@@ -1,4 +1,7 @@
-<footer>
+<footer
+  class="site-footer"
+  {% render 'color-scheme-vars' %}
+>
   <div class="footer__copyright">
     &copy;
     {{ 'now' | date: '%Y' }}
@@ -21,17 +24,19 @@
 </footer>
 
 {% stylesheet %}
-  footer {
+  .site-footer {
     display: flex;
     justify-content: space-between;
     margin-top: 2rem;
+    background-color: var(--cs-background);
+    color: var(--cs-text);
   }
-  footer a {
+  .site-footer a {
     text-decoration: none;
-    color: var(--color-foreground);
+    color: var(--cs-text);
   }
-  footer .footer__links,
-  footer .footer__payment {
+  .site-footer .footer__links,
+  .site-footer .footer__payment {
     display: flex;
     gap: 1rem;
   }

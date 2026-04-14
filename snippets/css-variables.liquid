@@ -1,18 +1,143 @@
 {% style %}
-  {% # Loads all font variantions with display: swap %}
-  {{ settings.type_primary_font | font_face: font_display: 'swap' }}
-  {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
-  {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
-  {{ settings.type_primary_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+  {%- liquid
+    assign use_custom_fonts = false
+    if settings.typography_mode == 'custom'
+      assign use_custom_fonts = true
+    endif
+
+    assign use_custom_colors = false
+    if settings.color_mode == 'custom'
+      assign use_custom_colors = true
+    endif
+  -%}
+
+  {%- if use_custom_fonts -%}
+    {%- unless settings.type_font_heading.system? -%}
+      {{ settings.type_font_heading | font_face: font_display: 'swap' }}
+      {{ settings.type_font_heading | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+    {%- endunless -%}
+    {%- unless settings.type_font_body.system? -%}
+      {{ settings.type_font_body | font_face: font_display: 'swap' }}
+      {{ settings.type_font_body | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+      {{ settings.type_font_body | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+      {{ settings.type_font_body | font_modify: 'weight', 'bold' | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+    {%- endunless -%}
+    {%- unless settings.type_font_mono.system? -%}
+      {{ settings.type_font_mono | font_face: font_display: 'swap' }}
+    {%- endunless -%}
+  {%- endif -%}
+
+  {%- liquid
+    assign s = false
+    unless use_custom_colors
+      assign gs = settings.global_color_scheme
+      if gs == blank or gs.settings == blank
+        assign gs = settings.color_schemes['scheme-1']
+      endif
+      if gs != blank and gs.settings != blank
+        assign s = gs.settings
+      endif
+    endunless
+
+    unless use_custom_fonts
+      assign fp = settings.font_pairing
+      case fp
+        when 'classic'
+          assign root_font_heading = "'Playfair Display', Georgia, serif"
+          assign root_font_body = "'Inter', system-ui, sans-serif"
+          assign root_font_mono = "'JetBrains Mono', monospace"
+        when 'modern'
+          assign root_font_heading = "'Plus Jakarta Sans', system-ui, sans-serif"
+          assign root_font_body = "'DM Sans', system-ui, sans-serif"
+          assign root_font_mono = "'DM Mono', monospace"
+        when 'editorial'
+          assign root_font_heading = "'Cormorant', Georgia, serif"
+          assign root_font_body = "'Source Sans 3', system-ui, sans-serif"
+          assign root_font_mono = "'Source Code Pro', monospace"
+        when 'geometric'
+          assign root_font_heading = "'Outfit', system-ui, sans-serif"
+          assign root_font_body = "'Outfit', system-ui, sans-serif"
+          assign root_font_mono = "'Space Mono', monospace"
+        when 'humanist'
+          assign root_font_heading = "'Fraunces', Georgia, serif"
+          assign root_font_body = "'Nunito Sans', system-ui, sans-serif"
+          assign root_font_mono = "'Fira Code', monospace"
+        when 'technical'
+          assign root_font_heading = "'Space Grotesk', system-ui, sans-serif"
+          assign root_font_body = "'Space Grotesk', system-ui, sans-serif"
+          assign root_font_mono = "'IBM Plex Mono', monospace"
+        else
+          assign root_font_heading = 'system-ui, sans-serif'
+          assign root_font_body = 'system-ui, sans-serif'
+          assign root_font_mono = 'monospace'
+      endcase
+    endunless
+  -%}
 
   :root {
-    --font-primary--family: {{ settings.type_primary_font.family }}, {{ settings.type_primary_font.fallback_families }};
-    --font-primary--style: {{ settings.type_primary_font.style }};
-    --font-primary--weight: {{ settings.type_primary_font.weight }};
     --page-width: {{ settings.max_page_width }};
     --page-margin: {{ settings.min_page_margin }}px;
-    --color-background: {{ settings.background_color }};
-    --color-foreground: {{ settings.foreground_color }};
     --style-border-radius-inputs: {{ settings.input_corner_radius }}px;
+    {%- if use_custom_colors -%}
+      --cs-background: {{ settings.custom_color_background | default: '#ffffff' }};
+      --cs-background-secondary: {{ settings.custom_color_background_secondary | default: '#f5f3ef' }};
+      --cs-border: {{ settings.custom_color_border | default: '#e8e6e1' }};
+      --cs-text: {{ settings.custom_color_text | default: '#1a1a1a' }};
+      --cs-text-secondary: {{ settings.custom_color_text_secondary | default: '#9e9b96' }};
+      --cs-heading: {{ settings.custom_color_heading | default: '#0a0a0a' }};
+      --cs-accent: {{ settings.custom_color_accent | default: '#e85d30' }};
+      --cs-accent-text: {{ settings.custom_color_accent_text | default: '#ffffff' }};
+      --cs-btn-primary-bg: {{ settings.custom_color_btn_primary_bg | default: '#1a1a1a' }};
+      --cs-btn-primary-text: {{ settings.custom_color_btn_primary_text | default: '#ffffff' }};
+      --cs-btn-primary-border: {{ settings.custom_color_btn_primary_border | default: '#1a1a1a' }};
+      --cs-btn-secondary-bg: {{ settings.custom_color_btn_secondary_bg | default: '#ffffff' }};
+      --cs-btn-secondary-text: {{ settings.custom_color_btn_secondary_text | default: '#1a1a1a' }};
+      --cs-btn-secondary-border: {{ settings.custom_color_btn_secondary_border | default: '#1a1a1a' }};
+      --color-background: {{ settings.custom_color_background | default: '#ffffff' }};
+      --color-foreground: {{ settings.custom_color_text | default: '#1a1a1a' }};
+    {%- elsif s -%}
+      --cs-background: {{ s.background }};
+      --cs-background-secondary: {{ s.background_secondary }};
+      --cs-border: {{ s.border }};
+      --cs-text: {{ s.text }};
+      --cs-text-secondary: {{ s.text_secondary }};
+      --cs-heading: {{ s.heading }};
+      --cs-accent: {{ s.accent }};
+      --cs-accent-text: {{ s.accent_text }};
+      --cs-btn-primary-bg: {{ s.btn_primary_bg }};
+      --cs-btn-primary-text: {{ s.btn_primary_text }};
+      --cs-btn-primary-border: {{ s.btn_primary_border }};
+      --cs-btn-secondary-bg: {{ s.btn_secondary_bg }};
+      --cs-btn-secondary-text: {{ s.btn_secondary_text }};
+      --cs-btn-secondary-border: {{ s.btn_secondary_border }};
+      --color-background: {{ s.background }};
+      --color-foreground: {{ s.text }};
+    {%- else -%}
+      --cs-background: #ffffff;
+      --cs-background-secondary: #f5f3ef;
+      --cs-border: #e8e6e1;
+      --cs-text: #1a1a1a;
+      --cs-text-secondary: #9e9b96;
+      --cs-heading: #0a0a0a;
+      --cs-accent: #e85d30;
+      --cs-accent-text: #ffffff;
+      --cs-btn-primary-bg: #1a1a1a;
+      --cs-btn-primary-text: #ffffff;
+      --cs-btn-primary-border: #1a1a1a;
+      --cs-btn-secondary-bg: #ffffff;
+      --cs-btn-secondary-text: #1a1a1a;
+      --cs-btn-secondary-border: #1a1a1a;
+      --color-background: #ffffff;
+      --color-foreground: #1a1a1a;
+    {%- endif -%}
+    {%- if use_custom_fonts -%}
+      --cs-font-heading: {{ settings.type_font_heading.family }}, {{ settings.type_font_heading.fallback_families }};
+      --cs-font-body: {{ settings.type_font_body.family }}, {{ settings.type_font_body.fallback_families }};
+      --cs-font-mono: {{ settings.type_font_mono.family }}, {{ settings.type_font_mono.fallback_families }};
+    {%- else -%}
+      --cs-font-heading: {{ root_font_heading }};
+      --cs-font-body: {{ root_font_body }};
+      --cs-font-mono: {{ root_font_mono }};
+    {%- endif -%}
   }
 {% endstyle %}

@@ -1,0 +1,10 @@
+// Design tokens (Sass) — prefer exposing storefront values as CSS custom properties where needed.
+
+$font-stack-system: system-ui, sans-serif;
+
+// Spacing scale (used in component SCSS via vars.* or forwarded maps later)
+$space-xs: 0.25rem;
+$space-sm: 0.5rem;
+$space-md: 1rem;
+$space-lg: 1.5rem;
+$space-xl: 2rem;

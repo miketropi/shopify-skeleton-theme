@@ -1,0 +1,39 @@
+<div
+  class="section-{{ section.id }} section-main-list-collections"
+  data-section-type="main-list-collections"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  <h1 class="main-list-collections__title">
+    {{- section.settings.title | default: 'Collections' | escape -}}
+  </h1>
+
+  <ul class="main-list-collections__grid" role="list">
+    {%- for collection in collections -%}
+      <li class="main-list-collections__item">
+        <a href="{{ collection.url }}" class="main-list-collections__link">
+          {%- if collection.image -%}
+            {{
+              collection.image
+              | image_url: width: 600
+              | image_tag: loading: 'lazy', alt: collection.title, class: 'main-list-collections__image'
+            }}
+          {%- endif -%}
+          <span class="main-list-collections__name">{{- collection.title | escape -}}</span>
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "name": "All collections",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "Collections" }
+  ],
+  "presets": [{ "name": "All collections" }]
+}
+{% endschema %}

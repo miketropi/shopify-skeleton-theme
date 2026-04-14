@@ -8,7 +8,7 @@
     "build": "vite build",
     "check": "shopify theme check",
     "lint": "eslint src --ext .ts",
-    "format": "prettier --write src",
+    "format": "prettier --write \"src/**/*.{ts,scss}\"",
     "package": "npm run build && shopify theme package"
   },
   "keywords": [],
@@ -17,14 +17,15 @@
   "type": "commonjs",
   "devDependencies": {
     "@shopify/cli": "^3.93.2",
-    "@shopify/theme": "^3.58.2",
     "@shopify/theme-check-node": "^3.24.0",
+    "@types/node": "^25.6.0",
     "@typescript-eslint/eslint-plugin": "^8.58.2",
     "@typescript-eslint/parser": "^8.58.2",
     "@vitejs/plugin-legacy": "^8.0.1",
     "concurrently": "^9.2.1",
     "eslint": "^10.2.0",
     "prettier": "^3.8.2",
+    "sass": "^1.99.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.8"
   }

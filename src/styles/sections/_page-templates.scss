@@ -1,0 +1,25 @@
+@use '../base/variables' as *;
+@use '../base/breakpoints' as *;
+
+// Layout shells for main-* sections (PAGE_TEMPLATES_SETUP.md)
+// Homepage marketing sections: section-hero, section-feature-grid (see SECTION_ARCHITECTURE_DESIGN_PRINCIPLES.md)
+.section-main-404,
+.section-main-password,
+.section-main-list-collections,
+.section-main-cart,
+.section-main-page,
+.section-main-blog,
+.section-main-article,
+.section-main-customers-account,
+.section-main-customers-login,
+.section-main-customers-register,
+.section-main-customers-order,
+.section-main-customers-addresses,
+.section-main-customers-reset-password,
+.section-main-customers-activate-account {
+  padding: $space-md;
+
+  @include mq-up('md') {
+    padding: $space-lg;
+  }
+}

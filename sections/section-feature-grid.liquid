@@ -1,0 +1,82 @@
+<div
+  class="section-{{ section.id }} section-feature-grid"
+  data-section-type="section-feature-grid"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  {%- if section.blocks.size > 0 -%}
+    <ul class="section-feature-grid__list" role="list">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'feature' -%}
+            <li class="section-feature-grid__item" {{ block.shopify_attributes }}>
+              {%- if block.settings.title != blank -%}
+                <h2 class="section-feature-grid__item-title">{{- block.settings.title | escape -}}</h2>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <div class="section-feature-grid__item-text rte">{{- block.settings.text -}}</div>
+              {%- endif -%}
+            </li>
+        {%- endcase -%}
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Feature grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>Short, helpful copy that explains your value in one or two sentences.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Feature grid",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Designed to last",
+            "text": "<p>Materials and construction chosen for durability and everyday comfort—not disposable trends.</p>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Transparent sourcing",
+            "text": "<p>We partner with makers we trust so you always know what you are buying.</p>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Simple returns",
+            "text": "<p>Try pieces at home. If they are not right, send them back within 30 days.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

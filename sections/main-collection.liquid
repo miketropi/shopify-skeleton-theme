@@ -1,0 +1,107 @@
+{%- liquid
+  assign products_per_page = section.settings.products_per_page | default: 24 | plus: 0
+  if products_per_page < 1
+    assign products_per_page = 24
+  endif
+  assign cols = section.settings.columns_desktop | default: '3' | plus: 0
+  if cols < 2
+    assign cols = 3
+  endif
+-%}
+
+<div
+  class="section-{{ section.id }} section-main-collection"
+  data-section-type="main-collection"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  {%- if collection == blank -%}
+    <div class="main-collection" style="--collection-cols: {{ cols }};">
+      <p class="main-collection__empty-state">{{- 'collections.general.no_matches' | t -}}</p>
+    </div>
+  {%- else -%}
+    <div class="main-collection" style="--collection-cols: {{ cols }};">
+      <header class="main-collection__header">
+        <div class="main-collection__header-text">
+          <h1 class="main-collection__title">{{- collection.title | escape -}}</h1>
+          {%- if collection.all_products_count != blank -%}
+            <p class="main-collection__count">
+              {{- 'collections.general.product_count' | t: count: collection.all_products_count -}}
+            </p>
+          {%- endif -%}
+        </div>
+        {%- if collection.description != blank -%}
+          <div class="main-collection__description rte">{{- collection.description -}}</div>
+        {%- endif -%}
+      </header>
+
+      {%- if request.page_type == 'collection' -%}
+        {%- paginate collection.products by products_per_page -%}
+          <ul class="main-collection__grid" role="list">
+            {%- for product in collection.products -%}
+              <li class="main-collection__item">
+                {%- render 'product-card', product: product -%}
+              </li>
+            {%- else -%}
+              <li class="main-collection__item main-collection__item--full">
+                <p class="main-collection__empty-state">{{- 'collections.general.no_matches' | t -}}</p>
+              </li>
+            {%- endfor -%}
+          </ul>
+
+          {%- if paginate.pages > 1 -%}
+            <nav class="main-collection__pagination" aria-label="{{ 'general.pagination.label' | t }}">
+              {{- paginate | default_pagination -}}
+            </nav>
+          {%- endif -%}
+        {%- endpaginate -%}
+      {%- else -%}
+        <ul class="main-collection__grid" role="list">
+          {%- for product in collection.products limit: products_per_page -%}
+            <li class="main-collection__item">
+              {%- render 'product-card', product: product -%}
+            </li>
+          {%- else -%}
+            <li class="main-collection__item main-collection__item--full">
+              <p class="main-collection__empty-state">{{- 'collections.general.no_matches' | t -}}</p>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Collection",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    }
+  ],
+  "presets": [{ "name": "Collection" }]
+}
+{% endschema %}

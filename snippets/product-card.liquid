@@ -1,0 +1,35 @@
+{%- comment -%}
+  @param {object} product - Product object
+{%- endcomment -%}
+
+{%- assign card_image_alt = product.featured_image.alt | default: product.title -%}
+{%- assign on_sale = false -%}
+{%- if product.compare_at_price > product.price -%}
+  {%- assign on_sale = true -%}
+{%- endif -%}
+
+<a class="product-card" href="{{ product.url }}">
+  <div class="product-card__media">
+    {%- if on_sale -%}
+      <span class="product-card__badge">{{- 'products.product.sale' | t -}}</span>
+    {%- endif -%}
+    {%- if product.featured_image != blank -%}
+      {{
+        product.featured_image
+        | image_url: width: 800
+        | image_tag: loading: 'lazy', alt: card_image_alt, class: 'product-card__image'
+      }}
+    {%- else -%}
+      <div class="product-card__placeholder" aria-hidden="true"></div>
+    {%- endif -%}
+  </div>
+  <div class="product-card__body">
+    <span class="product-card__title">{{- product.title | escape -}}</span>
+    <div class="product-card__price-row">
+      {%- if on_sale -%}
+        <s class="product-card__price product-card__price--compare">{{- product.compare_at_price | money -}}</s>
+      {%- endif -%}
+      <span class="product-card__price product-card__price--current">{{- product.price | money -}}</span>
+    </div>
+  </div>
+</a>

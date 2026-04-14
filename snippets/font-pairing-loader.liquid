@@ -1,0 +1,32 @@
+{%- comment -%}
+  =============================================================================
+  FONT PAIRING LOADER — call site contract
+  =============================================================================
+  • This snippet MUST be rendered only once, inside <head> in layout/theme.liquid.
+    It is the single permitted entry point for loading curated (Google Fonts) pairings.
+
+  • snippets/font-pairing-link.liquid MUST be called only from this file, in the loop
+    below. Never render font-pairing-link from a section, another snippet, or the body:
+    stylesheet <link> in <body> is invalid HTML and causes FOUC.
+
+  • Order matters: output the two preconnect <link>s first, then the stylesheet links.
+    Preconnect after a stylesheet request has no effect.
+
+  • fonts.googleapis.com / fonts.gstatic.com are on Shopify’s theme CSP allowlist for
+    Google Fonts — no extra layout/content_security_policy.liquid needed while URLs
+    stay on those hosts. If you change the font CDN (Adobe, Bunny, self-hosted, etc.),
+    add the host to layout/content_security_policy.liquid per Shopify docs; a <link>
+    alone is not sufficient.
+
+  Preset mode only; custom typography uses Shopify font_face in snippets/css-variables.liquid.
+{%- endcomment -%}
+{%- if settings.typography_mode != 'custom' -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  {%- liquid
+    assign all_pairings = 'classic|modern|editorial|geometric|humanist|technical' | split: '|'
+    for pairing in all_pairings
+      render 'font-pairing-link', pairing: pairing
+    endfor
+  -%}
+{%- endif -%}

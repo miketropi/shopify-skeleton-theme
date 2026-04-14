@@ -1,0 +1,58 @@
+<div
+  class="section-{{ section.id }} section-main-customers-login"
+  data-section-type="main-customers-login"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  <h1>{{- 'customer.login.title' | t -}}</h1>
+
+  {%- form 'customer_login' -%}
+    {{- form.errors | default_errors -}}
+
+    <div class="field">
+      <label for="CustomerEmail">{{- 'customer.login.email' | t -}}</label>
+      <input
+        type="email"
+        name="customer[email]"
+        id="CustomerEmail"
+        autocomplete="email"
+        autocorrect="off"
+        autocapitalize="off"
+        required
+      >
+    </div>
+
+    <div class="field">
+      <label for="CustomerPassword">{{- 'customer.login.password' | t -}}</label>
+      <input
+        type="password"
+        name="customer[password]"
+        id="CustomerPassword"
+        autocomplete="current-password"
+        required
+      >
+    </div>
+
+    <a href="{{ routes.account_recover_url }}" class="customers-login__forgot">
+      {{- 'customer.login.forgot_password' | t -}}
+    </a>
+
+    <button type="submit" class="btn btn--primary">
+      {{- 'customer.login.sign_in' | t -}}
+    </button>
+  {%- endform -%}
+
+  <p class="customers-login__register">
+    {{- 'customer.login.create_account_html' | t: link: routes.account_register_url -}}
+  </p>
+</div>
+
+{% schema %}
+{
+  "name": "Login",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "presets": [{ "name": "Login" }]
+}
+{% endschema %}

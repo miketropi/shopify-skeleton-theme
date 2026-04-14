@@ -1,0 +1,13 @@
+{%- comment -%}
+  @param {object} article - Article object
+  @param {boolean} [show_excerpt] - Show excerpt text
+{%- endcomment -%}
+
+<article class="article-card">
+  <a href="{{ article.url }}" class="article-card__link">
+    <h2 class="article-card__title">{{- article.title | escape -}}</h2>
+  </a>
+  {%- if show_excerpt and article.excerpt_or_content != blank -%}
+    <p class="article-card__excerpt">{{- article.excerpt_or_content | strip_html | truncatewords: 30 -}}</p>
+  {%- endif -%}
+</article>

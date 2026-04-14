@@ -1,0 +1,33 @@
+// Font pairing registry (slug → heading / body / mono).
+// Runtime --cs-font-* values come from snippets/color-scheme-vars.liquid; Google URLs from
+// snippets/font-pairing-link.liquid. Keep those three in sync when adding a pairing.
+//
+// classic    Playfair Display     / Inter            / JetBrains Mono
+// modern     Plus Jakarta Sans    / DM Sans          / DM Mono        (doc “Satoshi” → PJ Sans on GF)
+// editorial  Cormorant            / Source Sans 3    / Source Code Pro
+// geometric  Outfit               / Outfit           / Space Mono
+// humanist   Fraunces             / Nunito Sans      / Fira Code
+// technical  Space Grotesk        / Space Grotesk    / IBM Plex Mono
+
+body {
+  font-family: var(--cs-font-body);
+  color: var(--cs-text);
+  background-color: var(--cs-background);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--cs-font-heading);
+  color: var(--cs-heading);
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--cs-font-mono);
+}

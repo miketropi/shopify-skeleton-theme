@@ -48,7 +48,38 @@
     "page_width": "Page width",
     "show_payment_icons": "Show payment icons",
     "text_style": "Text style",
-    "text": "Text"
+    "text": "Text",
+    "typography_mode": "Typography source",
+    "font_pairing": "Font pairing",
+    "type_font_heading": "Heading font",
+    "type_font_body": "Body font",
+    "type_font_mono": "Monospace font",
+    "color_mode": "Colour source",
+    "global_color_scheme": "Store colour scheme",
+    "custom_background": "Background",
+    "custom_background_secondary": "Background secondary",
+    "custom_border": "Border",
+    "custom_text": "Body text",
+    "custom_text_secondary": "Secondary text",
+    "custom_heading": "Heading",
+    "custom_accent": "Accent",
+    "custom_accent_text": "Text on accent",
+    "custom_btn_bg": "Background",
+    "custom_btn_label": "Label",
+    "custom_btn_border": "Border"
+  },
+  "headers": {
+    "curated_font_pairing": "Curated pairing",
+    "custom_fonts": "Custom fonts",
+    "preset_color_schemes": "Preset colour schemes",
+    "custom_colors": "Custom colours"
+  },
+  "info": {
+    "colors_intro": "Choose preset named schemes for the whole store, or one custom palette. Colours are never set per section.",
+    "colors_preset": "Edit named schemes below, then choose which one applies to the whole store. Sections no longer have their own colour scheme.",
+    "colors_custom": "These colours apply site-wide. The preset scheme editor further down is ignored while Custom is selected.",
+    "typography_intro": "Choose curated Google Font pairings or pick your own fonts from the Shopify library (including shop fonts). Colour schemes still control colours per section.",
+    "typography_custom": "Heading, body, and code use these fonts. They map to --cs-font-heading, --cs-font-body, and --cs-font-mono."
   },
   "options": {
     "alignment": {
@@ -59,6 +90,14 @@
     "direction": {
       "horizontal": "Horizontal",
       "vertical": "Vertical"
+    },
+    "typography_mode": {
+      "preset": "Curated pairings (Google Fonts)",
+      "custom": "Custom (theme fonts)"
+    },
+    "color_mode": {
+      "preset": "Preset schemes (per section)",
+      "custom": "Custom (site-wide)"
     },
     "page_width": {
       "narrow": "Narrow",
@@ -72,6 +111,6 @@
       "title": "Title",
       "subtitle": "Subtitle",
       "normal": "Normal text"
-    },
+    }
   }
 }

@@ -1,0 +1,37 @@
+<div
+  class="section-{{ section.id }} section-main-customers-activate-account"
+  data-section-type="main-customers-activate-account"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  <h1>{{- 'customer.activate_account.title' | t -}}</h1>
+  <p>{{- 'customer.activate_account.subtext' | t -}}</p>
+
+  {%- form 'activate_customer_password' -%}
+    {{- form.errors | default_errors -}}
+
+    <div class="field">
+      <label for="ActivatePassword">{{- 'customer.activate_account.password' | t -}}</label>
+      <input type="password" name="customer[password]" id="ActivatePassword" autocomplete="new-password" required>
+    </div>
+
+    <div class="field">
+      <label for="ActivatePasswordConfirmation">{{- 'customer.activate_account.password_confirm' | t -}}</label>
+      <input type="password" name="customer[password_confirmation]" id="ActivatePasswordConfirmation" autocomplete="new-password" required>
+    </div>
+
+    <button type="submit" class="btn btn--primary">
+      {{- 'customer.activate_account.submit' | t -}}
+    </button>
+  {%- endform -%}
+</div>
+
+{% schema %}
+{
+  "name": "Activate account",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "presets": [{ "name": "Activate account" }]
+}
+{% endschema %}

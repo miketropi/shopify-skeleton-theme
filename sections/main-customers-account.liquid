@@ -1,0 +1,67 @@
+<div
+  class="section-{{ section.id }} section-main-customers-account"
+  data-section-type="main-customers-account"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  {%- if customer == blank -%}
+    <p><a href="{{ routes.account_login_url }}">{{- 'customer.login.title' | t -}}</a></p>
+  {%- else -%}
+  <h1 class="customers-account__title">
+    {{- 'customer.account.title' | t -}}
+  </h1>
+
+  <p class="customers-account__greeting">
+    {{- 'customer.account.details' | t: name: customer.first_name | default: customer.email -}}
+  </p>
+
+  <section class="customers-account__orders">
+    <h2>{{- 'customer.orders.title' | t -}}</h2>
+
+    {%- if customer.orders.size > 0 -%}
+      <table class="customers-account__orders-table">
+        <thead>
+          <tr>
+            <th>{{- 'customer.orders.order_number' | t -}}</th>
+            <th>{{- 'customer.orders.date' | t -}}</th>
+            <th>{{- 'customer.orders.payment_status' | t -}}</th>
+            <th>{{- 'customer.orders.fulfillment_status' | t -}}</th>
+            <th>{{- 'customer.orders.total' | t -}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for order in customer.orders -%}
+            <tr>
+              <td><a href="{{ order.customer_url }}">{{ order.name }}</a></td>
+              <td>{{ order.created_at | date: format: 'date' }}</td>
+              <td>{{ order.financial_status_label }}</td>
+              <td>{{ order.fulfillment_status_label }}</td>
+              <td>{{ order.total_price | money }}</td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    {%- else -%}
+      <p>{{- 'customer.orders.none' | t -}}</p>
+    {%- endif -%}
+  </section>
+
+  <section class="customers-account__address">
+    <h2>{{- 'customer.addresses.title' | t -}}</h2>
+    {%- if customer.default_address -%}
+      {{- customer.default_address | format_address -}}
+    {%- endif -%}
+    <a href="{{ routes.account_addresses_url }}">{{- 'customer.addresses.view_all' | t -}}</a>
+  </section>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Account",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "presets": [{ "name": "Account" }]
+}
+{% endschema %}

@@ -1,0 +1,78 @@
+<article
+  class="section-{{ section.id }} section-main-article"
+  data-section-type="main-article"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  <header class="main-article__header">
+    <h1 class="main-article__title">{{- article.title | escape -}}</h1>
+
+    {%- if section.settings.show_meta -%}
+      <div class="main-article__meta">
+        <span class="main-article__author">{{- article.author | escape -}}</span>
+        <time class="main-article__date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+          {{- article.published_at | date: format: 'date' -}}
+        </time>
+      </div>
+    {%- endif -%}
+
+    {%- if article.image and section.settings.show_featured_image -%}
+      {{
+        article.image
+        | image_url: width: 1200
+        | image_tag:
+          loading: 'eager',
+          widths: '600, 900, 1200',
+          sizes: '(max-width: 768px) 100vw, 800px',
+          class: 'main-article__featured-image'
+      }}
+    {%- endif -%}
+  </header>
+
+  <div class="main-article__body rte">
+    {{- article.content -}}
+  </div>
+
+  {%- if section.settings.show_tags and article.tags.size > 0 -%}
+    <footer class="main-article__footer">
+      <ul class="main-article__tags" role="list">
+        {%- for tag in article.tags -%}
+          <li>
+            <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="main-article__tag">
+              {{- tag | escape -}}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </footer>
+  {%- endif -%}
+</article>
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_featured_image",
+      "label": "Show featured image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_meta",
+      "label": "Show author and date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "Show tags",
+      "default": true
+    }
+  ],
+  "presets": [{ "name": "Article" }]
+}
+{% endschema %}

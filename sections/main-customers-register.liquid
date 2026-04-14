@@ -1,0 +1,62 @@
+<div
+  class="section-{{ section.id }} section-main-customers-register"
+  data-section-type="main-customers-register"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  <h1>{{- 'customer.register.title' | t -}}</h1>
+
+  {%- form 'create_customer' -%}
+    {{- form.errors | default_errors -}}
+
+    <div class="field">
+      <label for="FirstName">{{- 'customer.register.first_name' | t -}}</label>
+      <input type="text" name="customer[first_name]" id="FirstName" autocomplete="given-name">
+    </div>
+
+    <div class="field">
+      <label for="LastName">{{- 'customer.register.last_name' | t -}}</label>
+      <input type="text" name="customer[last_name]" id="LastName" autocomplete="family-name">
+    </div>
+
+    <div class="field">
+      <label for="RegisterEmail">{{- 'customer.register.email' | t -}}</label>
+      <input
+        type="email"
+        name="customer[email]"
+        id="RegisterEmail"
+        autocomplete="email"
+        required
+      >
+    </div>
+
+    <div class="field">
+      <label for="RegisterPassword">{{- 'customer.register.password' | t -}}</label>
+      <input
+        type="password"
+        name="customer[password]"
+        id="RegisterPassword"
+        autocomplete="new-password"
+        required
+      >
+    </div>
+
+    <button type="submit" class="btn btn--primary">
+      {{- 'customer.register.submit' | t -}}
+    </button>
+  {%- endform -%}
+
+  <p>
+    <a href="{{ routes.account_login_url }}">{{- 'customer.register.login' | t -}}</a>
+  </p>
+</div>
+
+{% schema %}
+{
+  "name": "Register",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "presets": [{ "name": "Register" }]
+}
+{% endschema %}

@@ -19,7 +19,7 @@ A minimal Shopify theme with a clear folder layout, Theme Check–friendly Liqui
 | Area | Path | Notes |
 |------|------|--------|
 | Theme (Liquid, JSON templates) | `layout/`, `sections/`, `snippets/`, `templates/`, `blocks/`, `config/`, `locales/` | Standard [theme architecture](https://shopify.dev/docs/storefronts/themes/architecture) |
-| Storefront JS (source) | `src/theme.ts` | Edit here; TypeScript, strict mode (`tsconfig.json`) |
+| Storefront JS (source) | `src/scripts/theme.ts` | Entry + section registry; TypeScript strict (`tsconfig.json`) |
 | Storefront JS (built) | `assets/theme.js` | Produced by Vite; `vite.config.ts` uses `emptyOutDir: false` so other assets stay put |
 | Global `window.Shopify` typings | `src/types/shopify.d.ts` | Extend as needed |
 | Theme Check | `.theme-check.yml` | Extends `theme-check:recommended` |
@@ -114,7 +114,7 @@ You can still use Liquid [`{% javascript %}`](https://shopify.dev/docs/api/liqui
 ├── snippets        # Reusable Liquid fragments
 ├── src             # TypeScript source for Vite (not uploaded as Liquid)
 ├── templates       # JSON templates
-└── vite.config.ts  # Build: src/theme.ts → assets/theme.js
+└── vite.config.ts  # Build: src/scripts/theme.ts → assets/theme.js
 ```
 
 More detail: [Theme architecture](https://shopify.dev/docs/storefronts/themes/architecture).

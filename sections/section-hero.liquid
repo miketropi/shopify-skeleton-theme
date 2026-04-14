@@ -1,0 +1,129 @@
+{%- liquid
+  assign hero_image = section.settings.hero_image
+  assign primary_url = section.settings.hero_primary_link | default: routes.all_products_collection_url
+  assign secondary_url = section.settings.hero_secondary_link
+  assign show_secondary = false
+  if section.settings.hero_secondary_label != blank and secondary_url != blank
+    assign show_secondary = true
+  endif
+-%}
+
+<div
+  class="section-{{ section.id }} section-hero{% if section.settings.hero_media_position == 'left' %} section-hero--media-left{% endif %}"
+  data-section-type="section-hero"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  <div class="section-hero__card">
+    <div class="section-hero__layout">
+      <div class="section-hero__copy">
+        {%- if section.settings.hero_kicker != blank -%}
+          <p class="section-hero__kicker">{{- section.settings.hero_kicker | escape -}}</p>
+        {%- endif -%}
+
+        <h1 class="section-hero__title">{{- section.settings.hero_heading | escape -}}</h1>
+
+        {%- if section.settings.hero_subheading != blank -%}
+          <p class="section-hero__lede">{{- section.settings.hero_subheading | escape -}}</p>
+        {%- endif -%}
+
+        <div class="section-hero__actions">
+          {%- if section.settings.hero_primary_label != blank -%}
+            <a class="section-hero__btn section-hero__btn--primary" href="{{ primary_url }}">
+              {{- section.settings.hero_primary_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if show_secondary -%}
+            <a class="section-hero__btn section-hero__btn--ghost" href="{{ secondary_url }}">
+              {{- section.settings.hero_secondary_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- if hero_image != blank -%}
+        <div class="section-hero__media" aria-hidden="true">
+          {{
+            hero_image
+            | image_url: width: 1400
+            | image_tag:
+              loading: 'eager',
+              widths: '400, 700, 1000, 1400',
+              sizes: '(min-width: 900px) 45vw, 100vw',
+              class: 'section-hero__image'
+          }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "hero_kicker",
+      "label": "Eyebrow text",
+      "default": "New season"
+    },
+    {
+      "type": "text",
+      "id": "hero_heading",
+      "label": "Heading",
+      "default": "Thoughtfully made goods for modern living"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_subheading",
+      "label": "Subheading",
+      "default": "Quality you can feel, design that lasts. Explore the collection and find pieces you will reach for every day."
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "select",
+      "id": "hero_media_position",
+      "label": "Image position on large screens",
+      "options": [
+        { "value": "right", "label": "Right of text" },
+        { "value": "left", "label": "Left of text" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "text",
+      "id": "hero_primary_label",
+      "label": "Primary button label",
+      "default": "Shop the collection"
+    },
+    {
+      "type": "url",
+      "id": "hero_primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "hero_secondary_label",
+      "label": "Secondary button label",
+      "default": "Our story"
+    },
+    {
+      "type": "url",
+      "id": "hero_secondary_link",
+      "label": "Secondary button link"
+    }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

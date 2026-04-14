@@ -8,17 +8,402 @@
     "theme_support_url": "https://support.shopify.com/"
   },
   {
+    "name": "Color schemes",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "t:info.colors_intro"
+      },
+      {
+        "type": "select",
+        "id": "color_mode",
+        "label": "t:labels.color_mode",
+        "options": [
+          {
+            "value": "preset",
+            "label": "t:options.color_mode.preset"
+          },
+          {
+            "value": "custom",
+            "label": "t:options.color_mode.custom"
+          }
+        ],
+        "default": "preset"
+      },
+      {
+        "type": "header",
+        "content": "t:headers.custom_colors",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:info.colors_custom",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "header",
+        "content": "Surface",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_background",
+        "label": "t:labels.custom_background",
+        "default": "#ffffff",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_background_secondary",
+        "label": "t:labels.custom_background_secondary",
+        "default": "#f5f3ef",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_border",
+        "label": "t:labels.custom_border",
+        "default": "#e8e6e1",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "header",
+        "content": "Text",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_text",
+        "label": "t:labels.custom_text",
+        "default": "#1a1a1a",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_text_secondary",
+        "label": "t:labels.custom_text_secondary",
+        "default": "#9e9b96",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_heading",
+        "label": "t:labels.custom_heading",
+        "default": "#0a0a0a",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "header",
+        "content": "Accent",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_accent",
+        "label": "t:labels.custom_accent",
+        "default": "#e85d30",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_accent_text",
+        "label": "t:labels.custom_accent_text",
+        "default": "#ffffff",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "header",
+        "content": "Button — primary",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_btn_primary_bg",
+        "label": "t:labels.custom_btn_bg",
+        "default": "#1a1a1a",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_btn_primary_text",
+        "label": "t:labels.custom_btn_label",
+        "default": "#ffffff",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_btn_primary_border",
+        "label": "t:labels.custom_btn_border",
+        "default": "#1a1a1a",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "header",
+        "content": "Button — secondary",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_btn_secondary_bg",
+        "label": "t:labels.custom_btn_bg",
+        "default": "#ffffff",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_btn_secondary_text",
+        "label": "t:labels.custom_btn_label",
+        "default": "#1a1a1a",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_color_btn_secondary_border",
+        "label": "t:labels.custom_btn_border",
+        "default": "#1a1a1a",
+        "visible_if": "{{ settings.color_mode == 'custom' }}"
+      },
+      {
+        "type": "header",
+        "content": "t:headers.preset_color_schemes",
+        "visible_if": "{{ settings.color_mode == 'preset' }}"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:info.colors_preset",
+        "visible_if": "{{ settings.color_mode == 'preset' }}"
+      },
+      {
+        "type": "color_scheme_group",
+        "id": "color_schemes",
+        "definition": [
+          {
+            "type": "header",
+            "content": "Surface"
+          },
+          {
+            "type": "color",
+            "id": "background",
+            "label": "Background",
+            "default": "#ffffff"
+          },
+          {
+            "type": "color_background",
+            "id": "background_gradient",
+            "label": "Background gradient",
+            "info": "Optional. Overrides solid background when set."
+          },
+          {
+            "type": "color",
+            "id": "background_secondary",
+            "label": "Background secondary",
+            "default": "#f5f3ef"
+          },
+          {
+            "type": "color",
+            "id": "border",
+            "label": "Border",
+            "default": "#e8e6e1"
+          },
+          {
+            "type": "header",
+            "content": "Text"
+          },
+          {
+            "type": "color",
+            "id": "text",
+            "label": "Body text",
+            "default": "#1a1a1a"
+          },
+          {
+            "type": "color",
+            "id": "text_secondary",
+            "label": "Secondary text",
+            "default": "#9e9b96"
+          },
+          {
+            "type": "color",
+            "id": "heading",
+            "label": "Heading",
+            "default": "#0a0a0a"
+          },
+          {
+            "type": "header",
+            "content": "Accent"
+          },
+          {
+            "type": "color",
+            "id": "accent",
+            "label": "Accent",
+            "default": "#e85d30"
+          },
+          {
+            "type": "color",
+            "id": "accent_text",
+            "label": "Text on accent",
+            "default": "#ffffff"
+          },
+          {
+            "type": "header",
+            "content": "Button — primary"
+          },
+          {
+            "type": "color",
+            "id": "btn_primary_bg",
+            "label": "Background",
+            "default": "#1a1a1a"
+          },
+          {
+            "type": "color",
+            "id": "btn_primary_text",
+            "label": "Label",
+            "default": "#ffffff"
+          },
+          {
+            "type": "color",
+            "id": "btn_primary_border",
+            "label": "Border",
+            "default": "#1a1a1a"
+          },
+          {
+            "type": "header",
+            "content": "Button — secondary"
+          },
+          {
+            "type": "color",
+            "id": "btn_secondary_bg",
+            "label": "Background",
+            "default": "#ffffff"
+          },
+          {
+            "type": "color",
+            "id": "btn_secondary_text",
+            "label": "Label",
+            "default": "#1a1a1a"
+          },
+          {
+            "type": "color",
+            "id": "btn_secondary_border",
+            "label": "Border",
+            "default": "#1a1a1a"
+          }
+        ],
+        "role": {
+          "text": "text",
+          "background": {
+            "solid": "background",
+            "gradient": "background_gradient"
+          },
+          "links": "accent",
+          "icons": "text_secondary",
+          "primary_button": "btn_primary_bg",
+          "on_primary_button": "btn_primary_text",
+          "primary_button_border": "btn_primary_border",
+          "secondary_button": "btn_secondary_bg",
+          "on_secondary_button": "btn_secondary_text",
+          "secondary_button_border": "btn_secondary_border"
+        }
+      },
+      {
+        "type": "color_scheme",
+        "id": "global_color_scheme",
+        "label": "t:labels.global_color_scheme",
+        "default": "scheme-1",
+        "visible_if": "{{ settings.color_mode == 'preset' }}"
+      }
+    ]
+  },
+  {
     "name": "t:general.typography",
     "settings": [
       {
+        "type": "paragraph",
+        "content": "t:info.typography_intro"
+      },
+      {
+        "type": "select",
+        "id": "typography_mode",
+        "label": "t:labels.typography_mode",
+        "options": [
+          {
+            "value": "preset",
+            "label": "t:options.typography_mode.preset"
+          },
+          {
+            "value": "custom",
+            "label": "t:options.typography_mode.custom"
+          }
+        ],
+        "default": "preset"
+      },
+      {
         "type": "header",
-        "content": "t:general.fonts"
+        "content": "t:headers.curated_font_pairing",
+        "visible_if": "{{ settings.typography_mode == 'preset' }}"
+      },
+      {
+        "type": "select",
+        "id": "font_pairing",
+        "label": "t:labels.font_pairing",
+        "options": [
+          {
+            "value": "classic",
+            "label": "Classic — Playfair Display + Inter"
+          },
+          {
+            "value": "modern",
+            "label": "Modern — Plus Jakarta Sans + DM Sans"
+          },
+          {
+            "value": "editorial",
+            "label": "Editorial — Cormorant + Source Sans 3"
+          },
+          {
+            "value": "geometric",
+            "label": "Geometric — Outfit + Outfit"
+          },
+          {
+            "value": "humanist",
+            "label": "Humanist — Fraunces + Nunito Sans"
+          },
+          {
+            "value": "technical",
+            "label": "Technical — Space Grotesk + IBM Plex Mono"
+          }
+        ],
+        "default": "classic",
+        "visible_if": "{{ settings.typography_mode == 'preset' }}"
+      },
+      {
+        "type": "header",
+        "content": "t:headers.custom_fonts",
+        "visible_if": "{{ settings.typography_mode == 'custom' }}"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:info.typography_custom",
+        "visible_if": "{{ settings.typography_mode == 'custom' }}"
       },
       {
         "type": "font_picker",
-        "id": "type_primary_font",
+        "id": "type_font_heading",
+        "label": "t:labels.type_font_heading",
+        "default": "playfair_display_n4",
+        "visible_if": "{{ settings.typography_mode == 'custom' }}"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_font_body",
+        "label": "t:labels.type_font_body",
         "default": "work_sans_n4",
-        "label": "t:general.primary"
+        "visible_if": "{{ settings.typography_mode == 'custom' }}"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_font_mono",
+        "label": "t:labels.type_font_mono",
+        "default": "ibm_plex_mono_n4",
+        "visible_if": "{{ settings.typography_mode == 'custom' }}"
       }
     ]
   },
@@ -50,23 +435,6 @@
         "unit": "px",
         "label": "t:labels.page_margin",
         "default": 20
-      }
-    ]
-  },
-  {
-    "name": "t:general.colors",
-    "settings": [
-      {
-        "type": "color",
-        "id": "background_color",
-        "default": "#FFFFFF",
-        "label": "t:labels.background"
-      },
-      {
-        "type": "color",
-        "id": "foreground_color",
-        "default": "#333333",
-        "label": "t:labels.foreground"
       },
       {
         "type": "range",

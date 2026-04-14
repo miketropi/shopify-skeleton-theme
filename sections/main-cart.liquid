@@ -1,0 +1,72 @@
+<div
+  class="section-{{ section.id }} section-main-cart"
+  data-section-type="main-cart"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  {%- if cart.item_count > 0 -%}
+    {%- form 'cart', cart, id: 'cart-form' -%}
+      <ul class="main-cart__items" role="list">
+        {%- for item in cart.items -%}
+          <li class="main-cart__item" data-key="{{ item.key }}">
+            {{
+              item.image
+              | image_url: width: 200
+              | image_tag: loading: 'lazy', alt: item.title, class: 'main-cart__item-image'
+            }}
+            <div class="main-cart__item-details">
+              <a href="{{ item.url }}" class="main-cart__item-title">{{- item.title | escape -}}</a>
+              <span class="main-cart__item-price">{{- item.final_price | money -}}</span>
+              <input
+                type="number"
+                name="updates[]"
+                value="{{ item.quantity }}"
+                min="0"
+                class="main-cart__item-qty"
+                data-cart-qty
+                aria-label="{{ 'cart.label.quantity' | t }}"
+              >
+              <a
+                href="{{ item.url_to_remove }}"
+                class="main-cart__item-remove"
+                aria-label="{{ 'cart.label.remove' | t }}"
+              >
+                {{- 'cart.general.remove' | t -}}
+              </a>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      <div class="main-cart__footer">
+        <div class="main-cart__subtotal">
+          <span>{{- 'cart.general.subtotal' | t -}}</span>
+          <span>{{- cart.total_price | money_with_currency -}}</span>
+        </div>
+        <p class="main-cart__taxes-note">
+          {{- 'cart.general.taxes_and_shipping_at_checkout_html' | t -}}
+        </p>
+        <button type="submit" name="checkout" class="main-cart__checkout btn">
+          {{- 'cart.general.checkout' | t -}}
+        </button>
+      </div>
+    {%- endform -%}
+  {%- else -%}
+    <div class="main-cart__empty">
+      <p>{{- 'cart.general.empty' | t -}}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="main-cart__continue btn">
+        {{- 'cart.general.continue_shopping' | t -}}
+      </a>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "presets": [{ "name": "Cart" }]
+}
+{% endschema %}

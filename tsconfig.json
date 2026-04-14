@@ -9,8 +9,8 @@
     "noUnusedParameters": true,
     "useDefineForClassFields": true,
     "skipLibCheck": true,
-    "types": ["vite/client"]
+    "types": ["vite/client", "node"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "vite.config.ts"],
   "exclude": ["node_modules", "assets"]
 }

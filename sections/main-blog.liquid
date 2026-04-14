@@ -1,0 +1,50 @@
+<div
+  class="section-{{ section.id }} section-main-blog"
+  data-section-type="main-blog"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  <h1 class="main-blog__title">{{- blog.title | escape -}}</h1>
+
+  {%- paginate blog.articles by section.settings.articles_per_page -%}
+    <ul class="main-blog__grid" role="list">
+      {%- for article in blog.articles -%}
+        <li class="main-blog__item">
+          {%- render 'article-card', article: article, show_excerpt: section.settings.show_excerpt -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {%- if paginate.pages > 1 -%}
+      <nav class="main-blog__pagination" aria-label="{{ 'general.pagination.label' | t }}">
+        {{- paginate | default_pagination -}}
+      </nav>
+    {%- endif -%}
+  {%- endpaginate -%}
+</div>
+
+{% schema %}
+{
+  "name": "Blog",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "label": "Articles per page",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show article excerpt",
+      "default": true
+    }
+  ],
+  "presets": [{ "name": "Blog" }]
+}
+{% endschema %}

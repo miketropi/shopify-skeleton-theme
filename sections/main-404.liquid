@@ -1,0 +1,30 @@
+<div
+  class="section-{{ section.id }} section-main-404"
+  data-section-type="main-404"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  <h1 class="main-404__title">
+    {{- section.settings.title | default: '404 — Page not found' | escape -}}
+  </h1>
+  <p class="main-404__message">
+    {{- section.settings.message | default: 'The page you were looking for does not exist.' | escape -}}
+  </p>
+  <a class="main-404__cta btn" href="{{ routes.root_url }}">
+    {{- section.settings.cta_label | default: 'Back to home' | escape -}}
+  </a>
+</div>
+
+{% schema %}
+{
+  "name": "404",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "404 — Page not found" },
+    { "type": "textarea", "id": "message", "label": "Message", "default": "The page you were looking for does not exist." },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Back to home" }
+  ],
+  "presets": [{ "name": "404" }]
+}
+{% endschema %}

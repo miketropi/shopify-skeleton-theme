@@ -9,12 +9,47 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "hello-world",
-      "settings": {}
+    "hero": {
+      "type": "section-hero",
+      "settings": {
+        "hero_kicker": "New season",
+        "hero_heading": "Thoughtfully made goods for modern living",
+        "hero_subheading": "Quality you can feel, design that lasts. Explore the collection and find pieces you will reach for every day.",
+        "hero_media_position": "right",
+        "hero_primary_label": "Shop the collection",
+        "hero_primary_link": "shopify://collections/all",
+        "hero_secondary_label": "Our story",
+        "hero_secondary_link": ""
+      }
+    },
+    "feature_grid": {
+      "type": "section-feature-grid",
+      "settings": {},
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "title": "Designed to last",
+            "text": "<p>Materials and construction chosen for durability and everyday comfort—not disposable trends.</p>"
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "title": "Transparent sourcing",
+            "text": "<p>We partner with makers we trust so you always know what you are buying.</p>"
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "title": "Simple returns",
+            "text": "<p>Try pieces at home. If they are not right, send them back within 30 days.</p>"
+          }
+        }
+      },
+      "block_order": ["feature_1", "feature_2", "feature_3"]
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["hero", "feature_grid"]
 }

@@ -1,0 +1,14 @@
+@use '../base/variables' as *;
+@use '../base/breakpoints' as *;
+
+.section-customer-register {
+  --section-gap: #{$space-md};
+
+  max-width: 28rem;
+  margin-inline: auto;
+  padding: var(--section-gap);
+
+  @include mq-up('md') {
+    --section-gap: #{$space-lg};
+  }
+}

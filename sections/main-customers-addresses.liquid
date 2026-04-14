@@ -1,0 +1,52 @@
+<div
+  class="section-{{ section.id }} section-main-customers-addresses"
+  data-section-type="main-customers-addresses"
+  data-section-id="{{ section.id }}"
+  {% render 'color-scheme-vars' %}
+>
+  <h1>{{- 'customer.addresses.title' | t -}}</h1>
+
+  <h2>{{- 'customer.addresses.add_new' | t -}}</h2>
+  {%- form 'customer_address', customer.new_address -%}
+    {{- form.errors | default_errors -}}
+    {%- render 'address-form', form: form, address: customer.new_address -%}
+    <button type="submit" class="btn">{{- 'customer.addresses.add' | t -}}</button>
+  {%- endform -%}
+
+  {%- if customer.addresses_count > 0 -%}
+    <h2>{{- 'customer.addresses.entries_count' | t: count: customer.addresses_count -}}</h2>
+
+    {%- paginate customer.addresses by 5 -%}
+      {%- for address in customer.addresses -%}
+        <div class="customers-address__entry">
+          {{- address | format_address -}}
+          {%- if address == customer.default_address -%}
+            <span class="customers-address__default-badge">{{- 'customer.addresses.default' | t -}}</span>
+          {%- endif -%}
+
+          {%- form 'customer_address', address -%}
+            {%- render 'address-form', form: form, address: address -%}
+            <button type="submit" class="btn">{{- 'customer.addresses.update' | t -}}</button>
+          {%- endform -%}
+
+          {%- form 'customer_address', address, method: 'delete' -%}
+            <button type="submit" class="btn btn--secondary">
+              {{- 'customer.addresses.delete' | t -}}
+            </button>
+          {%- endform -%}
+        </div>
+      {%- endfor -%}
+      {{- paginate | default_pagination -}}
+    {%- endpaginate -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Addresses",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "presets": [{ "name": "Addresses" }]
+}
+{% endschema %}

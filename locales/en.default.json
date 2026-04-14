@@ -15,20 +15,153 @@
   },
   "cart": {
     "checkout": "Checkout",
+    "general": {
+      "checkout": "Check out",
+      "continue_shopping": "Continue shopping",
+      "empty": "Your cart is empty",
+      "remove": "Remove",
+      "subtotal": "Subtotal",
+      "taxes_and_shipping_at_checkout_html": "Taxes and shipping calculated at checkout"
+    },
+    "label": {
+      "quantity": "Quantity",
+      "remove": "Remove item"
+    },
+    "remove": "Remove",
     "title": "Cart",
-    "update": "Update",
-    "remove": "Remove"
+    "update": "Update"
+  },
+  "collections": {
+    "general": {
+      "no_matches": "No products found",
+      "product_count": {
+        "one": "{{ count }} product",
+        "other": "{{ count }} products"
+      }
+    },
+    "title": "Collections"
+  },
+  "customer": {
+    "account": {
+      "details": "Hello, {{ name }}",
+      "title": "My account"
+    },
+    "activate_account": {
+      "password": "Password",
+      "password_confirm": "Confirm password",
+      "subtext": "Create your password to activate your account.",
+      "submit": "Activate account",
+      "title": "Activate account"
+    },
+    "addresses": {
+      "add": "Add address",
+      "add_new": "Add a new address",
+      "address1": "Address",
+      "address2": "Apartment, suite, etc.",
+      "city": "City",
+      "company": "Company",
+      "country": "Country/region",
+      "default": "Default",
+      "delete": "Delete",
+      "entries_count": "{{ count }} saved addresses",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "phone": "Phone",
+      "province": "Province",
+      "title": "Addresses",
+      "update": "Update address",
+      "view_all": "View all addresses",
+      "zip": "Postal/ZIP code"
+    },
+    "login": {
+      "create_account_html": "New customer? <a href=\"{{ link }}\">Create an account</a>",
+      "email": "Email",
+      "forgot_password": "Forgot your password?",
+      "password": "Password",
+      "sign_in": "Sign in",
+      "title": "Log in"
+    },
+    "order": {
+      "cancelled_html": "Cancelled on {{ date }}. Reason: {{ reason }}",
+      "date_html": "Placed on {{ date }}",
+      "fulfilled_at_html": "Fulfilled {{ date }}",
+      "price": "Price",
+      "product": "Product",
+      "quantity": "Quantity",
+      "sku": "SKU",
+      "subtotal": "Subtotal",
+      "title": "Order {{ name }}",
+      "total": "Total"
+    },
+    "orders": {
+      "date": "Date",
+      "fulfillment_status": "Fulfillment status",
+      "none": "You haven't placed any orders yet.",
+      "order_number": "Order",
+      "payment_status": "Payment status",
+      "title": "Order history",
+      "total": "Total"
+    },
+    "register": {
+      "email": "Email",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "login": "Already have an account? Log in",
+      "password": "Password",
+      "submit": "Create",
+      "title": "Create account"
+    },
+    "reset_password": {
+      "password": "New password",
+      "password_confirm": "Confirm password",
+      "submit": "Reset password",
+      "title": "Reset password"
+    }
   },
   "customers": {
+    "account": {
+      "addresses": "Addresses",
+      "log_out": "Log out",
+      "no_orders": "You have not placed any orders yet.",
+      "order_link": "Order {{ name }}",
+      "orders_heading": "Order history",
+      "sign_in_prompt": "Sign in to view your account.",
+      "title": "Account"
+    },
     "login": {
+      "create_account": "Create account",
       "email": "Email",
+      "forgot_password": "Forgot password?",
       "password": "Password",
       "submit": "Sign in",
       "title": "Login"
+    },
+    "order": {
+      "back_to_account": "Back to account",
+      "items_heading": "Items",
+      "not_found": "Order could not be found.",
+      "placed_on": "Placed on {{ date }}",
+      "title": "Order {{ name }}",
+      "total": "Total"
+    },
+    "register": {
+      "email": "Email",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "password": "Password",
+      "sign_in_instead": "Sign in instead",
+      "submit": "Create account",
+      "title": "Create account"
     }
   },
-  "collections": {
-    "title": "Collections"
+  "general": {
+    "pagination": {
+      "label": "Pagination"
+    },
+    "password_page": {
+      "enter_store": "Enter",
+      "password_placeholder": "Your password"
+    }
   },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",
@@ -37,16 +170,36 @@
     "expires_on": "Expires on {{ expires_on }}",
     "use_at_checkout": "Use this gift card at checkout"
   },
+  "gift_cards": {
+    "issued": {
+      "copy_code": "Copy code",
+      "expired": "Expired",
+      "gift_card_code": "Gift card code",
+      "remaining_html": "{{ balance }} remaining",
+      "shop_link": "Shop now",
+      "subtext": "Your gift card",
+      "title": "{{ value }} gift card for {{ shop }}"
+    }
+  },
   "password": {
-    "title": "This shop is private",
+    "enter": "Enter",
     "password": "Password",
-    "enter": "Enter"
+    "title": "This shop is private"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "quantity": "Quantity",
+      "sale": "Sale",
+      "sold_out": "Sold out",
+      "variant": "Variant"
+    }
   },
   "search": {
-    "title": "Search",
-    "placeholder": "Search articles, pages, or products",
-    "submit": "Search",
     "no_results_html": "No results found for {{ terms }}",
-    "results_for_html": "{{ count }} results found for {{ terms }}"
+    "placeholder": "Search articles, pages, or products",
+    "results_for_html": "{{ count }} results found for {{ terms }}",
+    "submit": "Search",
+    "title": "Search"
   }
 }
