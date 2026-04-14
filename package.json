@@ -1,0 +1,31 @@
+{
+  "name": "skeleton-theme",
+  "version": "1.0.0",
+  "description": "<h1 align=\"center\" style=\"position: relative;\">\r   <br>\r     <img src=\"./assets/shoppy-x-ray.svg\" alt=\"logo\" width=\"200\">\r   <br>\r   Shopify Skeleton Theme\r </h1>",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"shopify theme dev\" \"vite build --watch\"",
+    "build": "vite build",
+    "check": "shopify theme check",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src",
+    "package": "npm run build && shopify theme package"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@shopify/cli": "^3.93.2",
+    "@shopify/theme": "^3.58.2",
+    "@shopify/theme-check-node": "^3.24.0",
+    "@typescript-eslint/eslint-plugin": "^8.58.2",
+    "@typescript-eslint/parser": "^8.58.2",
+    "@vitejs/plugin-legacy": "^8.0.1",
+    "concurrently": "^9.2.1",
+    "eslint": "^10.2.0",
+    "prettier": "^3.8.2",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.8"
+  }
+}
