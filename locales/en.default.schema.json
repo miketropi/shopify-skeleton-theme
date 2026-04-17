@@ -44,6 +44,9 @@
     "layout_direction": "Layout direction",
     "menu": "Menu",
     "customer_account_menu": "Customer account menu",
+    "logo": "Logo image",
+    "logo_width": "Logo width",
+    "sticky_header": "Sticky header",
     "cart_drawer_position": "Drawer position",
     "cart_drawer_auto_open": "Open drawer after adding to cart",
     "padding": "Padding",
@@ -69,9 +72,14 @@
     "custom_accent_text": "Text on accent",
     "custom_btn_bg": "Background",
     "custom_btn_label": "Label",
-    "custom_btn_border": "Border"
+    "custom_btn_border": "Border",
+    "search_results_per_page": "Results per page",
+    "search_scope": "Search scope"
   },
   "headers": {
+    "logo": "Logo",
+    "header_layout": "Layout",
+    "navigation": "Navigation",
     "curated_font_pairing": "Curated pairing",
     "custom_fonts": "Custom fonts",
     "preset_color_schemes": "Preset colour schemes",
@@ -82,7 +90,9 @@
     "colors_preset": "Edit named schemes below, then choose which one applies to the whole store. Sections no longer have their own colour scheme.",
     "colors_custom": "These colours apply site-wide. The preset scheme editor further down is ignored while Custom is selected.",
     "typography_intro": "Choose curated Google Font pairings or pick your own fonts from the Shopify library (including shop fonts). Colour schemes still control colours per section.",
-    "typography_custom": "Heading, body, and code use these fonts. They map to --cs-font-heading, --cs-font-body, and --cs-font-mono."
+    "typography_custom": "Heading, body, and code use these fonts. They map to --cs-font-heading, --cs-font-body, and --cs-font-mono.",
+    "search_scope": "Product-only search uses Shopify’s type=product parameter. Articles and pages are excluded.",
+    "header_menu_nested": "Add nested links in Online Store → Navigation (up to two levels under a top-level item). On large screens they appear as dropdowns and flyouts; in the mobile drawer they expand in place."
   },
   "options": {
     "alignment": {
@@ -118,6 +128,10 @@
     "cart_drawer_position": {
       "right": "Right",
       "left": "Left"
+    },
+    "search_scope": {
+      "all": "Products, articles, and pages",
+      "product": "Products only"
     }
   }
 }

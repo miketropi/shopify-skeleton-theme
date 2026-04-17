@@ -1,5 +1,13 @@
 declare global {
   interface Window {
+    /** Populated from Liquid in layout/theme.liquid; preferred over Shopify.routes for cart URLs. */
+    __themeRoutes?: {
+      root: string
+      cart_url: string
+      cart_add_url: string
+      cart_change_url: string
+      cart_update_url: string
+    }
     Shopify: {
       shop: string
       locale: string

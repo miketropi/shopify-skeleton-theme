@@ -11,7 +11,10 @@
   "sections": {
     "main": {
       "type": "search",
-      "settings": {}
+      "settings": {
+        "results_per_page": 24,
+        "search_scope": "all"
+      }
     }
   },
   "order": [

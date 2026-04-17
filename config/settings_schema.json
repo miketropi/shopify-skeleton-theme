@@ -56,14 +56,14 @@
         "type": "color",
         "id": "custom_color_background_secondary",
         "label": "t:labels.custom_background_secondary",
-        "default": "#f5f3ef",
+        "default": "#f4f4f5",
         "visible_if": "{{ settings.color_mode == 'custom' }}"
       },
       {
         "type": "color",
         "id": "custom_color_border",
         "label": "t:labels.custom_border",
-        "default": "#e8e6e1",
+        "default": "#e4e4e7",
         "visible_if": "{{ settings.color_mode == 'custom' }}"
       },
       {
@@ -75,21 +75,21 @@
         "type": "color",
         "id": "custom_color_text",
         "label": "t:labels.custom_text",
-        "default": "#1a1a1a",
+        "default": "#27272a",
         "visible_if": "{{ settings.color_mode == 'custom' }}"
       },
       {
         "type": "color",
         "id": "custom_color_text_secondary",
         "label": "t:labels.custom_text_secondary",
-        "default": "#9e9b96",
+        "default": "#71717a",
         "visible_if": "{{ settings.color_mode == 'custom' }}"
       },
       {
         "type": "color",
         "id": "custom_color_heading",
         "label": "t:labels.custom_heading",
-        "default": "#0a0a0a",
+        "default": "#18181b",
         "visible_if": "{{ settings.color_mode == 'custom' }}"
       },
       {
@@ -101,7 +101,7 @@
         "type": "color",
         "id": "custom_color_accent",
         "label": "t:labels.custom_accent",
-        "default": "#e85d30",
+        "default": "#2563eb",
         "visible_if": "{{ settings.color_mode == 'custom' }}"
       },
       {
@@ -120,7 +120,7 @@
         "type": "color",
         "id": "custom_color_btn_primary_bg",
         "label": "t:labels.custom_btn_bg",
-        "default": "#1a1a1a",
+        "default": "#18181b",
         "visible_if": "{{ settings.color_mode == 'custom' }}"
       },
       {
@@ -134,7 +134,7 @@
         "type": "color",
         "id": "custom_color_btn_primary_border",
         "label": "t:labels.custom_btn_border",
-        "default": "#1a1a1a",
+        "default": "#18181b",
         "visible_if": "{{ settings.color_mode == 'custom' }}"
       },
       {
@@ -153,14 +153,14 @@
         "type": "color",
         "id": "custom_color_btn_secondary_text",
         "label": "t:labels.custom_btn_label",
-        "default": "#1a1a1a",
+        "default": "#18181b",
         "visible_if": "{{ settings.color_mode == 'custom' }}"
       },
       {
         "type": "color",
         "id": "custom_color_btn_secondary_border",
         "label": "t:labels.custom_btn_border",
-        "default": "#1a1a1a",
+        "default": "#d4d4d8",
         "visible_if": "{{ settings.color_mode == 'custom' }}"
       },
       {
@@ -197,13 +197,13 @@
             "type": "color",
             "id": "background_secondary",
             "label": "Background secondary",
-            "default": "#f5f3ef"
+            "default": "#f4f4f5"
           },
           {
             "type": "color",
             "id": "border",
             "label": "Border",
-            "default": "#e8e6e1"
+            "default": "#e4e4e7"
           },
           {
             "type": "header",
@@ -213,19 +213,19 @@
             "type": "color",
             "id": "text",
             "label": "Body text",
-            "default": "#1a1a1a"
+            "default": "#27272a"
           },
           {
             "type": "color",
             "id": "text_secondary",
             "label": "Secondary text",
-            "default": "#9e9b96"
+            "default": "#71717a"
           },
           {
             "type": "color",
             "id": "heading",
             "label": "Heading",
-            "default": "#0a0a0a"
+            "default": "#18181b"
           },
           {
             "type": "header",
@@ -235,7 +235,7 @@
             "type": "color",
             "id": "accent",
             "label": "Accent",
-            "default": "#e85d30"
+            "default": "#2563eb"
           },
           {
             "type": "color",
@@ -251,7 +251,7 @@
             "type": "color",
             "id": "btn_primary_bg",
             "label": "Background",
-            "default": "#1a1a1a"
+            "default": "#18181b"
           },
           {
             "type": "color",
@@ -263,7 +263,7 @@
             "type": "color",
             "id": "btn_primary_border",
             "label": "Border",
-            "default": "#1a1a1a"
+            "default": "#18181b"
           },
           {
             "type": "header",
@@ -279,13 +279,13 @@
             "type": "color",
             "id": "btn_secondary_text",
             "label": "Label",
-            "default": "#1a1a1a"
+            "default": "#18181b"
           },
           {
             "type": "color",
             "id": "btn_secondary_border",
             "label": "Border",
-            "default": "#1a1a1a"
+            "default": "#d4d4d8"
           }
         ],
         "role": {
@@ -371,7 +371,7 @@
             "label": "Technical — Space Grotesk + IBM Plex Mono"
           }
         ],
-        "default": "classic",
+        "default": "modern",
         "visible_if": "{{ settings.typography_mode == 'preset' }}"
       },
       {
@@ -388,14 +388,14 @@
         "type": "font_picker",
         "id": "type_font_heading",
         "label": "t:labels.type_font_heading",
-        "default": "playfair_display_n4",
+        "default": "inter_n4",
         "visible_if": "{{ settings.typography_mode == 'custom' }}"
       },
       {
         "type": "font_picker",
         "id": "type_font_body",
         "label": "t:labels.type_font_body",
-        "default": "work_sans_n4",
+        "default": "inter_n4",
         "visible_if": "{{ settings.typography_mode == 'custom' }}"
       },
       {
@@ -424,7 +424,7 @@
             "label": "t:options.page_width.wide"
           }
         ],
-        "default": "90rem"
+        "default": "110rem"
       },
       {
         "type": "range",
@@ -434,7 +434,7 @@
         "step": 1,
         "unit": "px",
         "label": "t:labels.page_margin",
-        "default": 20
+        "default": 24
       },
       {
         "type": "range",
@@ -444,7 +444,7 @@
         "step": 1,
         "unit": "px",
         "label": "t:labels.input_corner_radius",
-        "default": 4
+        "default": 6
       }
     ]
   }

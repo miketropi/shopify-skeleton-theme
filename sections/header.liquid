@@ -1,87 +1,241 @@
 <header
-  class="site-header"
+  class="site-header{% if section.settings.sticky_header %} site-header--sticky{% endif %}"
+  data-section-type="header"
+  data-section-id="{{ section.id }}"
+  {% if section.settings.logo != blank %}
+    style="--header-logo-width: {{ section.settings.logo_width }}px;"
+  {% endif %}
   {% render 'color-scheme-vars' %}
 >
-  <h2 class="header__title">
-    {{ shop.name | link_to: routes.root_url }}
-  </h2>
-
-  <div class="header__menu">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
-
-  <div class="header__icons">
-    {% if shop.customer_accounts_enabled %}
-      <shopify-account menu="{{ section.settings.customer_account_menu }}">
-        {{ 'icon-account.svg' | inline_asset_content }}
-      </shopify-account>
-    {% endif %}
-
-    <a
-      href="{{ routes.cart_url }}"
-      class="header__cart-link"
-      data-cart-drawer-open
-      aria-haspopup="dialog"
-      aria-controls="CartDrawerPanel"
+  <div class="site-header__inner">
+    <button
+      type="button"
+      class="header__menu-toggle"
+      data-header-menu-toggle
       aria-expanded="false"
-      aria-label="{{ 'cart.drawer.toggle_cart' | t }}"
+      aria-controls="HeaderNav-{{ section.id }}"
     >
-      <sup data-header-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
-        {{- cart.item_count -}}
-      </sup>
+      <span class="visually-hidden">{{ 'header.menu_toggle' | t }}</span>
+      <span class="header__burger" aria-hidden="true">
+        <span class="header__burger-line"></span>
+        <span class="header__burger-line"></span>
+        <span class="header__burger-line"></span>
+      </span>
+    </button>
 
-      {{ 'icon-cart.svg' | inline_asset_content }}
-    </a>
+    <div class="header__heading">
+      {% if section.settings.logo != blank %}
+        <a href="{{ routes.root_url }}" class="header__logo-link">
+          <img
+            class="header__logo"
+            src="{{ section.settings.logo | image_url: width: 400 }}"
+            srcset="{{ section.settings.logo | image_url: width: 120 }} 120w, {{ section.settings.logo | image_url: width: 200 }} 200w, {{ section.settings.logo | image_url: width: 300 }} 300w, {{ section.settings.logo | image_url: width: 400 }} 400w"
+            sizes="(max-width: 61.99em) {{ section.settings.logo_width | times: 0.9 | round }}px, {{ section.settings.logo_width }}px"
+            width="{{ section.settings.logo.width }}"
+            height="{{ section.settings.logo.height }}"
+            alt="{{ shop.name | escape }}"
+            loading="eager"
+            decoding="async"
+          >
+        </a>
+      {% else %}
+        <h2 class="header__title">
+          {{ shop.name | link_to: routes.root_url }}
+        </h2>
+      {% endif %}
+    </div>
+
+    <nav
+      class="header__nav"
+      id="HeaderNav-{{ section.id }}"
+      data-header-nav
+      aria-label="{{ 'header.navigation' | t }}"
+    >
+      <div class="header__offcanvas-head">
+        <div class="header__offcanvas-head-main">
+          <p
+            class="header__offcanvas-brand{% if section.settings.logo != blank %} header__offcanvas-brand--logo{% endif %}"
+            id="HeaderOffcanvasTitle-{{ section.id }}"
+          >
+            {% if section.settings.logo != blank %}
+              <img
+                class="header__logo header__logo--drawer"
+                src="{{ section.settings.logo | image_url: width: 240 }}"
+                srcset="{{ section.settings.logo | image_url: width: 160 }} 160w, {{ section.settings.logo | image_url: width: 240 }} 240w"
+                sizes="180px"
+                width="{{ section.settings.logo.width }}"
+                height="{{ section.settings.logo.height }}"
+                alt="{{ shop.name | escape }}"
+                loading="lazy"
+                decoding="async"
+              >
+            {% else %}
+              {{ shop.name | escape }}
+            {% endif %}
+          </p>
+        </div>
+        <button
+          type="button"
+          class="header__offcanvas-close"
+          data-header-menu-close
+          aria-label="{{ 'header.menu_close' | t }}"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="header__offcanvas-body">
+        <ul class="header__menu" role="list">
+          {% for link in section.settings.menu.links %}
+            <li
+              class="header__menu-item{% if link.links != blank %} header__menu-item--has-children{% endif %}"
+            >
+              {% if link.links != blank %}
+                {% assign top_index = forloop.index %}
+                <div class="header__menu-row">
+                  <a class="header__menu-link header__menu-link--parent" href="{{ link.url }}">
+                    {{- link.title | escape -}}
+                  </a>
+                  <button
+                    type="button"
+                    class="header__submenu-toggle"
+                    data-header-submenu-toggle
+                    aria-expanded="false"
+                    aria-controls="HeaderSub-{{ section.id }}-{{ top_index }}"
+                    aria-label="{{ 'header.submenu_toggle' | t: title: link.title | escape }}"
+                  >
+                    <span class="header__chevron" aria-hidden="true"></span>
+                  </button>
+                </div>
+                <ul
+                  class="header__submenu"
+                  id="HeaderSub-{{ section.id }}-{{ top_index }}"
+                  role="list"
+                  hidden
+                >
+                  {% for child in link.links %}
+                    <li
+                      class="header__submenu-item{% if child.links != blank %} header__submenu-item--has-children{% endif %}"
+                    >
+                      {% if child.links != blank %}
+                        <div class="header__submenu-row">
+                          <a class="header__submenu-link header__submenu-link--parent" href="{{ child.url }}">
+                            {{- child.title | escape -}}
+                          </a>
+                          <button
+                            type="button"
+                            class="header__submenu-toggle"
+                            data-header-submenu-toggle
+                            aria-expanded="false"
+                            aria-controls="HeaderSub2-{{ section.id }}-{{ top_index }}-{{ forloop.index }}"
+                            aria-label="{{ 'header.submenu_toggle' | t: title: child.title | escape }}"
+                          >
+                            <span class="header__chevron" aria-hidden="true"></span>
+                          </button>
+                        </div>
+                        <ul
+                          class="header__submenu-nested"
+                          id="HeaderSub2-{{ section.id }}-{{ top_index }}-{{ forloop.index }}"
+                          role="list"
+                          hidden
+                        >
+                          {% for grandchild in child.links %}
+                            <li class="header__submenu-item">
+                              <a class="header__submenu-link header__submenu-link--deep" href="{{ grandchild.url }}">
+                                {{- grandchild.title | escape -}}
+                              </a>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {% else %}
+                        <a class="header__submenu-link" href="{{ child.url }}">{{ child.title | escape }}</a>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <a class="header__menu-link" href="{{ link.url }}">{{ link.title | escape }}</a>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </nav>
+
+    <div class="header__icons">
+      {% if shop.customer_accounts_enabled %}
+        <shopify-account menu="{{ section.settings.customer_account_menu }}">
+          {{ 'icon-account.svg' | inline_asset_content }}
+        </shopify-account>
+      {% endif %}
+
+      <a
+        href="{{ routes.cart_url }}"
+        class="header__cart-link"
+        data-cart-drawer-open
+        aria-haspopup="dialog"
+        aria-controls="CartDrawerPanel"
+        aria-expanded="false"
+        aria-label="{{ 'cart.drawer.toggle_cart' | t }}"
+      >
+        <sup data-header-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
+          {{- cart.item_count -}}
+        </sup>
+
+        {{ 'icon-cart.svg' | inline_asset_content }}
+      </a>
+    </div>
   </div>
-</header>
 
-{% stylesheet %}
-  .site-header {
-    min-height: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    width: 100%;
-    background-color: var(--cs-background);
-    color: var(--cs-text);
-    border-bottom: 1px solid var(--cs-border);
-    padding-block: 0.75rem;
-  }
-  .site-header a {
-    position: relative;
-    text-decoration: none;
-    color: var(--cs-text);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .site-header a sup {
-    position: absolute;
-    left: 100%;
-    overflow: hidden;
-    max-width: var(--page-margin);
-  }
-  .site-header svg {
-    width: 2rem;
-  }
-  .site-header .header__menu,
-  .site-header .header__icons {
-    display: flex;
-    gap: 1rem;
-  }
-{% endstylesheet %}
+  <div
+    class="header__backdrop"
+    data-header-backdrop
+    inert
+    aria-hidden="true"
+  ></div>
+</header>
 
 {% schema %}
 {
   "name": "t:general.header",
   "settings": [
     {
+      "type": "header",
+      "content": "t:headers.logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:labels.logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 60,
+      "max": 280,
+      "step": 4,
+      "unit": "px",
+      "label": "t:labels.logo_width",
+      "default": 120
+    },
+    {
+      "type": "header",
+      "content": "t:headers.header_layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_header",
+      "label": "t:labels.sticky_header",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:headers.navigation"
+    },
+    {
       "type": "link_list",
       "id": "menu",
-      "label": "t:labels.menu"
+      "label": "t:labels.menu",
+      "info": "t:info.header_menu_nested"
     },
     {
       "type": "link_list",

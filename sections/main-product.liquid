@@ -11,6 +11,8 @@
   data-section-type="main-product"
   data-section-id="{{ section.id }}"
   data-main-product="{{ section.id }}"
+  data-product-add-label="{{ 'products.product.add_to_cart' | t | escape }}"
+  data-product-sold-label="{{ 'products.product.sold_out' | t | escape }}"
   {% render 'color-scheme-vars' %}
 >
   <div class="main-product main-product--media-{{ section.settings.media_size | default: 'medium' }}">
@@ -38,7 +40,7 @@
 
     <div class="main-product__info">
       {%- if section.settings.show_vendor and product.vendor != blank -%}
-        <p class="main-product__vendor">{{- product.vendor | link_to_vendor }}</p>
+        <p class="main-product__vendor">{{- product.vendor | link_to_vendor -}}</p>
       {%- endif -%}
 
       <h1 class="main-product__title">{{- product.title | escape -}}</h1>
@@ -57,144 +59,100 @@
       </div>
 
       {%- assign product_form_id = 'product-form-' | append: section.id -%}
-      {%- form 'product',
-        product,
-        id: product_form_id,
-        class: 'main-product__form',
-        novalidate: 'novalidate',
-        data-ajax-add-to-cart: ''
-      -%}
+      <div class="main-product__buy-card">
+        {%- form 'product',
+          product,
+          id: product_form_id,
+          class: 'main-product__form',
+          novalidate: 'novalidate',
+          data-ajax-add-to-cart: ''
+        -%}
 
-        {%- unless product.has_only_default_variant -%}
-          <div class="main-product__field">
-            <label class="main-product__label" for="ProductSelect-{{ section.id }}">
-              {{- 'products.product.variant' | t -}}
-            </label>
-            <select
-              name="id"
-              id="ProductSelect-{{ section.id }}"
-              class="main-product__select"
-              data-product-variant-select
-            >
-              {%- for variant in product.variants -%}
-                <option
-                  value="{{ variant.id }}"
-                  {% if variant == current_variant %}selected{% endif %}
-                  {% unless variant.available %}disabled{% endunless %}
-                >
-                  {{- variant.title | escape -}}
-                  —
-                  {{- variant.price | money -}}
-                </option>
-              {%- endfor -%}
-            </select>
-          </div>
-        {%- else -%}
-          <input type="hidden" name="id" value="{{ current_variant.id }}">
-        {%- endunless -%}
+          {%- unless product.has_only_default_variant -%}
+            <div class="main-product__field">
+              <label class="main-product__label" for="ProductSelect-{{ section.id }}">
+                {{- 'products.product.variant' | t -}}
+              </label>
+              <select
+                name="id"
+                id="ProductSelect-{{ section.id }}"
+                class="main-product__select"
+                data-product-variant-select
+              >
+                {%- for variant in product.variants -%}
+                  <option
+                    value="{{ variant.id }}"
+                    {% if variant == current_variant %}selected{% endif %}
+                    {% unless variant.available %}disabled{% endunless %}
+                  >
+                    {{- variant.title | escape -}}
+                    —
+                    {{- variant.price | money -}}
+                  </option>
+                {%- endfor -%}
+              </select>
+            </div>
+          {%- else -%}
+            <input type="hidden" name="id" value="{{ current_variant.id }}">
+          {%- endunless -%}
 
-        {%- if section.settings.show_quantity -%}
-          <div class="main-product__field main-product__field--inline">
-            <label class="main-product__label" for="Quantity-{{ section.id }}">
-              {{- 'products.product.quantity' | t -}}
-            </label>
-            <input
-              type="number"
-              name="quantity"
-              id="Quantity-{{ section.id }}"
-              class="main-product__quantity"
-              value="1"
-              min="1"
-            >
-          </div>
-        {%- endif -%}
+          {%- if section.settings.show_quantity -%}
+            <div class="main-product__field main-product__field--inline">
+              <label class="main-product__label" for="Quantity-{{ section.id }}">
+                {{- 'products.product.quantity' | t -}}
+              </label>
+              <input
+                type="number"
+                name="quantity"
+                id="Quantity-{{ section.id }}"
+                class="main-product__quantity"
+                value="1"
+                min="1"
+              >
+            </div>
+          {%- endif -%}
 
-        <button
-          type="submit"
-          class="main-product__submit"
-          data-product-submit
-          {% unless current_variant.available %}disabled{% endunless %}
-        >
-          <span data-product-submit-label>
-            {%- if current_variant.available -%}
-              {{- 'products.product.add_to_cart' | t -}}
-            {%- else -%}
-              {{- 'products.product.sold_out' | t -}}
-            {%- endif -%}
-          </span>
-        </button>
-      {%- endform -%}
+          <button
+            type="submit"
+            class="main-product__submit"
+            data-product-submit
+            {% unless current_variant.available %}disabled{% endunless %}
+          >
+            <span data-product-submit-label>
+              {%- if current_variant.available -%}
+                {{- 'products.product.add_to_cart' | t -}}
+              {%- else -%}
+                {{- 'products.product.sold_out' | t -}}
+              {%- endif -%}
+            </span>
+          </button>
+        {%- endform -%}
+      </div>
 
       {%- if product.description != blank -%}
-        <div class="main-product__description rte">
-          {{- product.description -}}
+        <div class="main-product__details">
+          <h2 class="main-product__details-heading">{{ 'products.product.details' | t }}</h2>
+          <div class="main-product__description rte">
+            {{- product.description -}}
+          </div>
         </div>
       {%- endif -%}
     </div>
   </div>
+
+  <script type="application/json" data-product-variant-json>
+    [
+      {%- for variant in product.variants -%}
+        {
+          "id": {{ variant.id }},
+          "available": {{ variant.available | json }},
+          "price": {{ variant.price | money | json }},
+          "compare_at_price": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %}
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ]
+  </script>
 </div>
-
-<script type="application/json" data-variant-data-{{ section.id }}>
-  [
-    {%- for variant in product.variants -%}
-      {
-        "id": {{ variant.id }},
-        "available": {{ variant.available | json }},
-        "price": {{ variant.price | money | json }},
-        "compare_at_price": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %}
-      }{%- unless forloop.last -%},{%- endunless -%}
-    {%- endfor -%}
-  ]
-</script>
-
-<script>
-  (function () {
-    var root = document.querySelector('[data-main-product="{{ section.id }}"]');
-    if (!root) return;
-    var dataEl = document.querySelector('[data-variant-data-{{ section.id }}]');
-    if (!dataEl) return;
-    var variants;
-    try {
-      variants = JSON.parse(dataEl.textContent);
-    } catch (e) {
-      return;
-    }
-    var select = root.querySelector('[data-product-variant-select]');
-    var priceEl = root.querySelector('[data-product-price]');
-    var compareEl = root.querySelector('[data-product-compare]');
-    var submitBtn = root.querySelector('[data-product-submit]');
-    var submitLabel = root.querySelector('[data-product-submit-label]');
-    var addLabel = {{ 'products.product.add_to_cart' | t | json }};
-    var soldLabel = {{ 'products.product.sold_out' | t | json }};
-
-    function applyVariant(id) {
-      var v = variants.find(function (x) { return String(x.id) === String(id); });
-      if (!v || !priceEl) return;
-      priceEl.textContent = v.price;
-      if (compareEl) {
-        if (v.compare_at_price) {
-          compareEl.textContent = v.compare_at_price;
-          compareEl.classList.remove('is-visually-hidden');
-        } else {
-          compareEl.textContent = '';
-          compareEl.classList.add('is-visually-hidden');
-        }
-      }
-      if (submitBtn) {
-        submitBtn.disabled = !v.available;
-      }
-      if (submitLabel) {
-        submitLabel.textContent = v.available ? addLabel : soldLabel;
-      }
-    }
-
-    if (select) {
-      select.addEventListener('change', function () {
-        applyVariant(select.value);
-      });
-    }
-  })();
-</script>
 
 <script>
   window.__productData = {{ product | json }};

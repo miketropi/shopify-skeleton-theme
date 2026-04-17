@@ -14,6 +14,36 @@ function getShopify(): Window['Shopify'] | undefined {
   return typeof window !== 'undefined' ? window.Shopify : undefined
 }
 
+type StorefrontRoutes = {
+  root: string
+  cart_url: string
+  cart_add_url: string
+  cart_change_url: string
+}
+
+/** Liquid `routes` in theme.liquid is reliable; `window.Shopify.routes` can be missing on first paint. */
+function getStorefrontRoutes(): StorefrontRoutes | null {
+  const liquid = window.__themeRoutes
+  const r = getShopify()?.routes
+  const root = liquid?.root ?? r?.root
+  const cart_url = liquid?.cart_url ?? r?.cart_url
+  const cart_add_url = liquid?.cart_add_url ?? r?.cart_add_url
+  const cart_change_url = liquid?.cart_change_url ?? r?.cart_change_url
+  if (
+    typeof root !== 'string' ||
+    root.length === 0 ||
+    typeof cart_url !== 'string' ||
+    cart_url.length === 0 ||
+    typeof cart_add_url !== 'string' ||
+    cart_add_url.length === 0 ||
+    typeof cart_change_url !== 'string' ||
+    cart_change_url.length === 0
+  ) {
+    return null
+  }
+  return { root, cart_url, cart_add_url, cart_change_url }
+}
+
 function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
@@ -27,7 +57,7 @@ function getFocusable(root: HTMLElement): HTMLElement[] {
 }
 
 function createCartDrawerController(container: HTMLElement) {
-  const shopify = getShopify()
+  const routes = getStorefrontRoutes()
   const panel = container.querySelector<HTMLElement>('[data-cart-drawer-panel]')
   const overlay = container.querySelector<HTMLElement>('[data-cart-drawer-overlay]')
   const abort = new AbortController()
@@ -76,9 +106,8 @@ function createCartDrawerController(container: HTMLElement) {
   }
 
   async function fetchCartJson(): Promise<CartJson> {
-    const cartUrl = shopify?.routes.cart_url
-    if (!cartUrl) throw new Error('cart_url missing')
-    const res = await fetch(`${cartUrl}.js`, { headers: { Accept: 'application/json' } })
+    if (!routes) throw new Error('cart routes missing')
+    const res = await fetch(`${routes.cart_url}.js`, { headers: { Accept: 'application/json' } })
     if (!res.ok) throw new Error('cart.js failed')
     return res.json() as Promise<CartJson>
   }
@@ -112,8 +141,8 @@ function createCartDrawerController(container: HTMLElement) {
   }
 
   async function refreshDrawerBody(): Promise<void> {
-    if (!shopify) return
-    const url = new URL(shopify.routes.root, window.location.href)
+    if (!routes) return
+    const url = new URL(routes.root, window.location.href)
     url.searchParams.set('sections', SECTION_FILE)
     const res = await fetch(url.toString(), {
       headers: { 'X-Requested-With': 'XMLHttpRequest' },
@@ -296,10 +325,10 @@ function createCartDrawerController(container: HTMLElement) {
   }
 
   async function changeLine(lineKey: string, quantity: number): Promise<void> {
-    if (!shopify) return
+    if (!routes) return
     beginBusy()
     try {
-      const res = await fetch(`${shopify.routes.cart_change_url}.js`, {
+      const res = await fetch(`${routes.cart_change_url}.js`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ id: lineKey, quantity }),
@@ -429,14 +458,14 @@ export function registerAjaxCartAdd(): void {
     const form = e.target
     if (!(form instanceof HTMLFormElement)) return
     if (!form.hasAttribute('data-ajax-add-to-cart')) return
-    const shopify = getShopify()
-    if (!shopify) return
+    const routes = getStorefrontRoutes()
+    if (!routes) return
     e.preventDefault()
     const fd = new FormData(form)
     void (async () => {
       const ctrl = activeController
       try {
-        const res = await fetch(`${shopify.routes.cart_add_url}.js`, {
+        const res = await fetch(`${routes.cart_add_url}.js`, {
           method: 'POST',
           body: fd,
           headers: { Accept: 'application/json' },

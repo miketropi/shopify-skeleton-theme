@@ -112,6 +112,7 @@
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.5rem 0.75rem;
+  will-change: opacity, transform;
 }
 
 .main-product__price {
@@ -120,17 +121,31 @@
   color: var(--cs-text);
 }
 
+.main-product__price--current {
+  font-size: clamp(1.35rem, 2.8vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--cs-heading);
+}
+
 .main-product__price--compare {
   font-size: 1rem;
   font-weight: 500;
   color: var(--cs-text-secondary);
 }
 
+.main-product__buy-card {
+  padding: $space-md $space-lg;
+  border-radius: var(--product-radius);
+  border: 1px solid var(--product-border);
+  background-color: color-mix(in srgb, var(--cs-background-secondary) 72%, var(--cs-background));
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--cs-text) 4%, transparent);
+}
+
 .main-product__form {
   display: flex;
   flex-direction: column;
   gap: $space-md;
-  padding-top: $space-sm;
 }
 
 .main-product__field {
@@ -175,15 +190,13 @@
   border: 1px solid var(--cs-btn-primary-border);
   border-radius: var(--product-radius);
   cursor: pointer;
-  transition: opacity 0.15s ease, transform 0.12s ease;
+  transition: opacity 0.15s ease, filter 0.15s ease;
+  will-change: transform;
 }
 
 .main-product__submit:hover:not(:disabled) {
-  opacity: 0.92;
-}
-
-.main-product__submit:active:not(:disabled) {
-  transform: translateY(1px);
+  opacity: 0.94;
+  filter: brightness(1.03);
 }
 
 .main-product__submit:disabled {
@@ -196,12 +209,28 @@
   outline-offset: 2px;
 }
 
-.main-product__description {
+.main-product__details {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
   padding-top: $space-lg;
   border-top: 1px solid var(--product-border);
+}
+
+.main-product__details-heading {
+  font-family: var(--cs-font-heading);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cs-text-secondary);
+  margin: 0;
+}
+
+.main-product__description {
   font-size: 0.9375rem;
   line-height: 1.65;
-  color: var(--cs-text-secondary);
+  color: var(--cs-text);
 }
 
 .main-product__description p {

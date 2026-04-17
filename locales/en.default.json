@@ -172,6 +172,12 @@
       "password_placeholder": "Your password"
     }
   },
+  "header": {
+    "menu_close": "Close menu",
+    "menu_toggle": "Menu",
+    "navigation": "Primary navigation",
+    "submenu_toggle": "Submenu for {{ title }}"
+  },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",
     "card": "Gift card",
@@ -198,6 +204,7 @@
   "products": {
     "product": {
       "add_to_cart": "Add to cart",
+      "details": "Details",
       "quantity": "Quantity",
       "sale": "Sale",
       "sold_out": "Sold out",
@@ -205,9 +212,16 @@
     }
   },
   "search": {
-    "no_results_html": "No results found for {{ terms }}",
+    "browse_products": "Browse products",
+    "intro": "Find products, blog posts, and store pages.",
+    "label": "Search",
+    "no_results_html": "No results found for “{{ terms }}”. Try different keywords or browse the catalog.",
     "placeholder": "Search articles, pages, or products",
-    "results_for_html": "{{ count }} results found for {{ terms }}",
+    "placeholder_products": "Search products",
+    "result_type_article": "Article",
+    "result_type_page": "Page",
+    "result_type_product": "Product",
+    "results_for_html": "{{ count }} results for “{{ terms }}”",
     "submit": "Search",
     "title": "Search"
   }

@@ -37,6 +37,20 @@
 
     {% sections 'footer-group' %}
 
+    {% comment %}
+      Cart AJAX + drawer use these paths. window.Shopify.routes is not always defined early;
+      a missing cart_add_url becomes the string "undefined.js", which resolves on PDPs to
+      /products/undefined.js and breaks the dev proxy.
+    {% endcomment %}
+    <script>
+      window.__themeRoutes = {
+        root: {{ routes.root_url | json }},
+        cart_url: {{ routes.cart_url | json }},
+        cart_add_url: {{ routes.cart_add_url | json }},
+        cart_change_url: {{ routes.cart_change_url | json }},
+        cart_update_url: {{ routes.cart_update_url | json }}
+      };
+    </script>
     <script src="{{ 'theme.js' | asset_url }}" defer></script>
   </body>
 </html>
