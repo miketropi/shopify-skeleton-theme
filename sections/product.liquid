@@ -18,7 +18,7 @@
 </div>
 
 <div class="product-form">
-  {% form 'product', product %}
+  {% form 'product', product, data-ajax-add-to-cart: '' %}
     {% assign current_variant = product.selected_or_first_available_variant %}
 
     <select name="id">

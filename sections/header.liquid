@@ -19,10 +19,18 @@
       </shopify-account>
     {% endif %}
 
-    <a href="{{ routes.cart_url }}">
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
-      {% endif %}
+    <a
+      href="{{ routes.cart_url }}"
+      class="header__cart-link"
+      data-cart-drawer-open
+      aria-haspopup="dialog"
+      aria-controls="CartDrawerPanel"
+      aria-expanded="false"
+      aria-label="{{ 'cart.drawer.toggle_cart' | t }}"
+    >
+      <sup data-header-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
+        {{- cart.item_count -}}
+      </sup>
 
       {{ 'icon-cart.svg' | inline_asset_content }}
     </a>

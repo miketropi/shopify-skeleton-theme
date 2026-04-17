@@ -1,1 +1,8 @@
 extends: theme-check:recommended
+
+# Curated typography loads Google Fonts (allowed by theme CSP). Theme Check wants
+# `asset_url`; self-hosting every pairing would duplicate large font files in assets.
+RemoteAsset:
+  ignore:
+    - snippets/font-pairing-loader.liquid
+    - snippets/font-pairing-link.liquid

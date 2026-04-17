@@ -1,0 +1,77 @@
+<div
+  class="cart-drawer section-{{ section.id }}"
+  data-section-type="cart-drawer"
+  data-section-id="{{ section.id }}"
+  data-auto-open-after-add="{{ section.settings.auto_open_after_add }}"
+  data-drawer-position="{{ section.settings.drawer_position }}"
+  data-i18n-announce-updated="{{ 'cart.drawer.announce_updated' | t | escape }}"
+  data-i18n-announce-error="{{ 'cart.drawer.announce_error' | t | escape }}"
+  {% render 'color-scheme-vars' %}
+>
+  <div
+    class="cart-drawer__overlay"
+    data-cart-drawer-overlay
+    hidden
+  ></div>
+
+  <div
+    id="CartDrawerPanel"
+    class="cart-drawer__panel cart-drawer__panel--{{ section.settings.drawer_position }}"
+    data-cart-drawer-panel
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="CartDrawerTitle"
+    aria-hidden="true"
+    tabindex="-1"
+    hidden
+  >
+    <div class="cart-drawer__header">
+      <h2 id="CartDrawerTitle" class="cart-drawer__title">
+        {{- 'cart.drawer.title' | t -}}
+      </h2>
+      <button
+        type="button"
+        class="cart-drawer__close"
+        data-cart-drawer-close
+        aria-label="{{ 'cart.drawer.close' | t | escape }}"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div
+      class="cart-drawer__live-region is-visually-hidden"
+      data-cart-drawer-live
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+
+    <div class="cart-drawer__body" data-cart-drawer-body>
+      {% render 'cart-drawer-content' %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:general.cart_drawer",
+  "settings": [
+    {
+      "type": "select",
+      "id": "drawer_position",
+      "label": "t:labels.cart_drawer_position",
+      "options": [
+        { "value": "right", "label": "t:options.cart_drawer_position.right" },
+        { "value": "left", "label": "t:options.cart_drawer_position.left" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_open_after_add",
+      "label": "t:labels.cart_drawer_auto_open",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

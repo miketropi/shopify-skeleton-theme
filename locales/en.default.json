@@ -14,6 +14,15 @@
     "comment_form_title": "Add a comment"
   },
   "cart": {
+    "drawer": {
+      "title": "Your cart",
+      "close": "Close cart",
+      "open_cart": "Cart",
+      "toggle_cart": "Open or close cart",
+      "view_full_cart": "View full cart",
+      "announce_updated": "Cart updated",
+      "announce_error": "Could not update the cart. Try again."
+    },
     "checkout": "Checkout",
     "general": {
       "checkout": "Check out",

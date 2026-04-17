@@ -19,6 +19,7 @@ export default defineConfig({
         theme: resolve(__dirname, 'src/scripts/theme.ts'),
       },
       output: {
+        format: 'iife',
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
         assetFileNames: '[name].[ext]',

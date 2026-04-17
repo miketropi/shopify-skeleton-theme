@@ -5,6 +5,7 @@
     "block": "Block",
     "blog": "Blog",
     "cart": "Cart",
+    "cart_drawer": "Cart drawer",
     "collection": "Collection",
     "collections": "Collections",
     "collection_card": "Collection card",
@@ -43,6 +44,8 @@
     "layout_direction": "Layout direction",
     "menu": "Menu",
     "customer_account_menu": "Customer account menu",
+    "cart_drawer_position": "Drawer position",
+    "cart_drawer_auto_open": "Open drawer after adding to cart",
     "padding": "Padding",
     "page_margin": "Page margin",
     "page_width": "Page width",
@@ -111,6 +114,10 @@
       "title": "Title",
       "subtitle": "Subtitle",
       "normal": "Normal text"
+    },
+    "cart_drawer_position": {
+      "right": "Right",
+      "left": "Left"
     }
   }
 }

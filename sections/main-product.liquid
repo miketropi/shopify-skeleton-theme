@@ -57,7 +57,13 @@
       </div>
 
       {%- assign product_form_id = 'product-form-' | append: section.id -%}
-      {%- form 'product', product, id: product_form_id, class: 'main-product__form', novalidate: 'novalidate' -%}
+      {%- form 'product',
+        product,
+        id: product_form_id,
+        class: 'main-product__form',
+        novalidate: 'novalidate',
+        data-ajax-add-to-cart: ''
+      -%}
 
         {%- unless product.has_only_default_variant -%}
           <div class="main-product__field">
