@@ -10,17 +10,43 @@
 {
   "sections": {
     "hero": {
-      "type": "section-hero",
+      "type": "section-hero-slider",
       "settings": {
-        "hero_kicker": "New season",
-        "hero_heading": "Thoughtfully made goods for modern living",
-        "hero_subheading": "Quality you can feel, design that lasts. Explore the collection and find pieces you will reach for every day.",
-        "hero_media_position": "right",
-        "hero_primary_label": "Shop the collection",
-        "hero_primary_link": "shopify://collections/all",
-        "hero_secondary_label": "Our story",
-        "hero_secondary_link": ""
-      }
+        "color_scheme": "scheme-1",
+        "min_height": 560,
+        "overlay_softness": 15,
+        "autoplay": true,
+        "autoplay_delay": 6
+      },
+      "blocks": {
+        "hero_slide_1": {
+          "type": "slide",
+          "settings": {
+            "kicker": "New season",
+            "heading": "Thoughtfully made goods for modern living",
+            "heading_size": "display",
+            "body": "<p>Quality you can feel, design that lasts. Explore the collection and find pieces you will reach for every day.</p>",
+            "cta_primary_label": "Shop the collection",
+            "cta_primary_link": "shopify://collections/all",
+            "cta_secondary_label": "Our story",
+            "cta_secondary_link": ""
+          }
+        },
+        "hero_slide_2": {
+          "type": "slide",
+          "settings": {
+            "kicker": "Materials",
+            "heading": "Built to feel good every day",
+            "heading_size": "h1",
+            "body": "<p>Quality you can feel in every detail.</p>",
+            "cta_primary_label": "Explore",
+            "cta_primary_link": "shopify://collections/all",
+            "cta_secondary_label": "",
+            "cta_secondary_link": ""
+          }
+        }
+      },
+      "block_order": ["hero_slide_1", "hero_slide_2"]
     },
     "feature_grid": {
       "type": "section-feature-grid",

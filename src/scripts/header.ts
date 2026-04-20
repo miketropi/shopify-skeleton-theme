@@ -1,4 +1,5 @@
 import gsap from 'gsap'
+import { init as initHeaderLayout, destroy as destroyHeaderLayout } from './sections/header'
 import { registerSection } from './section-registry'
 
 const SECTION_TYPE = 'header'
@@ -122,6 +123,8 @@ export function registerHeaderSection(): void {
   registerSection(
     SECTION_TYPE,
     (container) => {
+      initHeaderLayout(container)
+
       const toggle = container.querySelector<HTMLButtonElement>('[data-header-menu-toggle]')
       const nav = container.querySelector<HTMLElement>('[data-header-nav]')
       const backdrop = container.querySelector<HTMLElement>('[data-header-backdrop]')
@@ -165,26 +168,29 @@ export function registerHeaderSection(): void {
 
       function syncNavAccessibility(open: boolean): void {
         if (isDesktopNav()) {
-          nav.removeAttribute('inert')
-          nav.removeAttribute('aria-hidden')
+          nav?.removeAttribute('inert')
+          nav?.removeAttribute('aria-hidden')
           return
         }
         if (open) {
-          nav.removeAttribute('inert')
-          nav.removeAttribute('aria-hidden')
+          nav?.removeAttribute('inert')
+          nav?.removeAttribute('aria-hidden')
         } else {
-          nav.setAttribute('inert', '')
-          nav.setAttribute('aria-hidden', 'true')
+          nav?.setAttribute('inert', '')
+          nav?.setAttribute('aria-hidden', 'true')
         }
       }
 
       function setOpen(open: boolean): void {
+        if (open) {
+          container.closest('.shopify-section')?.classList.remove('shopify-section--header-hidden')
+        }
         container.classList.toggle('site-header--nav-open', open)
-        toggle.setAttribute('aria-expanded', open ? 'true' : 'false')
+        toggle?.setAttribute('aria-expanded', open ? 'true' : 'false')
         if (!isDesktopNav()) {
-          nav.setAttribute('aria-modal', open ? 'true' : 'false')
+          nav?.setAttribute('aria-modal', open ? 'true' : 'false')
         } else {
-          nav.removeAttribute('aria-modal')
+          nav?.removeAttribute('aria-modal')
         }
         syncNavAccessibility(open)
         if (backdrop) {
@@ -195,7 +201,7 @@ export function registerHeaderSection(): void {
         if (!open) closeAllSubmenus(true)
         if (open && !isDesktopNav()) {
           requestAnimationFrame(() => {
-            const focusTarget = closeBtn ?? getFocusableIn(nav)[0]
+            const focusTarget = closeBtn ?? getFocusableIn(nav ?? document.body)[0]
             focusTarget?.focus({ preventScroll: true })
           })
         }
@@ -225,13 +231,13 @@ export function registerHeaderSection(): void {
       function onNavKeydown(e: KeyboardEvent): void {
         if (!container.classList.contains('site-header--nav-open') || isDesktopNav()) return
         if (e.key !== 'Tab') return
-        const focusables = getFocusableIn(nav)
+        const focusables = getFocusableIn(nav ?? document.body)
         if (focusables.length === 0) return
         const first = focusables[0]
         const last = focusables[focusables.length - 1]
         const active = document.activeElement
         if (e.shiftKey) {
-          if (active === first || !nav.contains(active)) {
+          if (active === first || !nav?.contains(active)) {
             e.preventDefault()
             last.focus()
           }
@@ -251,7 +257,7 @@ export function registerHeaderSection(): void {
         if (container.classList.contains('site-header--nav-open')) {
           e.preventDefault()
           close()
-          toggle.focus()
+          toggle?.focus()
         }
       }
 
@@ -312,7 +318,9 @@ export function registerHeaderSection(): void {
       const extended = container as HTMLElement & { __headerTeardown?: () => void }
       extended.__headerTeardown?.()
       delete extended.__headerTeardown
-      container.classList.remove('site-header--nav-open')
+      destroyHeaderLayout(container)
+      container.classList.remove('site-header--nav-open', 'site-header--scrolled')
+      container.closest('.shopify-section')?.classList.remove('shopify-section--header-hidden')
       document.documentElement.classList.remove('header-nav-open')
       container.querySelector<HTMLElement>('[data-header-nav]')?.removeAttribute('aria-modal')
     }

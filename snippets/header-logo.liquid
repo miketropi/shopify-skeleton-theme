@@ -1,0 +1,174 @@
+{%- comment -%}
+  Header logo: desktop + mobile stacks, optional retina, shop name text fallback.
+  @param section {Section} Header section
+  @param variant {String} Optional. `drawer` — single compact logo for the mobile nav drawer.
+{%- endcomment -%}
+{%- liquid
+  assign logo = section.settings.logo
+  assign logo_retina = section.settings.logo_retina
+  assign logo_width = section.settings.logo_width
+  assign logo_mobile = section.settings.logo_mobile
+  assign logo_mobile_retina = section.settings.logo_mobile_retina
+  assign logo_mobile_width = section.settings.logo_mobile_width
+
+  assign has_logo = false
+  assign has_logo_mobile = false
+  if logo != blank
+    assign has_logo = true
+  endif
+  if logo_mobile != blank
+    assign has_logo_mobile = true
+  endif
+-%}
+
+{%- if variant == 'drawer' -%}
+  {%- if has_logo -%}
+    <a href="{{ routes.root_url }}" class="header-logo header-logo--drawer" aria-label="{{ shop.name | escape }}">
+      {%- if has_logo_mobile -%}
+        {%- assign w = logo_mobile_width -%}
+        {%- assign w2 = w | times: 2 -%}
+        {%- assign img_h = logo_mobile.height | times: w | divided_by: logo_mobile.width -%}
+        {%- if logo_mobile_retina != blank -%}
+          <img
+            class="header-logo__img"
+            src="{{ logo_mobile | image_url: width: w }}"
+            srcset="{{ logo_mobile | image_url: width: w }} 1x, {{ logo_mobile_retina | image_url: width: w2 }} 2x"
+            width="{{ w }}"
+            height="{{ img_h }}"
+            alt="{{ shop.name | escape }}"
+            loading="lazy"
+            decoding="async"
+          >
+        {%- else -%}
+          <img
+            class="header-logo__img"
+            src="{{ logo_mobile | image_url: width: w }}"
+            width="{{ w }}"
+            height="{{ img_h }}"
+            alt="{{ shop.name | escape }}"
+            loading="lazy"
+            decoding="async"
+          >
+        {%- endif -%}
+      {%- else -%}
+        {%- assign w = logo_mobile_width -%}
+        {%- assign w2 = w | times: 2 -%}
+        {%- assign img_h = logo.height | times: w | divided_by: logo.width -%}
+        {%- if logo_retina != blank -%}
+          <img
+            class="header-logo__img"
+            src="{{ logo | image_url: width: w }}"
+            srcset="{{ logo | image_url: width: w }} 1x, {{ logo_retina | image_url: width: w2 }} 2x"
+            width="{{ w }}"
+            height="{{ img_h }}"
+            alt="{{ shop.name | escape }}"
+            loading="lazy"
+            decoding="async"
+          >
+        {%- else -%}
+          <img
+            class="header-logo__img"
+            src="{{ logo | image_url: width: w }}"
+            width="{{ w }}"
+            height="{{ img_h }}"
+            alt="{{ shop.name | escape }}"
+            loading="lazy"
+            decoding="async"
+          >
+        {%- endif -%}
+      {%- endif -%}
+    </a>
+  {%- else -%}
+    <span class="header-logo header-logo--drawer header-logo__text" aria-hidden="true">{{ shop.name | escape }}</span>
+  {%- endif -%}
+{%- else -%}
+  <a href="{{ routes.root_url }}" class="header-logo" aria-label="{{ shop.name | escape }}">
+    {%- if has_logo -%}
+      <span class="header-logo__desktop">
+        {%- assign w = logo_width -%}
+        {%- assign w2 = w | times: 2 -%}
+        {%- assign img_h = logo.height | times: w | divided_by: logo.width -%}
+        {%- if logo_retina != blank -%}
+          <img
+            class="header-logo__img"
+            src="{{ logo | image_url: width: w }}"
+            srcset="{{ logo | image_url: width: w }} 1x, {{ logo_retina | image_url: width: w2 }} 2x"
+            width="{{ w }}"
+            height="{{ img_h }}"
+            alt=""
+            loading="eager"
+            decoding="async"
+          >
+        {%- else -%}
+          <img
+            class="header-logo__img"
+            src="{{ logo | image_url: width: w }}"
+            width="{{ w }}"
+            height="{{ img_h }}"
+            alt=""
+            loading="eager"
+            decoding="async"
+          >
+        {%- endif -%}
+      </span>
+
+      <span class="header-logo__mobile">
+        {%- if has_logo_mobile -%}
+          {%- assign w = logo_mobile_width -%}
+          {%- assign w2 = w | times: 2 -%}
+          {%- assign img_h = logo_mobile.height | times: w | divided_by: logo_mobile.width -%}
+          {%- if logo_mobile_retina != blank -%}
+            <img
+              class="header-logo__img"
+              src="{{ logo_mobile | image_url: width: w }}"
+              srcset="{{ logo_mobile | image_url: width: w }} 1x, {{ logo_mobile_retina | image_url: width: w2 }} 2x"
+              width="{{ w }}"
+              height="{{ img_h }}"
+              alt=""
+              loading="eager"
+              decoding="async"
+            >
+          {%- else -%}
+            <img
+              class="header-logo__img"
+              src="{{ logo_mobile | image_url: width: w }}"
+              width="{{ w }}"
+              height="{{ img_h }}"
+              alt=""
+              loading="eager"
+              decoding="async"
+            >
+          {%- endif -%}
+        {%- else -%}
+          {%- assign w = logo_mobile_width -%}
+          {%- assign w2 = w | times: 2 -%}
+          {%- assign img_h = logo.height | times: w | divided_by: logo.width -%}
+          {%- if logo_retina != blank -%}
+            <img
+              class="header-logo__img"
+              src="{{ logo | image_url: width: w }}"
+              srcset="{{ logo | image_url: width: w }} 1x, {{ logo_retina | image_url: width: w2 }} 2x"
+              width="{{ w }}"
+              height="{{ img_h }}"
+              alt=""
+              loading="eager"
+              decoding="async"
+            >
+          {%- else -%}
+            <img
+              class="header-logo__img"
+              src="{{ logo | image_url: width: w }}"
+              width="{{ w }}"
+              height="{{ img_h }}"
+              alt=""
+              loading="eager"
+              decoding="async"
+            >
+          {%- endif -%}
+        {%- endif -%}
+      </span>
+    {%- else -%}
+      <span class="header-logo__text" aria-hidden="true">{{ shop.name | escape }}</span>
+    {%- endif -%}
+  </a>
+{%- endif -%}

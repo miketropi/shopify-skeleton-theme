@@ -36,7 +36,7 @@ Before creating any file:
 
 | Template file | Section file(s) | Required | Notes |
 |---|---|---|---|
-| `templates/index.json` | `sections/section-hero.liquid`, `sections/section-feature-grid.liquid` | Yes | Homepage (orchestrator — see `SECTION_ARCHITECTURE_DESIGN_PRINCIPLES.md`) |
+| `templates/index.json` | `sections/section-hero-slider.liquid`, `sections/section-feature-grid.liquid` | Yes | Homepage (orchestrator — see `SECTION_ARCHITECTURE_DESIGN_PRINCIPLES.md`) |
 | `templates/product.json` | `sections/main-product.liquid` | Yes | PDP |
 | `templates/collection.json` | `sections/main-collection.liquid` | Yes | PLP |
 | `templates/list-collections.json` | `sections/main-list-collections.liquid` | No | All collections |
@@ -61,14 +61,14 @@ Before creating any file:
 
 ### index (homepage)
 
-The homepage template only **declares section order**. It composes reusable marketing sections (`section-hero`, `section-feature-grid`) so merchants can reorder, hide, or insert sections without coupling. See `docs/SECTION_ARCHITECTURE_DESIGN_PRINCIPLES.md`.
+The homepage template only **declares section order**. It composes reusable marketing sections (`section-hero-slider`, `section-feature-grid`) so merchants can reorder, hide, or insert sections without coupling. See `docs/SECTION_ARCHITECTURE_DESIGN_PRINCIPLES.md`.
 
 **`templates/index.json`** (minimal shape)
 ```json
 {
   "sections": {
     "hero": {
-      "type": "section-hero",
+      "type": "section-hero-slider",
       "settings": {}
     },
     "feature_grid": {
@@ -82,7 +82,7 @@ The homepage template only **declares section order**. It composes reusable mark
 }
 ```
 
-**`sections/section-hero.liquid`** — Single job: hero (copy, CTAs, optional image). `data-section-type="section-hero"`.
+**`sections/section-hero-slider.liquid`** — Single job: hero (copy, CTAs, optional image). `data-section-type="section-hero-slider"`.
 
 **`sections/section-feature-grid.liquid`** — Single job: repeating **feature** blocks in a grid. `data-section-type="section-feature-grid"`.
 

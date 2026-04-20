@@ -224,5 +224,17 @@
     "results_for_html": "{{ count }} results for “{{ terms }}”",
     "submit": "Search",
     "title": "Search"
+  },
+  "hero_slider": {
+    "carousel": "Carousel",
+    "region_label": "Promotional hero",
+    "slide": "Slide",
+    "slide_n_of_m": "Slide {{ n }} of {{ m }}",
+    "nav_label": "Hero slides",
+    "prev": "Previous slide",
+    "next": "Next slide",
+    "goto": "Go to slide {{ n }}",
+    "add_slides": "Add slide blocks",
+    "placeholder_heading": "Hero slider"
   }
 }

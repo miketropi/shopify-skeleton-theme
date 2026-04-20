@@ -1,31 +1,87 @@
 {%- comment -%}
-  Renders inline `--cs-*` colour tokens on the parent element.
-  Preset: theme setting `global_color_scheme`. Custom: theme `custom_color_*` settings.
-  Font stacks live on `:root` in snippets/css-variables.liquid.
+  Renders inline `--cs-*` colour tokens on the parent element (or `--cs-t-*` when prefix is set).
+
+  @param {object} scheme - Optional. `color_scheme` object (e.g. section.settings.color_scheme). When set, colours come from this scheme only.
+  @param {string} prefix - Optional. `transparent` → `--cs-t-*`; `solid` → `--cs-s-*` (header merge: no `--cs-*` inline so CSS can swap schemes).
+  @param {boolean} inline_only - Optional. When true, outputs only CSS declarations (no `style="..."` wrapper) for merging into a single style attribute.
+
+  Preset (no scheme): theme `global_color_scheme`. Custom: theme `custom_color_*` settings.
 {%- endcomment -%}
 {%- liquid
   assign use_custom_colors = false
   if settings.color_mode == 'custom'
     assign use_custom_colors = true
   endif
+
+  assign p = '--cs-'
+  if prefix == 'transparent'
+    assign p = '--cs-t-'
+  elsif prefix == 'solid'
+    assign p = '--cs-s-'
+  endif
 -%}
-{%- if use_custom_colors -%}
-  style="
-    --cs-background: {{ settings.custom_color_background | default: '#ffffff' }};
-    --cs-background-secondary: {{ settings.custom_color_background_secondary | default: '#f5f3ef' }};
-    --cs-border: {{ settings.custom_color_border | default: '#e8e6e1' }};
-    --cs-text: {{ settings.custom_color_text | default: '#1a1a1a' }};
-    --cs-text-secondary: {{ settings.custom_color_text_secondary | default: '#9e9b96' }};
-    --cs-heading: {{ settings.custom_color_heading | default: '#0a0a0a' }};
-    --cs-accent: {{ settings.custom_color_accent | default: '#e85d30' }};
-    --cs-accent-text: {{ settings.custom_color_accent_text | default: '#ffffff' }};
-    --cs-btn-primary-bg: {{ settings.custom_color_btn_primary_bg | default: '#1a1a1a' }};
-    --cs-btn-primary-text: {{ settings.custom_color_btn_primary_text | default: '#ffffff' }};
-    --cs-btn-primary-border: {{ settings.custom_color_btn_primary_border | default: '#1a1a1a' }};
-    --cs-btn-secondary-bg: {{ settings.custom_color_btn_secondary_bg | default: '#ffffff' }};
-    --cs-btn-secondary-text: {{ settings.custom_color_btn_secondary_text | default: '#1a1a1a' }};
-    --cs-btn-secondary-border: {{ settings.custom_color_btn_secondary_border | default: '#1a1a1a' }};
-  "
+{%- if scheme != blank and scheme.settings != blank -%}
+  {%- assign s = scheme.settings -%}
+  {%- liquid
+    if s.background_gradient != blank
+      assign cs_bg = s.background_gradient
+    else
+      assign cs_bg = s.background
+    endif
+  -%}
+  {%- if inline_only -%}
+    {{ p }}background: {{ cs_bg }};
+    {{ p }}background-secondary: {{ s.background_secondary }};
+    {{ p }}border: {{ s.border }};
+    {{ p }}text: {{ s.text }};
+    {{ p }}text-secondary: {{ s.text_secondary }};
+    {{ p }}heading: {{ s.heading }};
+    {{ p }}accent: {{ s.accent }};
+    {{ p }}accent-text: {{ s.accent_text }};
+    {{ p }}btn-primary-bg: {{ s.btn_primary_bg }};
+    {{ p }}btn-primary-text: {{ s.btn_primary_text }};
+    {{ p }}btn-primary-border: {{ s.btn_primary_border }};
+    {{ p }}btn-secondary-bg: {{ s.btn_secondary_bg }};
+    {{ p }}btn-secondary-text: {{ s.btn_secondary_text }};
+    {{ p }}btn-secondary-border: {{ s.btn_secondary_border }};
+  {%- else -%}
+    style="
+      {{ p }}background: {{ cs_bg }};
+      {{ p }}background-secondary: {{ s.background_secondary }};
+      {{ p }}border: {{ s.border }};
+      {{ p }}text: {{ s.text }};
+      {{ p }}text-secondary: {{ s.text_secondary }};
+      {{ p }}heading: {{ s.heading }};
+      {{ p }}accent: {{ s.accent }};
+      {{ p }}accent-text: {{ s.accent_text }};
+      {{ p }}btn-primary-bg: {{ s.btn_primary_bg }};
+      {{ p }}btn-primary-text: {{ s.btn_primary_text }};
+      {{ p }}btn-primary-border: {{ s.btn_primary_border }};
+      {{ p }}btn-secondary-bg: {{ s.btn_secondary_bg }};
+      {{ p }}btn-secondary-text: {{ s.btn_secondary_text }};
+      {{ p }}btn-secondary-border: {{ s.btn_secondary_border }};
+    "
+  {%- endif -%}
+{%- elsif use_custom_colors -%}
+  {%- if inline_only -%}
+  {%- else -%}
+    style="
+      --cs-background: {{ settings.custom_color_background | default: '#ffffff' }};
+      --cs-background-secondary: {{ settings.custom_color_background_secondary | default: '#f5f3ef' }};
+      --cs-border: {{ settings.custom_color_border | default: '#e8e6e1' }};
+      --cs-text: {{ settings.custom_color_text | default: '#1a1a1a' }};
+      --cs-text-secondary: {{ settings.custom_color_text_secondary | default: '#9e9b96' }};
+      --cs-heading: {{ settings.custom_color_heading | default: '#0a0a0a' }};
+      --cs-accent: {{ settings.custom_color_accent | default: '#e85d30' }};
+      --cs-accent-text: {{ settings.custom_color_accent_text | default: '#ffffff' }};
+      --cs-btn-primary-bg: {{ settings.custom_color_btn_primary_bg | default: '#1a1a1a' }};
+      --cs-btn-primary-text: {{ settings.custom_color_btn_primary_text | default: '#ffffff' }};
+      --cs-btn-primary-border: {{ settings.custom_color_btn_primary_border | default: '#1a1a1a' }};
+      --cs-btn-secondary-bg: {{ settings.custom_color_btn_secondary_bg | default: '#ffffff' }};
+      --cs-btn-secondary-text: {{ settings.custom_color_btn_secondary_text | default: '#1a1a1a' }};
+      --cs-btn-secondary-border: {{ settings.custom_color_btn_secondary_border | default: '#1a1a1a' }};
+    "
+  {%- endif -%}
 {%- else -%}
   {%- liquid
     assign scheme_obj = settings.global_color_scheme
@@ -39,21 +95,31 @@
     endif
   -%}
   {%- if s -%}
-    style="
-      --cs-background: {{ s.background }};
-      --cs-background-secondary: {{ s.background_secondary }};
-      --cs-border: {{ s.border }};
-      --cs-text: {{ s.text }};
-      --cs-text-secondary: {{ s.text_secondary }};
-      --cs-heading: {{ s.heading }};
-      --cs-accent: {{ s.accent }};
-      --cs-accent-text: {{ s.accent_text }};
-      --cs-btn-primary-bg: {{ s.btn_primary_bg }};
-      --cs-btn-primary-text: {{ s.btn_primary_text }};
-      --cs-btn-primary-border: {{ s.btn_primary_border }};
-      --cs-btn-secondary-bg: {{ s.btn_secondary_bg }};
-      --cs-btn-secondary-text: {{ s.btn_secondary_text }};
-      --cs-btn-secondary-border: {{ s.btn_secondary_border }};
-    "
+    {%- liquid
+      if s.background_gradient != blank
+        assign cs_bg = s.background_gradient
+      else
+        assign cs_bg = s.background
+      endif
+    -%}
+    {%- if inline_only -%}
+    {%- else -%}
+      style="
+        --cs-background: {{ cs_bg }};
+        --cs-background-secondary: {{ s.background_secondary }};
+        --cs-border: {{ s.border }};
+        --cs-text: {{ s.text }};
+        --cs-text-secondary: {{ s.text_secondary }};
+        --cs-heading: {{ s.heading }};
+        --cs-accent: {{ s.accent }};
+        --cs-accent-text: {{ s.accent_text }};
+        --cs-btn-primary-bg: {{ s.btn_primary_bg }};
+        --cs-btn-primary-text: {{ s.btn_primary_text }};
+        --cs-btn-primary-border: {{ s.btn_primary_border }};
+        --cs-btn-secondary-bg: {{ s.btn_secondary_bg }};
+        --cs-btn-secondary-text: {{ s.btn_secondary_text }};
+        --cs-btn-secondary-border: {{ s.btn_secondary_border }};
+      "
+    {%- endif -%}
   {%- endif -%}
 {%- endif -%}

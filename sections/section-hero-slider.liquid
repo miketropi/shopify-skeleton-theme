@@ -1,0 +1,351 @@
+{%- liquid
+  assign slide_count = 0
+  for block in section.blocks
+    if block.type == 'slide'
+      assign slide_count = slide_count | plus: 1
+    endif
+  endfor
+
+  assign hero_scheme = section.settings.color_scheme
+  if hero_scheme == blank or hero_scheme.settings == blank
+    assign hero_scheme = settings.global_color_scheme
+  endif
+  if hero_scheme == blank or hero_scheme.settings == blank
+    assign hero_scheme = settings.color_schemes['scheme-1']
+  endif
+
+  assign overlay_alpha = section.settings.overlay_softness | divided_by: 100.0
+-%}
+{%- capture scheme_vars -%}
+  {%- render 'color-scheme-vars', scheme: hero_scheme, inline_only: true -%}
+{%- endcapture -%}
+
+<div
+  class="section-{{ section.id }} section-hero-slider{% if slide_count < 2 %} section-hero-slider--single{% endif %}"
+  data-section-type="section-hero-slider"
+  data-section-id="{{ section.id }}"
+  data-hero-autoplay="{% if section.settings.autoplay %}true{% else %}false{% endif %}"
+  data-hero-autoplay-delay="{{ section.settings.autoplay_delay | times: 1000 }}"
+  style="
+    {{ scheme_vars }}
+    --hero-min-height: {{ section.settings.min_height }}px;
+    --hero-overlay-soft: {{ overlay_alpha }};
+  "
+  {{ section.shopify_attributes }}
+>
+  <div
+    class="section-hero-slider__viewport"
+    role="region"
+    aria-roledescription="{{ 'hero_slider.carousel' | t }}"
+    aria-label="{{ 'hero_slider.region_label' | t }}"
+    {% if slide_count > 0 %}
+      tabindex="-1"
+    {% endif %}
+  >
+    <div
+      class="hero-swiper swiper"
+      data-hero-swiper
+      {% if slide_count > 1 %}
+        tabindex="0"
+      {% endif %}
+      {% if slide_count > 0 %}
+        aria-live="polite"
+      {% endif %}
+    >
+      <div class="swiper-wrapper">
+        {%- if slide_count == 0 -%}
+          <div
+            class="swiper-slide hero-slide"
+            data-hero-slide
+            role="group"
+            aria-roledescription="{{ 'hero_slider.slide' | t }}"
+            aria-label="{{ 'hero_slider.slide_n_of_m' | t: n: 1, m: 1 }}"
+          >
+            <div class="hero-slide__media">
+              <div class="hero-slide__media-inner">
+                {{ 'product-apparel-1' | placeholder_svg_tag: 'hero-slide__placeholder-svg' }}
+              </div>
+            </div>
+            <div class="hero-slide__copy" data-hero-copy>
+              <p class="hero-slide__kicker">{{ 'hero_slider.add_slides' | t }}</p>
+              <div class="hero-slide__heading hero-slide__heading--h1">
+                <p>{{ 'hero_slider.placeholder_heading' | t }}</p>
+              </div>
+            </div>
+          </div>
+        {%- else -%}
+          {%- assign i = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'slide' -%}
+              {%- liquid
+                assign slide_scheme = block.settings.color_scheme
+                if slide_scheme == blank or slide_scheme.settings == blank
+                  assign slide_scheme = hero_scheme
+                endif
+              -%}
+              {%- capture slide_scheme_css -%}
+                {%- render 'color-scheme-vars', scheme: slide_scheme, inline_only: true -%}
+              {%- endcapture -%}
+              {%- assign i_display = i | plus: 1 -%}
+              {%- liquid
+                assign img_loading = 'lazy'
+                if i == 0
+                  assign img_loading = 'eager'
+                endif
+                assign img_alt = block.settings.image.alt | default: block.settings.heading | strip_html | escape
+              -%}
+              <div
+                class="swiper-slide hero-slide"
+                data-hero-slide
+                role="group"
+                aria-roledescription="{{ 'hero_slider.slide' | t }}"
+                aria-label="{{ 'hero_slider.slide_n_of_m' | t: n: i_display, m: slide_count }}"
+                style="{{ slide_scheme_css }}"
+                {{ block.shopify_attributes }}
+              >
+                <div class="hero-slide__media">
+                  <div class="hero-slide__media-inner" data-hero-media-inner>
+                    {%- if block.settings.image != blank -%}
+                      {{
+                        block.settings.image
+                        | image_url: width: 2400
+                        | image_tag:
+                          loading: img_loading,
+                          widths: '400, 600, 800, 1200, 1600, 2000, 2400',
+                          sizes: '(min-width: 768px) 55vw, 100vw',
+                          class: 'hero-slide__img',
+                          style: 'object-position: ' | append: block.settings.image_position | append: ';',
+                          alt: img_alt
+                      }}
+                    {%- else -%}
+                      {{ 'product-apparel-1' | placeholder_svg_tag: 'hero-slide__placeholder-svg' }}
+                    {%- endif -%}
+                  </div>
+                </div>
+                <div class="hero-slide__copy" data-hero-copy>
+                  {%- if block.settings.kicker != blank -%}
+                    <p class="hero-slide__kicker">{{ block.settings.kicker | escape }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.heading != blank -%}
+                    <div class="hero-slide__heading hero-slide__heading--{{ block.settings.heading_size }}">
+                      {{ block.settings.heading }}
+                    </div>
+                  {%- endif -%}
+                  {%- if block.settings.body != blank -%}
+                    <div class="hero-slide__body rte">{{ block.settings.body }}</div>
+                  {%- endif -%}
+                  {%- if block.settings.cta_primary_label != blank or block.settings.cta_secondary_label != blank -%}
+                    <div class="hero-slide__actions">
+                      {%- if block.settings.cta_primary_label != blank -%}
+                        <a
+                          class="hero-slider__btn hero-slider__btn--primary"
+                          href="{{ block.settings.cta_primary_link | default: '#' }}"
+                        >
+                          {{ block.settings.cta_primary_label | escape }}
+                        </a>
+                      {%- endif -%}
+                      {%- if block.settings.cta_secondary_label != blank -%}
+                        <a
+                          class="hero-slider__link"
+                          href="{{ block.settings.cta_secondary_link | default: '#' }}"
+                        >
+                          {{ block.settings.cta_secondary_label | escape }}
+                        </a>
+                      {%- endif -%}
+                    </div>
+                  {%- endif -%}
+                </div>
+              </div>
+              {%- assign i = i | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      {%- if slide_count > 1 -%}
+        <div class="swiper-pagination hero-slider__pagination" data-hero-pagination></div>
+        <button
+          type="button"
+          class="swiper-button-prev hero-slider__nav-btn hero-slider__nav-btn--prev"
+          data-hero-prev
+          aria-label="{{ 'hero_slider.prev' | t }}"
+        ></button>
+        <button
+          type="button"
+          class="swiper-button-next hero-slider__nav-btn hero-slider__nav-btn--next"
+          data-hero-next
+          aria-label="{{ 'hero_slider.next' | t }}"
+        ></button>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.hero_slider.name",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:headers.colour",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "t:sections.hero_slider.labels.min_height",
+      "min": 420,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 560
+    },
+    {
+      "type": "range",
+      "id": "overlay_softness",
+      "label": "t:sections.hero_slider.labels.overlay_softness",
+      "info": "t:sections.hero_slider.info.overlay_softness",
+      "min": 0,
+      "max": 40,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "t:sections.hero_slider.labels.autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "t:sections.hero_slider.labels.autoplay_delay",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "t:sections.hero_slider.blocks.slide.name",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "t:sections.hero_slider.blocks.slide.color_scheme",
+          "info": "t:sections.hero_slider.blocks.slide.color_scheme_info",
+          "default": "scheme-1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.hero_slider.blocks.slide.image"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "t:sections.hero_slider.blocks.slide.image_position",
+          "options": [
+            { "value": "center", "label": "t:sections.hero_slider.options.image_position.center" },
+            { "value": "top", "label": "t:sections.hero_slider.options.image_position.top" },
+            { "value": "bottom", "label": "t:sections.hero_slider.options.image_position.bottom" },
+            { "value": "left", "label": "t:sections.hero_slider.options.image_position.left" },
+            { "value": "right", "label": "t:sections.hero_slider.options.image_position.right" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "text",
+          "id": "kicker",
+          "label": "t:sections.hero_slider.blocks.slide.kicker"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "t:sections.hero_slider.blocks.slide.heading",
+          "default": "Hero headline"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "t:sections.hero_slider.blocks.slide.heading_size",
+          "options": [
+            { "value": "display", "label": "t:sections.hero_slider.options.heading_size.display" },
+            { "value": "h1", "label": "t:sections.hero_slider.options.heading_size.h1" },
+            { "value": "h2", "label": "t:sections.hero_slider.options.heading_size.h2" }
+          ],
+          "default": "display"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "t:sections.hero_slider.blocks.slide.body"
+        },
+        {
+          "type": "text",
+          "id": "cta_primary_label",
+          "label": "t:sections.hero_slider.blocks.slide.cta_primary_label",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "cta_primary_link",
+          "label": "t:sections.hero_slider.blocks.slide.cta_primary_link"
+        },
+        {
+          "type": "text",
+          "id": "cta_secondary_label",
+          "label": "t:sections.hero_slider.blocks.slide.cta_secondary_label"
+        },
+        {
+          "type": "url",
+          "id": "cta_secondary_link",
+          "label": "t:sections.hero_slider.blocks.slide.cta_secondary_link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.hero_slider.name",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "kicker": "Winter offers",
+            "heading": "Best beauty items",
+            "heading_size": "display",
+            "body": "<p>Curated picks for everyday glow — limited time only.</p>",
+            "cta_primary_label": "Shop collection",
+            "cta_primary_link": "shopify://collections/all",
+            "cta_secondary_label": "Learn more",
+            "cta_secondary_link": "shopify://pages/about"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "kicker": "New in",
+            "heading": "Fresh arrivals",
+            "heading_size": "h1",
+            "body": "<p>Restocks and new styles each week.</p>",
+            "cta_primary_label": "Browse",
+            "cta_primary_link": "shopify://collections/all"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

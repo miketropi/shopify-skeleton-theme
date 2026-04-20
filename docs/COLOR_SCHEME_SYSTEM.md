@@ -255,8 +255,8 @@ Use `color-scheme-vars` on the section’s outermost element. It injects the sam
 
 ```liquid
 <div
-  class="section-{{ section.id }} section-hero"
-  data-section-type="section-hero"
+  class="section-{{ section.id }} section-hero-slider"
+  data-section-type="section-hero-slider"
   data-section-id="{{ section.id }}"
   {% render 'color-scheme-vars' %}
 >
@@ -267,7 +267,7 @@ Use `color-scheme-vars` on the section’s outermost element. It injects the sam
 All colour decisions inside a section use the scoped custom properties — never `settings.*` directly, never hardcoded hex.
 
 ```scss
-.section-hero {
+.section-hero-slider {
   background-color: var(--cs-background);
   color:            var(--cs-text);
   border-color:     var(--cs-border);

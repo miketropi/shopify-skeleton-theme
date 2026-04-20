@@ -11,30 +11,108 @@ $header-offcanvas-duration: 0.38s;
 $header-backdrop-duration: 0.32s;
 $header-submenu-shadow: none; // 0 4px 6px color-mix(in srgb, var(--cs-text) 6%, transparent), 0 12px 24px color-mix(in srgb, var(--cs-text) 10%, transparent);
 
+/* Sticky positioning on the Shopify section wrapper; scroll-up hide class from `src/scripts/sections/header.ts`. */
+.shopify-section:has(.site-header[data-sticky='always']),
+.shopify-section:has(.site-header[data-sticky='scroll-up']) {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.shopify-section:has(.site-header[data-sticky='scroll-up']) {
+  transition: transform 0.3s ease;
+
+  &.shopify-section--header-hidden {
+    transform: translateY(-100%);
+  }
+}
+
+// Header section wrapper — full width, không bị constrain vào cột 2
+.shopify-section:has(.site-header) {
+  display: block; // override grid trên wrapper này
+}
+
+/* Wrapper cannot read `--cs-*` from the child `<header>`; using `var(--cs-background)` here tracked :root only. */
+.shopify-section:has(.site-header) {
+  background-color: transparent;
+  transition: background-color 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shopify-section:has(.site-header[data-sticky='scroll-up']) {
+    transition: none;
+  }
+}
+
+/* Fallback if `:has()` is unavailable — group class matches Online Store → Header. */
+@supports not (selector(:has(*))) {
+  .shopify-section-group-header-group {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}
+
+/*
+ * Header inline style sets only `--cs-s-*` (solid) and `--cs-t-*` (transparent), not `--cs-*`.
+ * Otherwise author inline would beat these aliases and transparent scheme would never show.
+ */
 .site-header {
+  --cs-background: var(--cs-s-background);
+  --cs-background-secondary: var(--cs-s-background-secondary);
+  --cs-border: var(--cs-s-border);
+  --cs-text: var(--cs-s-text);
+  --cs-text-secondary: var(--cs-s-text-secondary);
+  --cs-heading: var(--cs-s-heading);
+  --cs-accent: var(--cs-s-accent);
+  --cs-accent-text: var(--cs-s-accent-text);
+  --cs-btn-primary-bg: var(--cs-s-btn-primary-bg);
+  --cs-btn-primary-text: var(--cs-s-btn-primary-text);
+  --cs-btn-primary-border: var(--cs-s-btn-primary-border);
+  --cs-btn-secondary-bg: var(--cs-s-btn-secondary-bg);
+  --cs-btn-secondary-text: var(--cs-s-btn-secondary-text);
+  --cs-btn-secondary-border: var(--cs-s-btn-secondary-border);
+
+  display: grid;
+  grid-template-columns: var(--content-grid);
   position: relative;
   z-index: 200;
   width: 100%;
   background-color: var(--cs-background);
   color: var(--cs-text);
-  // border-bottom: 1px solid var(--cs-border);
+  border-bottom: 1px solid var(--cs-border);
+  transition:
+    background-color 0.25s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
   padding-block: 0.75rem;
-  // padding-inline: var(--page-margin);
 }
 
-.site-header--sticky {
-  position: sticky;
-  top: 0;
-  box-shadow: 0 1px 0 var(--cs-border);
+.site-header:not(.site-header--scrolled) {
+  --cs-background: var(--cs-t-background);
+  --cs-background-secondary: var(--cs-t-background-secondary);
+  --cs-border: var(--cs-t-border);
+  --cs-text: var(--cs-t-text);
+  --cs-text-secondary: var(--cs-t-text-secondary);
+  --cs-heading: var(--cs-t-heading);
+  --cs-accent: var(--cs-t-accent);
+  --cs-accent-text: var(--cs-t-accent-text);
+  --cs-btn-primary-bg: var(--cs-t-btn-primary-bg);
+  --cs-btn-primary-text: var(--cs-t-btn-primary-text);
+  --cs-btn-primary-border: var(--cs-t-btn-primary-border);
+  --cs-btn-secondary-bg: var(--cs-t-btn-secondary-bg);
+  --cs-btn-secondary-text: var(--cs-t-btn-secondary-text);
+  --cs-btn-secondary-border: var(--cs-t-btn-secondary-border);
 }
 
 .site-header__inner {
+  grid-column: 2;
   position: relative;
   z-index: 220;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--space-grid-gap, 0.25rem);
   width: 100%;
   margin-inline: auto;
   min-height: 3.25rem;
@@ -116,55 +194,84 @@ $header-submenu-shadow: none; // 0 4px 6px color-mix(in srgb, var(--cs-text) 6%,
   min-width: 0;
 }
 
-.header__logo-link {
-  display: inline-block;
+.header-logo {
+  display: block;
+  flex-shrink: 0;
   max-width: 100%;
   line-height: 0;
   text-decoration: none;
+  color: inherit;
   vertical-align: middle;
 }
 
-.header__logo-link:focus-visible {
+.header-logo:focus-visible {
   outline: 2px solid var(--cs-accent);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-.header__logo {
+.header-logo__img {
   display: block;
-  width: auto;
+  width: var(--logo-width);
   height: auto;
-  max-width: var(--header-logo-width, 120px);
   max-height: clamp(2rem, 8vw, 2.75rem);
   object-fit: contain;
   object-position: left center;
 }
 
-.header__logo--drawer {
+.header-logo__desktop .header-logo__img {
+  width: var(--logo-width);
+}
+
+.header-logo__mobile .header-logo__img {
+  width: var(--logo-mobile-width);
+  max-height: clamp(1.75rem, 7vw, 2.5rem);
+}
+
+.header-logo__desktop {
+  display: block;
+
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.header-logo__mobile {
+  display: none;
+
+  @media (max-width: 767px) {
+    display: block;
+  }
+}
+
+.header-logo__text {
+  display: block;
+  font-family: var(--cs-font-heading);
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  font-weight: 650;
+  line-height: 1.2;
+  color: var(--cs-heading);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-logo--drawer {
+  line-height: 0;
+}
+
+.header-logo--drawer .header-logo__img {
+  width: var(--logo-mobile-width);
   max-width: min(11rem, 58vw);
   max-height: 1.75rem;
 }
 
-.header__title {
-  margin: 0;
-  font-family: var(--cs-font-heading);
-  font-size: clamp(1rem, 2.5vw, 1.2rem);
+.header-logo--drawer.header-logo__text {
+  font-size: 1.125rem;
   font-weight: 650;
-  line-height: 1.2;
-}
-
-.header__title a {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-decoration: none;
-  color: var(--cs-heading);
-}
-
-.header__title a:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  max-height: none;
 }
 
 .header__offcanvas-head {
@@ -207,6 +314,10 @@ $header-submenu-shadow: none; // 0 4px 6px color-mix(in srgb, var(--cs-text) 6%,
   overflow: visible;
   white-space: normal;
   line-height: 0;
+}
+
+.header__offcanvas-brand .header-logo {
+  color: var(--cs-heading);
 }
 
 .header__offcanvas-close {

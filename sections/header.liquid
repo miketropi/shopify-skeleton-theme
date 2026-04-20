@@ -1,11 +1,42 @@
+{%- liquid
+  assign sticky_header = section.settings.sticky_header | default: 'scroll-up'
+  if sticky_header == 'scroll_up'
+    assign sticky_header = 'scroll-up'
+  endif
+
+  assign scheme_default = section.settings.color_scheme
+  if scheme_default == blank or scheme_default.settings == blank
+    assign scheme_default = settings.global_color_scheme
+  endif
+  if scheme_default == blank or scheme_default.settings == blank
+    assign scheme_default = settings.color_schemes['scheme-1']
+  endif
+
+  assign scheme_transparent = section.settings.color_scheme_transparent
+  if scheme_transparent == blank or scheme_transparent.settings == blank
+    assign scheme_transparent = scheme_default
+  endif
+-%}
+{%- capture header_scheme_solid -%}
+  {%- render 'color-scheme-vars', scheme: scheme_default, prefix: 'solid', inline_only: true -%}
+{%- endcapture -%}
+{%- capture header_scheme_transparent -%}
+  {%- render 'color-scheme-vars', scheme: scheme_transparent, prefix: 'transparent', inline_only: true -%}
+{%- endcapture -%}
 <header
-  class="site-header{% if section.settings.sticky_header %} site-header--sticky{% endif %}"
+  class="site-header"
   data-section-type="header"
   data-section-id="{{ section.id }}"
-  {% if section.settings.logo != blank %}
-    style="--header-logo-width: {{ section.settings.logo_width }}px;"
-  {% endif %}
-  {% render 'color-scheme-vars' %}
+  data-sticky="{{ sticky_header | escape }}"
+  data-scheme-default="{{ scheme_default.id }}"
+  data-scheme-transparent="{{ scheme_transparent.id }}"
+  style="
+    --logo-width: {{ section.settings.logo_width }}px;
+    --logo-mobile-width: {{ section.settings.logo_mobile_width }}px;
+    {{ header_scheme_solid }}
+    {{ header_scheme_transparent }}
+  "
+  {{ section.shopify_attributes }}
 >
   <div class="site-header__inner">
     <button
@@ -24,25 +55,7 @@
     </button>
 
     <div class="header__heading">
-      {% if section.settings.logo != blank %}
-        <a href="{{ routes.root_url }}" class="header__logo-link">
-          <img
-            class="header__logo"
-            src="{{ section.settings.logo | image_url: width: 400 }}"
-            srcset="{{ section.settings.logo | image_url: width: 120 }} 120w, {{ section.settings.logo | image_url: width: 200 }} 200w, {{ section.settings.logo | image_url: width: 300 }} 300w, {{ section.settings.logo | image_url: width: 400 }} 400w"
-            sizes="(max-width: 61.99em) {{ section.settings.logo_width | times: 0.9 | round }}px, {{ section.settings.logo_width }}px"
-            width="{{ section.settings.logo.width }}"
-            height="{{ section.settings.logo.height }}"
-            alt="{{ shop.name | escape }}"
-            loading="eager"
-            decoding="async"
-          >
-        </a>
-      {% else %}
-        <h2 class="header__title">
-          {{ shop.name | link_to: routes.root_url }}
-        </h2>
-      {% endif %}
+      {% render 'header-logo', section: section %}
     </div>
 
     <nav
@@ -54,24 +67,10 @@
       <div class="header__offcanvas-head">
         <div class="header__offcanvas-head-main">
           <p
-            class="header__offcanvas-brand{% if section.settings.logo != blank %} header__offcanvas-brand--logo{% endif %}"
+            class="header__offcanvas-brand{% if section.settings.logo != blank or section.settings.logo_mobile != blank %} header__offcanvas-brand--logo{% endif %}"
             id="HeaderOffcanvasTitle-{{ section.id }}"
           >
-            {% if section.settings.logo != blank %}
-              <img
-                class="header__logo header__logo--drawer"
-                src="{{ section.settings.logo | image_url: width: 240 }}"
-                srcset="{{ section.settings.logo | image_url: width: 160 }} 160w, {{ section.settings.logo | image_url: width: 240 }} 240w"
-                sizes="180px"
-                width="{{ section.settings.logo.width }}"
-                height="{{ section.settings.logo.height }}"
-                alt="{{ shop.name | escape }}"
-                loading="lazy"
-                decoding="async"
-              >
-            {% else %}
-              {{ shop.name | escape }}
-            {% endif %}
+            {% render 'header-logo', section: section, variant: 'drawer' %}
           </p>
         </div>
         <button
@@ -200,6 +199,24 @@
   "settings": [
     {
       "type": "header",
+      "content": "t:headers.colour"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:labels.header_color_scheme",
+      "info": "t:info.header_color_scheme_solid",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_transparent",
+      "label": "t:labels.header_color_scheme_transparent",
+      "info": "t:info.header_color_scheme_transparent",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
       "content": "t:headers.logo"
     },
     {
@@ -208,24 +225,64 @@
       "label": "t:labels.logo"
     },
     {
+      "type": "image_picker",
+      "id": "logo_retina",
+      "label": "t:labels.logo_retina",
+      "info": "t:info.logo_retina"
+    },
+    {
       "type": "range",
       "id": "logo_width",
-      "min": 60,
-      "max": 280,
-      "step": 4,
+      "min": 40,
+      "max": 300,
+      "step": 10,
       "unit": "px",
       "label": "t:labels.logo_width",
+      "info": "t:info.logo_width_retina",
       "default": 120
+    },
+    {
+      "type": "header",
+      "content": "t:headers.mobile_logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_mobile",
+      "label": "t:labels.logo_mobile",
+      "info": "t:info.logo_mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_mobile_retina",
+      "label": "t:labels.logo_mobile_retina",
+      "info": "t:info.logo_mobile_retina"
+    },
+    {
+      "type": "range",
+      "id": "logo_mobile_width",
+      "min": 24,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "t:labels.logo_mobile_width",
+      "info": "t:info.logo_mobile_width",
+      "default": 80
     },
     {
       "type": "header",
       "content": "t:headers.header_layout"
     },
     {
-      "type": "checkbox",
+      "type": "select",
       "id": "sticky_header",
       "label": "t:labels.sticky_header",
-      "default": false
+      "info": "t:info.sticky_header",
+      "default": "scroll-up",
+      "options": [
+        { "value": "none", "label": "t:options.sticky_header.none" },
+        { "value": "always", "label": "t:options.sticky_header.always" },
+        { "value": "scroll-up", "label": "t:options.sticky_header.scroll_up" }
+      ]
     },
     {
       "type": "header",

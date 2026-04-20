@@ -19,7 +19,7 @@ Every section does exactly one job. If you can describe a section with "and", it
 ```json
 {
   "sections": {
-    "hero":               { "type": "section-hero",               "settings": {} },
+    "hero":               { "type": "section-hero-slider",        "settings": {} },
     "feature-grid":       { "type": "section-feature-grid",       "settings": {} },
     "featured-collection":{ "type": "featured-collection",        "settings": {} }
   },
@@ -58,7 +58,7 @@ Name sections after what they render, not where they appear.
 
 ```
 ✗  main-index.liquid          (location-based — not reusable)
-✓  section-hero.liquid        (content-based — reusable anywhere)
+✓  section-hero-slider.liquid (content-based — reusable anywhere)
 ✓  section-feature-grid.liquid
 ✓  section-featured-collection.liquid
 ```
@@ -71,20 +71,20 @@ A section named after a page (`main-index`, `main-homepage`) is a signal that it
 
 | Principle | How this theme applies it |
 |-----------|---------------------------|
-| Homepage as orchestrator | `templates/index.json` lists `section-hero` and `section-feature-grid` (and any others you add) in `order` only — no markup in the template. |
-| One job per section | `section-hero.liquid` = hero only. `section-feature-grid.liquid` = grid of `feature` blocks only. |
+| Homepage as orchestrator | `templates/index.json` lists `section-hero-slider` and `section-feature-grid` (and any others you add) in `order` only — no markup in the template. |
+| One job per section | `section-hero-slider.liquid` = hero only. `section-feature-grid.liquid` = grid of `feature` blocks only. |
 | `main-*` for template context | `main-product`, `main-collection`, `main-cart`, etc. require Shopify objects (`product`, `collection`, …). |
 | `section-*` for reusable marketing | Hero and feature grid can be added to JSON templates other than the homepage if desired. |
 | Blocks = repeated instances | Feature grid blocks are all type `feature`; they are not mixed with hero content. |
 
-**Styles:** `src/styles/sections/_section-hero.scss` and `_section-feature-grid.scss` are forwarded from `src/styles/sections/index.scss`.
+**Styles:** `src/styles/sections/_section-hero-slider.scss` and `_section-feature-grid.scss` are forwarded from `src/styles/sections/index.scss`.
 
 Exception: sections that wrap Shopify system objects (`product`, `collection`, `blog`, `article`, `cart`) are legitimately page-specific. Prefix these with `main-` to signal they require a template context:
 
 ```
 main-product.liquid       ← requires product object
 main-collection.liquid    ← requires collection object
-section-hero.liquid       ← works on any page
+section-hero-slider.liquid ← works on any page
 section-feature-grid.liquid ← works on any page
 ```
 
@@ -97,7 +97,7 @@ Blocks belong inside a section when they are **instances of the same component t
 ```
 ✓  section-feature-grid.liquid  with blocks of type "feature"
 ✓  section-testimonials.liquid  with blocks of type "testimonial"
-✗  section-hero.liquid          with blocks of type "feature_grid_item"
+✗  section-hero-slider.liquid   with blocks of type "feature_grid_item"
    (feature grid items are not part of the hero — split the section)
 ```
 

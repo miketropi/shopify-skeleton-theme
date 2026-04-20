@@ -1,3 +1,4 @@
+// Base styles
 @use 'base/variables' as *;
 @use 'base/fonts';
 @use 'sections/index' as *;
@@ -5,4 +6,8 @@
 // Non-critical styles compiled to assets/theme.css via Vite.
 :root {
   --theme-font-stack: #{$font-stack-system};
+}
+
+html {
+  scroll-padding-top: var(--header-height, 0px);
 }

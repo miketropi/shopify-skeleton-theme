@@ -44,8 +44,14 @@
     "layout_direction": "Layout direction",
     "menu": "Menu",
     "customer_account_menu": "Customer account menu",
-    "logo": "Logo image",
+    "logo": "Logo",
+    "logo_retina": "Logo — retina",
+    "logo_mobile": "Mobile logo",
+    "logo_mobile_retina": "Mobile logo — retina",
+    "logo_mobile_width": "Mobile logo width",
     "logo_width": "Logo width",
+    "header_color_scheme": "Colour",
+    "header_color_scheme_transparent": "Colour when transparent",
     "sticky_header": "Sticky header",
     "cart_drawer_position": "Drawer position",
     "cart_drawer_auto_open": "Open drawer after adding to cart",
@@ -77,6 +83,8 @@
     "search_scope": "Search scope"
   },
   "headers": {
+    "colour": "Colour",
+    "mobile_logo": "Mobile logo",
     "logo": "Logo",
     "header_layout": "Layout",
     "navigation": "Navigation",
@@ -92,7 +100,15 @@
     "typography_intro": "Choose curated Google Font pairings or pick your own fonts from the Shopify library (including shop fonts). Colour schemes still control colours per section.",
     "typography_custom": "Heading, body, and code use these fonts. They map to --cs-font-heading, --cs-font-body, and --cs-font-mono.",
     "search_scope": "Product-only search uses Shopify’s type=product parameter. Articles and pages are excluded.",
-    "header_menu_nested": "Add nested links in Online Store → Navigation (up to two levels under a top-level item). On large screens they appear as dropdowns and flyouts; in the mobile drawer they expand in place."
+    "header_menu_nested": "Add nested links in Online Store → Navigation (up to two levels under a top-level item). On large screens they appear as dropdowns and flyouts; in the mobile drawer they expand in place.",
+    "sticky_header": "Controls whether the header stays visible when scrolling.",
+    "header_color_scheme_solid": "Applied when the header has a solid background (after scrolling past the header height).",
+    "header_color_scheme_transparent": "Applied when the header overlaps a hero at the top of the page. Use a light scheme for dark hero images.",
+    "logo_retina": "Optional 2× version for sharp display on high-DPI screens. Upload at double the intended display size.",
+    "logo_width_retina": "Display width of the logo. Upload your retina logo at twice this width in pixels.",
+    "logo_mobile": "Shown on screens narrower than 768px. Falls back to the main logo if not set.",
+    "logo_mobile_retina": "Optional 2× version of the mobile logo. Upload at double the intended mobile display size.",
+    "logo_mobile_width": "Display width of the mobile logo."
   },
   "options": {
     "alignment": {
@@ -132,6 +148,56 @@
     "search_scope": {
       "all": "Products, articles, and pages",
       "product": "Products only"
+    },
+    "sticky_header": {
+      "none": "Not sticky",
+      "always": "Always visible",
+      "scroll_up": "Visible when scrolling up"
+    }
+  },
+  "sections": {
+    "hero_slider": {
+      "name": "Hero slider",
+      "labels": {
+        "min_height": "Minimum height",
+        "overlay_softness": "Copy-side vignette",
+        "autoplay": "Autoplay",
+        "autoplay_delay": "Seconds between slides"
+      },
+      "info": {
+        "overlay_softness": "Adds a subtle background wash on the text side for legibility. 0% is off."
+      },
+      "options": {
+        "image_position": {
+          "center": "Centre",
+          "top": "Top",
+          "bottom": "Bottom",
+          "left": "Left",
+          "right": "Right"
+        },
+        "heading_size": {
+          "display": "Display",
+          "h1": "Heading 1",
+          "h2": "Heading 2"
+        }
+      },
+      "blocks": {
+        "slide": {
+          "name": "Slide",
+          "color_scheme": "Colour scheme",
+          "color_scheme_info": "Optional. Falls back to the section scheme.",
+          "image": "Image",
+          "image_position": "Image focal position",
+          "kicker": "Eyebrow",
+          "heading": "Heading",
+          "heading_size": "Heading size",
+          "body": "Body",
+          "cta_primary_label": "Primary button label",
+          "cta_primary_link": "Primary link",
+          "cta_secondary_label": "Secondary text link label",
+          "cta_secondary_link": "Secondary link"
+        }
+      }
     }
   }
 }
