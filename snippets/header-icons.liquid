@@ -1,0 +1,26 @@
+{%- comment -%}
+  Account + cart icons. @param section {Section} Header section
+{%- endcomment -%}
+<div class="header__icons">
+  {% if shop.customer_accounts_enabled %}
+    <shopify-account menu="{{ section.settings.customer_account_menu }}">
+      {{ 'icon-account.svg' | inline_asset_content }}
+    </shopify-account>
+  {% endif %}
+
+  <a
+    href="{{ routes.cart_url }}"
+    class="header__cart-link"
+    data-cart-drawer-open
+    aria-haspopup="dialog"
+    aria-controls="CartDrawerPanel"
+    aria-expanded="false"
+    aria-label="{{ 'cart.drawer.toggle_cart' | t }}"
+  >
+    <sup data-header-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
+      {{- cart.item_count -}}
+    </sup>
+
+    {{ 'icon-cart.svg' | inline_asset_content }}
+  </a>
+</div>

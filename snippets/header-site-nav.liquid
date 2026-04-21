@@ -1,0 +1,104 @@
+{%- comment -%}
+  Main menu nav (desktop inline + mobile drawer). @param section {Section} Header section
+{%- endcomment -%}
+<nav
+  class="header__nav"
+  id="HeaderNav-{{ section.id }}"
+  data-header-nav
+  aria-label="{{ 'header.navigation' | t }}"
+>
+  <div class="header__offcanvas-head">
+    <div class="header__offcanvas-head-main">
+      <p
+        class="header__offcanvas-brand{% if section.settings.logo != blank or section.settings.logo_mobile != blank %} header__offcanvas-brand--logo{% endif %}"
+        id="HeaderOffcanvasTitle-{{ section.id }}"
+      >
+        {% render 'header-logo', section: section, variant: 'drawer' %}
+      </p>
+    </div>
+    <button
+      type="button"
+      class="header__offcanvas-close"
+      data-header-menu-close
+      aria-label="{{ 'header.menu_close' | t }}"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="header__offcanvas-body">
+    <ul class="header__menu" role="list">
+      {% for link in section.settings.menu.links %}
+        <li
+          class="header__menu-item{% if link.links != blank %} header__menu-item--has-children{% endif %}"
+        >
+          {% if link.links != blank %}
+            {% assign top_index = forloop.index %}
+            <div class="header__menu-row">
+              <a class="header__menu-link header__menu-link--parent" href="{{ link.url }}">
+                {{- link.title | escape -}}
+              </a>
+              <button
+                type="button"
+                class="header__submenu-toggle"
+                data-header-submenu-toggle
+                aria-expanded="false"
+                aria-controls="HeaderSub-{{ section.id }}-{{ top_index }}"
+                aria-label="{{ 'header.submenu_toggle' | t: title: link.title | escape }}"
+              >
+                <span class="header__chevron" aria-hidden="true"></span>
+              </button>
+            </div>
+            <ul
+              class="header__submenu"
+              id="HeaderSub-{{ section.id }}-{{ top_index }}"
+              role="list"
+              hidden
+            >
+              {% for child in link.links %}
+                <li
+                  class="header__submenu-item{% if child.links != blank %} header__submenu-item--has-children{% endif %}"
+                >
+                  {% if child.links != blank %}
+                    <div class="header__submenu-row">
+                      <a class="header__submenu-link header__submenu-link--parent" href="{{ child.url }}">
+                        {{- child.title | escape -}}
+                      </a>
+                      <button
+                        type="button"
+                        class="header__submenu-toggle"
+                        data-header-submenu-toggle
+                        aria-expanded="false"
+                        aria-controls="HeaderSub2-{{ section.id }}-{{ top_index }}-{{ forloop.index }}"
+                        aria-label="{{ 'header.submenu_toggle' | t: title: child.title | escape }}"
+                      >
+                        <span class="header__chevron" aria-hidden="true"></span>
+                      </button>
+                    </div>
+                    <ul
+                      class="header__submenu-nested"
+                      id="HeaderSub2-{{ section.id }}-{{ top_index }}-{{ forloop.index }}"
+                      role="list"
+                      hidden
+                    >
+                      {% for grandchild in child.links %}
+                        <li class="header__submenu-item">
+                          <a class="header__submenu-link header__submenu-link--deep" href="{{ grandchild.url }}">
+                            {{- grandchild.title | escape -}}
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    <a class="header__submenu-link" href="{{ child.url }}">{{ child.title | escape }}</a>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <a class="header__menu-link" href="{{ link.url }}">{{ link.title | escape }}</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</nav>

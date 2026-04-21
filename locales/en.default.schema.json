@@ -80,7 +80,8 @@
     "custom_btn_label": "Label",
     "custom_btn_border": "Border",
     "search_results_per_page": "Results per page",
-    "search_scope": "Search scope"
+    "search_scope": "Search scope",
+    "desktop_header_layout": "Desktop layout"
   },
   "headers": {
     "colour": "Colour",
@@ -108,7 +109,8 @@
     "logo_width_retina": "Display width of the logo. Upload your retina logo at twice this width in pixels.",
     "logo_mobile": "Shown on screens narrower than 768px. Falls back to the main logo if not set.",
     "logo_mobile_retina": "Optional 2× version of the mobile logo. Upload at double the intended mobile display size.",
-    "logo_mobile_width": "Display width of the mobile logo."
+    "logo_mobile_width": "Display width of the mobile logo.",
+    "desktop_header_layout": "Large screens only. Phone and tablet still use the menu drawer and top bar."
   },
   "options": {
     "alignment": {
@@ -153,6 +155,11 @@
       "none": "Not sticky",
       "always": "Always visible",
       "scroll_up": "Visible when scrolling up"
+    },
+    "desktop_header_layout": {
+      "logo_nav_actions": "Logo left — menu and cart/icons on the right",
+      "nav_logo_center_actions": "Menu left — logo centred — cart/icons right",
+      "two_row": "Two rows — logo and cart/icons on top, menu below"
     }
   },
   "sections": {
