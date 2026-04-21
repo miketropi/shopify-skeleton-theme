@@ -21,11 +21,13 @@
 {%- endcapture -%}
 
 <div
-  class="section-{{ section.id }} section-hero-slider{% if slide_count < 2 %} section-hero-slider--single{% endif %}"
+  class="section-{{ section.id }} section-hero-slider full-width{% if slide_count < 2 %} section-hero-slider--single{% endif %}"
   data-section-type="section-hero-slider"
   data-section-id="{{ section.id }}"
   data-hero-autoplay="{% if section.settings.autoplay %}true{% else %}false{% endif %}"
   data-hero-autoplay-delay="{{ section.settings.autoplay_delay | times: 1000 }}"
+  data-hero-parallax="{% if section.settings.parallax_scroll %}true{% else %}false{% endif %}"
+  data-hero-parallax-intensity="{{ section.settings.parallax_amount }}"
   style="
     {{ scheme_vars }}
     --hero-min-height: {{ section.settings.min_height }}px;
@@ -62,14 +64,18 @@
             aria-label="{{ 'hero_slider.slide_n_of_m' | t: n: 1, m: 1 }}"
           >
             <div class="hero-slide__media">
-              <div class="hero-slide__media-inner">
-                {{ 'product-apparel-1' | placeholder_svg_tag: 'hero-slide__placeholder-svg' }}
+              <div class="hero-slide__media-inner" data-hero-media-inner>
+                <div class="hero-slide__parallax" data-hero-parallax>
+                  {{ 'product-apparel-1' | placeholder_svg_tag: 'hero-slide__placeholder-svg' }}
+                </div>
               </div>
             </div>
             <div class="hero-slide__copy" data-hero-copy>
-              <p class="hero-slide__kicker">{{ 'hero_slider.add_slides' | t }}</p>
-              <div class="hero-slide__heading hero-slide__heading--h1">
-                <p>{{ 'hero_slider.placeholder_heading' | t }}</p>
+              <div class="hero-slide__copy-inner">
+                <p class="hero-slide__kicker">{{ 'hero_slider.add_slides' | t }}</p>
+                <div class="hero-slide__heading hero-slide__heading--h1">
+                  <p>{{ 'hero_slider.placeholder_heading' | t }}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -93,6 +99,16 @@
                   assign img_loading = 'eager'
                 endif
                 assign img_alt = block.settings.image.alt | default: block.settings.heading | strip_html | escape
+                assign img_style = 'object-position: ' | append: block.settings.image_position | append: ';'
+                assign bg_media = block.settings.background_media | default: 'image'
+                assign use_video = false
+                if bg_media == 'video' and block.settings.video != blank
+                  assign use_video = true
+                endif
+                assign video_poster_url = ''
+                if use_video and block.settings.image != blank
+                  assign video_poster_url = block.settings.image | image_url: width: 1920
+                endif
               -%}
               <div
                 class="swiper-slide hero-slide"
@@ -105,55 +121,102 @@
               >
                 <div class="hero-slide__media">
                   <div class="hero-slide__media-inner" data-hero-media-inner>
-                    {%- if block.settings.image != blank -%}
-                      {{
-                        block.settings.image
-                        | image_url: width: 2400
-                        | image_tag:
-                          loading: img_loading,
-                          widths: '400, 600, 800, 1200, 1600, 2000, 2400',
-                          sizes: '(min-width: 768px) 55vw, 100vw',
-                          class: 'hero-slide__img',
-                          style: 'object-position: ' | append: block.settings.image_position | append: ';',
-                          alt: img_alt
-                      }}
-                    {%- else -%}
-                      {{ 'product-apparel-1' | placeholder_svg_tag: 'hero-slide__placeholder-svg' }}
-                    {%- endif -%}
+                    <div class="hero-slide__parallax" data-hero-parallax>
+                      {%- if use_video -%}
+                        {%- if block.settings.image != blank -%}
+                          {{
+                            block.settings.video
+                            | video_tag:
+                              autoplay: false,
+                              loop: true,
+                              muted: true,
+                              controls: false,
+                              playsinline: true,
+                              class: 'hero-slide__video',
+                              style: img_style,
+                              poster: video_poster_url
+                          }}
+                        {%- else -%}
+                          {{
+                            block.settings.video
+                            | video_tag:
+                              autoplay: false,
+                              loop: true,
+                              muted: true,
+                              controls: false,
+                              playsinline: true,
+                              class: 'hero-slide__video',
+                              style: img_style
+                          }}
+                        {%- endif -%}
+                      {%- elsif block.settings.image != blank -%}
+                        {{
+                          block.settings.image
+                          | image_url: width: 2400
+                          | image_tag:
+                            loading: img_loading,
+                            widths: '400, 600, 800, 1200, 1600, 2000, 2400',
+                            sizes: '(min-width: 1024px) 55vw, (min-width: 768px) 100vw, 100vw',
+                            class: 'hero-slide__img',
+                            style: img_style,
+                            alt: img_alt
+                        }}
+                      {%- else -%}
+                        {{ 'product-apparel-1' | placeholder_svg_tag: 'hero-slide__placeholder-svg' }}
+                      {%- endif -%}
+                    </div>
                   </div>
                 </div>
+                {%- if block.settings.content_overlay_enable -%}
+                  {%- liquid
+                    assign ol_color = block.settings.content_overlay_color | default: '#000000'
+                    assign ol_alpha = block.settings.content_overlay_opacity | divided_by: 100.0
+                    assign ol_bg = ol_color | color_modify: 'alpha', ol_alpha
+                    assign ol_cov = block.settings.content_overlay_coverage | default: 'copy'
+                    if ol_cov == 'bottom'
+                      assign ol_cov = 'copy'
+                    endif
+                  -%}
+                  <div
+                    class="hero-slide__content-overlay{% if ol_cov == 'full' %} hero-slide__content-overlay--full{% else %} hero-slide__content-overlay--copy{% endif %}"
+                    style="background-color: {{ ol_bg }};"
+                    aria-hidden="true"
+                  ></div>
+                {%- endif -%}
                 <div class="hero-slide__copy" data-hero-copy>
-                  {%- if block.settings.kicker != blank -%}
-                    <p class="hero-slide__kicker">{{ block.settings.kicker | escape }}</p>
-                  {%- endif -%}
-                  {%- if block.settings.heading != blank -%}
-                    <div class="hero-slide__heading hero-slide__heading--{{ block.settings.heading_size }}">
-                      {{ block.settings.heading }}
-                    </div>
-                  {%- endif -%}
-                  {%- if block.settings.body != blank -%}
-                    <div class="hero-slide__body rte">{{ block.settings.body }}</div>
-                  {%- endif -%}
-                  {%- if block.settings.cta_primary_label != blank or block.settings.cta_secondary_label != blank -%}
-                    <div class="hero-slide__actions">
-                      {%- if block.settings.cta_primary_label != blank -%}
-                        <a
-                          class="hero-slider__btn hero-slider__btn--primary"
-                          href="{{ block.settings.cta_primary_link | default: '#' }}"
-                        >
-                          {{ block.settings.cta_primary_label | escape }}
-                        </a>
-                      {%- endif -%}
-                      {%- if block.settings.cta_secondary_label != blank -%}
-                        <a
-                          class="hero-slider__link"
-                          href="{{ block.settings.cta_secondary_link | default: '#' }}"
-                        >
-                          {{ block.settings.cta_secondary_label | escape }}
-                        </a>
-                      {%- endif -%}
-                    </div>
-                  {%- endif -%}
+                  <div class="hero-slide__copy-inner">
+                    {%- if block.settings.kicker != blank -%}
+                      <p class="hero-slide__kicker">{{ block.settings.kicker | escape }}</p>
+                    {%- endif -%}
+                    {%- if block.settings.heading != blank -%}
+                      <div class="hero-slide__heading hero-slide__heading--{{ block.settings.heading_size }}">
+                        {{ block.settings.heading }}
+                      </div>
+                    {%- endif -%}
+                    {%- if block.settings.body != blank -%}
+                      <div class="hero-slide__body rte">{{ block.settings.body }}</div>
+                    {%- endif -%}
+                    {%- if block.settings.cta_primary_label != blank or block.settings.cta_secondary_label != blank -%}
+                      <div class="hero-slide__actions">
+                        {%- if block.settings.cta_primary_label != blank -%}
+                          <a
+                            class="hero-slider__btn hero-slider__btn--primary"
+                            href="{{ block.settings.cta_primary_link | default: '#' }}"
+                          >
+                            {{ block.settings.cta_primary_label | escape }}
+                          </a>
+                        {%- endif -%}
+                        {%- if block.settings.cta_secondary_label != blank -%}
+                          <a
+                            class="hero-slider__link"
+                            href="{{ block.settings.cta_secondary_link | default: '#' }}"
+                          >
+                            {{ block.settings.cta_secondary_label | escape }}
+                          </a>
+                        {%- endif -%}
+                      </div>
+                    {%- endif -%}
+                  </div>
                 </div>
               </div>
               {%- assign i = i | plus: 1 -%}
@@ -163,19 +226,45 @@
       </div>
 
       {%- if slide_count > 1 -%}
-        <div class="swiper-pagination hero-slider__pagination" data-hero-pagination></div>
-        <button
-          type="button"
-          class="swiper-button-prev hero-slider__nav-btn hero-slider__nav-btn--prev"
-          data-hero-prev
-          aria-label="{{ 'hero_slider.prev' | t }}"
-        ></button>
-        <button
-          type="button"
-          class="swiper-button-next hero-slider__nav-btn hero-slider__nav-btn--next"
-          data-hero-next
-          aria-label="{{ 'hero_slider.next' | t }}"
-        ></button>
+        <div class="hero-slider__chrome" data-hero-chrome>
+          <button
+            type="button"
+            class="swiper-button-prev hero-slider__nav-btn hero-slider__nav-btn--prev"
+            data-hero-prev
+            aria-label="{{ 'hero_slider.prev' | t }}"
+          >
+            <span class="hero-slider__nav-label">
+              <span class="hero-slider__nav-arrow" aria-hidden="true">←</span>
+              <span class="hero-slider__nav-text">{{ 'hero_slider.nav_previous' | t }}</span>
+            </span>
+          </button>
+          <div class="hero-slider__chrome-mid">
+            <div
+              class="hero-slider__fraction"
+              data-hero-fraction
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <span class="hero-slider__fraction-current" data-hero-current>01</span>
+              <span class="hero-slider__fraction-sep" aria-hidden="true">/</span>
+              <span class="hero-slider__fraction-total" data-hero-total>
+                {%- if slide_count < 10 -%}0{%- endif -%}{{ slide_count }}
+              </span>
+            </div>
+            <div class="swiper-pagination hero-slider__pagination" data-hero-pagination></div>
+          </div>
+          <button
+            type="button"
+            class="swiper-button-next hero-slider__nav-btn hero-slider__nav-btn--next"
+            data-hero-next
+            aria-label="{{ 'hero_slider.next' | t }}"
+          >
+            <span class="hero-slider__nav-label">
+              <span class="hero-slider__nav-text">{{ 'hero_slider.nav_next' | t }}</span>
+              <span class="hero-slider__nav-arrow" aria-hidden="true">→</span>
+            </span>
+          </button>
+        </div>
       {%- endif -%}
     </div>
   </div>
@@ -219,6 +308,23 @@
     },
     {
       "type": "checkbox",
+      "id": "parallax_scroll",
+      "label": "t:sections.hero_slider.labels.parallax_scroll",
+      "info": "t:sections.hero_slider.info.parallax_scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "parallax_amount",
+      "label": "t:sections.hero_slider.labels.parallax_amount",
+      "min": 6,
+      "max": 22,
+      "step": 1,
+      "unit": "%",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
       "id": "autoplay",
       "label": "t:sections.hero_slider.labels.autoplay",
       "default": true
@@ -248,9 +354,27 @@
           "default": "scheme-1"
         },
         {
+          "type": "select",
+          "id": "background_media",
+          "label": "t:sections.hero_slider.blocks.slide.background_media",
+          "info": "t:sections.hero_slider.blocks.slide.background_media_info",
+          "options": [
+            { "value": "image", "label": "t:sections.hero_slider.options.background_media.image" },
+            { "value": "video", "label": "t:sections.hero_slider.options.background_media.video" }
+          ],
+          "default": "image"
+        },
+        {
           "type": "image_picker",
           "id": "image",
-          "label": "t:sections.hero_slider.blocks.slide.image"
+          "label": "t:sections.hero_slider.blocks.slide.image",
+          "info": "t:sections.hero_slider.blocks.slide.image_info"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "t:sections.hero_slider.blocks.slide.video",
+          "info": "t:sections.hero_slider.blocks.slide.video_info"
         },
         {
           "type": "select",
@@ -264,6 +388,40 @@
             { "value": "right", "label": "t:sections.hero_slider.options.image_position.right" }
           ],
           "default": "center"
+        },
+        {
+          "type": "checkbox",
+          "id": "content_overlay_enable",
+          "label": "t:sections.hero_slider.blocks.slide.content_overlay_enable",
+          "info": "t:sections.hero_slider.blocks.slide.content_overlay_enable_info",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "content_overlay_color",
+          "label": "t:sections.hero_slider.blocks.slide.content_overlay_color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "content_overlay_opacity",
+          "label": "t:sections.hero_slider.blocks.slide.content_overlay_opacity",
+          "min": 5,
+          "max": 90,
+          "step": 5,
+          "unit": "%",
+          "default": 35
+        },
+        {
+          "type": "select",
+          "id": "content_overlay_coverage",
+          "label": "t:sections.hero_slider.blocks.slide.content_overlay_coverage",
+          "info": "t:sections.hero_slider.blocks.slide.content_overlay_coverage_info",
+          "options": [
+            { "value": "copy", "label": "t:sections.hero_slider.options.content_overlay_coverage.copy" },
+            { "value": "full", "label": "t:sections.hero_slider.options.content_overlay_coverage.full" }
+          ],
+          "default": "copy"
         },
         {
           "type": "text",

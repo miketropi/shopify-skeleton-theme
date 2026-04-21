@@ -161,11 +161,14 @@
       "labels": {
         "min_height": "Minimum height",
         "overlay_softness": "Copy-side vignette",
+        "parallax_scroll": "Parallax on scroll",
+        "parallax_amount": "Parallax strength",
         "autoplay": "Autoplay",
         "autoplay_delay": "Seconds between slides"
       },
       "info": {
-        "overlay_softness": "Adds a subtle background wash on the text side for legibility. 0% is off."
+        "overlay_softness": "Adds a subtle background wash on the text side for legibility. 0% is off.",
+        "parallax_scroll": "Background media moves slightly as the page scrolls (desktop only; disabled when reduced motion is on)."
       },
       "options": {
         "image_position": {
@@ -175,10 +178,18 @@
           "left": "Left",
           "right": "Right"
         },
+        "background_media": {
+          "image": "Image",
+          "video": "Video"
+        },
         "heading_size": {
           "display": "Display",
           "h1": "Heading 1",
           "h2": "Heading 2"
+        },
+        "content_overlay_coverage": {
+          "copy": "Text column only",
+          "full": "Full slide"
         }
       },
       "blocks": {
@@ -186,8 +197,13 @@
           "name": "Slide",
           "color_scheme": "Colour scheme",
           "color_scheme_info": "Optional. Falls back to the section scheme.",
-          "image": "Image",
-          "image_position": "Image focal position",
+          "background_media": "Background type",
+          "background_media_info": "Choose a still image or a video file hosted in your store.",
+          "image": "Background image",
+          "image_info": "When using video, this image is the poster frame before playback (recommended).",
+          "video": "Background video",
+          "video_info": "Shown when Background type is Video. Use an MP4 from Shopify Files.",
+          "image_position": "Media focal position",
           "kicker": "Eyebrow",
           "heading": "Heading",
           "heading_size": "Heading size",
@@ -195,7 +211,13 @@
           "cta_primary_label": "Primary button label",
           "cta_primary_link": "Primary link",
           "cta_secondary_label": "Secondary text link label",
-          "cta_secondary_link": "Secondary link"
+          "cta_secondary_link": "Secondary link",
+          "content_overlay_enable": "Content overlay",
+          "content_overlay_enable_info": "Adds a colour layer between the background and text for better contrast.",
+          "content_overlay_color": "Overlay colour",
+          "content_overlay_opacity": "Overlay strength",
+          "content_overlay_coverage": "Overlay area",
+          "content_overlay_coverage_info": "Text column only tints behind the copy. Full slide covers the entire hero."
         }
       }
     }

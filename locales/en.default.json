@@ -233,6 +233,8 @@
     "nav_label": "Hero slides",
     "prev": "Previous slide",
     "next": "Next slide",
+    "nav_previous": "Previous",
+    "nav_next": "Next",
     "goto": "Go to slide {{ n }}",
     "add_slides": "Add slide blocks",
     "placeholder_heading": "Hero slider"
