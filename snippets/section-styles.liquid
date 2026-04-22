@@ -1,30 +1,227 @@
 {%- comment -%}
   snippets/section-styles.liquid
-  Injects #shopify-section-* CSS custom properties for global spacing/background.
-  Usage: {%- render 'section-styles', section: section -%}
-  Place before the first root HTML node of the section.
-  See: docs/Shopify Theme — Global Section Options.md
+  ────────────────────────────────────────────────────────────────────────────
+  Section shell: padding (4 sides), margin (top/bottom), background, border,
+  and per-corner radius (--section-radius-tl/tr/br/bl).
+
+  Usage:
+    {%- render 'section-styles', section: section -%}
+  On the same section root, add class `shopify-section-wrapper` + color-scheme vars.
+
+  Copy the JSON block at the bottom into each section schema (ids must match).
+
+  See: src/styles/base/_section-wrapper.scss
 {%- endcomment -%}
 
 {%- liquid
   assign pt = section.settings.padding_top | default: 40
+  assign pr = section.settings.padding_right | default: 0
   assign pb = section.settings.padding_bottom | default: 40
+  assign pl = section.settings.padding_left | default: 0
   assign mt = section.settings.margin_top | default: 0
   assign mb = section.settings.margin_bottom | default: 0
   assign bg = section.settings.background_color
+
+  assign border_w = section.settings.border_width | default: 0
+  assign border_style = section.settings.border_style | default: 'solid'
+  assign r_tl = section.settings.border_radius_top_left | default: 0
+  assign r_tr = section.settings.border_radius_top_right | default: 0
+  assign r_br = section.settings.border_radius_bottom_right | default: 0
+  assign r_bl = section.settings.border_radius_bottom_left | default: 0
+  assign border_c = section.settings.border_color
 -%}
 
 <style>
   #shopify-section-{{ section.id }} {
     --section-padding-top: {{ pt }}px;
+    --section-padding-right: {{ pr }}px;
     --section-padding-bottom: {{ pb }}px;
+    --section-padding-left: {{ pl }}px;
     --section-margin-top: {{ mt }}px;
     --section-margin-bottom: {{ mb }}px;
+    --section-border-width: {{ border_w }}px;
+    --section-border-style: {{ border_style }};
+    --section-radius-tl: {{ r_tl }}px;
+    --section-radius-tr: {{ r_tr }}px;
+    --section-radius-br: {{ r_br }}px;
+    --section-radius-bl: {{ r_bl }}px;
 {%- if bg != blank
   and bg != 'rgba(0,0,0,0)'
   and bg != 'rgba(0, 0, 0, 0)'
 -%}
     --section-bg: {{ bg }};
 {%- endif -%}
+{%- if border_c != blank
+  and border_c != 'rgba(0,0,0,0)'
+  and border_c != 'rgba(0, 0, 0, 0)'
+-%}
+    --section-border-color: {{ border_c }};
+{%- endif -%}
   }
 </style>
+
+{%- comment -%}
+  === Base settings (schema JSON) — copy into "settings": [ ... ] ================
+
+  {
+    "type": "header",
+    "content": "Section"
+  },
+  {
+    "type": "header",
+    "content": "Padding"
+  },
+  {
+    "type": "range",
+    "id": "padding_top",
+    "min": 0,
+    "max": 120,
+    "step": 4,
+    "unit": "px",
+    "label": "Top",
+    "default": 40
+  },
+  {
+    "type": "range",
+    "id": "padding_right",
+    "min": 0,
+    "max": 80,
+    "step": 4,
+    "unit": "px",
+    "label": "Right",
+    "default": 0
+  },
+  {
+    "type": "range",
+    "id": "padding_bottom",
+    "min": 0,
+    "max": 120,
+    "step": 4,
+    "unit": "px",
+    "label": "Bottom",
+    "default": 40
+  },
+  {
+    "type": "range",
+    "id": "padding_left",
+    "min": 0,
+    "max": 80,
+    "step": 4,
+    "unit": "px",
+    "label": "Left",
+    "default": 0
+  },
+  {
+    "type": "header",
+    "content": "Margin"
+  },
+  {
+    "type": "range",
+    "id": "margin_top",
+    "min": 0,
+    "max": 80,
+    "step": 4,
+    "unit": "px",
+    "label": "Margin top",
+    "default": 0
+  },
+  {
+    "type": "range",
+    "id": "margin_bottom",
+    "min": 0,
+    "max": 80,
+    "step": 4,
+    "unit": "px",
+    "label": "Margin bottom",
+    "default": 0
+  },
+  {
+    "type": "header",
+    "content": "Background"
+  },
+  {
+    "type": "color",
+    "id": "background_color",
+    "label": "Background color",
+    "default": "rgba(0,0,0,0)",
+    "info": "Clear uses the color scheme. Otherwise fills the full section area."
+  },
+  {
+    "type": "header",
+    "content": "Border"
+  },
+  {
+    "type": "range",
+    "id": "border_width",
+    "min": 0,
+    "max": 8,
+    "step": 1,
+    "unit": "px",
+    "label": "Width",
+    "default": 0
+  },
+  {
+    "type": "select",
+    "id": "border_style",
+    "label": "Style",
+    "options": [
+      { "value": "none", "label": "None" },
+      { "value": "solid", "label": "Solid" },
+      { "value": "dashed", "label": "Dashed" },
+      { "value": "dotted", "label": "Dotted" }
+    ],
+    "default": "solid"
+  },
+  {
+    "type": "header",
+    "content": "Corner radius"
+  },
+  {
+    "type": "range",
+    "id": "border_radius_top_left",
+    "min": 0,
+    "max": 48,
+    "step": 1,
+    "unit": "px",
+    "label": "Top left",
+    "default": 0
+  },
+  {
+    "type": "range",
+    "id": "border_radius_top_right",
+    "min": 0,
+    "max": 48,
+    "step": 1,
+    "unit": "px",
+    "label": "Top right",
+    "default": 0
+  },
+  {
+    "type": "range",
+    "id": "border_radius_bottom_right",
+    "min": 0,
+    "max": 48,
+    "step": 1,
+    "unit": "px",
+    "label": "Bottom right",
+    "default": 0
+  },
+  {
+    "type": "range",
+    "id": "border_radius_bottom_left",
+    "min": 0,
+    "max": 48,
+    "step": 1,
+    "unit": "px",
+    "label": "Bottom left",
+    "default": 0
+  },
+  {
+    "type": "color",
+    "id": "border_color",
+    "label": "Border color",
+    "default": "rgba(0,0,0,0)",
+    "info": "Clear uses the color scheme border. Shown when width is greater than 0."
+  }
+
+{%- endcomment -%}

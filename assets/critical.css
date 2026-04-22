@@ -127,3 +127,17 @@ body {
 .shopify-section > .full-width {
   grid-column: 1 / -1;
 }
+
+/**
+ * Constrain layout to the same width as a default (non full-width) section column.
+ * Use inside a `.full-width` section shell so backgrounds span edge-to-edge while
+ * text, cards, and grids line up with the page content column (inherits --content-width
+ * from `.shopify-section`).
+ */
+.section-content-width {
+  width: 100%;
+  max-width: var(--content-width);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}

@@ -1,12 +1,20 @@
-// Global section shell — used with snippets/section-styles.liquid
-// Variables are defined on #shopify-section-* (injected in the section-styles snippet)
+// Global section shell — use with snippets/section-styles.liquid
+// Variables are set on #shopify-section-* ; same node should set --cs-* (color scheme)
 .shopify-section-wrapper {
   box-sizing: border-box;
   width: 100%;
   margin-top: var(--section-margin-top, 0px);
   margin-bottom: var(--section-margin-bottom, 0px);
   padding-top: var(--section-padding-top, 40px);
+  padding-right: var(--section-padding-right, 0px);
   padding-bottom: var(--section-padding-bottom, 40px);
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: var(--section-padding-left, 0px);
+  background-color: var(--section-bg, var(--cs-background, transparent));
+  border-width: var(--section-border-width, 0px);
+  border-style: var(--section-border-style, solid);
+  border-color: var(--section-border-color, var(--cs-border, transparent));
+  border-top-left-radius: var(--section-radius-tl, 0px);
+  border-top-right-radius: var(--section-radius-tr, 0px);
+  border-bottom-right-radius: var(--section-radius-br, 0px);
+  border-bottom-left-radius: var(--section-radius-bl, 0px);
 }

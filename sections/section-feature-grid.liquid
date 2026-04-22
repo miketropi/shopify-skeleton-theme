@@ -14,14 +14,14 @@
 {%- render 'section-styles', section: section -%}
 
 <div
-  class="section-{{ section.id }} section-feature-grid shopify-section-wrapper section-feature-grid--align-{{ section.settings.heading_alignment }} section-feature-grid--density-{{ section.settings.section_density }} section-feature-grid--card-{{ section.settings.card_style }} section-feature-grid--cols-{{ section.settings.columns }}{% if section.settings.entrance_animation %} section-feature-grid--animate{% endif %}"
+  class="section-{{ section.id }} section-feature-grid section-feature-grid--align-{{ section.settings.heading_alignment }} section-feature-grid--density-{{ section.settings.section_density }} section-feature-grid--card-{{ section.settings.card_style }} section-feature-grid--cols-{{ section.settings.columns }}{% if section.settings.entrance_animation %} section-feature-grid--animate{% endif %}{% if section.settings.full_width %} full-width{% endif %} shopify-section-wrapper"
   data-section-type="section-feature-grid"
   data-section-id="{{ section.id }}"
   style="{{ fg_scheme_vars }} --fg-item-count: {{ section.blocks.size }};"
   {{ section.shopify_attributes }}
 >
   {%- if section.blocks.size > 0 -%}
-    <div class="section-feature-grid__inner">
+    <div class="section-feature-grid__inner{% if section.settings.full_width %} section-content-width{% endif %}">
       {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
         <header class="section-feature-grid__header">
           {%- if section.settings.heading != blank -%}
@@ -107,7 +107,93 @@
   "settings": [
     {
       "type": "header",
-      "content": "Spacing"
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why shop with us"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>We focus on the details that make shopping simple and products that last.</p>"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns (desktop & tablet)",
+      "info": "One column on small screens; then follows your choice.",
+      "options": [
+        { "value": "auto", "label": "Auto (1 → 2 → 3)" },
+        { "value": "2", "label": "2 columns" },
+        { "value": "3", "label": "3 columns" },
+        { "value": "4", "label": "4 columns" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "select",
+      "id": "card_style",
+      "label": "Card style",
+      "options": [
+        { "value": "elevated", "label": "Elevated" },
+        { "value": "soft", "label": "Soft" },
+        { "value": "minimal", "label": "Minimal" }
+      ],
+      "default": "elevated"
+    },
+    {
+      "type": "select",
+      "id": "section_density",
+      "label": "Card spacing",
+      "options": [
+        { "value": "compact", "label": "Compact" },
+        { "value": "default", "label": "Default" },
+        { "value": "spacious", "label": "Spacious" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "checkbox",
+      "id": "entrance_animation",
+      "label": "Scroll-in animation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width (edge-to-edge background)",
+      "info": "Section background fills the browser width. Content stays in the page column.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
     },
     {
       "type": "range",
@@ -116,8 +202,18 @@
       "max": 120,
       "step": 4,
       "unit": "px",
-      "label": "Padding top",
+      "label": "Top",
       "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Right",
+      "default": 0
     },
     {
       "type": "range",
@@ -126,8 +222,22 @@
       "max": 120,
       "step": 4,
       "unit": "px",
-      "label": "Padding bottom",
+      "label": "Bottom",
       "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Left",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Margin"
     },
     {
       "type": "range",
@@ -157,7 +267,85 @@
       "type": "color",
       "id": "background_color",
       "label": "Background color",
-      "default": "rgba(0,0,0,0)"
+      "default": "rgba(0,0,0,0)",
+      "info": "Clear uses the color scheme. Otherwise fills the full section area."
+    },
+    {
+      "type": "header",
+      "content": "Border"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "Width",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "Style",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "solid", "label": "Solid" },
+        { "value": "dashed", "label": "Dashed" },
+        { "value": "dotted", "label": "Dotted" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "rgba(0,0,0,0)",
+      "info": "Clear uses the color scheme border. Used when width is greater than 0."
+    },
+    {
+      "type": "header",
+      "content": "Corner radius"
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Top left",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Top right",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom right",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom left",
+      "default": 0
     },
     {
       "type": "header",
@@ -168,69 +356,6 @@
       "id": "color_scheme",
       "label": "Color scheme",
       "default": "scheme-1"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Why shop with us"
-    },
-    {
-      "type": "richtext",
-      "id": "subheading",
-      "label": "Subheading",
-      "default": "<p>We focus on the details that make shopping simple and products that last.</p>"
-    },
-    {
-      "type": "select",
-      "id": "heading_alignment",
-      "label": "Heading alignment",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "select",
-      "id": "columns",
-      "label": "Columns (desktop & tablet)",
-      "info": "Layout stays one column on small phones, then follows your choice.",
-      "options": [
-        { "value": "auto", "label": "Auto (1 → 2 → 3)" },
-        { "value": "2", "label": "2 columns" },
-        { "value": "3", "label": "3 columns" },
-        { "value": "4", "label": "4 columns" }
-      ],
-      "default": "auto"
-    },
-    {
-      "type": "select",
-      "id": "card_style",
-      "label": "Card style",
-      "options": [
-        { "value": "elevated", "label": "Elevated" },
-        { "value": "soft", "label": "Soft" },
-        { "value": "minimal", "label": "Minimal" }
-      ],
-      "default": "elevated"
-    },
-    {
-      "type": "select",
-      "id": "section_density",
-      "label": "Card spacing (inside the section)",
-      "options": [
-        { "value": "compact", "label": "Compact" },
-        { "value": "default", "label": "Default" },
-        { "value": "spacious", "label": "Spacious" }
-      ],
-      "default": "default"
-    },
-    {
-      "type": "checkbox",
-      "id": "entrance_animation",
-      "label": "Scroll-in animation",
-      "default": true
     }
   ],
   "blocks": [
@@ -243,18 +368,18 @@
           "type": "image_picker",
           "id": "image",
           "label": "Image or icon",
-          "info": "Optional. Square icons or small illustrations work best (about 64–120px display size)."
+          "info": "Optional. Square works best."
         },
         {
           "type": "text",
           "id": "image_alt",
           "label": "Image alt text",
-          "info": "Describe the image for screen readers. Leave empty if the image is decorative only."
+          "info": "For accessibility. Leave empty if decorative."
         },
         {
           "type": "text",
           "id": "kicker",
-          "label": "Eyebrow / label"
+          "label": "Label"
         },
         {
           "type": "text",
@@ -265,7 +390,7 @@
         {
           "type": "richtext",
           "id": "text",
-          "label": "Description",
+          "label": "Text",
           "default": "<p>Short, helpful copy that explains your value in one or two sentences.</p>"
         },
         {
@@ -276,8 +401,7 @@
         {
           "type": "text",
           "id": "link_label",
-          "label": "Link label",
-          "default": "Learn more"
+          "label": "Link label"
         },
         {
           "type": "checkbox",
@@ -293,17 +417,27 @@
       "name": "Feature grid",
       "settings": {
         "padding_top": 40,
+        "padding_right": 0,
         "padding_bottom": 40,
+        "padding_left": 0,
         "margin_top": 0,
         "margin_bottom": 0,
         "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0,
+        "border_color": "rgba(0,0,0,0)",
         "heading": "Why shop with us",
         "subheading": "<p>We focus on the details that make shopping simple and products that last.</p>",
         "heading_alignment": "center",
         "columns": "auto",
         "card_style": "elevated",
         "section_density": "default",
-        "entrance_animation": true
+        "entrance_animation": true,
+        "full_width": false
       },
       "blocks": [
         {
