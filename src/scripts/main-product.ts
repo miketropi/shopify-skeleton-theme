@@ -1,5 +1,6 @@
 import gsap from 'gsap'
-
+import Swiper from 'swiper'
+import { A11y, EffectFade, Keyboard, Navigation, Pagination, Thumbs } from 'swiper/modules'
 import { registerSection } from './section-registry'
 
 const SECTION_TYPE = 'main-product'
@@ -7,8 +8,30 @@ const SECTION_TYPE = 'main-product'
 type VariantJson = {
   id: number
   available: boolean
+  option1: string | null
+  option2: string | null
+  option3: string | null
   price: string
   compare_at_price: string | null
+  compare_at_cents: number
+  price_cents: number
+  featured_media_id: number | null
+}
+
+type MediaEntry = {
+  id: number
+  src: string
+  alt: string
+  w: number
+  h: number
+}
+
+type ProductDataVariant = {
+  id: number
+  option1?: string | null
+  option2?: string | null
+  option3?: string | null
+  options?: string[] | null
 }
 
 function prefersReducedMotion(): boolean {
@@ -26,51 +49,315 @@ function parseVariantsJson(container: HTMLElement): VariantJson[] | null {
   }
 }
 
+function parseMediaJson(container: HTMLElement): Record<string, MediaEntry> | null {
+  const el = container.querySelector('script[type="application/json"][data-product-media-json]')
+  if (!el?.textContent) return null
+  try {
+    return JSON.parse(el.textContent) as Record<string, MediaEntry>
+  } catch {
+    return null
+  }
+}
+
+function getMediaIdOrder(container: HTMLElement): number[] {
+  const raw = container.dataset.productMediaOrder || ''
+  return raw
+    .split(',')
+    .map((s) => parseInt(s.trim(), 10))
+    .filter((n) => Number.isFinite(n))
+}
+
+function normOpt(v: string | null | undefined): string {
+  if (v == null || v === 'null') return ''
+  return String(v).trim()
+}
+
+/**
+ * Match variant using `window.__productData.variants[].options` (storefront shape)
+ * so option strings align with the picker; falls back to option1/2/3 in JSON.
+ */
+function findVariantIdFromStorefront(choices: string[], groupCount: number): number | null {
+  const w = window as unknown as { __productData?: { variants?: ProductDataVariant[] } }
+  const list = w.__productData?.variants
+  if (!list?.length) return null
+
+  for (const v of list) {
+    const opts: string[] =
+      Array.isArray(v.options) && v.options.length
+        ? v.options.map((x) => normOpt(x))
+        : [normOpt(v.option1), normOpt(v.option2), normOpt(v.option3)]
+    let ok = true
+    for (let i = 0; i < groupCount; i++) {
+      if (normOpt(choices[i]) !== normOpt(opts[i])) {
+        ok = false
+        break
+      }
+    }
+    if (ok) return v.id
+  }
+  return null
+}
+
+function findVariantInJson(
+  id: number,
+  variants: VariantJson[]
+): VariantJson | undefined {
+  return variants.find((x) => x.id === id)
+}
+
+function findVariantJsonHeuristic(choices: string[], groupCount: number, variants: VariantJson[]): VariantJson | undefined {
+  return variants.find((v) => {
+    if (groupCount >= 1 && normOpt(v.option1) !== normOpt(choices[0] ?? '')) return false
+    if (groupCount >= 2 && normOpt(v.option2) !== normOpt(choices[1] ?? '')) return false
+    if (groupCount >= 3 && normOpt(v.option3) !== normOpt(choices[2] ?? '')) return false
+    return true
+  })
+}
+
+function getOptionValues(container: HTMLElement, groupCount: number): string[] {
+  const out: string[] = []
+  const groups = container.querySelectorAll<HTMLElement>('[data-product-option-group]')
+  for (let i = 0; i < groupCount; i++) {
+    const g = groups[i]
+    if (!g) {
+      out[i] = ''
+      continue
+    }
+    const radio = g.querySelector<HTMLInputElement>('input[type="radio"][data-product-option]:checked')
+    if (radio) {
+      out[i] = radio.value
+      continue
+    }
+    const sel = g.querySelector<HTMLSelectElement>('[data-product-option-select]')
+    out[i] = sel?.value ?? ''
+  }
+  return out
+}
+
+function setRadiosAndSelectsFromVariant(container: HTMLElement, v: VariantJson, groupCount: number): void {
+  const groups = container.querySelectorAll<HTMLElement>('[data-product-option-group]')
+  const w = window as unknown as { __productData?: { variants?: ProductDataVariant[] } }
+  const store = w.__productData?.variants?.find((x) => x.id === v.id)
+  const opts: string[] =
+    store && Array.isArray(store.options) && store.options.length
+      ? store.options.map((x) => normOpt(x as string))
+      : [normOpt(v.option1), normOpt(v.option2), normOpt(v.option3)]
+
+  for (let i = 0; i < groupCount; i++) {
+    const g = groups[i]
+    if (!g) continue
+    const val = normOpt(opts[i] ?? null)
+    const rads = g.querySelectorAll<HTMLInputElement>('input[type="radio"][data-product-option]')
+    if (rads.length > 0) {
+      for (const r of rads) {
+        r.checked = normOpt(r.value) === val
+        r.labels?.[0]?.classList.toggle('is-selected', r.checked)
+      }
+    }
+    const sel = g.querySelector<HTMLSelectElement>('[data-product-option-select]')
+    if (sel) {
+      const match = Array.from(sel.options).find((o) => normOpt(o.value) === val)
+      if (match) sel.value = match.value
+    }
+  }
+}
+
+function setOptionSelectedLabels(container: HTMLElement, v: VariantJson, groupCount: number): void {
+  const w = window as unknown as { __productData?: { variants?: ProductDataVariant[] } }
+  const store = w.__productData?.variants?.find((x) => x.id === v.id)
+  const opts: string[] =
+    store && Array.isArray(store.options) && store.options.length
+      ? store.options.map((x) => String(x))
+      : [normOpt(v.option1), normOpt(v.option2), normOpt(v.option3)]
+
+  const groups = container.querySelectorAll('[data-product-option-group]')
+  for (let i = 0; i < groupCount; i++) {
+    const g = groups[i] as HTMLElement | undefined
+    if (!g) continue
+    const el = g.querySelector('[data-product-option-selected]')
+    if (el) el.textContent = normOpt(opts[i] ?? null) || '—'
+  }
+}
+
 function killProductTweens(nodes: Element[]): void {
   for (const n of nodes) {
     gsap.killTweensOf(n)
   }
 }
 
+function getSlideIndexForMediaId(order: number[], id: number | null): number {
+  if (id == null) return 0
+  const i = order.indexOf(id)
+  return i >= 0 ? i : 0
+}
+
+function updateSaleBadge(
+  container: HTMLElement,
+  variant: VariantJson
+): void {
+  const badge = container.querySelector<HTMLElement>('[data-product-badge]')
+  if (!badge) return
+  const c = variant.compare_at_cents
+  const p = variant.price_cents
+  if (c > p && c > 0) {
+    const offPct = Math.round(((c - p) * 100) / c)
+    const suffix = (container.dataset.saleOffLabel || '').trim()
+    badge.hidden = false
+    badge.classList.remove('is-visually-hidden', 'visually-hidden')
+    badge.textContent = suffix ? `${offPct}% ${suffix}` : `${offPct}%`
+  } else {
+    badge.hidden = true
+    badge.classList.add('is-visually-hidden')
+  }
+}
+
+type MainProductTeardown = {
+  (): void
+}
+
 export function registerMainProductSection(): void {
   registerSection(
     SECTION_TYPE,
     (container) => {
-      const variants = parseVariantsJson(container)
-      if (!variants) return
+      const parsedVariants = parseVariantsJson(container)
+      if (!parsedVariants) return
+      const variants = parsedVariants
 
+      const mediaMap = parseMediaJson(container)
+      const mediaOrder = getMediaIdOrder(container)
       const reduced = prefersReducedMotion()
       const abort = new AbortController()
       const { signal } = abort
 
-      const gallery = container.querySelector('.main-product__media')
-      const figures = gallery ? Array.from(gallery.querySelectorAll('.main-product__figure')) : []
-      const info = container.querySelector('.main-product__info')
-      const infoBlocks = info ? Array.from(info.children) : []
+      const gallery = container.querySelector<HTMLElement>('[data-product-gallery]')
+      const swiperEl = container.querySelector<HTMLElement>('[data-product-swiper]')
+      const thumbsEl = container.querySelector<HTMLElement>('[data-product-thumbs-swiper]')
 
-      const select = container.querySelector<HTMLSelectElement>('[data-product-variant-select]')
+      let mainSwiper: InstanceType<typeof Swiper> | null = null
+      let thumbsSwiper: InstanceType<typeof Swiper> | null = null
+
+      if (swiperEl && thumbsEl) {
+        thumbsSwiper = new Swiper(thumbsEl, {
+          modules: [A11y],
+          spaceBetween: 8,
+          slidesPerView: 4.2,
+          freeMode: true,
+          watchSlidesProgress: true,
+          breakpoints: {
+            480: { slidesPerView: 4.5 },
+            768: { slidesPerView: 5.5, spaceBetween: 10 },
+          },
+        })
+        const totalSlides = swiperEl.querySelectorAll('.swiper-slide').length
+        const padN = (n: number) => {
+          const w = Math.max(2, String(totalSlides).length)
+          return String(n).padStart(w, '0')
+        }
+        const paginationEl = container.querySelector<HTMLElement>('[data-product-pagination]') ?? undefined
+        mainSwiper = new Swiper(swiperEl, {
+          modules: [A11y, EffectFade, Keyboard, Navigation, Pagination, Thumbs],
+          effect: 'fade',
+          fadeEffect: { crossFade: true },
+          speed: reduced ? 0 : 420,
+          keyboard: { enabled: true, onlyInViewport: true },
+          spaceBetween: 0,
+          grabCursor: !reduced,
+          watchOverflow: true,
+          navigation: {
+            nextEl: container.querySelector<HTMLElement>('[data-product-nav-next]') ?? undefined,
+            prevEl: container.querySelector<HTMLElement>('[data-product-nav-prev]') ?? undefined,
+          },
+          pagination: {
+            el: paginationEl,
+            type: 'fraction',
+            formatFractionCurrent: (n) => padN(n),
+            formatFractionTotal: (n) => padN(n),
+          },
+          thumbs: { swiper: thumbsSwiper },
+          on: {
+            slideChange(sw) {
+              const id = mediaOrder[sw.activeIndex] ?? null
+              if (gallery && id != null) gallery.setAttribute('data-active-media-id', String(id))
+              container.querySelectorAll<HTMLButtonElement>('[data-product-thumb]').forEach((btn) => {
+                const mid = btn.getAttribute('data-media-id')
+                btn.setAttribute('aria-pressed', mid === String(id) ? 'true' : 'false')
+              })
+            },
+          },
+        })
+      }
+
+      const info = container.querySelector<HTMLElement>('[data-product-info]')
+      const infoChildren = info ? (Array.from(info.children) as HTMLElement[]) : []
+      const galleryForAnim: HTMLElement[] = []
+      if (gallery) {
+        const inner =
+          gallery.querySelector<HTMLElement>('[data-product-gallery-frame]') ??
+          gallery.querySelector<HTMLElement>('.main-product__media-inner')
+        if (inner) galleryForAnim.push(inner)
+      }
+
       const priceEl = container.querySelector('[data-product-price]')
       const compareEl = container.querySelector('[data-product-compare]')
       const submitBtn = container.querySelector<HTMLButtonElement>('[data-product-submit]')
       const submitLabel = container.querySelector('[data-product-submit-label]')
       const priceRow = container.querySelector('[data-product-price-row]')
       const form = container.querySelector<HTMLFormElement>('.main-product__form')
+      const variantIdInput = container.querySelector<HTMLInputElement>('[data-product-variant-id]')
+      const selectLegacy = container.querySelector<HTMLSelectElement>('[data-product-variant-select]')
 
       const addLabel = container.dataset.productAddLabel?.trim() || 'Add to cart'
       const soldLabel = container.dataset.productSoldLabel?.trim() || 'Sold out'
 
-      const animNodes = [...figures, ...infoBlocks]
+      const groupCount = container.querySelectorAll('[data-product-option-group]').length
 
-      if (!reduced && animNodes.length > 0) {
-        gsap.set(animNodes, { autoAlpha: 0, y: 10 })
-        gsap.to(animNodes, {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'power2.out',
-          stagger: 0.055,
-          clearProps: 'transform',
-        })
+      const animNodes = [...galleryForAnim, ...infoChildren]
+
+      if (animNodes.length > 0) {
+        if (!reduced) {
+          gsap.set(animNodes, { autoAlpha: 0, y: 14 })
+          gsap.to(animNodes, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.55,
+            ease: 'power2.out',
+            stagger: 0.06,
+            clearProps: 'transform,opacity,visibility',
+          })
+        } else {
+          gsap.set(animNodes, { clearProps: 'all' })
+        }
+      }
+
+      function goToMediaId(featuredId: number | null): void {
+        if (featuredId == null || !mainSwiper || mediaOrder.length === 0) return
+        const idx = getSlideIndexForMediaId(mediaOrder, featuredId)
+        mainSwiper.slideTo(idx, reduced ? 0 : 400)
+        if (gallery) gallery.setAttribute('data-active-media-id', String(featuredId))
+      }
+
+      function applySingleImageFromVariant(m: MediaEntry | undefined): void {
+        const img = container.querySelector<HTMLImageElement>('[data-product-slide-img]')
+        if (!img || !m) return
+        img.src = m.src
+        img.removeAttribute('srcset')
+        img.setAttribute('width', String(m.w))
+        img.setAttribute('height', String(m.h))
+        img.alt = m.alt
+        const fig = container.querySelector('[data-product-feature-figure]')
+        if (fig) fig.setAttribute('data-media-id', String(m.id))
+        if (gallery) gallery.setAttribute('data-active-media-id', String(m.id))
+      }
+
+      function applyMediaForVariant(v: VariantJson): void {
+        const id = v.featured_media_id
+        if (id == null) return
+        if (mainSwiper && mediaOrder.length > 0) {
+          goToMediaId(id)
+          return
+        }
+        const m = mediaMap?.[String(id)]
+        if (m) applySingleImageFromVariant(m)
       }
 
       function applyVariant(id: string): void {
@@ -90,6 +377,13 @@ export function registerMainProductSection(): void {
           }
           if (submitBtn) submitBtn.disabled = !v.available
           if (submitLabel) submitLabel.textContent = v.available ? addLabel : soldLabel
+          if (variantIdInput) variantIdInput.value = String(v.id)
+          if (groupCount > 0) {
+            setRadiosAndSelectsFromVariant(container, v, groupCount)
+            setOptionSelectedLabels(container, v, groupCount)
+          }
+          updateSaleBadge(container, v)
+          applyMediaForVariant(v)
         }
 
         if (reduced || !priceRow) {
@@ -100,19 +394,36 @@ export function registerMainProductSection(): void {
         gsap.killTweensOf(priceRow)
         gsap
           .timeline()
-          .to(priceRow, { autoAlpha: 0.65, y: -3, duration: 0.12, ease: 'power2.in' })
+          .to(priceRow, { autoAlpha: 0.5, y: -4, duration: 0.12, ease: 'power2.in' })
           .add(updateDom)
-          .to(priceRow, { autoAlpha: 1, y: 0, duration: 0.22, ease: 'power2.out' })
+          .to(priceRow, { autoAlpha: 1, y: 0, duration: 0.2, ease: 'power2.out' })
       }
 
-      if (select) {
-        select.addEventListener(
-          'change',
-          () => {
-            applyVariant(select.value)
-          },
-          { signal }
-        )
+      function onOptionsChanged(): void {
+        if (groupCount === 0) return
+        const values = getOptionValues(container, groupCount)
+        const sid = findVariantIdFromStorefront(values, groupCount)
+        let vJson: VariantJson | undefined
+        if (sid != null) {
+          vJson = findVariantInJson(sid, variants)
+        }
+        if (!vJson) {
+          vJson = findVariantJsonHeuristic(values, groupCount, variants)
+        }
+        if (vJson) {
+          applyVariant(String(vJson.id))
+        }
+      }
+
+      if (selectLegacy) {
+        selectLegacy.addEventListener('change', () => applyVariant(selectLegacy.value), { signal })
+      }
+
+      for (const el of container.querySelectorAll<HTMLInputElement>('input[type="radio"][data-product-option]')) {
+        el.addEventListener('change', onOptionsChanged, { signal })
+      }
+      for (const el of container.querySelectorAll<HTMLSelectElement>('[data-product-option-select]')) {
+        el.addEventListener('change', onOptionsChanged, { signal })
       }
 
       if (form && submitBtn) {
@@ -138,15 +449,20 @@ export function registerMainProductSection(): void {
         )
       }
 
-      ;(container as HTMLElement & { __mainProductTeardown?: () => void }).__mainProductTeardown = () => {
+      const extended = container as HTMLElement & { __mainProductTeardown?: MainProductTeardown }
+      extended.__mainProductTeardown = () => {
         abort.abort()
         killProductTweens(animNodes)
         if (priceRow) gsap.killTweensOf(priceRow)
         if (submitBtn) gsap.killTweensOf(submitBtn)
+        mainSwiper?.destroy(true, true)
+        thumbsSwiper?.destroy(true, true)
+        mainSwiper = null
+        thumbsSwiper = null
       }
     },
     (container) => {
-      const extended = container as HTMLElement & { __mainProductTeardown?: () => void }
+      const extended = container as HTMLElement & { __mainProductTeardown?: MainProductTeardown }
       extended.__mainProductTeardown?.()
       delete extended.__mainProductTeardown
     }

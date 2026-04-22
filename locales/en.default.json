@@ -204,11 +204,30 @@
   "products": {
     "product": {
       "add_to_cart": "Add to cart",
+      "breadcrumb_label": "Breadcrumb",
+      "breadcrumb_home": "Home",
+      "complete_look": "Complete the look",
+      "description_heading": "Description",
       "details": "Details",
+      "open_image": "View image",
+      "gallery_toolbar": "Image gallery",
       "quantity": "Quantity",
+      "review_aria": "Average rating {{ rating }} out of 5. {{ count }} reviews.",
+      "review_count": {
+        "one": "{{ count }} review",
+        "other": "{{ count }} reviews"
+      },
+      "review_score": "{{ score }} out of 5",
       "sale": "Sale",
+      "sale_off": "off",
+      "sale_percent": "{{ percent }}% off",
+      "size_guide": "Size guide",
+      "slideshow_next": "Next image",
+      "slideshow_prev": "Previous image",
       "sold_out": "Sold out",
-      "variant": "Variant"
+      "stars": "★★★★★",
+      "variant": "Variant",
+      "wishlist": "Add to wishlist"
     }
   },
   "search": {

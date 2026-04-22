@@ -227,6 +227,29 @@
           "content_overlay_coverage_info": "Text column only tints behind the copy. Full slide covers the entire hero."
         }
       }
+    },
+    "main_product": {
+      "name": "Product",
+      "show_breadcrumbs": "Show breadcrumbs",
+      "show_vendor": "Show vendor",
+      "show_quantity": "Show quantity selector",
+      "show_sale_badge": "Show sale badge on image",
+      "show_review_summary": "Show review summary",
+      "review_info": "Uses product metafields `reviews.rating` and `reviews.rating_count` when present (e.g. review apps).",
+      "size_guide_url": "Size guide link (optional)",
+      "wishlist_url": "Wishlist link (optional)",
+      "wishlist_info": "Leave empty to hide the secondary button.",
+      "heading_recommendations": "Complete the look",
+      "show_complete_look": "Show “Complete the look”",
+      "complete_look_collection": "Collection",
+      "complete_look_limit": "Products to show",
+      "complete_look_heading": "Heading (optional)",
+      "block_spec": "Spec row",
+      "spec_label": "Label",
+      "spec_value": "Value",
+      "block_accordion": "Accordion",
+      "accordion_heading": "Heading",
+      "accordion_body": "Content"
     }
   }
 }
