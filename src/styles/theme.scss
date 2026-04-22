@@ -1,6 +1,7 @@
 // Base styles
 @use 'base/variables' as *;
 @use 'base/fonts';
+@use 'base/section-wrapper';
 @use 'sections/index' as *;
 
 // Non-critical styles compiled to assets/theme.css via Vite.

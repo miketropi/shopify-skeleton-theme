@@ -30,7 +30,7 @@
     "type_font_heading": "inter_n4",
     "type_font_body": "inter_n4",
     "type_font_mono": "ibm_plex_mono_n4",
-    "max_page_width": "110rem",
+    "max_page_width": "90rem",
     "min_page_margin": 24,
     "input_corner_radius": 6,
     "color_schemes": {

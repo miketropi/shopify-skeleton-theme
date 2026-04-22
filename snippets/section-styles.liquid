@@ -1,0 +1,30 @@
+{%- comment -%}
+  snippets/section-styles.liquid
+  Injects #shopify-section-* CSS custom properties for global spacing/background.
+  Usage: {%- render 'section-styles', section: section -%}
+  Place before the first root HTML node of the section.
+  See: docs/Shopify Theme — Global Section Options.md
+{%- endcomment -%}
+
+{%- liquid
+  assign pt = section.settings.padding_top | default: 40
+  assign pb = section.settings.padding_bottom | default: 40
+  assign mt = section.settings.margin_top | default: 0
+  assign mb = section.settings.margin_bottom | default: 0
+  assign bg = section.settings.background_color
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --section-padding-top: {{ pt }}px;
+    --section-padding-bottom: {{ pb }}px;
+    --section-margin-top: {{ mt }}px;
+    --section-margin-bottom: {{ mb }}px;
+{%- if bg != blank
+  and bg != 'rgba(0,0,0,0)'
+  and bg != 'rgba(0, 0, 0, 0)'
+-%}
+    --section-bg: {{ bg }};
+{%- endif -%}
+  }
+</style>

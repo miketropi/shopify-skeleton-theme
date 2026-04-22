@@ -1,25 +1,98 @@
+{%- liquid
+  assign fg_scheme = section.settings.color_scheme
+  if fg_scheme == blank or fg_scheme.settings == blank
+    assign fg_scheme = settings.global_color_scheme
+  endif
+  if fg_scheme == blank or fg_scheme.settings == blank
+    assign fg_scheme = settings.color_schemes['scheme-1']
+  endif
+-%}
+{%- capture fg_scheme_vars -%}
+  {%- render 'color-scheme-vars', scheme: fg_scheme, inline_only: true -%}
+{%- endcapture -%}
+
+{%- render 'section-styles', section: section -%}
+
 <div
-  class="section-{{ section.id }} section-feature-grid"
+  class="section-{{ section.id }} section-feature-grid shopify-section-wrapper section-feature-grid--align-{{ section.settings.heading_alignment }} section-feature-grid--density-{{ section.settings.section_density }} section-feature-grid--card-{{ section.settings.card_style }} section-feature-grid--cols-{{ section.settings.columns }}{% if section.settings.entrance_animation %} section-feature-grid--animate{% endif %}"
   data-section-type="section-feature-grid"
   data-section-id="{{ section.id }}"
-  {% render 'color-scheme-vars' %}
+  style="{{ fg_scheme_vars }} --fg-item-count: {{ section.blocks.size }};"
+  {{ section.shopify_attributes }}
 >
   {%- if section.blocks.size > 0 -%}
-    <ul class="section-feature-grid__list" role="list">
-      {%- for block in section.blocks -%}
-        {%- case block.type -%}
-          {%- when 'feature' -%}
-            <li class="section-feature-grid__item" {{ block.shopify_attributes }}>
-              {%- if block.settings.title != blank -%}
-                <h2 class="section-feature-grid__item-title">{{- block.settings.title | escape -}}</h2>
-              {%- endif -%}
-              {%- if block.settings.text != blank -%}
-                <div class="section-feature-grid__item-text rte">{{- block.settings.text -}}</div>
-              {%- endif -%}
-            </li>
-        {%- endcase -%}
-      {%- endfor -%}
-    </ul>
+    <div class="section-feature-grid__inner">
+      {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+        <header class="section-feature-grid__header">
+          {%- if section.settings.heading != blank -%}
+            <h2 class="section-feature-grid__heading">{{ section.settings.heading | escape }}</h2>
+          {%- endif -%}
+          {%- if section.settings.subheading != blank -%}
+            <div class="section-feature-grid__subheading rte">{{ section.settings.subheading }}</div>
+          {%- endif -%}
+        </header>
+      {%- endif -%}
+
+      <ul class="section-feature-grid__list" role="list">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'feature' -%}
+              <li
+                class="section-feature-grid__item"
+                style="--fg-i: {{ forloop.index0 }};"
+                {{ block.shopify_attributes }}
+              >
+                {%- if block.settings.image != blank -%}
+                  {%- assign card_image_alt = block.settings.image_alt | default: '' -%}
+                  <div class="section-feature-grid__icon-wrap">
+                    {{
+                      block.settings.image
+                      | image_url: width: 200
+                      | image_tag:
+                        loading: 'lazy',
+                        class: 'section-feature-grid__icon',
+                        widths: '100, 150, 200',
+                        sizes: '80px',
+                        alt: card_image_alt
+                    }}
+                  </div>
+                {%- endif -%}
+
+                <div class="section-feature-grid__content">
+                  {%- if block.settings.kicker != blank -%}
+                    <p class="section-feature-grid__kicker">{{ block.settings.kicker | escape }}</p>
+                  {%- endif -%}
+
+                  {%- if block.settings.title != blank -%}
+                    {%- if section.settings.heading != blank -%}
+                      <h3 class="section-feature-grid__item-title">{{ block.settings.title | escape }}</h3>
+                    {%- else -%}
+                      <h2 class="section-feature-grid__item-title">{{ block.settings.title | escape }}</h2>
+                    {%- endif -%}
+                  {%- endif -%}
+
+                  {%- if block.settings.text != blank -%}
+                    <div class="section-feature-grid__item-text rte">{{ block.settings.text }}</div>
+                  {%- endif -%}
+
+                  {%- if block.settings.link != blank and block.settings.link_label != blank -%}
+                    <a
+                      class="section-feature-grid__link"
+                      href="{{ block.settings.link }}"
+                      {% if block.settings.open_in_new_tab %}
+                        target="_blank" rel="noopener noreferrer"
+                      {% endif %}
+                    >
+                      <span class="section-feature-grid__link-text">{{ block.settings.link_label | escape }}</span>
+                      <span class="section-feature-grid__link-chevron" aria-hidden="true">→</span>
+                    </a>
+                  {%- endif -%}
+                </div>
+              </li>
+          {%- endcase -%}
+        {%- endfor -%}
+      </ul>
+    </div>
   {%- endif -%}
 </div>
 
@@ -28,13 +101,161 @@
   "name": "Feature grid",
   "tag": "section",
   "class": "section",
-  "settings": [],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "header",
+      "content": "Theme"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why shop with us"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>We focus on the details that make shopping simple and products that last.</p>"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns (desktop & tablet)",
+      "info": "Layout stays one column on small phones, then follows your choice.",
+      "options": [
+        { "value": "auto", "label": "Auto (1 → 2 → 3)" },
+        { "value": "2", "label": "2 columns" },
+        { "value": "3", "label": "3 columns" },
+        { "value": "4", "label": "4 columns" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "select",
+      "id": "card_style",
+      "label": "Card style",
+      "options": [
+        { "value": "elevated", "label": "Elevated" },
+        { "value": "soft", "label": "Soft" },
+        { "value": "minimal", "label": "Minimal" }
+      ],
+      "default": "elevated"
+    },
+    {
+      "type": "select",
+      "id": "section_density",
+      "label": "Card spacing (inside the section)",
+      "options": [
+        { "value": "compact", "label": "Compact" },
+        { "value": "default", "label": "Default" },
+        { "value": "spacious", "label": "Spacious" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "checkbox",
+      "id": "entrance_animation",
+      "label": "Scroll-in animation",
+      "default": true
+    }
+  ],
   "blocks": [
     {
       "type": "feature",
       "name": "Feature",
-      "limit": 6,
+      "limit": 9,
       "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image or icon",
+          "info": "Optional. Square icons or small illustrations work best (about 64–120px display size)."
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image alt text",
+          "info": "Describe the image for screen readers. Leave empty if the image is decorative only."
+        },
+        {
+          "type": "text",
+          "id": "kicker",
+          "label": "Eyebrow / label"
+        },
         {
           "type": "text",
           "id": "title",
@@ -46,6 +267,23 @@
           "id": "text",
           "label": "Description",
           "default": "<p>Short, helpful copy that explains your value in one or two sentences.</p>"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label",
+          "default": "Learn more"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_in_new_tab",
+          "label": "Open link in a new tab",
+          "default": false
         }
       ]
     }
@@ -53,6 +291,20 @@
   "presets": [
     {
       "name": "Feature grid",
+      "settings": {
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "heading": "Why shop with us",
+        "subheading": "<p>We focus on the details that make shopping simple and products that last.</p>",
+        "heading_alignment": "center",
+        "columns": "auto",
+        "card_style": "elevated",
+        "section_density": "default",
+        "entrance_animation": true
+      },
       "blocks": [
         {
           "type": "feature",
@@ -72,7 +324,8 @@
           "type": "feature",
           "settings": {
             "title": "Simple returns",
-            "text": "<p>Try pieces at home. If they are not right, send them back within 30 days.</p>"
+            "text": "<p>Try pieces at home. If they are not right, send them back within 30 days.</p>",
+            "link_label": "Return policy"
           }
         }
       ]
