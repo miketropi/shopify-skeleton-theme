@@ -1,0 +1,11 @@
+{%- comment -%} Renders `detail_accordion` blocks for the product section (e.g. inside Description). {%- endcomment -%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'detail_accordion' and block.settings.heading != blank -%}
+    <details class="main-product__accordion" {{ block.shopify_attributes }}>
+      <summary class="main-product__accordion-summary">{{- block.settings.heading | escape -}}</summary>
+      {%- if block.settings.body != blank -%}
+        <div class="main-product__accordion-body rte">{{ block.settings.body }}</div>
+      {%- endif -%}
+    </details>
+  {%- endif -%}
+{%- endfor -%}

@@ -21,6 +21,7 @@ import { registerCartDrawerSection, registerAjaxCartAdd } from './cart-drawer'
 import { registerMainProductSection } from './main-product'
 import { registerHeaderSection } from './header'
 import { registerSectionHeroSlider } from './sections/section-hero-slider'
+import './size-guide'
 
 document.documentElement.classList.add('js')
 

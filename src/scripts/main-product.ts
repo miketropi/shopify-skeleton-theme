@@ -215,6 +215,82 @@ type MainProductTeardown = {
   (): void
 }
 
+/**
+ * ARIA tabs for product info: keeps tab/panel in sync, keyboard roving, arrow / Home / End.
+ */
+function initProductDetailTabs(root: HTMLElement, signal: AbortSignal): void {
+  const tabsHost = root.querySelector<HTMLElement>('[data-product-tabs]')
+  if (!tabsHost) return
+
+  const tabButtons = (): HTMLButtonElement[] =>
+    Array.from(tabsHost.querySelectorAll<HTMLButtonElement>('[data-product-tab][role="tab"]'))
+
+  const tabPanels = (): HTMLElement[] =>
+    Array.from(tabsHost.querySelectorAll<HTMLElement>('[data-product-tab-panel][role="tabpanel"]'))
+
+  function showTab(key: string): void {
+    for (const btn of tabButtons()) {
+      const k = btn.getAttribute('data-product-tab') || ''
+      const on = k === key
+      btn.setAttribute('aria-selected', on ? 'true' : 'false')
+      btn.tabIndex = on ? 0 : -1
+    }
+    for (const panel of tabPanels()) {
+      const k = panel.getAttribute('data-product-tab-panel') || ''
+      if (k === key) {
+        panel.removeAttribute('hidden')
+      } else {
+        panel.setAttribute('hidden', '')
+      }
+    }
+  }
+
+  tabsHost.addEventListener(
+    'click',
+    (e) => {
+      const t = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-product-tab]')
+      if (!t || !tabsHost.contains(t)) return
+      const key = t.getAttribute('data-product-tab')
+      if (key) showTab(key)
+    },
+    { signal }
+  )
+
+  tabsHost.addEventListener(
+    'keydown',
+    (e) => {
+      const cur = document.activeElement
+      if (!cur || !(cur instanceof HTMLButtonElement) || !cur.hasAttribute('data-product-tab')) return
+      if (!tabsHost.contains(cur)) return
+      const list = tabButtons()
+      const idx = list.indexOf(cur)
+      if (idx < 0) return
+      let next = idx
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault()
+        next = (idx + 1) % list.length
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault()
+        next = (idx - 1 + list.length) % list.length
+      } else if (e.key === 'Home') {
+        e.preventDefault()
+        next = 0
+      } else if (e.key === 'End') {
+        e.preventDefault()
+        next = list.length - 1
+      } else {
+        return
+      }
+      const k = list[next]?.getAttribute('data-product-tab')
+      if (k) {
+        showTab(k)
+        list[next]?.focus()
+      }
+    },
+    { signal }
+  )
+}
+
 export function registerMainProductSection(): void {
   registerSection(
     SECTION_TYPE,
@@ -228,6 +304,8 @@ export function registerMainProductSection(): void {
       const reduced = prefersReducedMotion()
       const abort = new AbortController()
       const { signal } = abort
+
+      initProductDetailTabs(container, signal)
 
       const gallery = container.querySelector<HTMLElement>('[data-product-gallery]')
       const swiperEl = container.querySelector<HTMLElement>('[data-product-swiper]')
@@ -258,7 +336,7 @@ export function registerMainProductSection(): void {
           modules: [A11y, EffectFade, Keyboard, Navigation, Pagination, Thumbs],
           effect: 'fade',
           fadeEffect: { crossFade: true },
-          speed: reduced ? 0 : 420,
+          speed: reduced ? 0 : 520,
           keyboard: { enabled: true, onlyInViewport: true },
           spaceBetween: 0,
           grabCursor: !reduced,
@@ -311,17 +389,18 @@ export function registerMainProductSection(): void {
 
       const groupCount = container.querySelectorAll('[data-product-option-group]').length
 
-      const animNodes = [...galleryForAnim, ...infoChildren]
+      const pdpBleed = container.querySelector<HTMLElement>('.main-product__pdp-bleed')
+      const animNodes = [...galleryForAnim, ...infoChildren, ...(pdpBleed ? [pdpBleed] : [])]
 
       if (animNodes.length > 0) {
         if (!reduced) {
-          gsap.set(animNodes, { autoAlpha: 0, y: 14 })
+          gsap.set(animNodes, { autoAlpha: 0, y: 20 })
           gsap.to(animNodes, {
             autoAlpha: 1,
             y: 0,
-            duration: 0.55,
-            ease: 'power2.out',
-            stagger: 0.06,
+            duration: 0.68,
+            ease: 'power3.out',
+            stagger: 0.085,
             clearProps: 'transform,opacity,visibility',
           })
         } else {
@@ -332,7 +411,7 @@ export function registerMainProductSection(): void {
       function goToMediaId(featuredId: number | null): void {
         if (featuredId == null || !mainSwiper || mediaOrder.length === 0) return
         const idx = getSlideIndexForMediaId(mediaOrder, featuredId)
-        mainSwiper.slideTo(idx, reduced ? 0 : 400)
+        mainSwiper.slideTo(idx, reduced ? 0 : 480)
         if (gallery) gallery.setAttribute('data-active-media-id', String(featuredId))
       }
 
@@ -394,9 +473,9 @@ export function registerMainProductSection(): void {
         gsap.killTweensOf(priceRow)
         gsap
           .timeline()
-          .to(priceRow, { autoAlpha: 0.5, y: -4, duration: 0.12, ease: 'power2.in' })
+          .to(priceRow, { autoAlpha: 0.55, y: -5, duration: 0.14, ease: 'power3.in' })
           .add(updateDom)
-          .to(priceRow, { autoAlpha: 1, y: 0, duration: 0.2, ease: 'power2.out' })
+          .to(priceRow, { autoAlpha: 1, y: 0, duration: 0.26, ease: 'power3.out' })
       }
 
       function onOptionsChanged(): void {
@@ -437,8 +516,8 @@ export function registerMainProductSection(): void {
               submitBtn,
               { scale: 1 },
               {
-                scale: 0.98,
-                duration: 0.07,
+                scale: 0.985,
+                duration: 0.09,
                 ease: 'power2.inOut',
                 yoyo: true,
                 repeat: 1,

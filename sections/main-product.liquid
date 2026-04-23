@@ -1,3 +1,7 @@
+{%- comment -%}
+  Product (PDP) — two-column layout on md+ (gallery | buy box). Variant JSON + media JSON at bottom.
+  Blocks: spec rows, detail accordions. "Complete the look" renders below the grid when enabled.
+{%- endcomment -%}
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign show_compare = false
@@ -17,6 +21,21 @@
     assign rating_count = 0
   endif
   assign complete_collection = section.settings.complete_look_collection
+  assign pdp_size_mf = product.metafields.custom.size_guide
+  assign pdp_has_size_mf = false
+  if pdp_size_mf != blank and pdp_size_mf.value != blank
+    assign pdp_has_size_mf = true
+  endif
+  assign pdp_size_section_override = false
+  if section.settings.size_guide_image != blank
+    assign pdp_size_section_override = true
+  endif
+  assign show_size_guide_modal = false
+  if settings.size_guide_enabled
+    if pdp_has_size_mf or pdp_size_section_override or settings.size_guide_image != blank
+      assign show_size_guide_modal = true
+    endif
+  endif
 -%}
 
 <div
@@ -24,10 +43,13 @@
   data-section-type="main-product"
   data-section-id="{{ section.id }}"
   data-main-product="{{ section.id }}"
+  role="region"
+  aria-label="{{ 'products.product.region_aria' | t | escape }}"
   data-product-add-label="{{ 'products.product.add_to_cart' | t | escape }}"
   data-product-sold-label="{{ 'products.product.sold_out' | t | escape }}"
   data-sale-off-label="{{ 'products.product.sale_off' | t | escape }}"
   data-product-media-order="{% for m in product.media %}{{ m.id }}{% unless forloop.last %},{% endunless %}{% endfor %}"
+  data-pdp-size-metafield="{% if pdp_has_size_mf %}true{% else %}false{% endif %}"
   {% render 'color-scheme-vars' %}
 >
   <div class="main-product">
@@ -57,6 +79,7 @@
       </nav>
     {%- endif -%}
 
+    <div class="main-product__split">
     <div
       class="main-product__media"
       data-product-gallery
@@ -278,7 +301,7 @@
             {%- if is_color -%}
               <fieldset class="main-product__fieldset" data-product-option-group data-option-index="{{ forloop.index0 }}">
                 <div class="main-product__fieldset-head">
-                  <legend class="main-product__label main-product__label--field">{{- option.name | upcase -}}</legend>
+                  <legend class="main-product__label main-product__label--field">{{- option.name -}}</legend>
                 </div>
                 <div
                   class="main-product__swatch-row"
@@ -356,16 +379,33 @@
             {%- elsif is_size -%}
               <fieldset class="main-product__fieldset" data-product-option-group data-option-index="{{ forloop.index0 }}">
                 <div class="main-product__fieldset-head main-product__fieldset-head--size">
-                  <legend class="main-product__label main-product__label--field">{{- option.name | upcase -}}</legend>
-                  {%- if section.settings.size_guide_url != blank -%}
-                    <a
-                      class="main-product__size-guide"
-                      href="{{ section.settings.size_guide_url }}"
-                      rel="nofollow noopener"
-                      target="_blank"
+                  <legend class="main-product__label main-product__label--field">{{- option.name -}}</legend>
+                  {%- if show_size_guide_modal -%}
+                    <button
+                      type="button"
+                      class="main-product__size-guide main-product__size-guide--modal size-guide-trigger"
+                      data-size-guide-open
+                      aria-haspopup="dialog"
+                      aria-label="{{ 'products.product.size_guide_open' | t }}"
                     >
-                      {{- 'products.product.size_guide' | t -}}
-                    </a>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <path d="M21 3H3v7h18V3z"></path>
+                        <path d="M21 14H3v7h18v-7z"></path>
+                      </svg>
+                      <span class="size-guide-trigger__label">{{- 'products.product.size_guide' | t -}}</span>
+                    </button>
                   {%- endif -%}
                 </div>
                 <div
@@ -478,14 +518,6 @@
                 {%- endif -%}
               </span>
             </button>
-            {%- if section.settings.wishlist_url != blank -%}
-              <a
-                class="main-product__btn main-product__btn--secondary"
-                href="{{ section.settings.wishlist_url }}"
-              >
-                {{- 'products.product.wishlist' | t -}}
-              </a>
-            {%- endif -%}
           </div>
         </div>
       {%- endform -%}
@@ -493,47 +525,187 @@
       {%- if lede != blank -%}
         <p class="main-product__lede">{{ lede | escape }}</p>
       {%- endif -%}
+    </div>
+    </div>
 
-      {%- if product.description != blank -%}
-        <div class="main-product__details">
-          <h2 class="main-product__details-heading">{{- 'products.product.description_heading' | t -}}</h2>
-          <div class="main-product__description rte">
-            {{- product.description -}}
-          </div>
+    {%- liquid
+      assign pdp_has_accordions = false
+      for block in section.blocks
+        if block.type == 'detail_accordion' and block.settings.heading != blank
+          assign pdp_has_accordions = true
+          break
+        endif
+      endfor
+
+      assign pdp_has_spec = false
+      for block in section.blocks
+        if block.type == 'spec' and block.settings.label != blank and block.settings.value != blank
+          assign pdp_has_spec = true
+          break
+        endif
+      endfor
+
+      assign pdp_rte_size = section.settings.tab_size_fit
+      assign pdp_rte_care = section.settings.tab_care
+      assign pdp_rte_ship = section.settings.tab_shipping
+
+      assign pdp_desc_filled = false
+      if product.description != blank or pdp_has_accordions
+        assign pdp_desc_filled = true
+      endif
+      assign pdp_size_filled = false
+      if pdp_rte_size != blank or pdp_has_spec
+        assign pdp_size_filled = true
+      endif
+    -%}
+
+    <div
+      class="main-product__pdp-lower main-product__pdp-lower--tabbed"
+      data-product-tabs
+    >
+      <div class="main-product__pdp-bleed">
+      <div class="main-product__pdp-lower__inner">
+        <h2 class="main-product__pdp-heading">{{- 'products.product.information_tabs_heading' | t -}}</h2>
+        <div
+          class="main-product__tablist"
+          role="tablist"
+          aria-label="{{ 'products.product.tabs_aria' | t | escape }}"
+        >
+          <button
+            type="button"
+            class="main-product__tab"
+            id="pdp-tab-desc-{{ section.id }}"
+            role="tab"
+            aria-selected="true"
+            aria-controls="pdp-panel-desc-{{ section.id }}"
+            tabindex="0"
+            data-product-tab="desc"
+          >
+            {{- 'products.product.tab_description' | t -}}
+          </button>
+          <button
+            type="button"
+            class="main-product__tab"
+            id="pdp-tab-size-{{ section.id }}"
+            role="tab"
+            aria-selected="false"
+            aria-controls="pdp-panel-size-{{ section.id }}"
+            tabindex="-1"
+            data-product-tab="size"
+          >
+            {{- 'products.product.tab_size_fit' | t -}}
+          </button>
+          <button
+            type="button"
+            class="main-product__tab"
+            id="pdp-tab-care-{{ section.id }}"
+            role="tab"
+            aria-selected="false"
+            aria-controls="pdp-panel-care-{{ section.id }}"
+            tabindex="-1"
+            data-product-tab="care"
+          >
+            {{- 'products.product.tab_care' | t -}}
+          </button>
+          <button
+            type="button"
+            class="main-product__tab"
+            id="pdp-tab-ship-{{ section.id }}"
+            role="tab"
+            aria-selected="false"
+            aria-controls="pdp-panel-ship-{{ section.id }}"
+            tabindex="-1"
+            data-product-tab="ship"
+          >
+            {{- 'products.product.tab_shipping' | t -}}
+          </button>
         </div>
-      {%- endif -%}
 
-      {%- assign has_spec = false -%}
-      {%- for block in section.blocks -%}
-        {%- if block.type == 'spec' and block.settings.label != blank and block.settings.value != blank -%}
-          {%- assign has_spec = true -%}
-        {%- endif -%}
-      {%- endfor -%}
-      {%- if has_spec -%}
-        <dl class="main-product__specs">
-          {%- for block in section.blocks -%}
-            {%- if block.type == 'spec' and block.settings.label != blank and block.settings.value != blank -%}
-              <div class="main-product__spec" {{ block.shopify_attributes }}>
-                <dt class="main-product__spec-k">{{- block.settings.label | escape -}}</dt>
-                <dd class="main-product__spec-v">{{- block.settings.value -}}</dd>
+        <div class="main-product__tab-panels">
+          <div
+            class="main-product__tab-panel"
+            id="pdp-panel-desc-{{ section.id }}"
+            role="tabpanel"
+            aria-labelledby="pdp-tab-desc-{{ section.id }}"
+            data-product-tab-panel="desc"
+          >
+            {%- if product.description != blank -%}
+              <div class="main-product__description main-product__description--wide rte">
+                {{- product.description -}}
               </div>
             {%- endif -%}
-          {%- endfor -%}
-        </dl>
-      {%- endif -%}
+            {%- render 'pdp-accordion-blocks', section: section -%}
+            {%- unless pdp_desc_filled -%}
+              <p class="main-product__tab-notice" role="status">
+                {{- 'products.product.tab_empty_description' | t -}}
+              </p>
+            {%- endunless -%}
+          </div>
 
-      {%- for block in section.blocks -%}
-        {%- if block.type == 'detail_accordion' and block.settings.heading != blank -%}
-          <details class="main-product__accordion" {{ block.shopify_attributes }}>
-            <summary class="main-product__accordion-summary">{{- block.settings.heading | escape -}}</summary>
-            {%- if block.settings.body != blank -%}
-              <div class="main-product__accordion-body rte">{{ block.settings.body }}</div>
+          <div
+            class="main-product__tab-panel"
+            id="pdp-panel-size-{{ section.id }}"
+            role="tabpanel"
+            aria-labelledby="pdp-tab-size-{{ section.id }}"
+            data-product-tab-panel="size"
+            hidden
+          >
+            {%- if pdp_rte_size != blank -%}
+              <div class="main-product__tab-rte rte">
+                {{- pdp_rte_size -}}
+              </div>
             {%- endif -%}
-          </details>
-        {%- endif -%}
-      {%- endfor -%}
+            {%- if pdp_has_spec -%}
+              {%- render 'pdp-spec-blocks', section: section, in_tab: true -%}
+            {%- endif -%}
+            {%- unless pdp_size_filled -%}
+              <p class="main-product__tab-notice" role="status">
+                {{- 'products.product.tab_empty_size_fit' | t -}}
+              </p>
+            {%- endunless -%}
+          </div>
+
+          <div
+            class="main-product__tab-panel"
+            id="pdp-panel-care-{{ section.id }}"
+            role="tabpanel"
+            aria-labelledby="pdp-tab-care-{{ section.id }}"
+            data-product-tab-panel="care"
+            hidden
+          >
+            {%- if pdp_rte_care != blank -%}
+              <div class="main-product__tab-rte rte">
+                {{- pdp_rte_care -}}
+              </div>
+            {%- else -%}
+              <p class="main-product__tab-notice" role="status">
+                {{- 'products.product.tab_empty_care' | t -}}
+              </p>
+            {%- endif -%}
+          </div>
+
+          <div
+            class="main-product__tab-panel"
+            id="pdp-panel-ship-{{ section.id }}"
+            role="tabpanel"
+            aria-labelledby="pdp-tab-ship-{{ section.id }}"
+            data-product-tab-panel="ship"
+            hidden
+          >
+            {%- if pdp_rte_ship != blank -%}
+              <div class="main-product__tab-rte rte">
+                {{- pdp_rte_ship -}}
+              </div>
+            {%- else -%}
+              <p class="main-product__tab-notice" role="status">
+                {{- 'products.product.tab_empty_shipping' | t -}}
+              </p>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+      </div>
     </div>
-  </div>
 
   {%- if section.settings.show_complete_look
     and complete_collection != null
@@ -565,6 +737,7 @@
       </ul>
     </div>
   {%- endif -%}
+  </div>
 
   <script type="application/json" data-product-variant-json>
     [
@@ -606,6 +779,12 @@
       {%- endfor -%}
     }
   </script>
+
+  {%- if settings.size_guide_enabled and pdp_size_section_override and pdp_has_size_mf == false -%}
+    <div data-size-guide-section-override hidden>
+      {%- render 'size-guide-panel', modal_title: settings.size_guide_title, image: section.settings.size_guide_image -%}
+    </div>
+  {%- endif -%}
 </div>
 
 <script>
@@ -650,15 +829,41 @@
       "info": "t:sections.main_product.review_info"
     },
     {
-      "type": "url",
-      "id": "size_guide_url",
-      "label": "t:sections.main_product.size_guide_url"
+      "type": "header",
+      "content": "t:sections.main_product.heading_size_guide"
     },
     {
-      "type": "url",
-      "id": "wishlist_url",
-      "label": "t:sections.main_product.wishlist_url",
-      "info": "t:sections.main_product.wishlist_info"
+      "type": "paragraph",
+      "content": "t:sections.main_product.size_guide_pdp_info"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_guide_image",
+      "label": "t:sections.main_product.size_guide_image",
+      "info": "t:sections.main_product.size_guide_image_info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main_product.heading_product_tabs"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.main_product.product_tabs_info"
+    },
+    {
+      "type": "richtext",
+      "id": "tab_size_fit",
+      "label": "t:sections.main_product.tab_size_fit"
+    },
+    {
+      "type": "richtext",
+      "id": "tab_care",
+      "label": "t:sections.main_product.tab_care"
+    },
+    {
+      "type": "richtext",
+      "id": "tab_shipping",
+      "label": "t:sections.main_product.tab_shipping"
     },
     {
       "type": "header",

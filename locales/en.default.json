@@ -208,9 +208,20 @@
       "breadcrumb_home": "Home",
       "complete_look": "Complete the look",
       "description_heading": "Description",
+      "information_tabs_heading": "Product information",
+      "tabs_aria": "Product information",
+      "tab_description": "Description",
+      "tab_size_fit": "Size & Fit",
+      "tab_care": "Care Information",
+      "tab_shipping": "Shipping & Returns",
+      "tab_empty_description": "No description is available for this product yet.",
+      "tab_empty_size_fit": "No size and fit information is available yet.",
+      "tab_empty_care": "No care information is available yet.",
+      "tab_empty_shipping": "No shipping and return information is available yet.",
       "details": "Details",
       "open_image": "View image",
       "gallery_toolbar": "Image gallery",
+      "region_aria": "Product",
       "quantity": "Quantity",
       "review_aria": "Average rating {{ rating }} out of 5. {{ count }} reviews.",
       "review_count": {
@@ -222,12 +233,15 @@
       "sale_off": "off",
       "sale_percent": "{{ percent }}% off",
       "size_guide": "Size guide",
+      "size_guide_open": "Open size guide",
+      "size_guide_close": "Close size guide",
+      "size_guide_error": "Could not load the size guide. Please try again.",
+      "size_guide_unavailable": "No size guide is available for this product.",
       "slideshow_next": "Next image",
       "slideshow_prev": "Previous image",
       "sold_out": "Sold out",
       "stars": "★★★★★",
-      "variant": "Variant",
-      "wishlist": "Add to wishlist"
+      "variant": "Variant"
     }
   },
   "search": {

@@ -1,0 +1,19 @@
+{%- if settings.size_guide_enabled -%}
+  <size-guide-modal
+    class="size-guide-modal"
+    data-size-guide-modal
+    data-size-guide-error="{{ 'products.product.size_guide_error' | t | escape }}"
+    data-size-guide-empty="{{ 'products.product.size_guide_unavailable' | t | escape }}"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="false"
+    aria-label="{{ settings.size_guide_title | default: 'Size guide' | escape }}"
+  >
+    <div class="size-guide-modal__overlay" data-size-guide-close></div>
+    <div class="size-guide-modal__container">
+      <div class="size-guide-modal__loading" data-size-guide-loading>
+        <span class="size-guide-modal__spinner" aria-hidden="true"></span>
+      </div>
+    </div>
+  </size-guide-modal>
+{%- endif -%}

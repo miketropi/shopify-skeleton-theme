@@ -1,0 +1,51 @@
+{% doc %}
+  Size guide modal panel (`data-size-guide`). Metafield (rich text) or a single size chart `image` when not using metafield.
+
+  @param {string} modal_title
+  @param {object} [metafield] - `custom.size_guide` when set, shown instead of `image`
+  @param {object} [image] - Size chart image (theme or section)
+{% enddoc %}
+
+{%- liquid
+  assign guide_title = modal_title | default: 'Size guide'
+  assign use_mf = false
+  if metafield != blank and metafield.value != blank
+    assign use_mf = true
+  endif
+-%}
+<div class="size-guide" data-size-guide>
+  <div class="size-guide__header">
+    <h2 class="size-guide__title">
+      {{- guide_title -}}
+    </h2>
+    <button
+      type="button"
+      class="size-guide__close"
+      data-size-guide-close
+      aria-label="{{ 'products.product.size_guide_close' | t }}"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <div class="size-guide__body rte">
+    {%- if use_mf -%}
+      <div class="size-guide__content">
+        {{ metafield | metafield_tag }}
+      </div>
+    {%- else -%}
+      {%- if image != blank -%}
+        <div class="size-guide__image">
+          {{
+            image
+            | image_url: width: 1100
+            | image_tag: loading: 'lazy', alt: '', sizes: '(min-width: 720px) 700px, 100vw', widths: '400, 700, 1100'
+          }}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>

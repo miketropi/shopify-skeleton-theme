@@ -1,0 +1,34 @@
+{%- comment -%}
+  Section Rendering API: GET /products/{handle}?section_id=size-guide
+  Priority: product metafield `custom.size_guide` > theme global size chart image.
+{%- endcomment -%}
+
+{%- liquid
+  assign mf = product.metafields.custom.size_guide
+  assign has_product_guide = false
+  if mf != blank and mf.value != blank
+    assign has_product_guide = true
+  endif
+
+  assign has_global_image = false
+  if settings.size_guide_image != blank
+    assign has_global_image = true
+  endif
+
+  assign panel_title = settings.size_guide_title | default: 'Size guide'
+-%}
+
+{%- if has_product_guide or has_global_image -%}
+  {%- if has_product_guide -%}
+    {% render 'size-guide-panel', modal_title: panel_title, metafield: mf %}
+  {%- else -%}
+    {% render 'size-guide-panel', modal_title: panel_title, image: settings.size_guide_image %}
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.size_guide.name",
+  "settings": []
+}
+{% endschema %}

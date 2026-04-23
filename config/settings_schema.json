@@ -447,5 +447,28 @@
         "default": 6
       }
     ]
+  },
+  {
+    "name": "t:general.size_guide",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "size_guide_enabled",
+        "label": "t:labels.size_guide_enabled",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "size_guide_title",
+        "label": "t:labels.size_guide_modal_title",
+        "default": "Size guide"
+      },
+      {
+        "type": "image_picker",
+        "id": "size_guide_image",
+        "label": "t:labels.size_guide_default_image",
+        "info": "t:info.size_guide_default_image"
+      }
+    ]
   }
 ]

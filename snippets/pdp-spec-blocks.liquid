@@ -1,0 +1,11 @@
+{%- comment -%} Renders `spec` blocks as a description list. {%- endcomment -%}
+<dl class="main-product__specs{% if in_tab %} main-product__specs--in-tab{% endif %}">
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'spec' and block.settings.label != blank and block.settings.value != blank -%}
+      <div class="main-product__spec" {{ block.shopify_attributes }}>
+        <dt class="main-product__spec-k">{{- block.settings.label | escape -}}</dt>
+        <dd class="main-product__spec-v">{{- block.settings.value -}}</dd>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+</dl>

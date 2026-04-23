@@ -32,7 +32,8 @@
     "sidebar": "Sidebar",
     "text": "Text",
     "theme": "Theme",
-    "typography": "Typography"
+    "typography": "Typography",
+    "size_guide": "Size guide"
   },
   "labels": {
     "alignment": "Alignment",
@@ -81,7 +82,10 @@
     "custom_btn_border": "Border",
     "search_results_per_page": "Results per page",
     "search_scope": "Search scope",
-    "desktop_header_layout": "Desktop layout"
+    "desktop_header_layout": "Desktop layout",
+    "size_guide_enabled": "Enable size guide (modal)",
+    "size_guide_modal_title": "Modal title",
+    "size_guide_default_image": "Default size chart image"
   },
   "headers": {
     "colour": "Colour",
@@ -110,7 +114,8 @@
     "logo_mobile": "Shown on screens narrower than 768px. Falls back to the main logo if not set.",
     "logo_mobile_retina": "Optional 2× version of the mobile logo. Upload at double the intended mobile display size.",
     "logo_mobile_width": "Display width of the mobile logo.",
-    "desktop_header_layout": "Large screens only. Phone and tablet still use the menu drawer and top bar."
+    "desktop_header_layout": "Large screens only. Phone and tablet still use the menu drawer and top bar.",
+    "size_guide_default_image": "Shown in the size guide modal when a product has no `custom.size_guide` metafield. Upload a size chart (e.g. PNG or SVG)."
   },
   "options": {
     "alignment": {
@@ -163,6 +168,9 @@
     }
   },
   "sections": {
+    "size_guide": {
+      "name": "Size guide (modal)"
+    },
     "hero_slider": {
       "name": "Hero slider",
       "labels": {
@@ -236,9 +244,15 @@
       "show_sale_badge": "Show sale badge on image",
       "show_review_summary": "Show review summary",
       "review_info": "Uses product metafields `reviews.rating` and `reviews.rating_count` when present (e.g. review apps).",
-      "size_guide_url": "Size guide link (optional)",
-      "wishlist_url": "Wishlist link (optional)",
-      "wishlist_info": "Leave empty to hide the secondary button.",
+      "heading_size_guide": "Size guide (this product page)",
+      "size_guide_pdp_info": "Optional size chart for this product template. When set, and the product has no `custom.size_guide` metafield, this image is used **instead of** the theme’s global size chart. Product metafield content still takes priority. Leave empty to use the global or metafield only.",
+      "size_guide_image": "Size chart image",
+      "size_guide_image_info": "Overrides the global theme size chart for this product template when the product has no `custom.size_guide` metafield.",
+      "heading_product_tabs": "Product information tabs",
+      "product_tabs_info": "All four information tabs (Description, Size & Fit, Care, Shipping & Returns) are always shown. The Description tab uses the product’s admin description and any Detail accordion blocks; Size & fit uses the fields below and Spec row blocks. If a tab has no content, customers see a short message instead.",
+      "tab_size_fit": "Size & fit (tab content)",
+      "tab_care": "Care information (tab content)",
+      "tab_shipping": "Shipping & returns (tab content)",
       "heading_recommendations": "Complete the look",
       "show_complete_look": "Show “Complete the look”",
       "complete_look_collection": "Collection",
