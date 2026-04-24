@@ -34,6 +34,7 @@
     },
     "label": {
       "quantity": "Quantity",
+      "line_total": "Line total",
       "remove": "Remove item"
     },
     "remove": "Remove",
@@ -204,6 +205,7 @@
   "products": {
     "product": {
       "add_to_cart": "Add to cart",
+      "adding_to_cart": "Adding…",
       "breadcrumb_label": "Breadcrumb",
       "breadcrumb_home": "Home",
       "complete_look": "Complete the look",
@@ -223,6 +225,8 @@
       "gallery_toolbar": "Image gallery",
       "region_aria": "Product",
       "quantity": "Quantity",
+      "quantity_decrease": "Decrease quantity",
+      "quantity_increase": "Increase quantity",
       "review_aria": "Average rating {{ rating }} out of 5. {{ count }} reviews.",
       "review_count": {
         "one": "{{ count }} review",
@@ -240,7 +244,21 @@
       "slideshow_next": "Next image",
       "slideshow_prev": "Previous image",
       "sold_out": "Sold out",
+      "share": "Share",
+      "share_copied": "Link copied",
+      "share_copy": "Copy product link",
+      "share_facebook": "Share on Facebook",
+      "share_linkedin": "Share on LinkedIn",
+      "share_pinterest": "Share on Pinterest",
+      "share_twitter": "Share on X",
+      "share_name_copy": "Copy link",
+      "share_name_facebook": "Facebook",
+      "share_name_linkedin": "LinkedIn",
+      "share_name_pinterest": "Pinterest",
+      "share_name_twitter": "X",
+      "sku_label": "SKU",
       "stars": "★★★★★",
+      "tags_label": "Tags",
       "variant": "Variant"
     }
   },

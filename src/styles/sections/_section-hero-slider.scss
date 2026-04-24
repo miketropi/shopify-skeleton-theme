@@ -141,16 +141,20 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--cs-text-secondary, var(--cs-text));
+  color: var(--hero-ov-kicker, var(--cs-text-secondary, var(--cs-text)));
 }
 
 .hero-slide__heading {
   margin: 0;
   font-family: var(--cs-font-heading);
-  color: var(--cs-heading);
+  color: var(--hero-ov-heading, var(--cs-heading));
   line-height: 1.05;
   letter-spacing: -0.02em;
   max-width: 55ch;
+
+  a {
+    color: var(--hero-ov-link, var(--cs-accent, var(--cs-heading)));
+  }
 
   p {
     margin: 0;
@@ -173,8 +177,12 @@
   font-family: var(--cs-font-body);
   font-size: clamp(0.95rem, 1.8vw, 1.0625rem);
   line-height: 1.6;
-  color: var(--cs-text);
+  color: var(--hero-ov-body, var(--cs-text));
   max-width: 55ch;
+
+  a {
+    color: var(--hero-ov-link, var(--cs-accent, var(--cs-text)));
+  }
 
   p {
     margin: 0;
@@ -203,15 +211,19 @@
   font-size: 0.875rem;
   font-weight: 600;
   text-decoration: none;
-  color: var(--cs-text);
-  background: transparent;
-  border: 1px solid color-mix(in srgb, var(--cs-text) 55%, transparent);
+  color: var(--hero-ov-btn-text, var(--cs-text));
+  background: var(--hero-ov-btn-bg, transparent);
+  border: 1px solid
+    var(
+      --hero-ov-btn-border,
+      color-mix(in srgb, var(--cs-text) 55%, transparent)
+    );
   border-radius: 999px;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 
 .hero-slider__btn:hover {
-  border-color: var(--cs-text);
+  border-color: var(--hero-ov-btn-text, var(--cs-text));
 }
 
 .hero-slider__btn:focus-visible {
@@ -220,14 +232,14 @@
 }
 
 .hero-slider__btn--primary {
-  border-color: var(--cs-text);
+  border-color: var(--hero-ov-btn-border, var(--cs-text));
 }
 
 .hero-slider__link {
   font-family: var(--cs-font-body);
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--cs-text);
+  color: var(--hero-ov-link, var(--cs-text));
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }

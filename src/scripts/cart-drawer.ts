@@ -353,6 +353,24 @@ function createCartDrawerController(container: HTMLElement) {
     qtyTimers.set(lineKey, id)
   }
 
+  function findQtyInput(lineKey: string): HTMLInputElement | null {
+    for (const el of container.querySelectorAll<HTMLInputElement>('[data-cart-drawer-qty]')) {
+      if (el.dataset.lineKey === lineKey) return el
+    }
+    return null
+  }
+
+  function applyQtyStep(lineKey: string, delta: number): void {
+    const input = findQtyInput(lineKey)
+    if (!input) return
+    const cur = Number.parseInt(input.value, 10)
+    if (Number.isNaN(cur)) return
+    const next = Math.max(0, cur + delta)
+    if (next === cur) return
+    input.value = String(next)
+    scheduleQtyChange(lineKey, next)
+  }
+
   document.addEventListener(
     'click',
     (e) => {
@@ -405,7 +423,20 @@ function createCartDrawerController(container: HTMLElement) {
   container.addEventListener(
     'click',
     (e) => {
-      const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-cart-drawer-remove]')
+      const t = e.target as HTMLElement
+      if (t.closest('[data-cart-drawer-qty-minus]')) {
+        e.preventDefault()
+        const key = t.closest<HTMLElement>('[data-cart-drawer-qty-minus]')?.dataset.lineKey
+        if (key) applyQtyStep(key, -1)
+        return
+      }
+      if (t.closest('[data-cart-drawer-qty-plus]')) {
+        e.preventDefault()
+        const key = t.closest<HTMLElement>('[data-cart-drawer-qty-plus]')?.dataset.lineKey
+        if (key) applyQtyStep(key, 1)
+        return
+      }
+      const btn = t.closest<HTMLElement>('[data-cart-drawer-remove]')
       if (!btn) return
       e.preventDefault()
       const key = btn.dataset.lineKey
@@ -453,6 +484,59 @@ export function registerCartDrawerSection(): void {
   )
 }
 
+const AJAX_CART_SUBMIT_LOADING = 'is-ajax-loading'
+
+function getSubmitControl(
+  form: HTMLFormElement,
+  e: SubmitEvent
+): HTMLButtonElement | HTMLInputElement | null {
+  const sub = e.submitter
+  if (sub instanceof HTMLButtonElement && sub.type === 'submit') return sub
+  if (sub instanceof HTMLInputElement && sub.type === 'submit') return sub
+  return (
+    form.querySelector<HTMLButtonElement>('button[type="submit"]') ??
+    form.querySelector<HTMLInputElement>('input[type="submit"]') ??
+    null
+  )
+}
+
+/**
+ * `data-ajax-adding-label` (optional) upgrades the a11y name while the request runs; previous `aria-label` is restored in `end`.
+ */
+function setAjaxAddSubmitLoading(
+  el: HTMLButtonElement | HTMLInputElement,
+  loading: boolean,
+  a11y: { addingText?: string; prevAria: string | null }
+): void {
+  if (loading) {
+    a11y.addingText = el.getAttribute('data-ajax-adding-label')?.trim() || undefined
+    a11y.prevAria = el.getAttribute('aria-label')
+    if (a11y.addingText) {
+      el.setAttribute('aria-label', a11y.addingText)
+    }
+    el.setAttribute('aria-busy', 'true')
+    el.classList.add(AJAX_CART_SUBMIT_LOADING)
+    el.disabled = true
+  } else {
+    if (a11y.addingText) {
+      if (a11y.prevAria != null) {
+        el.setAttribute('aria-label', a11y.prevAria)
+      } else {
+        el.removeAttribute('aria-label')
+      }
+    }
+    el.removeAttribute('aria-busy')
+    el.classList.remove(AJAX_CART_SUBMIT_LOADING)
+    const btn = el
+    if ('productSubmit' in btn.dataset) {
+      const ok = el.getAttribute('data-product-available') !== 'false'
+      btn.disabled = !ok
+    } else {
+      el.disabled = false
+    }
+  }
+}
+
 export function registerAjaxCartAdd(): void {
   document.addEventListener('submit', (e) => {
     const form = e.target
@@ -461,6 +545,11 @@ export function registerAjaxCartAdd(): void {
     const routes = getStorefrontRoutes()
     if (!routes) return
     e.preventDefault()
+    const submitEl = getSubmitControl(form, e)
+    const a11y: { addingText?: string; prevAria: string | null } = { prevAria: null }
+    if (submitEl) {
+      setAjaxAddSubmitLoading(submitEl, true, a11y)
+    }
     const fd = new FormData(form)
     void (async () => {
       const ctrl = activeController
@@ -486,6 +575,10 @@ export function registerAjaxCartAdd(): void {
         if (ctrl?.autoOpenAfterAdd) ctrl.open(null)
       } catch {
         if (ctrl) ctrl.announceMessage(ctrl.defaultErrorMessage())
+      } finally {
+        if (submitEl) {
+          setAjaxAddSubmitLoading(submitEl, false, a11y)
+        }
       }
     })()
   })

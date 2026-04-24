@@ -1,0 +1,63 @@
+{%- comment -%}
+  @param share_url
+  @param product_title
+{%- endcomment -%}
+{%- liquid
+  assign u = share_url | url_encode
+  assign t = product_title | strip_html | url_encode
+-%}
+<ul class="main-product__meta-list" role="list">
+  <li class="main-product__meta-list-item">
+    <a
+      class="main-product__meta-link"
+      href="https://www.facebook.com/sharer.php?u={{ u }}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {{- 'products.product.share_name_facebook' | t -}}
+    </a>
+  </li>
+  <li class="main-product__meta-list-item">
+    <a
+      class="main-product__meta-link"
+      href="https://twitter.com/intent/tweet?url={{ u }}&text={{ t }}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {{- 'products.product.share_name_twitter' | t -}}
+    </a>
+  </li>
+  <li class="main-product__meta-list-item">
+    <a
+      class="main-product__meta-link"
+      href="https://www.pinterest.com/pin/create/button/?url={{ u }}&description={{ t }}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {{- 'products.product.share_name_pinterest' | t -}}
+    </a>
+  </li>
+  <li class="main-product__meta-list-item">
+    <a
+      class="main-product__meta-link"
+      href="https://www.linkedin.com/sharing/share-offsite/?url={{ u }}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {{- 'products.product.share_name_linkedin' | t -}}
+    </a>
+  </li>
+  <li class="main-product__meta-list-item">
+    <button
+      type="button"
+      class="main-product__meta-link main-product__meta-link--copy"
+      data-product-share-copy
+      data-share-url="{{ share_url | escape }}"
+      data-label-default="{{ 'products.product.share_name_copy' | t | escape }}"
+      data-label-copied="{{ 'products.product.share_copied' | t | escape }}"
+      aria-label="{{ 'products.product.share_name_copy' | t | escape }}"
+    >
+      {{- 'products.product.share_name_copy' | t -}}
+    </button>
+  </li>
+</ul>

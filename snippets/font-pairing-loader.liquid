@@ -18,13 +18,13 @@
     add the host to layout/content_security_policy.liquid per Shopify docs; a <link>
     alone is not sufficient.
 
-  Preset mode only; custom typography uses Shopify font_face in snippets/css-variables.liquid.
+  Preset mode: three Google Font bundles (neutral, vision, technology). Custom: Shopify font_face in css-variables.liquid.
 {%- endcomment -%}
 {%- if settings.typography_mode != 'custom' -%}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   {%- liquid
-    assign all_pairings = 'classic|modern|editorial|geometric|humanist|technical' | split: '|'
+    assign all_pairings = 'neutral|vision|technology' | split: '|'
     for pairing in all_pairings
       render 'font-pairing-link', pairing: pairing
     endfor

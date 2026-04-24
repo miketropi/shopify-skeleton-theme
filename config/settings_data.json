@@ -26,50 +26,50 @@
     "custom_color_btn_secondary_text": "#18181b",
     "custom_color_btn_secondary_border": "#d4d4d8",
     "typography_mode": "preset",
-    "font_pairing": "modern",
+    "font_pairing": "neutral",
     "type_font_heading": "inter_n4",
     "type_font_body": "inter_n4",
     "type_font_mono": "ibm_plex_mono_n4",
     "max_page_width": "90rem",
     "min_page_margin": 24,
-    "input_corner_radius": 6,
+    "input_corner_radius": 0,
     "color_schemes": {
       "scheme-1": {
         "settings": {
-          "background": "#ffffff",
+          "background": "#d2dcb6",
           "background_gradient": "",
-          "background_secondary": "#f4f4f5",
-          "border": "#e4e4e7",
-          "text": "#27272a",
-          "text_secondary": "#71717a",
-          "heading": "#18181b",
-          "accent": "#2563eb",
-          "accent_text": "#ffffff",
-          "btn_primary_bg": "#18181b",
-          "btn_primary_text": "#ffffff",
-          "btn_primary_border": "#18181b",
-          "btn_secondary_bg": "#ffffff",
-          "btn_secondary_text": "#18181b",
-          "btn_secondary_border": "#d4d4d8"
+          "background_secondary": "#e1e7cd",
+          "border": "#b4c19a",
+          "text": "#2c3228",
+          "text_secondary": "#4d5545",
+          "heading": "#1a2016",
+          "accent": "#3d4d34",
+          "accent_text": "#f2f4e7",
+          "btn_primary_bg": "#2f3d2a",
+          "btn_primary_text": "#e8ecd8",
+          "btn_primary_border": "#2f3d2a",
+          "btn_secondary_bg": "#e1e7cd",
+          "btn_secondary_text": "#2c3228",
+          "btn_secondary_border": "#9aaa84"
         }
       },
       "scheme-2": {
         "settings": {
-          "background": "#f4f4f5",
+          "background": "#efbc9b",
           "background_gradient": "",
-          "background_secondary": "#ffffff",
-          "border": "#e4e4e7",
-          "text": "#3f3f46",
-          "text_secondary": "#71717a",
-          "heading": "#18181b",
-          "accent": "#0d9488",
-          "accent_text": "#ffffff",
-          "btn_primary_bg": "#18181b",
-          "btn_primary_text": "#ffffff",
-          "btn_primary_border": "#18181b",
-          "btn_secondary_bg": "#f4f4f5",
-          "btn_secondary_text": "#18181b",
-          "btn_secondary_border": "#a1a1aa"
+          "background_secondary": "#f5cdb2",
+          "border": "#e0a47a",
+          "text": "#3d2d22",
+          "text_secondary": "#6b4e3e",
+          "heading": "#261c15",
+          "accent": "#a85c38",
+          "accent_text": "#fff5ee",
+          "btn_primary_bg": "#4a2f22",
+          "btn_primary_text": "#fdf1e6",
+          "btn_primary_border": "#4a2f22",
+          "btn_secondary_bg": "#f5d0b8",
+          "btn_secondary_text": "#3d2d22",
+          "btn_secondary_border": "#c98b68"
         }
       },
       "scheme-3": {
@@ -89,6 +89,44 @@
           "btn_secondary_bg": "transparent",
           "btn_secondary_text": "#fafafa",
           "btn_secondary_border": "#a1a1aa"
+        }
+      },
+      "scheme-4": {
+        "settings": {
+          "background": "#c5d0e0",
+          "background_gradient": "",
+          "background_secondary": "#d7dff0",
+          "border": "#9daec8",
+          "text": "#1e2a3a",
+          "text_secondary": "#3d4a5c",
+          "heading": "#121a24",
+          "accent": "#2d4a6f",
+          "accent_text": "#e8edf5",
+          "btn_primary_bg": "#2a3f5a",
+          "btn_primary_text": "#e5eaf2",
+          "btn_primary_border": "#2a3f5a",
+          "btn_secondary_bg": "#d7dff0",
+          "btn_secondary_text": "#1e2a3a",
+          "btn_secondary_border": "#7c8eaa"
+        }
+      },
+      "scheme-5": {
+        "settings": {
+          "background": "#d4c4e0",
+          "background_gradient": "",
+          "background_secondary": "#e2d8ed",
+          "border": "#b8a8cc",
+          "text": "#2d2438",
+          "text_secondary": "#4a3d5a",
+          "heading": "#1a1422",
+          "accent": "#5b4a6e",
+          "accent_text": "#f3eff8",
+          "btn_primary_bg": "#4a3d5a",
+          "btn_primary_text": "#f0eaf5",
+          "btn_primary_border": "#4a3d5a",
+          "btn_secondary_bg": "#e2d8ed",
+          "btn_secondary_text": "#2d2438",
+          "btn_secondary_border": "#9d8cb5"
         }
       }
     }

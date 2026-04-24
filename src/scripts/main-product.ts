@@ -1,6 +1,6 @@
 import gsap from 'gsap'
 import Swiper from 'swiper'
-import { A11y, EffectFade, Keyboard, Navigation, Pagination, Thumbs } from 'swiper/modules'
+import { A11y, EffectFade, FreeMode, Keyboard, Navigation, Thumbs } from 'swiper/modules'
 import { registerSection } from './section-registry'
 
 const SECTION_TYPE = 'main-product'
@@ -16,6 +16,7 @@ type VariantJson = {
   compare_at_cents: number
   price_cents: number
   featured_media_id: number | null
+  sku: string | null
 }
 
 type MediaEntry = {
@@ -162,6 +163,196 @@ function setRadiosAndSelectsFromVariant(container: HTMLElement, v: VariantJson, 
   }
 }
 
+function applyVariantSku(container: HTMLElement, sku: string | null | undefined): void {
+  const wrap = container.querySelector<HTMLElement>('[data-product-sku-wrap]')
+  const el = container.querySelector<HTMLElement>('[data-product-sku]')
+  if (!wrap || !el) return
+  const s = sku != null && String(sku).trim() !== '' ? String(sku).trim() : ''
+  el.textContent = s
+  wrap.toggleAttribute('hidden', !s)
+}
+
+/** Opens share URLs in a new window (centered) so the product page is not left. */
+function initProductShareExternal(root: HTMLElement, signal: AbortSignal): void {
+  const list = root.querySelector<HTMLElement>('.main-product__meta-line--share .main-product__meta-list')
+  if (!list) return
+
+  list.addEventListener(
+    'click',
+    (e) => {
+      const raw = e.target
+      const el: Element | null =
+        raw instanceof Text ? raw.parentElement : raw instanceof Element ? raw : null
+      const link = el?.closest('a.main-product__meta-link') as HTMLAnchorElement | null
+      if (!link || !list.contains(link)) return
+      e.preventDefault()
+      const url = link.href
+      if (!url) return
+
+      const w = 600
+      const h = 560
+      const sw = window.screenLeft ?? window.screenX ?? 0
+      const st = window.screenTop ?? window.screenY ?? 0
+      const vw = window.outerWidth ?? 1024
+      const vh = window.outerHeight ?? 800
+      const left = Math.round(sw + (vw - w) / 2)
+      const top = Math.round(st + (vh - h) / 2)
+      const features = [
+        `width=${w}`,
+        `height=${h}`,
+        `left=${left}`,
+        `top=${top}`,
+        'scrollbars=yes',
+        'resizable=yes',
+      ].join(',')
+
+      let child: Window | null = null
+      try {
+        child = window.open(url, 'pdp_share_social', features)
+      } catch {
+        child = null
+      }
+      if (child) {
+        try {
+          child.opener = null
+        } catch {
+          /* cross-origin */
+        }
+        child.focus()
+      } else {
+        window.open(url, '_blank', 'noopener,noreferrer')
+      }
+    },
+    { signal }
+  )
+}
+
+function initProductCopyLink(root: HTMLElement, signal: AbortSignal): void {
+  const btn = root.querySelector<HTMLButtonElement>('[data-product-share-copy]')
+  if (!btn) return
+  const url = (btn.dataset.shareUrl || '').trim()
+  const labelDefault = (btn.dataset.labelDefault || btn.textContent || '').trim()
+  const labelCopied = (btn.dataset.labelCopied || '').trim()
+  if (!url || !labelDefault || !labelCopied) return
+
+  btn.addEventListener(
+    'click',
+    async () => {
+      try {
+        await navigator.clipboard.writeText(url)
+        btn.textContent = labelCopied
+        btn.setAttribute('aria-label', labelCopied)
+        const t = window.setTimeout(() => {
+          btn.textContent = labelDefault
+          btn.setAttribute('aria-label', labelDefault)
+        }, 2200)
+        signal.addEventListener('abort', () => window.clearTimeout(t), { once: true })
+      } catch {
+        /* clipboard may be denied */
+      }
+    },
+    { signal }
+  )
+}
+
+function initProductQuantityStepper(root: HTMLElement, signal: AbortSignal): void {
+  const wrap = root.querySelector<HTMLElement>('[data-product-qty]')
+  if (!wrap) return
+  const input = wrap.querySelector<HTMLInputElement>('[data-product-qty-input]')
+  if (!input) return
+  const minus = wrap.querySelector<HTMLButtonElement>('[data-product-qty-minus]')
+  const plus = wrap.querySelector<HTMLButtonElement>('[data-product-qty-plus]')
+
+  const getMin = (): number => {
+    const m = input.getAttribute('min')
+    const n = m != null && m !== '' ? parseInt(m, 10) : 1
+    return Number.isFinite(n) && n >= 1 ? n : 1
+  }
+
+  const getMax = (): number | null => {
+    const m = input.getAttribute('max')
+    if (m == null || m === '') return null
+    const n = parseInt(m, 10)
+    return Number.isFinite(n) ? n : null
+  }
+
+  const clamp = (n: number): number => {
+    const min = getMin()
+    const max = getMax()
+    let v = Math.max(min, Math.floor(Number.isFinite(n) ? n : min))
+    if (max != null) v = Math.min(v, max)
+    return v
+  }
+
+  const readRaw = (): string => input.value.trim()
+
+  const commitValue = (): void => {
+    if (readRaw() === '') {
+      input.value = String(getMin())
+    } else {
+      const parsed = parseInt(input.value, 10)
+      input.value = String(clamp(parsed))
+    }
+  }
+
+  const step = (delta: number): void => {
+    const base = readRaw() === '' ? getMin() : parseInt(input.value, 10)
+    const n = Number.isFinite(base) ? base : getMin()
+    input.value = String(clamp(n + delta))
+  }
+
+  const syncDisabled = (): void => {
+    const raw = readRaw()
+    if (raw === '') {
+      if (minus) minus.disabled = true
+      if (plus) plus.disabled = false
+      return
+    }
+    const v = parseInt(raw, 10)
+    if (!Number.isFinite(v)) {
+      if (minus) minus.disabled = false
+      if (plus) plus.disabled = false
+      return
+    }
+    if (minus) minus.disabled = v <= getMin()
+    if (plus) {
+      const max = getMax()
+      plus.disabled = max != null && v >= max
+    }
+  }
+
+  minus?.addEventListener(
+    'click',
+    () => {
+      commitValue()
+      step(-1)
+      syncDisabled()
+    },
+    { signal }
+  )
+  plus?.addEventListener(
+    'click',
+    () => {
+      commitValue()
+      step(1)
+      syncDisabled()
+    },
+    { signal }
+  )
+
+  input.addEventListener('blur', () => {
+    commitValue()
+    syncDisabled()
+  }, { signal })
+  input.addEventListener('change', () => {
+    commitValue()
+    syncDisabled()
+  }, { signal })
+  input.addEventListener('input', () => { syncDisabled() }, { signal })
+
+  syncDisabled()
+}
+
 function setOptionSelectedLabels(container: HTMLElement, v: VariantJson, groupCount: number): void {
   const w = window as unknown as { __productData?: { variants?: ProductDataVariant[] } }
   const store = w.__productData?.variants?.find((x) => x.id === v.id)
@@ -306,6 +497,9 @@ export function registerMainProductSection(): void {
       const { signal } = abort
 
       initProductDetailTabs(container, signal)
+      initProductQuantityStepper(container, signal)
+      initProductCopyLink(container, signal)
+      initProductShareExternal(container, signal)
 
       const gallery = container.querySelector<HTMLElement>('[data-product-gallery]')
       const swiperEl = container.querySelector<HTMLElement>('[data-product-swiper]')
@@ -316,24 +510,26 @@ export function registerMainProductSection(): void {
 
       if (swiperEl && thumbsEl) {
         thumbsSwiper = new Swiper(thumbsEl, {
-          modules: [A11y],
+          modules: [A11y, FreeMode],
+          watchSlidesProgress: true,
+          observer: true,
+          observeParents: true,
           spaceBetween: 8,
           slidesPerView: 4.2,
           freeMode: true,
-          watchSlidesProgress: true,
+          direction: 'horizontal',
           breakpoints: {
             480: { slidesPerView: 4.5 },
-            768: { slidesPerView: 5.5, spaceBetween: 10 },
+            768: {
+              direction: 'vertical',
+              slidesPerView: 'auto',
+              spaceBetween: 8,
+              freeMode: true,
+            },
           },
         })
-        const totalSlides = swiperEl.querySelectorAll('.swiper-slide').length
-        const padN = (n: number) => {
-          const w = Math.max(2, String(totalSlides).length)
-          return String(n).padStart(w, '0')
-        }
-        const paginationEl = container.querySelector<HTMLElement>('[data-product-pagination]') ?? undefined
         mainSwiper = new Swiper(swiperEl, {
-          modules: [A11y, EffectFade, Keyboard, Navigation, Pagination, Thumbs],
+          modules: [A11y, EffectFade, Keyboard, Navigation, Thumbs],
           effect: 'fade',
           fadeEffect: { crossFade: true },
           speed: reduced ? 0 : 520,
@@ -341,15 +537,11 @@ export function registerMainProductSection(): void {
           spaceBetween: 0,
           grabCursor: !reduced,
           watchOverflow: true,
+          observer: true,
+          observeParents: true,
           navigation: {
             nextEl: container.querySelector<HTMLElement>('[data-product-nav-next]') ?? undefined,
             prevEl: container.querySelector<HTMLElement>('[data-product-nav-prev]') ?? undefined,
-          },
-          pagination: {
-            el: paginationEl,
-            type: 'fraction',
-            formatFractionCurrent: (n) => padN(n),
-            formatFractionTotal: (n) => padN(n),
           },
           thumbs: { swiper: thumbsSwiper },
           on: {
@@ -362,6 +554,10 @@ export function registerMainProductSection(): void {
               })
             },
           },
+        })
+        queueMicrotask(() => {
+          thumbsSwiper?.update()
+          mainSwiper?.update()
         })
       }
 
@@ -454,7 +650,10 @@ export function registerMainProductSection(): void {
               compareEl.classList.add('is-visually-hidden')
             }
           }
-          if (submitBtn) submitBtn.disabled = !v.available
+          if (submitBtn) {
+            submitBtn.disabled = !v.available
+            submitBtn.setAttribute('data-product-available', v.available ? 'true' : 'false')
+          }
           if (submitLabel) submitLabel.textContent = v.available ? addLabel : soldLabel
           if (variantIdInput) variantIdInput.value = String(v.id)
           if (groupCount > 0) {
@@ -462,6 +661,7 @@ export function registerMainProductSection(): void {
             setOptionSelectedLabels(container, v, groupCount)
           }
           updateSaleBadge(container, v)
+          applyVariantSku(container, v.sku)
           applyMediaForVariant(v)
         }
 

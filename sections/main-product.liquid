@@ -127,78 +127,74 @@
         </div>
       {%- else -%}
         <div class="main-product__gallery-frame" data-product-gallery-frame>
-          {%- if section.settings.show_sale_badge -%}
-            <span
-              class="main-product__badge{% unless show_compare and off_pct > 0 %} is-visually-hidden{% endunless %}"
-              data-product-badge
-              {% unless show_compare and off_pct > 0 %}
-                hidden
-              {% endunless %}
-            >
-              {%- if show_compare and off_pct > 0 -%}
-                {{- 'products.product.sale_percent' | t: percent: off_pct -}}
-              {%- endif -%}
-            </span>
-          {%- endif -%}
+          <div class="main-product__gallery-main">
+            {%- if section.settings.show_sale_badge -%}
+              <span
+                class="main-product__badge{% unless show_compare and off_pct > 0 %} is-visually-hidden{% endunless %}"
+                data-product-badge
+                {% unless show_compare and off_pct > 0 %}
+                  hidden
+                {% endunless %}
+              >
+                {%- if show_compare and off_pct > 0 -%}
+                  {{- 'products.product.sale_percent' | t: percent: off_pct -}}
+                {%- endif -%}
+              </span>
+            {%- endif -%}
 
-          <div class="swiper main-product__swiper" data-product-swiper>
-            <div class="swiper-wrapper">
-              {%- for media in product.media -%}
-                {%- assign slide_alt = media.alt | default: product.title -%}
-                <div class="swiper-slide main-product__slide" data-media-id="{{ media.id }}">
-                  <figure
-                    class="main-product__figure main-product__figure--slide"
-                    data-product-feature-figure
-                    data-media-id="{{ media.id }}"
-                  >
-                    <img
-                      class="main-product__image"
-                      data-product-slide-img
-                      src="{{ media | image_url: width: 1600 }}"
-                      srcset="{{ media | image_url: width: 480 }} 480w, {{ media | image_url: width: 720 }} 720w, {{ media | image_url: width: 960 }} 960w, {{ media | image_url: width: 1200 }} 1200w, {{ media | image_url: width: 1600 }} 1600w"
-                      sizes="(min-width: 900px) 40vw, 100vw"
-                      width="1600"
-                      height="{{ 1600 | divided_by: media.aspect_ratio | ceil }}"
-                      alt="{{ slide_alt | escape }}"
-                      loading="{% if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
-                      {%- if forloop.first -%}
-                        fetchpriority="high"
-                      {%- endif -%}
+            <div class="swiper main-product__swiper" data-product-swiper>
+              <div class="swiper-wrapper">
+                {%- for media in product.media -%}
+                  {%- assign slide_alt = media.alt | default: product.title -%}
+                  <div class="swiper-slide main-product__slide" data-media-id="{{ media.id }}">
+                    <figure
+                      class="main-product__figure main-product__figure--slide"
+                      data-product-feature-figure
+                      data-media-id="{{ media.id }}"
                     >
-                  </figure>
-                </div>
-              {%- endfor -%}
+                      <img
+                        class="main-product__image"
+                        data-product-slide-img
+                        src="{{ media | image_url: width: 1600 }}"
+                        srcset="{{ media | image_url: width: 480 }} 480w, {{ media | image_url: width: 720 }} 720w, {{ media | image_url: width: 960 }} 960w, {{ media | image_url: width: 1200 }} 1200w, {{ media | image_url: width: 1600 }} 1600w"
+                        sizes="(min-width: 900px) 42vw, 100vw"
+                        width="1600"
+                        height="{{ 1600 | divided_by: media.aspect_ratio | ceil }}"
+                        alt="{{ slide_alt | escape }}"
+                        loading="{% if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
+                        {%- if forloop.first -%}
+                          fetchpriority="high"
+                        {%- endif -%}
+                      >
+                    </figure>
+                  </div>
+                {%- endfor -%}
+              </div>
             </div>
-          </div>
 
-          <div
-            class="main-product__gallery-toolbar"
-            role="group"
-            aria-label="{{ 'products.product.gallery_toolbar' | t }}"
-            data-product-gallery-toolbar
-          >
-            <button
-              type="button"
-              class="main-product__nav-btn main-product__nav-btn--prev"
-              data-product-nav-prev
-              aria-label="{{ 'products.product.slideshow_prev' | t }}"
+            <div
+              class="main-product__gallery-toolbar"
+              role="group"
+              aria-label="{{ 'products.product.gallery_toolbar' | t }}"
+              data-product-gallery-toolbar
             >
-              <span class="main-product__nav-icon" aria-hidden="true">‹</span>
-            </button>
-            <div class="main-product__fraction-wrap">
-              <div
-                class="swiper-pagination main-product__pagination main-product__pagination--fraction"
-                data-product-pagination
-              ></div>
+              <button
+                type="button"
+                class="main-product__nav-btn main-product__nav-btn--prev"
+                data-product-nav-prev
+                aria-label="{{ 'products.product.slideshow_prev' | t }}"
+              >
+                <span class="main-product__nav-icon" aria-hidden="true">‹</span>
+              </button>
+              <button
+                type="button"
+                class="main-product__nav-btn main-product__nav-btn--next"
+                data-product-nav-next
+                aria-label="{{ 'products.product.slideshow_next' | t }}"
+              >
+                <span class="main-product__nav-icon" aria-hidden="true">›</span>
+              </button>
             </div>
-            <button
-              type="button"
-              class="main-product__nav-btn main-product__nav-btn--next"
-              data-product-nav-next
-              aria-label="{{ 'products.product.slideshow_next' | t }}"
-            >
-              <span class="main-product__nav-icon" aria-hidden="true">›</span>
-            </button>
           </div>
 
           <div class="main-product__thumbs-outer">
@@ -302,6 +298,21 @@
               <fieldset class="main-product__fieldset" data-product-option-group data-option-index="{{ forloop.index0 }}">
                 <div class="main-product__fieldset-head">
                   <legend class="main-product__label main-product__label--field">{{- option.name -}}</legend>
+                  <p class="main-product__option-selected main-product__option-selected--inline">
+                    <span class="visually-hidden">
+                      {{- option.name -}}:
+                    </span>
+                    <strong class="main-product__option-value" data-product-option-selected>
+                      {%- case option.position -%}
+                        {%- when 1 -%}
+                          {{- current_variant.option1 -}}
+                        {%- when 2 -%}
+                          {{- current_variant.option2 -}}
+                        {%- when 3 -%}
+                          {{- current_variant.option3 -}}
+                      {%- endcase -%}
+                    </strong>
+                  </p>
                 </div>
                 <div
                   class="main-product__swatch-row"
@@ -363,50 +374,55 @@
                     </label>
                   {%- endfor -%}
                 </div>
-                <p class="main-product__option-selected">
-                  <span class="visually-hidden">{{- option.name -}}: </span>
-                  <span data-option-name>{{ option.name }}</span>:
-                  {%- case option.position -%}
-                    {%- when 1 -%}
-                      <strong data-product-option-selected>{{- current_variant.option1 -}}</strong>
-                    {%- when 2 -%}
-                      <strong data-product-option-selected>{{- current_variant.option2 -}}</strong>
-                    {%- when 3 -%}
-                      <strong data-product-option-selected>{{- current_variant.option3 -}}</strong>
-                  {%- endcase -%}
-                </p>
               </fieldset>
             {%- elsif is_size -%}
               <fieldset class="main-product__fieldset" data-product-option-group data-option-index="{{ forloop.index0 }}">
                 <div class="main-product__fieldset-head main-product__fieldset-head--size">
                   <legend class="main-product__label main-product__label--field">{{- option.name -}}</legend>
-                  {%- if show_size_guide_modal -%}
-                    <button
-                      type="button"
-                      class="main-product__size-guide main-product__size-guide--modal size-guide-trigger"
-                      data-size-guide-open
-                      aria-haspopup="dialog"
-                      aria-label="{{ 'products.product.size_guide_open' | t }}"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        aria-hidden="true"
-                        focusable="false"
+                  <div class="main-product__fieldset-head-size-trailing">
+                    <p class="main-product__option-selected main-product__option-selected--inline">
+                      <span class="visually-hidden">
+                        {{- option.name -}}:
+                      </span>
+                      <strong class="main-product__option-value" data-product-option-selected>
+                        {%- case option.position -%}
+                          {%- when 1 -%}
+                            {{- current_variant.option1 -}}
+                          {%- when 2 -%}
+                            {{- current_variant.option2 -}}
+                          {%- when 3 -%}
+                            {{- current_variant.option3 -}}
+                        {%- endcase -%}
+                      </strong>
+                    </p>
+                    {%- if show_size_guide_modal -%}
+                      <button
+                        type="button"
+                        class="main-product__size-guide main-product__size-guide--modal size-guide-trigger"
+                        data-size-guide-open
+                        aria-haspopup="dialog"
+                        aria-label="{{ 'products.product.size_guide_open' | t }}"
                       >
-                        <path d="M21 3H3v7h18V3z"></path>
-                        <path d="M21 14H3v7h18v-7z"></path>
-                      </svg>
-                      <span class="size-guide-trigger__label">{{- 'products.product.size_guide' | t -}}</span>
-                    </button>
-                  {%- endif -%}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <path d="M21 3H3v7h18V3z"></path>
+                          <path d="M21 14H3v7h18v-7z"></path>
+                        </svg>
+                        <span class="size-guide-trigger__label">{{- 'products.product.size_guide' | t -}}</span>
+                      </button>
+                    {%- endif -%}
+                  </div>
                 </div>
                 <div
                   class="main-product__chips"
@@ -489,15 +505,64 @@
               <label class="main-product__qty-label" for="Quantity-{{ section.id }}">
                 {{- 'products.product.quantity' | t -}}
               </label>
-              <input
-                type="number"
-                name="quantity"
-                id="Quantity-{{ section.id }}"
-                class="main-product__quantity"
-                value="1"
-                min="1"
-                inputmode="numeric"
+              <div
+                class="main-product__qty-stepper"
+                role="group"
+                aria-label="{{ 'products.product.quantity' | t | escape }}"
               >
+                <button
+                  type="button"
+                  class="main-product__qty-btn main-product__qty-btn--minus"
+                  data-product-qty-minus
+                  aria-label="{{ 'products.product.quantity_decrease' | t }}"
+                >
+                  <svg
+                    class="main-product__qty-icon"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path d="M5 12h14"/>
+                  </svg>
+                </button>
+                <input
+                  type="number"
+                  name="quantity"
+                  id="Quantity-{{ section.id }}"
+                  class="main-product__quantity"
+                  data-product-qty-input
+                  value="1"
+                  min="1"
+                  inputmode="numeric"
+                >
+                <button
+                  type="button"
+                  class="main-product__qty-btn main-product__qty-btn--plus"
+                  data-product-qty-plus
+                  aria-label="{{ 'products.product.quantity_increase' | t }}"
+                >
+                  <svg
+                    class="main-product__qty-icon"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                </button>
+              </div>
             </div>
           {%- endif -%}
 
@@ -506,6 +571,8 @@
               type="submit"
               class="main-product__btn main-product__btn--primary"
               data-product-submit
+              data-product-available="{% if current_variant.available %}true{% else %}false{% endif %}"
+              data-ajax-adding-label="{{ 'products.product.adding_to_cart' | t | escape }}"
               {% unless current_variant.available -%}
                 disabled
               {%- endunless -%}
@@ -517,10 +584,89 @@
                   {{- 'products.product.sold_out' | t -}}
                 {%- endif -%}
               </span>
+              <span class="main-product__btn-loader" aria-hidden="true"></span>
             </button>
           </div>
         </div>
       {%- endform -%}
+
+      {%- liquid
+        assign pdp_has_any_sku = false
+        for v in product.variants
+          if v.sku != blank
+            assign pdp_has_any_sku = true
+            break
+          endif
+        endfor
+        assign pdp_show_meta = false
+        if section.settings.show_share
+          assign pdp_show_meta = true
+        endif
+        if section.settings.show_tags and product.tags.size > 0
+          assign pdp_show_meta = true
+        endif
+        if section.settings.show_sku and pdp_has_any_sku
+          assign pdp_show_meta = true
+        endif
+      -%}
+      {%- if pdp_show_meta -%}
+        {%- assign pdp_share_url = request.origin | append: product.url -%}
+        <div class="main-product__meta" data-product-meta>
+          {%- if section.settings.show_sku and pdp_has_any_sku -%}
+            <div
+              class="main-product__meta-line"
+              data-product-sku-wrap
+              {% if current_variant.sku == blank %}
+                hidden
+              {% endif %}
+            >
+              <div class="main-product__meta-line-label">
+                <span class="main-product__label--field">{{- 'products.product.sku_label' | t -}}: </span>
+              </div>
+              <div class="main-product__meta-line-value">
+                <span class="main-product__meta-sku-value" data-product-sku>
+                  {%- if current_variant.sku != blank -%}
+                    {{- current_variant.sku | escape -}}
+                  {%- endif -%}
+                </span>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.show_tags and product.tags.size > 0 -%}
+            <div class="main-product__meta-line main-product__meta-line--tags">
+              <div class="main-product__meta-line-label">
+                <span class="main-product__label--field">{{- 'products.product.tags_label' | t -}}: </span>
+              </div>
+              <div class="main-product__meta-line-value main-product__meta-line-value--tags">
+                <ul class="main-product__meta-list" role="list">
+                  {%- for tag in product.tags -%}
+                    <li class="main-product__meta-list-item">
+                      <a
+                        class="main-product__meta-link"
+                        href="{{ routes.search_url }}?q={{ 'tag:' | append: tag | url_param_escape }}"
+                      >
+                        {{- tag | escape -}}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.show_share -%}
+            <div class="main-product__meta-line main-product__meta-line--share">
+              <div class="main-product__meta-line-label">
+                <span class="main-product__label--field">{{- 'products.product.share' | t -}}: </span>
+              </div>
+              <div class="main-product__meta-line-value">
+                {%- render 'pdp-social-share', share_url: pdp_share_url, product_title: product.title -%}
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
 
       {%- if lede != blank -%}
         <p class="main-product__lede">{{ lede | escape }}</p>
@@ -565,7 +711,6 @@
     >
       <div class="main-product__pdp-bleed">
       <div class="main-product__pdp-lower__inner">
-        <h2 class="main-product__pdp-heading">{{- 'products.product.information_tabs_heading' | t -}}</h2>
         <div
           class="main-product__tablist"
           role="tablist"
@@ -760,7 +905,8 @@
             {{ variant.featured_media.id }}
           {%- else -%}
             null
-          {%- endif %}
+          {%- endif -%},
+          "sku": {{ variant.sku | json }}
         }{%- unless forloop.last -%},{%- endunless -%}
       {%- endfor -%}
     ]
@@ -827,6 +973,28 @@
       "label": "t:sections.main_product.show_review_summary",
       "default": true,
       "info": "t:sections.main_product.review_info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main_product.heading_product_meta"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sku",
+      "label": "t:sections.main_product.show_sku",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "t:sections.main_product.show_tags",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "label": "t:sections.main_product.show_share",
+      "default": true
     },
     {
       "type": "header",

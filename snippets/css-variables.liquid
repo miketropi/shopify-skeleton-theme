@@ -42,34 +42,22 @@
     unless use_custom_fonts
       assign fp = settings.font_pairing
       case fp
-        when 'classic'
-          assign root_font_heading = "'Playfair Display', Georgia, serif"
-          assign root_font_body = "'Inter', system-ui, sans-serif"
-          assign root_font_mono = "'JetBrains Mono', monospace"
-        when 'modern'
+        when 'neutral', 'modern'
           assign root_font_heading = "'Plus Jakarta Sans', system-ui, sans-serif"
           assign root_font_body = "'DM Sans', system-ui, sans-serif"
           assign root_font_mono = "'DM Mono', monospace"
-        when 'editorial'
-          assign root_font_heading = "'Cormorant', Georgia, serif"
-          assign root_font_body = "'Source Sans 3', system-ui, sans-serif"
-          assign root_font_mono = "'Source Code Pro', monospace"
-        when 'geometric'
-          assign root_font_heading = "'Outfit', system-ui, sans-serif"
-          assign root_font_body = "'Outfit', system-ui, sans-serif"
-          assign root_font_mono = "'Space Mono', monospace"
-        when 'humanist'
+        when 'vision', 'atelier', 'meridian'
           assign root_font_heading = "'Fraunces', Georgia, serif"
-          assign root_font_body = "'Nunito Sans', system-ui, sans-serif"
-          assign root_font_mono = "'Fira Code', monospace"
-        when 'technical'
-          assign root_font_heading = "'Space Grotesk', system-ui, sans-serif"
-          assign root_font_body = "'Space Grotesk', system-ui, sans-serif"
-          assign root_font_mono = "'IBM Plex Mono', monospace"
+          assign root_font_body = "'Manrope', system-ui, sans-serif"
+          assign root_font_mono = "'Fira Code', ui-monospace, monospace"
+        when 'technology', 'technical'
+          assign root_font_heading = "'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace"
+          assign root_font_body = "'Inter', system-ui, sans-serif"
+          assign root_font_mono = "'JetBrains Mono', ui-monospace, monospace"
         else
-          assign root_font_heading = 'system-ui, sans-serif'
-          assign root_font_body = 'system-ui, sans-serif'
-          assign root_font_mono = 'monospace'
+          assign root_font_heading = "'Plus Jakarta Sans', system-ui, sans-serif"
+          assign root_font_body = "'DM Sans', system-ui, sans-serif"
+          assign root_font_mono = "'DM Mono', monospace"
       endcase
     endunless
   -%}

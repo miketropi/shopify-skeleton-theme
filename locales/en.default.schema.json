@@ -100,10 +100,11 @@
   },
   "info": {
     "colors_intro": "Choose preset named schemes for the whole store, or one custom palette. Colours are never set per section.",
-    "colors_preset": "Edit named schemes below, then choose which one applies to the whole store. Sections no longer have their own colour scheme.",
+    "colors_preset": "There are five named schemes (sage, peach, dark, plus mist blue and soft lilac). Edit them below, then pick Store colour scheme for the site. Sections do not have their own colour scheme.",
     "colors_custom": "These colours apply site-wide. The preset scheme editor further down is ignored while Custom is selected.",
-    "typography_intro": "Choose curated Google Font pairings or pick your own fonts from the Shopify library (including shop fonts). Colour schemes still control colours per section.",
+    "typography_intro": "Curated mode loads Google Fonts (preconnect + display=swap) into --cs-font-heading, --cs-font-body, and --cs-font-mono. Custom mode uses Shopify’s font_picker and @font-face (Shop fonts and Google in the library). Global colours are under Colors, not here.",
     "typography_custom": "Heading, body, and code use these fonts. They map to --cs-font-heading, --cs-font-body, and --cs-font-mono.",
+    "typography_preset_research": "Three curated pairings: Neutral (versatile sans), Vision (Fraunces + Manrope: editorial serif + modern sans; Fira Code for mono), Technology (monospace headings + Inter body). To add or change a slug, update config/settings_schema.json, snippets/font-pairing-link.liquid, font-pairing-loader.liquid, snippets/css-variables.liquid, and src/styles/base/_fonts.scss. Keep href on fonts.googleapis.com.",
     "search_scope": "Product-only search uses Shopify’s type=product parameter. Articles and pages are excluded.",
     "header_menu_nested": "Add nested links in Online Store → Navigation (up to two levels under a top-level item). On large screens they appear as dropdowns and flyouts; in the mobile drawer they expand in place.",
     "sticky_header": "Controls whether the header stays visible when scrolling.",
@@ -160,6 +161,11 @@
       "none": "Not sticky",
       "always": "Always visible",
       "scroll_up": "Visible when scrolling up"
+    },
+    "font_pairing": {
+      "neutral": "Neutral — Plus Jakarta Sans + DM Sans (global)",
+      "vision": "Vision — Fraunces + Manrope (business, artistic)",
+      "technology": "Technology — JetBrains Mono + Inter (mono-led)"
     },
     "desktop_header_layout": {
       "logo_nav_actions": "Logo left — menu and cart/icons on the right",
@@ -232,7 +238,18 @@
           "content_overlay_color": "Overlay colour",
           "content_overlay_opacity": "Overlay strength",
           "content_overlay_coverage": "Overlay area",
-          "content_overlay_coverage_info": "Text column only tints behind the copy. Full slide covers the entire hero."
+          "content_overlay_coverage_info": "Text column only tints behind the copy. Full slide covers the entire hero.",
+          "heading_content_colors": "Copy colours",
+          "content_color_override": "Override text and control colours",
+          "content_color_override_info": "Applies to this slide’s eyebrow, heading, body, text links, and primary/secondary actions. The slide colour scheme still controls the overall palette when overrides are not set, or for anything these fields do not cover (e.g. focus rings use the scheme accent).",
+          "content_color_kicker": "Eyebrow",
+          "content_color_heading": "Heading",
+          "content_color_body": "Body",
+          "content_color_link": "Text link (body, heading links, and secondary action)",
+          "content_color_btn_text": "Primary button — text",
+          "content_color_btn_border": "Primary button — border",
+          "content_color_btn_bg": "Primary button — background",
+          "content_color_btn_bg_info": "Use a transparent or semi-transparent value for the outline look. Solid fills for a pill button."
         }
       }
     },
@@ -244,6 +261,10 @@
       "show_sale_badge": "Show sale badge on image",
       "show_review_summary": "Show review summary",
       "review_info": "Uses product metafields `reviews.rating` and `reviews.rating_count` when present (e.g. review apps).",
+      "heading_product_meta": "Product details (PDP)",
+      "show_sku": "Show SKU (updates when variant changes)",
+      "show_tags": "Show product tags (linked to search)",
+      "show_share": "Show share / copy link",
       "heading_size_guide": "Size guide (this product page)",
       "size_guide_pdp_info": "Optional size chart for this product template. When set, and the product has no `custom.size_guide` metafield, this image is used **instead of** the theme’s global size chart. Product metafield content still takes priority. Leave empty to use the global or metafield only.",
       "size_guide_image": "Size chart image",

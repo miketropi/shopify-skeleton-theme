@@ -2,12 +2,10 @@
 // Runtime --cs-font-* values come from snippets/color-scheme-vars.liquid; Google URLs from
 // snippets/font-pairing-link.liquid. Keep those three in sync when adding a pairing.
 //
-// classic    Playfair Display     / Inter            / JetBrains Mono
-// modern     Plus Jakarta Sans    / DM Sans          / DM Mono        (doc “Satoshi” → PJ Sans on GF)
-// editorial  Cormorant            / Source Sans 3    / Source Code Pro
-// geometric  Outfit               / Outfit           / Space Mono
-// humanist   Fraunces             / Nunito Sans      / Fira Code
-// technical  Space Grotesk        / Space Grotesk    / IBM Plex Mono
+// Preset count: 3. Slug → (heading, body, mono)
+// neutral    Plus Jakarta Sans   / DM Sans          / DM Mono          (global, neutral)
+// vision     Fraunces (soft serif) / Manrope        / Fira Code       (business / editorial, artistic; variable opsz)
+// technology JetBrains Mono      / Inter            / JetBrains Mono  (tech: mono for headings + code; GF v2)
 
 body {
   font-family: var(--cs-font-body);

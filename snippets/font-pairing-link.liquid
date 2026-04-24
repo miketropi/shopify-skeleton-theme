@@ -2,56 +2,33 @@
   =============================================================================
   FONT PAIRING LINK — private to font-pairing-loader.liquid
   =============================================================================
-  @param {String} pairing - Curated slug (classic, modern, …)
+  @param {String} pairing - Curated slug: neutral | vision | technology
 
   DO NOT render this snippet from sections, blocks, or any file other than
   snippets/font-pairing-loader.liquid. The loader is only included from <head> in
   layout/theme.liquid. Stylesheet <link> in <body> is invalid HTML and causes FOUC.
 
   Outputs exactly one Google Fonts stylesheet <link> (no preconnect — those live in
-  the loader, before this loop).
-
-  "modern" loads Plus Jakarta Sans (Satoshi is not on Google Fonts); stacks in
-  snippets/css-variables.liquid must match these URLs.
-
-  CSP: while href stays on fonts.googleapis.com, Shopify’s allowlist covers it. If you
-  point this snippet at another domain, extend layout/content_security_policy.liquid.
+  the loader, before this loop). Stacks in snippets/css-variables.liquid must match
+  the families requested here. CSP: keep href on fonts.googleapis.com.
 {%- endcomment -%}
 
 {%- case pairing -%}
-  {%- when 'classic' -%}
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap"
-      rel="stylesheet"
-    >
-
-  {%- when 'modern' -%}
+  {%- when 'neutral' -%}
     <link
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400&display=swap"
       rel="stylesheet"
     >
 
-  {%- when 'editorial' -%}
+  {%- when 'vision' -%}
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500&family=Source+Code+Pro:wght@400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Manrope:wght@400;500;600&family=Fira+Code:wght@400&display=swap"
       rel="stylesheet"
     >
 
-  {%- when 'geometric' -%}
+  {%- when 'technology' -%}
     <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&family=Space+Mono:wght@400&display=swap"
-      rel="stylesheet"
-    >
-
-  {%- when 'humanist' -%}
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Nunito+Sans:wght@400;500&family=Fira+Code:wght@400&display=swap"
-      rel="stylesheet"
-    >
-
-  {%- when 'technical' -%}
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     >
 {%- endcase -%}

@@ -185,7 +185,7 @@
             "type": "color",
             "id": "background",
             "label": "Background",
-            "default": "#ffffff"
+            "default": "#d2dcb6"
           },
           {
             "type": "color_background",
@@ -197,13 +197,13 @@
             "type": "color",
             "id": "background_secondary",
             "label": "Background secondary",
-            "default": "#f4f4f5"
+            "default": "#e1e7cd"
           },
           {
             "type": "color",
             "id": "border",
             "label": "Border",
-            "default": "#e4e4e7"
+            "default": "#b4c19a"
           },
           {
             "type": "header",
@@ -213,19 +213,19 @@
             "type": "color",
             "id": "text",
             "label": "Body text",
-            "default": "#27272a"
+            "default": "#2c3228"
           },
           {
             "type": "color",
             "id": "text_secondary",
             "label": "Secondary text",
-            "default": "#71717a"
+            "default": "#4d5545"
           },
           {
             "type": "color",
             "id": "heading",
             "label": "Heading",
-            "default": "#18181b"
+            "default": "#1a2016"
           },
           {
             "type": "header",
@@ -235,13 +235,13 @@
             "type": "color",
             "id": "accent",
             "label": "Accent",
-            "default": "#2563eb"
+            "default": "#3d4d34"
           },
           {
             "type": "color",
             "id": "accent_text",
             "label": "Text on accent",
-            "default": "#ffffff"
+            "default": "#f2f4e7"
           },
           {
             "type": "header",
@@ -251,19 +251,19 @@
             "type": "color",
             "id": "btn_primary_bg",
             "label": "Background",
-            "default": "#18181b"
+            "default": "#2f3d2a"
           },
           {
             "type": "color",
             "id": "btn_primary_text",
             "label": "Label",
-            "default": "#ffffff"
+            "default": "#e8ecd8"
           },
           {
             "type": "color",
             "id": "btn_primary_border",
             "label": "Border",
-            "default": "#18181b"
+            "default": "#2f3d2a"
           },
           {
             "type": "header",
@@ -273,19 +273,19 @@
             "type": "color",
             "id": "btn_secondary_bg",
             "label": "Background",
-            "default": "#ffffff"
+            "default": "#e1e7cd"
           },
           {
             "type": "color",
             "id": "btn_secondary_text",
             "label": "Label",
-            "default": "#18181b"
+            "default": "#2c3228"
           },
           {
             "type": "color",
             "id": "btn_secondary_border",
             "label": "Border",
-            "default": "#d4d4d8"
+            "default": "#9aaa84"
           }
         ],
         "role": {
@@ -347,31 +347,24 @@
         "label": "t:labels.font_pairing",
         "options": [
           {
-            "value": "classic",
-            "label": "Classic — Playfair Display + Inter"
+            "value": "neutral",
+            "label": "t:options.font_pairing.neutral"
           },
           {
-            "value": "modern",
-            "label": "Modern — Plus Jakarta Sans + DM Sans"
+            "value": "vision",
+            "label": "t:options.font_pairing.vision"
           },
           {
-            "value": "editorial",
-            "label": "Editorial — Cormorant + Source Sans 3"
-          },
-          {
-            "value": "geometric",
-            "label": "Geometric — Outfit + Outfit"
-          },
-          {
-            "value": "humanist",
-            "label": "Humanist — Fraunces + Nunito Sans"
-          },
-          {
-            "value": "technical",
-            "label": "Technical — Space Grotesk + IBM Plex Mono"
+            "value": "technology",
+            "label": "t:options.font_pairing.technology"
           }
         ],
-        "default": "modern",
+        "default": "neutral",
+        "visible_if": "{{ settings.typography_mode == 'preset' }}"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:info.typography_preset_research",
         "visible_if": "{{ settings.typography_mode == 'preset' }}"
       },
       {
@@ -444,7 +437,7 @@
         "step": 1,
         "unit": "px",
         "label": "t:labels.input_corner_radius",
-        "default": 6
+        "default": 0
       }
     ]
   },

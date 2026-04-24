@@ -92,6 +92,39 @@
               {%- capture slide_scheme_css -%}
                 {%- render 'color-scheme-vars', scheme: slide_scheme, inline_only: true -%}
               {%- endcapture -%}
+              {%- assign slide_hero_ov = '' -%}
+              {%- if block.settings.content_color_override -%}
+                {%- liquid
+                  assign kc = block.settings.content_color_kicker
+                  assign hc = block.settings.content_color_heading
+                  assign bc = block.settings.content_color_body
+                  assign lc = block.settings.content_color_link
+                  assign pt = block.settings.content_color_btn_text
+                  assign pb = block.settings.content_color_btn_border
+                  assign pbg = block.settings.content_color_btn_bg
+                -%}
+                {%- if kc != blank -%}
+                  {%- assign slide_hero_ov = slide_hero_ov | append: ' --hero-ov-kicker: ' | append: kc | append: ';' -%}
+                {%- endif -%}
+                {%- if hc != blank -%}
+                  {%- assign slide_hero_ov = slide_hero_ov | append: ' --hero-ov-heading: ' | append: hc | append: ';' -%}
+                {%- endif -%}
+                {%- if bc != blank -%}
+                  {%- assign slide_hero_ov = slide_hero_ov | append: ' --hero-ov-body: ' | append: bc | append: ';' -%}
+                {%- endif -%}
+                {%- if lc != blank -%}
+                  {%- assign slide_hero_ov = slide_hero_ov | append: ' --hero-ov-link: ' | append: lc | append: ';' -%}
+                {%- endif -%}
+                {%- if pt != blank -%}
+                  {%- assign slide_hero_ov = slide_hero_ov | append: ' --hero-ov-btn-text: ' | append: pt | append: ';' -%}
+                {%- endif -%}
+                {%- if pb != blank -%}
+                  {%- assign slide_hero_ov = slide_hero_ov | append: ' --hero-ov-btn-border: ' | append: pb | append: ';' -%}
+                {%- endif -%}
+                {%- if pbg != blank -%}
+                  {%- assign slide_hero_ov = slide_hero_ov | append: ' --hero-ov-btn-bg: ' | append: pbg | append: ';' -%}
+                {%- endif -%}
+              {%- endif -%}
               {%- assign i_display = i | plus: 1 -%}
               {%- liquid
                 assign img_loading = 'lazy'
@@ -116,7 +149,7 @@
                 role="group"
                 aria-roledescription="{{ 'hero_slider.slide' | t }}"
                 aria-label="{{ 'hero_slider.slide_n_of_m' | t: n: i_display, m: slide_count }}"
-                style="{{ slide_scheme_css }}"
+                style="{{ slide_scheme_css }}{{ slide_hero_ov }}"
                 {{ block.shopify_attributes }}
               >
                 <div class="hero-slide__media">
@@ -470,6 +503,67 @@
           "type": "url",
           "id": "cta_secondary_link",
           "label": "t:sections.hero_slider.blocks.slide.cta_secondary_link"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.hero_slider.blocks.slide.heading_content_colors"
+        },
+        {
+          "type": "checkbox",
+          "id": "content_color_override",
+          "label": "t:sections.hero_slider.blocks.slide.content_color_override",
+          "info": "t:sections.hero_slider.blocks.slide.content_color_override_info",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "content_color_kicker",
+          "label": "t:sections.hero_slider.blocks.slide.content_color_kicker",
+          "default": "#e7e5e4",
+          "visible_if": "{{ block.settings.content_color_override }}"
+        },
+        {
+          "type": "color",
+          "id": "content_color_heading",
+          "label": "t:sections.hero_slider.blocks.slide.content_color_heading",
+          "default": "#fafaf9",
+          "visible_if": "{{ block.settings.content_color_override }}"
+        },
+        {
+          "type": "color",
+          "id": "content_color_body",
+          "label": "t:sections.hero_slider.blocks.slide.content_color_body",
+          "default": "#d6d3d1",
+          "visible_if": "{{ block.settings.content_color_override }}"
+        },
+        {
+          "type": "color",
+          "id": "content_color_link",
+          "label": "t:sections.hero_slider.blocks.slide.content_color_link",
+          "default": "#fafaf9",
+          "visible_if": "{{ block.settings.content_color_override }}"
+        },
+        {
+          "type": "color",
+          "id": "content_color_btn_text",
+          "label": "t:sections.hero_slider.blocks.slide.content_color_btn_text",
+          "default": "#fafaf9",
+          "visible_if": "{{ block.settings.content_color_override }}"
+        },
+        {
+          "type": "color",
+          "id": "content_color_btn_border",
+          "label": "t:sections.hero_slider.blocks.slide.content_color_btn_border",
+          "default": "#fafaf9",
+          "visible_if": "{{ block.settings.content_color_override }}"
+        },
+        {
+          "type": "color",
+          "id": "content_color_btn_bg",
+          "label": "t:sections.hero_slider.blocks.slide.content_color_btn_bg",
+          "info": "t:sections.hero_slider.blocks.slide.content_color_btn_bg_info",
+          "default": "rgba(0,0,0,0)",
+          "visible_if": "{{ block.settings.content_color_override }}"
         }
       ]
     }
