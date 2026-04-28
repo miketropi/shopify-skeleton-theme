@@ -1,61 +1,231 @@
+{%- liquid
+  assign footer_scheme = section.settings.color_scheme
+  if footer_scheme == blank or footer_scheme.settings == blank
+    assign footer_scheme = settings.global_color_scheme
+  endif
+  if footer_scheme == blank or footer_scheme.settings == blank
+    assign footer_scheme = settings.color_schemes['scheme-1']
+  endif
+-%}
+{%- capture footer_scheme_vars -%}
+  {%- render 'color-scheme-vars', scheme: footer_scheme, inline_only: true -%}
+{%- endcapture -%}
+
+{%- liquid
+  assign menu_primary = section.settings.menu
+  assign menu_secondary = section.settings.secondary_menu
+  assign show_social_block = false
+  if section.settings.show_social
+    if section.settings.social_instagram != blank or section.settings.social_facebook != blank or section.settings.social_pinterest != blank or section.settings.social_youtube != blank or section.settings.social_tiktok != blank or section.settings.social_x != blank
+      assign show_social_block = true
+    endif
+  endif
+  assign show_policies = false
+  if section.settings.show_policy_links and shop.policies != empty
+    assign show_policies = true
+  endif
+-%}
+
 <footer
   class="site-footer"
-  {% render 'color-scheme-vars' %}
+  style="{{ footer_scheme_vars }}"
+  data-section-type="footer"
+  data-section-id="{{ section.id }}"
+  {{ section.shopify_attributes }}
 >
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
-  </div>
+  <div class="site-footer__inner">
+    <div class="site-footer__top">
+      {%- if section.settings.show_branding -%}
+        <div class="site-footer__brand">
+          <h2 class="site-footer__brand-heading">
+            <a class="site-footer__brand-heading-link" href="{{ routes.root_url }}">{{ shop.name }}</a>
+          </h2>
+          {%- if section.settings.tagline != blank -%}
+            <p class="site-footer__tagline">{{ section.settings.tagline | escape }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
 
-  <div class="footer__links">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
+      {%- if menu_primary != blank and menu_primary.links.size > 0 -%}
+        <nav class="site-footer__nav" aria-label="{{ 'footer.menu_primary_aria' | t }}">
+          <h3 class="site-footer__col-heading">{{ section.settings.primary_menu_heading | escape }}</h3>
+          <ul class="site-footer__list" role="list">
+            {%- for link in menu_primary.links -%}
+              <li>
+                <a href="{{ link.url }}">{{ link.title | escape }}</a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
 
-  <div class="footer__payment">
-    {% if section.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
-    {% endif %}
+      {%- if menu_secondary != blank and menu_secondary.links.size > 0 -%}
+        <nav class="site-footer__nav" aria-label="{{ 'footer.menu_secondary_aria' | t }}">
+          <h3 class="site-footer__col-heading">{{ section.settings.secondary_menu_heading | escape }}</h3>
+          <ul class="site-footer__list" role="list">
+            {%- for link in menu_secondary.links -%}
+              <li>
+                <a href="{{ link.url }}">{{ link.title | escape }}</a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+
+      {%- if show_social_block -%}
+        <div class="site-footer__social">
+          <h3 class="site-footer__col-heading">{{ 'footer.follow' | t }}</h3>
+          {% render 'footer-socials', section: section %}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="site-footer__bottom">
+      {%- if show_policies -%}
+        <nav class="site-footer__policies" aria-label="{{ 'footer.policies_aria' | t }}">
+          {%- for policy in shop.policies -%}
+            {%- if policy != blank -%}
+              <a href="{{ policy.url }}">{{ policy.title | escape }}</a>
+            {%- endif -%}
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
+
+      {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+        <div class="site-footer__payments" aria-label="{{ 'footer.payment_aria' | t }}">
+          {%- for type in shop.enabled_payment_types -%}
+            {{ type | payment_type_svg_tag }}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <p class="site-footer__copyright">
+        &copy;
+        {{ 'now' | date: '%Y' }}
+        <a href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
+        {%- if section.settings.copyright_note != blank -%}
+          <span class="site-footer__copyright-note"> — {{ section.settings.copyright_note | escape }}</span>
+        {%- endif -%}
+        <span class="site-footer__powered"> · {{ powered_by_link }}</span>
+      </p>
+    </div>
   </div>
 </footer>
 
-{% stylesheet %}
-  .site-footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-    background-color: var(--cs-background);
-    color: var(--cs-text);
-  }
-  .site-footer a {
-    text-decoration: none;
-    color: var(--cs-text);
-  }
-  .site-footer .footer__links,
-  .site-footer .footer__payment {
-    display: flex;
-    gap: 1rem;
-  }
-{% endstylesheet %}
-
 {% schema %}
 {
-  "name": "t:general.footer",
+  "name": "t:sections.footer.name",
+  "class": "section-footer",
   "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.footer.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.footer.heading_brand"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_branding",
+      "label": "t:sections.footer.show_branding",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "t:sections.footer.tagline",
+      "info": "t:sections.footer.tagline_info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.footer.heading_menus"
+    },
     {
       "type": "link_list",
       "id": "menu",
       "label": "t:labels.menu"
     },
     {
+      "type": "text",
+      "id": "primary_menu_heading",
+      "label": "t:sections.footer.primary_menu_heading",
+      "default": "Shop"
+    },
+    {
+      "type": "link_list",
+      "id": "secondary_menu",
+      "label": "t:sections.footer.secondary_menu"
+    },
+    {
+      "type": "text",
+      "id": "secondary_menu_heading",
+      "label": "t:sections.footer.secondary_menu_heading",
+      "default": "Help"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.footer.heading_social"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "t:sections.footer.show_social",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook",
+      "label": "Facebook"
+    },
+    {
+      "type": "url",
+      "id": "social_pinterest",
+      "label": "Pinterest"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube",
+      "label": "YouTube"
+    },
+    {
+      "type": "url",
+      "id": "social_tiktok",
+      "label": "TikTok"
+    },
+    {
+      "type": "url",
+      "id": "social_x",
+      "label": "X (Twitter)"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.footer.heading_bottom"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policy_links",
+      "label": "t:sections.footer.show_policy_links",
+      "default": true
+    },
+    {
       "type": "checkbox",
       "id": "show_payment_icons",
       "label": "t:labels.show_payment_icons",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "copyright_note",
+      "label": "t:sections.footer.copyright_note",
+      "info": "t:sections.footer.copyright_note_info"
     }
   ]
 }

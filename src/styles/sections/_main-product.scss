@@ -679,7 +679,7 @@
 }
 
 .main-product__meta-line--share {
-  align-items: center;
+  align-items: flex-start;
 }
 
 .main-product__meta-line:last-child {
@@ -803,11 +803,65 @@ button.main-product__meta-link:focus-visible {
 .main-product__fieldset-head--size {
   margin-bottom: 0.7rem;
   align-items: center;
+  width: 100%;
 }
 
+/* Right cluster: “M · Size guide” — one readable row; wraps cleanly on narrow widths */
 .main-product__fieldset-head-size-trailing {
-  gap: 0.5rem 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.25rem 0.55rem;
   min-width: 0;
+  max-width: 100%;
+  margin-left: auto;
+}
+
+.main-product__option-selected--size-trailing {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.main-product__fieldset-head-size-trailing .main-product__option-selected--inline {
+  text-align: inherit;
+  max-width: min(14rem, 100%);
+}
+
+.main-product__size-guide-sep {
+  flex: 0 0 auto;
+  color: var(--pdp-text-quiet);
+  font-size: 1.05rem;
+  line-height: 1;
+  font-weight: 300;
+  opacity: 0.9;
+  user-select: none;
+  transform: translateY(-0.03em);
+}
+
+.main-product__fieldset-head-size-trailing .main-product__size-guide--modal {
+  flex: 0 0 auto;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--pdp-text-muted);
+  // text-decoration: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .main-product__fieldset-head-size-trailing .main-product__size-guide--modal:hover {
+    color: var(--cs-heading);
+    text-decoration: underline;
+    // text-decoration-thickness: 1px;
+    // text-underline-offset: 0.18em;
+  }
+}
+
+.main-product__fieldset-head-size-trailing .main-product__size-guide--modal:focus-visible {
+  outline: 2px solid var(--cs-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 .main-product__label--field {
@@ -1290,6 +1344,12 @@ button.main-product__meta-link:focus-visible {
   padding-block: clamp(1.65rem, 2.75vw, 2.4rem);
 }
 
+.main-product__pdp-lower__inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+
 /* Tab bar: text + bottom rule; <lg = horizontal scroll + ~44px tap targets */
 .main-product__tablist {
   display: flex;
@@ -1539,43 +1599,6 @@ button.main-product__meta-link:focus-visible {
   line-height: 1.65;
   letter-spacing: 0.01em;
   color: var(--cs-text);
-}
-
-/* Same .shopify-section content column as .main-product — no extra horizontal padding. */
-.main-product__complete {
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  margin-top: clamp(2.4rem, 5.5vw, 4.25rem);
-  padding: $space-lg 0 0;
-  border-top: 1px solid var(--pdp-border-hairline);
-}
-
-.main-product__complete-heading {
-  margin: 0 0 1.1rem;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--pdp-text-muted);
-}
-
-.main-product__complete-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(0.75rem, 2.5vw, 1.5rem);
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-
-  @include mq-up('md') {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-.main-product__complete-item {
-  min-width: 0;
 }
 
 .visually-hidden,

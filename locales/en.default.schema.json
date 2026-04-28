@@ -274,17 +274,30 @@
       "tab_size_fit": "Size & fit (tab content)",
       "tab_care": "Care information (tab content)",
       "tab_shipping": "Shipping & returns (tab content)",
-      "heading_recommendations": "Complete the look",
-      "show_complete_look": "Show “Complete the look”",
-      "complete_look_collection": "Collection",
-      "complete_look_limit": "Products to show",
-      "complete_look_heading": "Heading (optional)",
       "block_spec": "Spec row",
       "spec_label": "Label",
       "spec_value": "Value",
       "block_accordion": "Accordion",
       "accordion_heading": "Heading",
       "accordion_body": "Content"
+    },
+    "footer": {
+      "name": "Footer",
+      "color_scheme": "Colour scheme",
+      "heading_brand": "Brand",
+      "show_branding": "Show shop name and tagline",
+      "tagline": "Tagline",
+      "tagline_info": "Optional short line under the shop name.",
+      "heading_menus": "Menus",
+      "primary_menu_heading": "Primary menu heading",
+      "secondary_menu": "Secondary menu",
+      "secondary_menu_heading": "Secondary menu heading",
+      "heading_social": "Social media",
+      "show_social": "Show social icons when URLs are set",
+      "heading_bottom": "Bottom bar",
+      "show_policy_links": "Show policy links",
+      "copyright_note": "Extra copyright line",
+      "copyright_note_info": "Short text after the shop name (optional)."
     }
   }
 }

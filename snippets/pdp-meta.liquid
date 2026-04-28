@@ -1,0 +1,59 @@
+{%- comment -%}
+  PDP SKU / tags / share block below the form.
+  Pass: `product`, `section`, `current_variant`, `pdp_share_url`, `pdp_has_any_sku`
+{%- endcomment -%}
+<div class="main-product__meta" data-product-meta>
+  {%- if section.settings.show_sku and pdp_has_any_sku -%}
+    <div
+      class="main-product__meta-line"
+      data-product-sku-wrap
+      {% if current_variant.sku == blank %}
+        hidden
+      {% endif %}
+    >
+      <div class="main-product__meta-line-label">
+        <span class="main-product__label--field">{{- 'products.product.sku_label' | t -}}: </span>
+      </div>
+      <div class="main-product__meta-line-value">
+        <span class="main-product__meta-sku-value" data-product-sku>
+          {%- if current_variant.sku != blank -%}
+            {{- current_variant.sku | escape -}}
+          {%- endif -%}
+        </span>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_tags and product.tags.size > 0 -%}
+    <div class="main-product__meta-line main-product__meta-line--tags">
+      <div class="main-product__meta-line-label">
+        <span class="main-product__label--field">{{- 'products.product.tags_label' | t -}}: </span>
+      </div>
+      <div class="main-product__meta-line-value main-product__meta-line-value--tags">
+        <ul class="main-product__meta-list" role="list">
+          {%- for tag in product.tags -%}
+            <li class="main-product__meta-list-item">
+              <a
+                class="main-product__meta-link"
+                href="{{ routes.search_url }}?q={{ 'tag:' | append: tag | url_param_escape }}"
+              >
+                {{- tag | escape -}}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_share -%}
+    <div class="main-product__meta-line main-product__meta-line--share">
+      <div class="main-product__meta-line-label">
+        <span class="main-product__label--field">{{- 'products.product.share' | t -}}: </span>
+      </div>
+      <div class="main-product__meta-line-value">
+        {%- render 'pdp-social-share', share_url: pdp_share_url, product_title: product.title -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>

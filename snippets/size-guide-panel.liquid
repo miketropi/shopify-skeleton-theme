@@ -14,14 +14,14 @@
   endif
 -%}
 <div class="size-guide" data-size-guide>
-  <div class="size-guide__header">
-    <h2 class="size-guide__title">
+  <div class="theme-modal__header">
+    <h2 class="theme-modal__title">
       {{- guide_title -}}
     </h2>
     <button
       type="button"
-      class="size-guide__close"
-      data-size-guide-close
+      class="theme-modal__close"
+      data-theme-modal-close
       aria-label="{{ 'products.product.size_guide_close' | t }}"
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
@@ -31,7 +31,7 @@
     </button>
   </div>
 
-  <div class="size-guide__body rte">
+  <div class="theme-modal__body rte">
     {%- if use_mf -%}
       <div class="size-guide__content">
         {{ metafield | metafield_tag }}
@@ -48,4 +48,6 @@
       {%- endif -%}
     {%- endif -%}
   </div>
+
+  {% render 'theme-modal-hints' %}
 </div>

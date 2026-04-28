@@ -1,0 +1,24 @@
+{% doc %}
+  Shortcut hints row for `theme-modal` dialogs. Place after `theme-modal__body` inside the panel content.
+
+  Sighted users see compact labels; screen readers get `general.modal.hints_aria` from a visually hidden line.
+{% enddoc %}
+<aside class="theme-modal__hints">
+  <p class="visually-hidden">{{ 'general.modal.hints_aria' | t }}</p>
+  <div class="theme-modal__hints-inner" aria-hidden="true">
+    <span class="theme-modal__hints-label">{{ 'general.modal.hints_intro' | t }}</span>
+    <ul class="theme-modal__hint-list">
+      <li class="theme-modal__hint">
+        <kbd class="theme-modal__kbd">Esc</kbd>
+        <span class="theme-modal__hint-label">{{ 'general.modal.hint_escape' | t }}</span>
+      </li>
+      <li class="theme-modal__hint">
+        <kbd class="theme-modal__kbd">Tab</kbd>
+        <span class="theme-modal__hint-label">{{ 'general.modal.hint_tab' | t }}</span>
+      </li>
+      <li class="theme-modal__hint theme-modal__hint--text">
+        <span class="theme-modal__hint-label">{{ 'general.modal.hint_backdrop' | t }}</span>
+      </li>
+    </ul>
+  </div>
+</aside>

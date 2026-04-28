@@ -1,0 +1,150 @@
+{%- comment -%}
+  PDP tabbed description / size / care / shipping region.
+  Expects `section`, `product`, and tab flags/RTE fragments from section assigns.
+{%- endcomment -%}
+<div
+  class="main-product__pdp-lower main-product__pdp-lower--tabbed"
+  data-product-tabs
+>
+  <div class="main-product__pdp-bleed">
+    <div class="main-product__pdp-lower__inner">
+      <div
+        class="main-product__tablist"
+        role="tablist"
+        aria-label="{{ 'products.product.tabs_aria' | t | escape }}"
+      >
+        <button
+          type="button"
+          class="main-product__tab"
+          id="pdp-tab-desc-{{ section.id }}"
+          role="tab"
+          aria-selected="true"
+          aria-controls="pdp-panel-desc-{{ section.id }}"
+          tabindex="0"
+          data-product-tab="desc"
+        >
+          {{- 'products.product.tab_description' | t -}}
+        </button>
+        <button
+          type="button"
+          class="main-product__tab"
+          id="pdp-tab-size-{{ section.id }}"
+          role="tab"
+          aria-selected="false"
+          aria-controls="pdp-panel-size-{{ section.id }}"
+          tabindex="-1"
+          data-product-tab="size"
+        >
+          {{- 'products.product.tab_size_fit' | t -}}
+        </button>
+        <button
+          type="button"
+          class="main-product__tab"
+          id="pdp-tab-care-{{ section.id }}"
+          role="tab"
+          aria-selected="false"
+          aria-controls="pdp-panel-care-{{ section.id }}"
+          tabindex="-1"
+          data-product-tab="care"
+        >
+          {{- 'products.product.tab_care' | t -}}
+        </button>
+        <button
+          type="button"
+          class="main-product__tab"
+          id="pdp-tab-ship-{{ section.id }}"
+          role="tab"
+          aria-selected="false"
+          aria-controls="pdp-panel-ship-{{ section.id }}"
+          tabindex="-1"
+          data-product-tab="ship"
+        >
+          {{- 'products.product.tab_shipping' | t -}}
+        </button>
+      </div>
+
+      <div class="main-product__tab-panels">
+        <div
+          class="main-product__tab-panel"
+          id="pdp-panel-desc-{{ section.id }}"
+          role="tabpanel"
+          aria-labelledby="pdp-tab-desc-{{ section.id }}"
+          data-product-tab-panel="desc"
+        >
+          {%- if product.description != blank -%}
+            <div class="main-product__description main-product__description--wide rte">
+              {{- product.description -}}
+            </div>
+          {%- endif -%}
+          {%- render 'pdp-accordion-blocks', section: section -%}
+          {%- unless pdp_desc_filled -%}
+            <p class="main-product__tab-notice" role="status">
+              {{- 'products.product.tab_empty_description' | t -}}
+            </p>
+          {%- endunless -%}
+        </div>
+
+        <div
+          class="main-product__tab-panel"
+          id="pdp-panel-size-{{ section.id }}"
+          role="tabpanel"
+          aria-labelledby="pdp-tab-size-{{ section.id }}"
+          data-product-tab-panel="size"
+          hidden
+        >
+          {%- if pdp_rte_size != blank -%}
+            <div class="main-product__tab-rte rte">
+              {{- pdp_rte_size -}}
+            </div>
+          {%- endif -%}
+          {%- if pdp_has_spec -%}
+            {%- render 'pdp-spec-blocks', section: section, in_tab: true -%}
+          {%- endif -%}
+          {%- unless pdp_size_filled -%}
+            <p class="main-product__tab-notice" role="status">
+              {{- 'products.product.tab_empty_size_fit' | t -}}
+            </p>
+          {%- endunless -%}
+        </div>
+
+        <div
+          class="main-product__tab-panel"
+          id="pdp-panel-care-{{ section.id }}"
+          role="tabpanel"
+          aria-labelledby="pdp-tab-care-{{ section.id }}"
+          data-product-tab-panel="care"
+          hidden
+        >
+          {%- if pdp_rte_care != blank -%}
+            <div class="main-product__tab-rte rte">
+              {{- pdp_rte_care -}}
+            </div>
+          {%- else -%}
+            <p class="main-product__tab-notice" role="status">
+              {{- 'products.product.tab_empty_care' | t -}}
+            </p>
+          {%- endif -%}
+        </div>
+
+        <div
+          class="main-product__tab-panel"
+          id="pdp-panel-ship-{{ section.id }}"
+          role="tabpanel"
+          aria-labelledby="pdp-tab-ship-{{ section.id }}"
+          data-product-tab-panel="ship"
+          hidden
+        >
+          {%- if pdp_rte_ship != blank -%}
+            <div class="main-product__tab-rte rte">
+              {{- pdp_rte_ship -}}
+            </div>
+          {%- else -%}
+            <p class="main-product__tab-notice" role="status">
+              {{- 'products.product.tab_empty_shipping' | t -}}
+            </p>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

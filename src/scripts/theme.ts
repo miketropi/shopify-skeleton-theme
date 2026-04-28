@@ -23,6 +23,9 @@ import { registerHeaderSection } from './header'
 import { registerSectionHeroSlider } from './sections/section-hero-slider'
 import './size-guide'
 
+export type { ThemeModalOptions } from './theme-modal'
+export { ThemeModal, THEME_MODAL_COMPACT_MQ } from './theme-modal'
+
 document.documentElement.classList.add('js')
 
 registerCartDrawerSection()

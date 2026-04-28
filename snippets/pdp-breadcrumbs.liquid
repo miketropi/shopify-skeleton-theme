@@ -1,0 +1,28 @@
+{%- comment -%}
+  PDP breadcrumbs (module). Requires: `product`, `section` (for settings).
+{%- endcomment -%}
+{%- if section.settings.show_breadcrumbs -%}
+  <nav class="main-product__breadcrumbs" aria-label="{{ 'products.product.breadcrumb_label' | t }}">
+    <ol class="main-product__breadcrumb-list">
+      <li class="main-product__breadcrumb-item">
+        <a class="main-product__breadcrumb-link" href="{{ routes.root_url }}">
+          {{- 'products.product.breadcrumb_home' | t -}}
+        </a>
+        <span class="main-product__breadcrumb-sep" aria-hidden="true">/</span>
+      </li>
+      {%- if product.collections.size > 0 -%}
+        {%- assign bc_collection = product.collections.first -%}
+        <li class="main-product__breadcrumb-item">
+          <a class="main-product__breadcrumb-link" href="{{ bc_collection.url }}">
+            {{- bc_collection.title | escape -}}
+          </a>
+          <span class="main-product__breadcrumb-sep" aria-hidden="true">/</span>
+        </li>
+      {%- endif -%}
+      <li class="main-product__breadcrumb-item main-product__breadcrumb-item--current">
+        <span class="visually-hidden">{{ 'products.product.breadcrumb_label' | t }}: </span>
+        {{- product.title | escape -}}
+      </li>
+    </ol>
+  </nav>
+{%- endif -%}

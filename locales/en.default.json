@@ -51,6 +51,13 @@
     },
     "title": "Collections"
   },
+  "footer": {
+    "menu_primary_aria": "Footer menu",
+    "menu_secondary_aria": "Footer secondary menu",
+    "policies_aria": "Store policies",
+    "payment_aria": "Accepted payment methods",
+    "follow": "Follow us"
+  },
   "customer": {
     "account": {
       "details": "Hello, {{ name }}",
@@ -165,6 +172,14 @@
     }
   },
   "general": {
+    "modal": {
+      "hints_intro": "Tips",
+    "hints_aria": "Escape closes this dialog. Tab moves focus between controls. Click the dimmed background to close.",
+    "handle_drag_close": "Drag down to close",
+    "hint_escape": "Close",
+      "hint_tab": "Next control",
+      "hint_backdrop": "Click outside to close"
+    },
     "pagination": {
       "label": "Pagination"
     },
@@ -208,7 +223,6 @@
       "adding_to_cart": "Adding…",
       "breadcrumb_label": "Breadcrumb",
       "breadcrumb_home": "Home",
-      "complete_look": "Complete the look",
       "description_heading": "Description",
       "information_tabs_heading": "Product information",
       "tabs_aria": "Product information",

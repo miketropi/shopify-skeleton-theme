@@ -1,0 +1,42 @@
+{%- comment -%}
+  PDP buy column: vendor, title + price row, optional review summary.
+  Pass: `product`, `section`, `current_variant`, `show_compare`, `rating`, `rating_count`
+{%- endcomment -%}
+{%- if section.settings.show_vendor and product.vendor != blank -%}
+  <p class="main-product__vendor">{{- product.vendor | link_to_vendor -}}</p>
+{%- endif -%}
+
+<div class="main-product__title-row">
+  <h1 class="main-product__title">{{- product.title | escape -}}</h1>
+  <div class="main-product__price-col" data-product-price-row>
+    {%- if show_compare -%}
+      <s class="main-product__price main-product__price--compare" data-product-compare>
+        {{- current_variant.compare_at_price | money -}}
+      </s>
+    {%- else -%}
+      <s class="main-product__price main-product__price--compare is-visually-hidden" data-product-compare></s>
+    {%- endif -%}
+    <span class="main-product__price main-product__price--current" data-product-price>
+      {{- current_variant.price | money -}}
+    </span>
+  </div>
+</div>
+
+{%- if section.settings.show_review_summary and rating != blank -%}
+  <div
+    class="main-product__reviews"
+    role="group"
+    aria-label="{{ 'products.product.review_aria' | t: rating: rating, count: rating_count }}"
+  >
+    <span class="main-product__review-stars" aria-hidden="true">
+      {{- 'products.product.stars' | t -}}
+    </span>
+    <span class="main-product__review-meta">
+      {%- if rating_count != blank and rating_count > 0 -%}
+        {{- 'products.product.review_count' | t: count: rating_count -}}
+      {%- else -%}
+        {{- 'products.product.review_score' | t: score: rating -}}
+      {%- endif -%}
+    </span>
+  </div>
+{%- endif -%}

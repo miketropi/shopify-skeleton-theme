@@ -1,0 +1,471 @@
+/* Shared shell for `ThemeModal` — use these classes on any dialog for consistent chrome. */
+
+/* Phone — full-width bottom sheet. Must stay in sync with `THEME_MODAL_COMPACT_MQ` in theme-modal.ts for motion. */
+$theme-modal-mobile-max: 47.99em;
+/* Phone + tablet — bottom sheet / floating card; compact motion + friendly tap targets. */
+$theme-modal-compact-max: 74.99em;
+$theme-modal-tablet-min: 48em;
+
+.theme-modal {
+  /* Align with cart drawer / PDP radius tokens */
+  --theme-modal-z: 10050;
+  --theme-modal-radius: min(calc(var(--style-border-radius-inputs, 8px) + 6px), 22px);
+  --theme-modal-sheet-radius: var(--theme-modal-radius);
+  --theme-modal-panel-w: min(100%, 45rem);
+  --theme-modal-backdrop: color-mix(in srgb, var(--cs-text, #000) 42%, transparent);
+  --theme-modal-border: color-mix(in srgb, var(--cs-border, #e4e4e7) 88%, var(--cs-text) 4%);
+  --theme-modal-hairline: color-mix(in srgb, var(--cs-border, #e4e4e7) 82%, var(--cs-text) 6%);
+  position: fixed;
+  inset: 0;
+  z-index: var(--theme-modal-z);
+  /* Scroll the whole layer when the panel is taller than the viewport (no nested scroll in `.theme-modal__body`). */
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  /* No CSS transitions — GSAP (`ThemeModal`) owns motion. */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.theme-modal__aligner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+}
+
+/* Grow/shrink so short panels sit vertically centered; tall panels pin to the top while scrolling. */
+.theme-modal__aligner::before,
+.theme-modal__aligner::after {
+  content: '';
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+html.js .theme-modal {
+  opacity: 1;
+}
+
+.theme-modal__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--theme-modal-backdrop);
+  cursor: pointer;
+}
+
+/* Native-app drag affordance — first child inside `.theme-modal__panel` on compact viewports. */
+.theme-modal__handle {
+  display: none;
+}
+
+.theme-modal__panel {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: var(--theme-modal-panel-w);
+  margin: 0.75rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--cs-background, #fff);
+  color: var(--cs-text, #1a1a1a);
+  border: 1px solid var(--theme-modal-border);
+  border-radius: var(--theme-modal-radius);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--cs-text) 3.5%, transparent),
+    0 1.35rem 3.25rem color-mix(in srgb, var(--cs-text, #000) 11%, transparent),
+    0 0.4rem 1rem color-mix(in srgb, var(--cs-text, #000) 5%, transparent);
+}
+
+.theme-modal__header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  padding: 1.25rem 1.5rem 0.9rem;
+  margin: 0;
+  border-bottom: 1px solid var(--theme-modal-hairline);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--cs-accent, #2563eb) 5%, var(--cs-background)) 0%,
+    var(--cs-background) 65%
+  );
+}
+
+.theme-modal__title {
+  margin: 0;
+  font-family: var(--cs-font-heading, inherit);
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--cs-heading, var(--cs-text));
+}
+
+.theme-modal__close {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  background: color-mix(in srgb, var(--cs-text) 3.5%, var(--cs-background));
+  border: 1px solid var(--theme-modal-hairline);
+  border-radius: var(--style-border-radius-inputs, 8px);
+  cursor: pointer;
+  line-height: 0;
+  border-radius: 50%;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .theme-modal__close:hover {
+    background: color-mix(in srgb, var(--cs-text) 6.5%, var(--cs-background));
+    border-color: color-mix(in srgb, var(--cs-border) 70%, var(--cs-text) 12%);
+  }
+}
+
+.theme-modal__close:focus-visible {
+  outline: 2px solid var(--cs-accent, #2563eb);
+  outline-offset: 2px;
+}
+
+.theme-modal__body {
+  flex: 0 0 auto;
+  overflow-x: hidden;
+  padding: 1rem 1.5rem 1.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+.theme-modal__body > *:first-child {
+  margin-top: 0;
+}
+
+.theme-modal__hints {
+  flex-shrink: 0;
+  margin: 0;
+  border-top: 1px solid var(--theme-modal-hairline);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--cs-text) 2%, var(--cs-background)),
+    color-mix(in srgb, var(--cs-text) 4.5%, var(--cs-background))
+  );
+}
+
+.theme-modal__hints-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.65rem 1.5rem 0.85rem;
+  justify-content: flex-start;
+}
+
+.theme-modal__hints-label {
+  flex: 0 0 auto;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cs-text-secondary, #71717a);
+}
+
+.theme-modal__hint-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.85rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.theme-modal__hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--cs-text-secondary, #52525b);
+}
+
+.theme-modal__hint--text {
+  max-width: 100%;
+}
+
+.theme-modal__hint-label {
+  color: var(--cs-text, #1a1a1a);
+  font-weight: 500;
+}
+
+.theme-modal__hint--text .theme-modal__hint-label {
+  font-weight: 400;
+  color: var(--cs-text-secondary, #52525b);
+}
+
+.theme-modal__hint:not(:last-child) .theme-modal__hint-label::after {
+  content: '·';
+  margin-left: 0.85rem;
+  color: var(--cs-text-secondary, #a1a1aa);
+  font-weight: 400;
+  pointer-events: none;
+}
+
+/* Touch devices: hide keyboard-centric hints; keep “tap outside” style copy. */
+@media (hover: none) and (pointer: coarse) {
+  .theme-modal__hint-list .theme-modal__hint:not(.theme-modal__hint--text) {
+    display: none;
+  }
+
+  .theme-modal__hint--text .theme-modal__hint-label::after {
+    content: none;
+  }
+}
+
+.theme-modal__kbd {
+  display: inline-block;
+  min-width: 1.65rem;
+  padding: 0.15rem 0.45rem;
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--cs-text, #1a1a1a);
+  background: var(--cs-background, #fff);
+  border: 1px solid var(--theme-modal-hairline);
+  border-radius: 50px;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--cs-text) 8%, var(--cs-background)),
+    inset 0 1px 0 color-mix(in srgb, var(--cs-background) 80%, transparent);
+}
+
+/* Inline loading shown before panel content is ready */
+.theme-modal__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 10rem;
+  padding: 2rem 1.5rem;
+  flex-shrink: 0;
+  background: var(--cs-background, #fff);
+}
+
+.theme-modal__loading[hidden],
+.theme-modal__loading.is-hidden {
+  display: none !important;
+}
+
+.theme-modal__spinner {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid color-mix(in srgb, var(--cs-text) 12%, var(--cs-background));
+  border-top-color: var(--cs-text, #1a1a1a);
+  border-radius: 50%;
+  animation: theme-modal-spin 0.65s linear infinite;
+}
+
+.theme-modal__message {
+  margin: 0;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--cs-text-secondary, #71717a);
+  background: var(--cs-background, #fff);
+}
+
+@keyframes theme-modal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ——— Tablet + phone (app-style sheet) ——— */
+@media (max-width: $theme-modal-compact-max) {
+  .theme-modal {
+    --theme-modal-sheet-radius: min(1.25rem, calc(var(--style-border-radius-inputs, 8px) + 10px));
+  }
+
+  .theme-modal__aligner {
+    justify-content: flex-end;
+    align-items: stretch;
+    padding-top: max(0.65rem, env(safe-area-inset-top));
+    padding-inline: 0;
+    padding-bottom: 0;
+  }
+
+  .theme-modal__aligner::before,
+  .theme-modal__aligner::after {
+    display: none;
+  }
+
+  .theme-modal__overlay {
+    @supports (backdrop-filter: blur(12px)) {
+      background: color-mix(in srgb, var(--cs-text, #000) 26%, transparent);
+      backdrop-filter: blur(14px) saturate(1.08);
+      -webkit-backdrop-filter: blur(14px) saturate(1.08);
+    }
+  }
+
+  .theme-modal__handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-height: 1rem;
+    margin: 0;
+    padding: 0 2.75rem;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+    background: transparent;
+  }
+
+  .theme-modal__handle::before {
+    content: '';
+    display: block;
+    width: 2.5rem;
+    height: 0.28rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--cs-text) 16%, var(--cs-background));
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--cs-text) 6%, transparent);
+  }
+
+  .theme-modal__handle:active {
+    cursor: grabbing;
+  }
+
+  .theme-modal__panel {
+    margin: 0;
+    border-radius: var(--theme-modal-sheet-radius) var(--theme-modal-sheet-radius) 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .theme-modal__panel::before {
+    display: none;
+  }
+
+  .theme-modal__title {
+    font-size: clamp(1.125rem, 0.6rem + 1.5vw, 1.25rem);
+  }
+
+  .theme-modal__close {
+    width: 2.75rem;
+    height: 2.75rem;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .theme-modal__header {
+    padding: 0.85rem 1.25rem 0.8rem;
+    gap: 0.85rem 1rem;
+  }
+
+  .theme-modal__body {
+    padding: 1rem 1.25rem 1.5rem;
+    font-size: 1rem;
+    line-height: 1.62;
+  }
+
+  .theme-modal__hints-inner {
+    padding: 0.55rem 1.25rem max(0.75rem, 0.35rem + env(safe-area-inset-bottom));
+  }
+
+  .theme-modal__loading {
+    min-height: 11rem;
+    padding: 2.25rem 1.5rem;
+  }
+}
+
+/* Phone: edge-to-edge sheet */
+@media (max-width: $theme-modal-mobile-max) {
+  .theme-modal__panel {
+    width: 100%;
+    max-width: 100%;
+    border-radius: var(--theme-modal-sheet-radius) var(--theme-modal-sheet-radius) 0 0;
+    border-width: 0;
+    border-bottom: none;
+    border-top: 1px solid var(--theme-modal-hairline);
+  }
+
+  .theme-modal__header {
+    padding: 0.65rem 1.1rem 0.7rem;
+  }
+
+  .theme-modal__body {
+    padding: 0.85rem 1.1rem 1.35rem;
+  }
+
+  .theme-modal__hints-inner {
+    padding-inline: 1.1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+  }
+}
+
+/* Tablet: floating “card” sheet above home indicator / gesture bar */
+@media (min-width: $theme-modal-tablet-min) and (max-width: $theme-modal-compact-max) {
+  .theme-modal__aligner {
+    padding-inline: 1.35rem;
+    padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
+  }
+
+  .theme-modal__panel {
+    width: min(100%, 34rem);
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0;
+    border-radius: var(--theme-modal-sheet-radius);
+    border-width: 1px;
+    border-bottom: 1px solid var(--theme-modal-border);
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--cs-text) 4%, transparent),
+      0 1.5rem 3.5rem color-mix(in srgb, var(--cs-text, #000) 14%, transparent),
+      0 0.5rem 1.25rem color-mix(in srgb, var(--cs-text, #000) 7%, transparent);
+  }
+
+  .theme-modal__panel::before {
+    display: block;
+    border-radius: var(--theme-modal-sheet-radius) var(--theme-modal-sheet-radius) 0 0;
+  }
+
+  .theme-modal__handle {
+    margin-top: 0.65rem;
+  }
+
+  .theme-modal__hints-inner {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-modal__spinner {
+    animation-duration: 1.2s;
+  }
+}

@@ -1,0 +1,207 @@
+{%- comment -%}
+  PDP variant UI (swatches / chips / selects). Does not include form wrapper or hidden variant id.
+  Pass: `product`, `section`, `current_variant`, `show_size_guide_modal`
+{%- endcomment -%}
+{%- unless product.has_only_default_variant -%}
+  {%- for option in product.options_with_values -%}
+    {%- assign oix = forloop.index0 -%}
+    {%- assign opt_l = option.name | downcase -%}
+    {%- assign is_color = false -%}
+    {%- if opt_l contains 'color' or opt_l contains 'colour' -%}
+      {%- assign is_color = true -%}
+    {%- endif -%}
+    {%- assign is_size = false -%}
+    {%- if opt_l contains 'size' -%}
+      {%- assign is_size = true -%}
+    {%- endif -%}
+
+    {%- if is_color -%}
+      <fieldset class="main-product__fieldset" data-product-option-group data-option-index="{{ forloop.index0 }}">
+        <div class="main-product__fieldset-head">
+          <legend class="main-product__label main-product__label--field">{{- option.name -}}</legend>
+          <p class="main-product__option-selected main-product__option-selected--inline">
+            <span class="visually-hidden">
+              {{- option.name -}}:
+            </span>
+            <strong class="main-product__option-value" data-product-option-selected>
+              {%- case option.position -%}
+                {%- when 1 -%}
+                  {{- current_variant.option1 -}}
+                {%- when 2 -%}
+                  {{- current_variant.option2 -}}
+                {%- when 3 -%}
+                  {{- current_variant.option3 -}}
+              {%- endcase -%}
+            </strong>
+          </p>
+        </div>
+        <div
+          class="main-product__swatch-row"
+          role="radiogroup"
+          aria-label="{{ option.name | escape }}"
+        >
+          {%- for value in option.values -%}
+            {%- assign opt_value = value -%}
+            {%- if value.name != blank -%}
+              {%- assign opt_value = value.name -%}
+            {%- endif -%}
+            {%- assign is_checked = false -%}
+            {%- if option.position == 1 and opt_value == current_variant.option1 -%}
+              {%- assign is_checked = true -%}
+            {%- elsif option.position == 2 and opt_value == current_variant.option2 -%}
+              {%- assign is_checked = true -%}
+            {%- elsif option.position == 3 and opt_value == current_variant.option3 -%}
+              {%- assign is_checked = true -%}
+            {%- endif -%}
+            {%- assign swatch_variant = false -%}
+            {%- for v in product.variants -%}
+              {%- if option.position == 1 and v.option1 == opt_value -%}
+                {%- assign swatch_variant = v -%}
+                {%- break -%}
+              {%- elsif option.position == 2 and v.option2 == opt_value -%}
+                {%- assign swatch_variant = v -%}
+                {%- break -%}
+              {%- elsif option.position == 3 and v.option3 == opt_value -%}
+                {%- assign swatch_variant = v -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            <input
+              type="radio"
+              class="main-product__option-input visually-hidden"
+              id="Option{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+              name="pdp-opt-{{ section.id }}-{{ option.position }}"
+              value="{{ opt_value | escape }}"
+              data-product-option
+              data-option-index="{{ oix }}"
+              {% if is_checked -%}
+                checked
+              {%- endif -%}
+            >
+            <label
+              class="main-product__swatch{% if is_checked %} is-selected{% endif %}"
+              for="Option{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+            >
+              <span class="visually-hidden">{{ opt_value }}</span>
+              {%- if swatch_variant and swatch_variant.featured_image -%}
+                {{
+                  swatch_variant.featured_image
+                  | image_url: width: 120
+                  | image_tag: alt: '', class: 'main-product__swatch-img', loading: 'lazy'
+                }}
+              {%- else -%}
+                <span class="main-product__swatch-fallback" aria-hidden="true">{{ opt_value | slice: 0, 1 | upcase }}</span>
+              {%- endif -%}
+            </label>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+    {%- elsif is_size -%}
+      <fieldset class="main-product__fieldset" data-product-option-group data-option-index="{{ forloop.index0 }}">
+        <div class="main-product__fieldset-head main-product__fieldset-head--size">
+          <legend class="main-product__label main-product__label--field">{{- option.name -}}</legend>
+          <div class="main-product__fieldset-head-size-trailing">
+            <p class="main-product__option-selected main-product__option-selected--inline main-product__option-selected--size-trailing">
+              <span class="visually-hidden">
+                {{- option.name -}}:
+              </span>
+              <strong class="main-product__option-value" data-product-option-selected>
+                {%- case option.position -%}
+                  {%- when 1 -%}
+                    {{- current_variant.option1 -}}
+                  {%- when 2 -%}
+                    {{- current_variant.option2 -}}
+                  {%- when 3 -%}
+                    {{- current_variant.option3 -}}
+                {%- endcase -%}
+              </strong>
+            </p>
+            {%- if show_size_guide_modal -%}
+              <span class="main-product__size-guide-sep" aria-hidden="true">·</span>
+              <button
+                type="button"
+                class="main-product__size-guide main-product__size-guide--modal size-guide-trigger"
+                data-size-guide-open
+                aria-haspopup="dialog"
+                aria-label="{{ 'products.product.size_guide_open' | t }}"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v-3"/><path d="M14 15v-3"/><path d="M18 15v-3"/><path d="M2 8V4"/><path d="M22 6H2"/><path d="M22 8V4"/><path d="M6 15v-3"/><rect x="2" y="12" width="20" height="8" rx="2"/></svg>
+                <span class="size-guide-trigger__label">{{- 'products.product.size_guide' | t -}}</span>
+              </button>
+            {%- endif -%}
+          </div>
+        </div>
+        <div
+          class="main-product__chips"
+          role="radiogroup"
+          aria-label="{{ option.name | escape }}"
+        >
+          {%- for value in option.values -%}
+            {%- assign opt_value = value -%}
+            {%- if value.name != blank -%}
+              {%- assign opt_value = value.name -%}
+            {%- endif -%}
+            {%- assign is_checked = false -%}
+            {%- if option.position == 1 and opt_value == current_variant.option1 -%}
+              {%- assign is_checked = true -%}
+            {%- elsif option.position == 2 and opt_value == current_variant.option2 -%}
+              {%- assign is_checked = true -%}
+            {%- elsif option.position == 3 and opt_value == current_variant.option3 -%}
+              {%- assign is_checked = true -%}
+            {%- endif -%}
+            <input
+              type="radio"
+              class="main-product__option-input visually-hidden"
+              id="Option{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+              name="pdp-opt-{{ section.id }}-{{ option.position }}"
+              value="{{ opt_value | escape }}"
+              data-product-option
+              data-option-index="{{ oix }}"
+              {% if is_checked -%}
+                checked
+              {%- endif -%}
+            >
+            <label
+              class="main-product__chip{% if is_checked %} is-selected{% endif %}"
+              for="Option{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+            >
+              {{- opt_value -}}
+            </label>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+    {%- else -%}
+      <div class="main-product__field" data-product-option-group data-option-index="{{ forloop.index0 }}">
+        <label class="main-product__label" for="Select-{{ section.id }}-option-{{ forloop.index }}">
+          {{- option.name -}}
+        </label>
+        <div class="main-product__select-wrap">
+          <select
+            id="Select-{{ section.id }}-option-{{ forloop.index }}"
+            class="main-product__select"
+            data-product-option-select
+            data-option-index="{{ forloop.index0 }}"
+          >
+            {%- for value in option.values -%}
+              {%- assign opt_value = value -%}
+              {%- if value.name != blank -%}
+                {%- assign opt_value = value.name -%}
+              {%- endif -%}
+              {%- assign is_sel = false -%}
+              {%- if option.position == 1 and opt_value == current_variant.option1 -%}
+                {%- assign is_sel = true -%}
+              {%- elsif option.position == 2 and opt_value == current_variant.option2 -%}
+                {%- assign is_sel = true -%}
+              {%- elsif option.position == 3 and opt_value == current_variant.option3 -%}
+                {%- assign is_sel = true -%}
+              {%- endif -%}
+              <option value="{{ opt_value | escape }}" {% if is_sel %}selected{% endif %}>
+                {{- opt_value -}}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endunless -%}

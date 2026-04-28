@@ -1,0 +1,92 @@
+{%- comment -%}
+  PDP quantity stepper + add to cart. Pass: `product`, `section`, `current_variant`
+{%- endcomment -%}
+<div class="main-product__buy-row">
+  {%- if section.settings.show_quantity -%}
+    <div class="main-product__qty" data-product-qty>
+      <label class="main-product__qty-label" for="Quantity-{{ section.id }}">
+        {{- 'products.product.quantity' | t -}}
+      </label>
+      <div
+        class="main-product__qty-stepper"
+        role="group"
+        aria-label="{{ 'products.product.quantity' | t | escape }}"
+      >
+        <button
+          type="button"
+          class="main-product__qty-btn main-product__qty-btn--minus"
+          data-product-qty-minus
+          aria-label="{{ 'products.product.quantity_decrease' | t }}"
+        >
+          <svg
+            class="main-product__qty-icon"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M5 12h14"/>
+          </svg>
+        </button>
+        <input
+          type="number"
+          name="quantity"
+          id="Quantity-{{ section.id }}"
+          class="main-product__quantity"
+          data-product-qty-input
+          value="1"
+          min="1"
+          inputmode="numeric"
+        >
+        <button
+          type="button"
+          class="main-product__qty-btn main-product__qty-btn--plus"
+          data-product-qty-plus
+          aria-label="{{ 'products.product.quantity_increase' | t }}"
+        >
+          <svg
+            class="main-product__qty-icon"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="main-product__actions">
+    <button
+      type="submit"
+      class="main-product__btn main-product__btn--primary"
+      data-product-submit
+      data-product-available="{% if current_variant.available %}true{% else %}false{% endif %}"
+      data-ajax-adding-label="{{ 'products.product.adding_to_cart' | t | escape }}"
+      {% unless current_variant.available -%}
+        disabled
+      {%- endunless -%}
+    >
+      <span data-product-submit-label>
+        {%- if current_variant.available -%}
+          {{- 'products.product.add_to_cart' | t -}}
+        {%- else -%}
+          {{- 'products.product.sold_out' | t -}}
+        {%- endif -%}
+      </span>
+      <span class="main-product__btn-loader" aria-hidden="true"></span>
+    </button>
+  </div>
+</div>

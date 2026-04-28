@@ -1,6 +1,6 @@
 {%- if settings.size_guide_enabled -%}
   <size-guide-modal
-    class="size-guide-modal"
+    class="theme-modal size-guide-modal"
     data-size-guide-modal
     data-size-guide-error="{{ 'products.product.size_guide_error' | t | escape }}"
     data-size-guide-empty="{{ 'products.product.size_guide_unavailable' | t | escape }}"
@@ -9,10 +9,17 @@
     aria-modal="false"
     aria-label="{{ settings.size_guide_title | default: 'Size guide' | escape }}"
   >
-    <div class="size-guide-modal__overlay" data-size-guide-close></div>
-    <div class="size-guide-modal__container">
-      <div class="size-guide-modal__loading" data-size-guide-loading>
-        <span class="size-guide-modal__spinner" aria-hidden="true"></span>
+    <div class="theme-modal__aligner">
+      <div class="theme-modal__overlay"></div>
+      <div class="theme-modal__panel">
+        <div
+          class="theme-modal__handle"
+          data-theme-modal-drag
+          aria-label="{{ 'general.modal.handle_drag_close' | t }}"
+        ></div>
+        <div class="theme-modal__loading" data-size-guide-loading>
+          <span class="theme-modal__spinner" aria-hidden="true"></span>
+        </div>
       </div>
     </div>
   </size-guide-modal>

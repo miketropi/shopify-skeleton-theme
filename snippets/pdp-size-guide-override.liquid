@@ -1,0 +1,8 @@
+{%- comment -%}
+  Hidden size guide markup when section image overrides product metafield.
+{%- endcomment -%}
+{%- if settings.size_guide_enabled and pdp_size_section_override and pdp_has_size_mf == false -%}
+  <div data-size-guide-section-override hidden>
+    {%- render 'size-guide-panel', modal_title: settings.size_guide_title, image: section.settings.size_guide_image -%}
+  </div>
+{%- endif -%}
