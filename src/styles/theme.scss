@@ -3,6 +3,7 @@
 @use 'base/fonts';
 @use 'base/section-wrapper';
 @use 'components/theme-modal';
+@use 'components/image-lightbox';
 @use 'sections/index' as *;
 
 // Non-critical styles compiled to assets/theme.css via Vite.

@@ -11,10 +11,54 @@
   "sections": {
     "main": {
       "type": "main-product",
-      "settings": {}
+      "settings": {},
+      "blocks": {
+        "pdp_breadcrumbs": { "type": "pdp_breadcrumbs", "settings": {} },
+        "pdp_gallery": { "type": "gallery", "settings": {} },
+        "pdp_title": { "type": "product_title", "settings": {} },
+        "pdp_variant": { "type": "variant_picker", "settings": {} },
+        "pdp_buy": { "type": "buy_buttons", "settings": {} },
+        "pdp_meta": { "type": "meta", "settings": {} },
+        "pdp_lede": { "type": "lede", "settings": {} }
+      },
+      "block_order": [
+        "pdp_breadcrumbs",
+        "pdp_gallery",
+        "pdp_title",
+        "pdp_variant",
+        "pdp_buy",
+        "pdp_meta",
+        "pdp_lede"
+      ]
+    },
+    "product_tabs": {
+      "type": "product-tabs",
+      "settings": {},
+      "blocks": {
+        "tabs_description": {
+          "type": "tab_description",
+          "settings": { "heading": "" }
+        },
+        "tabs_size_fit": {
+          "type": "tab_rte",
+          "settings": { "heading": "Size & fit", "include_spec_rows": true }
+        },
+        "tabs_care": {
+          "type": "tab_rte",
+          "settings": { "heading": "Care", "include_spec_rows": false }
+        },
+        "tabs_shipping": {
+          "type": "tab_rte",
+          "settings": { "heading": "Shipping & returns", "include_spec_rows": false }
+        }
+      },
+      "block_order": [
+        "tabs_description",
+        "tabs_size_fit",
+        "tabs_care",
+        "tabs_shipping"
+      ]
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["main", "product_tabs"]
 }

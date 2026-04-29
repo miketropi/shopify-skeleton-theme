@@ -1,6 +1,6 @@
 {%- comment -%}
-  Product (PDP) — composes `pdp-*` snippets for gallery, buy box, tabs, and JSON.
-  Blocks: spec rows, accordions (see `pdp-spec-blocks`, `pdp-accordion-blocks`).
+  Product (PDP) — block-based layout: breadcrumbs, gallery, title/price, variant picker, buy buttons, meta, lede, app blocks.
+  Product description / specs / accordions live in the separate **Product tabs** section.
 {%- endcomment -%}
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
@@ -35,6 +35,24 @@
       assign show_size_guide_modal = true
     endif
   endif
+
+  assign pdp_has_any_sku = false
+  for v in product.variants
+    if v.sku != blank
+      assign pdp_has_any_sku = true
+      break
+    endif
+  endfor
+  assign pdp_show_meta = false
+  if section.settings.show_share
+    assign pdp_show_meta = true
+  endif
+  if section.settings.show_tags and product.tags.size > 0
+    assign pdp_show_meta = true
+  endif
+  if section.settings.show_sku and pdp_has_any_sku
+    assign pdp_show_meta = true
+  endif
 -%}
 
 <div
@@ -47,130 +65,125 @@
   data-product-add-label="{{ 'products.product.add_to_cart' | t | escape }}"
   data-product-sold-label="{{ 'products.product.sold_out' | t | escape }}"
   data-sale-off-label="{{ 'products.product.sale_off' | t | escape }}"
+  data-lightbox-close="{{ 'products.product.lightbox_close' | t | escape }}"
+  data-lightbox-prev="{{ 'products.product.lightbox_prev' | t | escape }}"
+  data-lightbox-next="{{ 'products.product.lightbox_next' | t | escape }}"
+  data-lightbox-dialog="{{ 'products.product.lightbox_dialog' | t | escape }}"
+  data-lightbox-counter="{{ 'products.product.lightbox_counter' | t | escape }}"
   data-product-media-order="{% for m in product.media %}{{ m.id }}{% unless forloop.last %},{% endunless %}{% endfor %}"
   data-pdp-size-metafield="{% if pdp_has_size_mf %}true{% else %}false{% endif %}"
   {% render 'color-scheme-vars' %}
 >
   <div class="main-product">
-    {%- render 'pdp-breadcrumbs', product: product, section: section -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'pdp_breadcrumbs' -%}
+        <div class="main-product__breadcrumbs" {{ block.shopify_attributes }}>
+          {%- render 'pdp-breadcrumbs', product: product, section: section -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
 
     <div class="main-product__split">
-      {%- render 'pdp-gallery',
-        product: product,
-        section: section,
-        show_compare: show_compare,
-        off_pct: off_pct
-      -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'gallery' -%}
+          <div class="main-product__block main-product__block--gallery" {{ block.shopify_attributes }}>
+            {%- render 'pdp-gallery',
+              product: product,
+              section: section,
+              show_compare: show_compare,
+              off_pct: off_pct
+            -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
 
       <div class="main-product__info" data-product-info>
-        {%- render 'pdp-info-head',
-          product: product,
-          section: section,
-          current_variant: current_variant,
-          show_compare: show_compare,
-          rating: rating,
-          rating_count: rating_count
-        -%}
-
-        {%- form 'product',
-          product,
-          id: product_form_id,
-          class: 'main-product__form',
-          novalidate: 'novalidate',
-          data-ajax-add-to-cart: ''
-        -%}
-          <input type="hidden" name="id" value="{{ current_variant.id }}" data-product-variant-id>
-          {%- render 'pdp-variant-picker',
-            product: product,
-            section: section,
-            current_variant: current_variant,
-            show_size_guide_modal: show_size_guide_modal
-          -%}
-          {%- render 'pdp-buy-row',
-            product: product,
-            section: section,
-            current_variant: current_variant
-          -%}
-        {%- endform -%}
-
-        {%- liquid
-          assign pdp_has_any_sku = false
-          for v in product.variants
-            if v.sku != blank
-              assign pdp_has_any_sku = true
-              break
-            endif
-          endfor
-          assign pdp_show_meta = false
-          if section.settings.show_share
-            assign pdp_show_meta = true
-          endif
-          if section.settings.show_tags and product.tags.size > 0
-            assign pdp_show_meta = true
-          endif
-          if section.settings.show_sku and pdp_has_any_sku
-            assign pdp_show_meta = true
-          endif
-        -%}
-        {%- if pdp_show_meta -%}
-          {%- assign pdp_share_url = request.origin | append: product.url -%}
-          {%- render 'pdp-meta',
-            product: product,
-            section: section,
-            current_variant: current_variant,
-            pdp_share_url: pdp_share_url,
-            pdp_has_any_sku: pdp_has_any_sku
-          -%}
-        {%- endif -%}
-
-        {%- if lede != blank -%}
-          <p class="main-product__lede">{{ lede | escape }}</p>
+        {%- assign product_form_open = false -%}
+        {%- for block in section.blocks -%}
+          {%- unless block.type == 'pdp_breadcrumbs' or block.type == 'gallery' -%}
+            {%- if block.type == '@app' -%}
+              {%- if product_form_open -%}
+                </form>
+                {%- assign product_form_open = false -%}
+              {%- endif -%}
+              <div class="main-product__block main-product__block--app" {{ block.shopify_attributes }}>
+                {%- render block -%}
+              </div>
+            {%- else -%}
+              {%- if product_form_open == false -%}
+                <form
+                  method="post"
+                  action="{{ routes.cart_add_url }}"
+                  id="{{ product_form_id }}"
+                  accept-charset="UTF-8"
+                  class="main-product__form shopify-product-form"
+                  enctype="multipart/form-data"
+                  novalidate
+                  data-ajax-add-to-cart=""
+                >
+                  <input type="hidden" name="form_type" value="product">
+                  <input type="hidden" name="utf8" value="✓">
+                  <input type="hidden" name="product-id" value="{{ product.id }}">
+                  <input type="hidden" name="id" value="{{ current_variant.id }}" data-product-variant-id>
+                {%- assign product_form_open = true -%}
+              {%- endif -%}
+              {%- case block.type -%}
+                {%- when 'product_title' -%}
+                  <div class="main-product__block main-product__block--product-title" {{ block.shopify_attributes }}>
+                    {%- render 'pdp-info-head',
+                      product: product,
+                      section: section,
+                      current_variant: current_variant,
+                      show_compare: show_compare,
+                      rating: rating,
+                      rating_count: rating_count
+                    -%}
+                  </div>
+                {%- when 'variant_picker' -%}
+                  <div class="main-product__block main-product__block--variant-picker" {{ block.shopify_attributes }}>
+                    {%- render 'pdp-variant-picker',
+                      product: product,
+                      section: section,
+                      current_variant: current_variant,
+                      show_size_guide_modal: show_size_guide_modal
+                    -%}
+                  </div>
+                {%- when 'buy_buttons' -%}
+                  <div class="main-product__block main-product__block--buy-buttons" {{ block.shopify_attributes }}>
+                    {%- render 'pdp-buy-row',
+                      product: product,
+                      section: section,
+                      current_variant: current_variant
+                    -%}
+                  </div>
+                {%- when 'meta' -%}
+                  {%- if pdp_show_meta -%}
+                    {%- assign pdp_share_url = request.origin | append: product.url -%}
+                    <div class="main-product__block main-product__block--meta" {{ block.shopify_attributes }}>
+                      {%- render 'pdp-meta',
+                        product: product,
+                        section: section,
+                        current_variant: current_variant,
+                        pdp_share_url: pdp_share_url,
+                        pdp_has_any_sku: pdp_has_any_sku
+                      -%}
+                    </div>
+                  {%- endif -%}
+                {%- when 'lede' -%}
+                  {%- if lede != blank -%}
+                    <p class="main-product__lede main-product__block main-product__block--lede" {{ block.shopify_attributes }}>
+                      {{- lede | escape -}}
+                    </p>
+                  {%- endif -%}
+              {%- endcase -%}
+            {%- endif -%}
+          {%- endunless -%}
+        {%- endfor -%}
+        {%- if product_form_open -%}
+          </form>
         {%- endif -%}
       </div>
     </div>
-
-    {%- liquid
-      assign pdp_has_accordions = false
-      for block in section.blocks
-        if block.type == 'detail_accordion' and block.settings.heading != blank
-          assign pdp_has_accordions = true
-          break
-        endif
-      endfor
-
-      assign pdp_has_spec = false
-      for block in section.blocks
-        if block.type == 'spec' and block.settings.label != blank and block.settings.value != blank
-          assign pdp_has_spec = true
-          break
-        endif
-      endfor
-
-      assign pdp_rte_size = section.settings.tab_size_fit
-      assign pdp_rte_care = section.settings.tab_care
-      assign pdp_rte_ship = section.settings.tab_shipping
-
-      assign pdp_desc_filled = false
-      if product.description != blank or pdp_has_accordions
-        assign pdp_desc_filled = true
-      endif
-      assign pdp_size_filled = false
-      if pdp_rte_size != blank or pdp_has_spec
-        assign pdp_size_filled = true
-      endif
-    -%}
-
-    {%- render 'pdp-product-tabs',
-      section: section,
-      product: product,
-      pdp_has_spec: pdp_has_spec,
-      pdp_rte_size: pdp_rte_size,
-      pdp_rte_care: pdp_rte_care,
-      pdp_rte_ship: pdp_rte_ship,
-      pdp_desc_filled: pdp_desc_filled,
-      pdp_size_filled: pdp_size_filled
-    -%}
-
   </div>
 
   {%- render 'pdp-json-data', product: product -%}
@@ -191,6 +204,10 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.main_product.layout_info"
+    },
     {
       "type": "checkbox",
       "id": "show_breadcrumbs",
@@ -214,13 +231,6 @@
       "id": "show_sale_badge",
       "label": "t:sections.main_product.show_sale_badge",
       "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_review_summary",
-      "label": "t:sections.main_product.show_review_summary",
-      "default": true,
-      "info": "t:sections.main_product.review_info"
     },
     {
       "type": "header",
@@ -257,68 +267,76 @@
       "id": "size_guide_image",
       "label": "t:sections.main_product.size_guide_image",
       "info": "t:sections.main_product.size_guide_image_info"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.main_product.heading_product_tabs"
-    },
-    {
-      "type": "paragraph",
-      "content": "t:sections.main_product.product_tabs_info"
-    },
-    {
-      "type": "richtext",
-      "id": "tab_size_fit",
-      "label": "t:sections.main_product.tab_size_fit"
-    },
-    {
-      "type": "richtext",
-      "id": "tab_care",
-      "label": "t:sections.main_product.tab_care"
-    },
-    {
-      "type": "richtext",
-      "id": "tab_shipping",
-      "label": "t:sections.main_product.tab_shipping"
     }
   ],
   "blocks": [
     {
-      "type": "spec",
-      "name": "t:sections.main_product.block_spec",
-      "settings": [
-        {
-          "type": "text",
-          "id": "label",
-          "label": "t:sections.main_product.spec_label"
-        },
-        {
-          "type": "text",
-          "id": "value",
-          "label": "t:sections.main_product.spec_value"
-        }
-      ]
+      "type": "pdp_breadcrumbs",
+      "name": "t:sections.main_product.block_breadcrumbs",
+      "limit": 1,
+      "settings": []
     },
     {
-      "type": "detail_accordion",
-      "name": "t:sections.main_product.block_accordion",
-      "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "t:sections.main_product.accordion_heading"
-        },
-        {
-          "type": "richtext",
-          "id": "body",
-          "label": "t:sections.main_product.accordion_body"
-        }
-      ]
+      "type": "gallery",
+      "name": "t:sections.main_product.block_gallery",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "product_title",
+      "name": "t:sections.main_product.block_product_title",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "variant_picker",
+      "name": "t:sections.main_product.block_variant_picker",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "buy_buttons",
+      "name": "t:sections.main_product.block_buy_buttons",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "meta",
+      "name": "t:sections.main_product.block_meta",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "lede",
+      "name": "t:sections.main_product.block_lede",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "@app"
     }
   ],
   "presets": [
     {
-      "name": "t:sections.main_product.name"
+      "name": "t:sections.main_product.name",
+      "blocks": {
+        "pdp_breadcrumbs": { "type": "pdp_breadcrumbs", "settings": {} },
+        "pdp_gallery": { "type": "gallery", "settings": {} },
+        "pdp_title": { "type": "product_title", "settings": {} },
+        "pdp_variant": { "type": "variant_picker", "settings": {} },
+        "pdp_buy": { "type": "buy_buttons", "settings": {} },
+        "pdp_meta": { "type": "meta", "settings": {} },
+        "pdp_lede": { "type": "lede", "settings": {} }
+      },
+      "block_order": [
+        "pdp_breadcrumbs",
+        "pdp_gallery",
+        "pdp_title",
+        "pdp_variant",
+        "pdp_buy",
+        "pdp_meta",
+        "pdp_lede"
+      ]
     }
   ]
 }

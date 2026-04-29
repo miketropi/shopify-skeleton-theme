@@ -1,5 +1,5 @@
 {%- comment -%}
-  PDP buy column: vendor, title + price row, optional review summary.
+  PDP buy column: vendor, title + price row, review summary when metafields present.
   Pass: `product`, `section`, `current_variant`, `show_compare`, `rating`, `rating_count`
 {%- endcomment -%}
 {%- if section.settings.show_vendor and product.vendor != blank -%}
@@ -21,22 +21,3 @@
     </span>
   </div>
 </div>
-
-{%- if section.settings.show_review_summary and rating != blank -%}
-  <div
-    class="main-product__reviews"
-    role="group"
-    aria-label="{{ 'products.product.review_aria' | t: rating: rating, count: rating_count }}"
-  >
-    <span class="main-product__review-stars" aria-hidden="true">
-      {{- 'products.product.stars' | t -}}
-    </span>
-    <span class="main-product__review-meta">
-      {%- if rating_count != blank and rating_count > 0 -%}
-        {{- 'products.product.review_count' | t: count: rating_count -}}
-      {%- else -%}
-        {{- 'products.product.review_score' | t: score: rating -}}
-      {%- endif -%}
-    </span>
-  </div>
-{%- endif -%}

@@ -2,7 +2,8 @@
 @use '../base/breakpoints' as *;
 
 /* Allow full-bleed + normal flow; avoids overflow clipping from section shells. */
-.shopify-section:has(.section-main-product) {
+.shopify-section:has(.section-main-product),
+.shopify-section:has(.section-product-tabs) {
   overflow: visible;
 }
 
@@ -14,6 +15,12 @@
   @include mq-up('md') {
     padding-block: clamp(2.25rem, 3.75vw, 3.75rem);
   }
+}
+
+.section-product-tabs {
+  overflow: visible;
+  padding-block: 0 0.25rem;
+  --product-tabs-content-max: 760px;
 }
 
 /* PDP — gallery 60% | buy column 40% (md+), no “card” chrome. */
@@ -50,7 +57,7 @@
 
   @include mq-up('md') {
     row-gap: clamp(1.9rem, 2.4vw, 2.6rem);
-    /* One column of rows: split (gallery + buy) | tabs | complete — two-column PDP lives in .main-product__split */
+    /* One column of rows: split (gallery + buy) | … — tabs live in section-product-tabs below */
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -393,6 +400,19 @@
   background-color: transparent;
 }
 
+.main-product__figure--zoomable {
+  cursor: zoom-in;
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cs-accent, #345bff);
+    outline-offset: 3px;
+  }
+}
+
 .main-product__slide {
   box-sizing: border-box;
   width: 100%;
@@ -545,6 +565,7 @@
   letter-spacing: 0.04em;
   text-transform: none;
   color: var(--pdp-text-muted);
+  margin-bottom: 0.55rem;
 }
 
 .main-product__vendor a {
@@ -629,36 +650,16 @@
   text-decoration-color: color-mix(in srgb, var(--pdp-text-quiet) 65%, var(--cs-text) 35%);
 }
 
-.main-product__reviews {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.45rem 0.65rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: var(--pdp-text-muted);
-}
-
-.main-product__review-stars {
-  color: var(--cs-heading);
-  font-size: 0.95rem;
-  line-height: 1;
-  letter-spacing: 0.05em;
-}
-
-.main-product__review-meta {
-  color: var(--cs-text);
-  font-weight: 500;
-}
 
 /* SKU, tags, share — one block per line; tags + share use .main-product__meta-list */
 .main-product__meta {
   display: flex;
   flex-direction: column;
+  gap: 0.55rem;
   width: 100%;
   max-width: 100%;
   margin: 0;
-  padding: clamp(0.65rem, 1.2vw, 0.85rem) 0 0;
+  padding: clamp(0.85rem, 1.2vw, 1rem) 0 0;
   border-top: 1px solid var(--pdp-border-hairline);
   font-size: 0.875rem;
   line-height: 1.5;
@@ -671,7 +672,7 @@
   column-gap: 0.75rem;
   row-gap: 0.25rem;
   align-items: baseline;
-  padding: 0.55rem 0;
+  // padding: 0.55rem 0;
 }
 
 .main-product__meta-line--tags {
@@ -781,6 +782,12 @@ button.main-product__meta-link:focus-visible {
   margin: 0;
   border: none;
   background: none;
+}
+
+.main-product__block--variant-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 1.65rem;
 }
 
 .main-product__fieldset {
@@ -1344,11 +1351,25 @@ button.main-product__meta-link:focus-visible {
   padding-block: clamp(1.65rem, 2.75vw, 2.4rem);
 }
 
-.main-product__pdp-lower__inner {
-  max-width: 760px;
+.section-product-tabs .main-product__pdp-lower__inner {
+  max-width: var(--product-tabs-content-max);
   margin: 0 auto;
 }
 
+/* App blocks below the tabbed region (same max width + bleed rhythm) */
+.main-product__pdp-lower--tabbed + .main-product__pdp-lower--apps .main-product__pdp-bleed {
+  padding-top: clamp(0.85rem, 1.5vw, 1.35rem);
+}
+
+.main-product__pdp-app-stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.15rem, 2.25vw, 1.85rem);
+}
+
+.main-product__pdp-app-block {
+  min-width: 0;
+}
 
 /* Tab bar: text + bottom rule; <lg = horizontal scroll + ~44px tap targets */
 .main-product__tablist {
@@ -1409,7 +1430,6 @@ button.main-product__meta-link:focus-visible {
 
 .main-product__tab[aria-selected='true'] {
   color: var(--cs-heading);
-  font-weight: 600;
   border-bottom-color: var(--cs-heading);
 }
 
@@ -1613,3 +1633,4 @@ button.main-product__meta-link:focus-visible {
   white-space: nowrap !important;
   border: 0 !important;
 }
+

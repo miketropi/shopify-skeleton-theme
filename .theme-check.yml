@@ -1,5 +1,10 @@
 extends: theme-check:recommended
 
+# PDP: HTML `<form>` is opened/closed around `@app` blocks; pairing spans branches Theme Check cannot prove.
+UnclosedHTMLElement:
+  ignore:
+    - sections/main-product.liquid
+
 # Curated typography loads Google Fonts (allowed by theme CSP). Theme Check wants
 # `asset_url`; self-hosting every pairing would duplicate large font files in assets.
 RemoteAsset:

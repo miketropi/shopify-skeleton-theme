@@ -1,0 +1,149 @@
+{%- comment -%}
+  Product information tabs, spec table, accordions (description tab), and stacked app blocks.
+  Place below the **Product** section on the product template. Uses the same `product` as the page.
+{%- endcomment -%}
+
+<div
+  class="section-{{ section.id }} section-product-tabs"
+  data-section-type="product-tabs"
+  data-section-id="{{ section.id }}"
+  style="--product-tabs-content-max: {% if section.settings.content_max_width == 'none' %}none{% else %}{{ section.settings.content_max_width | default: '760' }}px{% endif %};"
+  {% render 'color-scheme-vars' %}
+>
+  {%- render 'pdp-product-tabs', product: product, section: section -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.product_tabs.name",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.product_tabs.intro"
+    },
+    {
+      "type": "select",
+      "id": "content_max_width",
+      "label": "t:sections.product_tabs.content_max_width",
+      "default": "760",
+      "info": "t:sections.product_tabs.content_max_width_info",
+      "options": [
+        { "value": "680", "label": "t:sections.product_tabs.content_max_width_680" },
+        { "value": "760", "label": "t:sections.product_tabs.content_max_width_760" },
+        { "value": "900", "label": "t:sections.product_tabs.content_max_width_900" },
+        { "value": "1100", "label": "t:sections.product_tabs.content_max_width_1100" },
+        { "value": "1400", "label": "t:sections.product_tabs.content_max_width_1400" },
+        { "value": "none", "label": "t:sections.product_tabs.content_max_width_full" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab_description",
+      "name": "t:sections.product_tabs.block_tab_description",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.product_tabs.tab_description_heading",
+          "info": "t:sections.product_tabs.tab_description_heading_info"
+        }
+      ]
+    },
+    {
+      "type": "tab_rte",
+      "name": "t:sections.product_tabs.block_tab_rte",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.product_tabs.tab_rte_heading",
+          "info": "t:sections.product_tabs.tab_rte_heading_info"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "t:sections.product_tabs.tab_rte_body"
+        },
+        {
+          "type": "checkbox",
+          "id": "include_spec_rows",
+          "label": "t:sections.product_tabs.tab_rte_include_specs",
+          "default": false,
+          "info": "t:sections.product_tabs.tab_rte_include_specs_info"
+        },
+        {
+          "type": "text",
+          "id": "empty_message",
+          "label": "t:sections.product_tabs.tab_rte_empty_message",
+          "info": "t:sections.product_tabs.tab_rte_empty_message_info"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    },
+    {
+      "type": "spec",
+      "name": "t:sections.product_tabs.block_spec",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "t:sections.product_tabs.spec_label"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "t:sections.product_tabs.spec_value"
+        }
+      ]
+    },
+    {
+      "type": "detail_accordion",
+      "name": "t:sections.product_tabs.block_accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.product_tabs.accordion_heading"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "t:sections.product_tabs.accordion_body"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.product_tabs.name",
+      "blocks": {
+        "tabs_description": {
+          "type": "tab_description",
+          "settings": { "heading": "" }
+        },
+        "tabs_size_fit": {
+          "type": "tab_rte",
+          "settings": { "heading": "Size & fit", "include_spec_rows": true }
+        },
+        "tabs_care": {
+          "type": "tab_rte",
+          "settings": { "heading": "Care", "include_spec_rows": false }
+        },
+        "tabs_shipping": {
+          "type": "tab_rte",
+          "settings": { "heading": "Shipping & returns", "include_spec_rows": false }
+        }
+      },
+      "block_order": ["tabs_description", "tabs_size_fit", "tabs_care", "tabs_shipping"]
+    }
+  ]
+}
+{% endschema %}

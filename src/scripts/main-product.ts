@@ -1,6 +1,7 @@
 import gsap from 'gsap'
 import Swiper from 'swiper'
 import { A11y, EffectFade, FreeMode, Keyboard, Navigation, Thumbs } from 'swiper/modules'
+import { createImageLightbox, lightboxItemsFromGalleryImgs, type ImageLightboxHandle } from './image-lightbox'
 import { registerSection } from './section-registry'
 
 const SECTION_TYPE = 'main-product'
@@ -37,6 +38,16 @@ type ProductDataVariant = {
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function readLightboxLabels(root: HTMLElement) {
+  return {
+    close: root.dataset.lightboxClose || 'Close',
+    prev: root.dataset.lightboxPrev || 'Previous',
+    next: root.dataset.lightboxNext || 'Next',
+    dialog: root.dataset.lightboxDialog || 'Images',
+    counterTemplate: root.dataset.lightboxCounter || '__CURRENT__ / __TOTAL__',
+  }
 }
 
 function parseVariantsJson(container: HTMLElement): VariantJson[] | null {
@@ -406,82 +417,6 @@ type MainProductTeardown = {
   (): void
 }
 
-/**
- * ARIA tabs for product info: keeps tab/panel in sync, keyboard roving, arrow / Home / End.
- */
-function initProductDetailTabs(root: HTMLElement, signal: AbortSignal): void {
-  const tabsHost = root.querySelector<HTMLElement>('[data-product-tabs]')
-  if (!tabsHost) return
-
-  const tabButtons = (): HTMLButtonElement[] =>
-    Array.from(tabsHost.querySelectorAll<HTMLButtonElement>('[data-product-tab][role="tab"]'))
-
-  const tabPanels = (): HTMLElement[] =>
-    Array.from(tabsHost.querySelectorAll<HTMLElement>('[data-product-tab-panel][role="tabpanel"]'))
-
-  function showTab(key: string): void {
-    for (const btn of tabButtons()) {
-      const k = btn.getAttribute('data-product-tab') || ''
-      const on = k === key
-      btn.setAttribute('aria-selected', on ? 'true' : 'false')
-      btn.tabIndex = on ? 0 : -1
-    }
-    for (const panel of tabPanels()) {
-      const k = panel.getAttribute('data-product-tab-panel') || ''
-      if (k === key) {
-        panel.removeAttribute('hidden')
-      } else {
-        panel.setAttribute('hidden', '')
-      }
-    }
-  }
-
-  tabsHost.addEventListener(
-    'click',
-    (e) => {
-      const t = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-product-tab]')
-      if (!t || !tabsHost.contains(t)) return
-      const key = t.getAttribute('data-product-tab')
-      if (key) showTab(key)
-    },
-    { signal }
-  )
-
-  tabsHost.addEventListener(
-    'keydown',
-    (e) => {
-      const cur = document.activeElement
-      if (!cur || !(cur instanceof HTMLButtonElement) || !cur.hasAttribute('data-product-tab')) return
-      if (!tabsHost.contains(cur)) return
-      const list = tabButtons()
-      const idx = list.indexOf(cur)
-      if (idx < 0) return
-      let next = idx
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault()
-        next = (idx + 1) % list.length
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault()
-        next = (idx - 1 + list.length) % list.length
-      } else if (e.key === 'Home') {
-        e.preventDefault()
-        next = 0
-      } else if (e.key === 'End') {
-        e.preventDefault()
-        next = list.length - 1
-      } else {
-        return
-      }
-      const k = list[next]?.getAttribute('data-product-tab')
-      if (k) {
-        showTab(k)
-        list[next]?.focus()
-      }
-    },
-    { signal }
-  )
-}
-
 export function registerMainProductSection(): void {
   registerSection(
     SECTION_TYPE,
@@ -496,7 +431,6 @@ export function registerMainProductSection(): void {
       const abort = new AbortController()
       const { signal } = abort
 
-      initProductDetailTabs(container, signal)
       initProductQuantityStepper(container, signal)
       initProductCopyLink(container, signal)
       initProductShareExternal(container, signal)
@@ -504,6 +438,54 @@ export function registerMainProductSection(): void {
       const gallery = container.querySelector<HTMLElement>('[data-product-gallery]')
       const swiperEl = container.querySelector<HTMLElement>('[data-product-swiper]')
       const thumbsEl = container.querySelector<HTMLElement>('[data-product-thumbs-swiper]')
+
+      let galleryLightbox: ImageLightboxHandle | null = null
+      if (gallery && gallery.querySelector('[data-product-slide-img]')) {
+        galleryLightbox = createImageLightbox({
+          getItems: () => lightboxItemsFromGalleryImgs(gallery),
+          labels: readLightboxLabels(container),
+          reducedMotion: reduced,
+        })
+
+        const openLightboxFromTarget = (target: Element): void => {
+          const img =
+            target instanceof HTMLImageElement && target.hasAttribute('data-product-slide-img')
+              ? target
+              : target.querySelector<HTMLImageElement>('[data-product-slide-img]')
+          if (!img || !gallery.contains(img)) return
+          const imgs = [...gallery.querySelectorAll<HTMLImageElement>('[data-product-slide-img]')]
+          const idx = imgs.indexOf(img)
+          if (idx >= 0) galleryLightbox?.open(idx)
+        }
+
+        gallery.addEventListener(
+          'click',
+          (e) => {
+            const t = e.target
+            if (!(t instanceof Element)) return
+            if (t.closest('.main-product__nav-btn, [data-product-thumb]')) return
+            const img = t.closest<HTMLImageElement>('[data-product-slide-img]')
+            const fig = t.closest('.main-product__figure--zoomable')
+            if (img) openLightboxFromTarget(img)
+            else if (fig) openLightboxFromTarget(fig)
+          },
+          { signal }
+        )
+
+        gallery.addEventListener(
+          'keydown',
+          (e) => {
+            if (e.key !== 'Enter' && e.key !== ' ') return
+            const t = e.target
+            if (!(t instanceof Element)) return
+            const fig = t.closest('.main-product__figure--zoomable')
+            if (!fig || !gallery.contains(fig)) return
+            e.preventDefault()
+            openLightboxFromTarget(fig)
+          },
+          { signal }
+        )
+      }
 
       let mainSwiper: InstanceType<typeof Swiper> | null = null
       let thumbsSwiper: InstanceType<typeof Swiper> | null = null
@@ -730,6 +712,8 @@ export function registerMainProductSection(): void {
 
       const extended = container as HTMLElement & { __mainProductTeardown?: MainProductTeardown }
       extended.__mainProductTeardown = () => {
+        galleryLightbox?.destroy()
+        galleryLightbox = null
         abort.abort()
         killProductTweens(animNodes)
         if (priceRow) gsap.killTweensOf(priceRow)

@@ -13,7 +13,8 @@
     </div>
   {%- elsif product.media.size == 1 -%}
     {%- assign one_media = product.media.first -%}
-    {%- assign one_alt = one_media.alt | default: product.title -%}
+    {%- assign merchant_alt_one = one_media.alt | strip -%}
+    {%- assign one_alt = merchant_alt_one | default: product.title -%}
     <div class="main-product__media-inner main-product__media-inner--static">
       {%- if section.settings.show_sale_badge -%}
         <span
@@ -29,9 +30,12 @@
         </span>
       {%- endif -%}
       <figure
-        class="main-product__figure main-product__figure--slide"
+        class="main-product__figure main-product__figure--slide main-product__figure--zoomable"
         data-product-feature-figure
         data-media-id="{{ one_media.id }}"
+        role="button"
+        tabindex="0"
+        aria-label="{{ 'products.product.lightbox_open' | t | escape }}"
       >
         <img
           class="main-product__image"
@@ -42,6 +46,8 @@
           width="1600"
           height="{{ 1600 | divided_by: one_media.aspect_ratio | ceil }}"
           alt="{{ one_alt | escape }}"
+          data-lightbox-caption="{{ merchant_alt_one | escape }}"
+          data-lightbox-has-caption="{% if merchant_alt_one != blank %}true{% else %}false{% endif %}"
           fetchpriority="high"
           loading="eager"
         >
@@ -67,12 +73,16 @@
         <div class="swiper main-product__swiper" data-product-swiper>
           <div class="swiper-wrapper">
             {%- for media in product.media -%}
-              {%- assign slide_alt = media.alt | default: product.title -%}
+              {%- assign merchant_alt = media.alt | strip -%}
+              {%- assign slide_alt = merchant_alt | default: product.title -%}
               <div class="swiper-slide main-product__slide" data-media-id="{{ media.id }}">
                 <figure
-                  class="main-product__figure main-product__figure--slide"
+                  class="main-product__figure main-product__figure--slide main-product__figure--zoomable"
                   data-product-feature-figure
                   data-media-id="{{ media.id }}"
+                  role="button"
+                  tabindex="0"
+                  aria-label="{{ 'products.product.lightbox_open' | t | escape }}"
                 >
                   <img
                     class="main-product__image"
@@ -83,6 +93,8 @@
                     width="1600"
                     height="{{ 1600 | divided_by: media.aspect_ratio | ceil }}"
                     alt="{{ slide_alt | escape }}"
+                    data-lightbox-caption="{{ merchant_alt | escape }}"
+                    data-lightbox-has-caption="{% if merchant_alt != blank %}true{% else %}false{% endif %}"
                     loading="{% if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
                     {%- if forloop.first -%}
                       fetchpriority="high"

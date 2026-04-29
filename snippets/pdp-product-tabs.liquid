@@ -1,150 +1,172 @@
 {%- comment -%}
-  PDP tabbed description / size / care / shipping region.
-  Expects `section`, `product`, and tab flags/RTE fragments from section assigns.
+  PDP lower region: (1) tabbed `tab_description` + `tab_rte` blocks; (2) `@app` blocks stacked below in section block order.
+  Spec / accordion blocks stay as section blocks; include spec rows in a `tab_rte` via "Include spec table".
 {%- endcomment -%}
-<div
-  class="main-product__pdp-lower main-product__pdp-lower--tabbed"
-  data-product-tabs
->
-  <div class="main-product__pdp-bleed">
-    <div class="main-product__pdp-lower__inner">
-      <div
-        class="main-product__tablist"
-        role="tablist"
-        aria-label="{{ 'products.product.tabs_aria' | t | escape }}"
-      >
-        <button
-          type="button"
-          class="main-product__tab"
-          id="pdp-tab-desc-{{ section.id }}"
-          role="tab"
-          aria-selected="true"
-          aria-controls="pdp-panel-desc-{{ section.id }}"
-          tabindex="0"
-          data-product-tab="desc"
-        >
-          {{- 'products.product.tab_description' | t -}}
-        </button>
-        <button
-          type="button"
-          class="main-product__tab"
-          id="pdp-tab-size-{{ section.id }}"
-          role="tab"
-          aria-selected="false"
-          aria-controls="pdp-panel-size-{{ section.id }}"
-          tabindex="-1"
-          data-product-tab="size"
-        >
-          {{- 'products.product.tab_size_fit' | t -}}
-        </button>
-        <button
-          type="button"
-          class="main-product__tab"
-          id="pdp-tab-care-{{ section.id }}"
-          role="tab"
-          aria-selected="false"
-          aria-controls="pdp-panel-care-{{ section.id }}"
-          tabindex="-1"
-          data-product-tab="care"
-        >
-          {{- 'products.product.tab_care' | t -}}
-        </button>
-        <button
-          type="button"
-          class="main-product__tab"
-          id="pdp-tab-ship-{{ section.id }}"
-          role="tab"
-          aria-selected="false"
-          aria-controls="pdp-panel-ship-{{ section.id }}"
-          tabindex="-1"
-          data-product-tab="ship"
-        >
-          {{- 'products.product.tab_shipping' | t -}}
-        </button>
-      </div>
+{%- liquid
+  assign pdp_tab_count = 0
+  for block in section.blocks
+    if block.type == 'tab_description' or block.type == 'tab_rte'
+      assign pdp_tab_count = pdp_tab_count | plus: 1
+    endif
+  endfor
 
-      <div class="main-product__tab-panels">
-        <div
-          class="main-product__tab-panel"
-          id="pdp-panel-desc-{{ section.id }}"
-          role="tabpanel"
-          aria-labelledby="pdp-tab-desc-{{ section.id }}"
-          data-product-tab-panel="desc"
-        >
-          {%- if product.description != blank -%}
-            <div class="main-product__description main-product__description--wide rte">
-              {{- product.description -}}
-            </div>
-          {%- endif -%}
-          {%- render 'pdp-accordion-blocks', section: section -%}
-          {%- unless pdp_desc_filled -%}
-            <p class="main-product__tab-notice" role="status">
-              {{- 'products.product.tab_empty_description' | t -}}
-            </p>
-          {%- endunless -%}
-        </div>
+  assign pdp_app_block_count = 0
+  for block in section.blocks
+    if block.type == '@app'
+      assign pdp_app_block_count = pdp_app_block_count | plus: 1
+    endif
+  endfor
 
-        <div
-          class="main-product__tab-panel"
-          id="pdp-panel-size-{{ section.id }}"
-          role="tabpanel"
-          aria-labelledby="pdp-tab-size-{{ section.id }}"
-          data-product-tab-panel="size"
-          hidden
-        >
-          {%- if pdp_rte_size != blank -%}
-            <div class="main-product__tab-rte rte">
-              {{- pdp_rte_size -}}
-            </div>
-          {%- endif -%}
-          {%- if pdp_has_spec -%}
-            {%- render 'pdp-spec-blocks', section: section, in_tab: true -%}
-          {%- endif -%}
-          {%- unless pdp_size_filled -%}
-            <p class="main-product__tab-notice" role="status">
-              {{- 'products.product.tab_empty_size_fit' | t -}}
-            </p>
-          {%- endunless -%}
-        </div>
+  assign pdp_has_accordions = false
+  for block in section.blocks
+    if block.type == 'detail_accordion' and block.settings.heading != blank
+      assign pdp_has_accordions = true
+      break
+    endif
+  endfor
 
-        <div
-          class="main-product__tab-panel"
-          id="pdp-panel-care-{{ section.id }}"
-          role="tabpanel"
-          aria-labelledby="pdp-tab-care-{{ section.id }}"
-          data-product-tab-panel="care"
-          hidden
-        >
-          {%- if pdp_rte_care != blank -%}
-            <div class="main-product__tab-rte rte">
-              {{- pdp_rte_care -}}
-            </div>
-          {%- else -%}
-            <p class="main-product__tab-notice" role="status">
-              {{- 'products.product.tab_empty_care' | t -}}
-            </p>
-          {%- endif -%}
-        </div>
+  assign pdp_has_spec = false
+  for block in section.blocks
+    if block.type == 'spec' and block.settings.label != blank and block.settings.value != blank
+      assign pdp_has_spec = true
+      break
+    endif
+  endfor
+-%}
 
-        <div
-          class="main-product__tab-panel"
-          id="pdp-panel-ship-{{ section.id }}"
-          role="tabpanel"
-          aria-labelledby="pdp-tab-ship-{{ section.id }}"
-          data-product-tab-panel="ship"
-          hidden
-        >
-          {%- if pdp_rte_ship != blank -%}
-            <div class="main-product__tab-rte rte">
-              {{- pdp_rte_ship -}}
-            </div>
-          {%- else -%}
-            <p class="main-product__tab-notice" role="status">
-              {{- 'products.product.tab_empty_shipping' | t -}}
-            </p>
-          {%- endif -%}
+{%- if pdp_tab_count > 0 or pdp_app_block_count > 0 -%}
+  {%- if pdp_tab_count > 0 -%}
+    <div
+      class="main-product__pdp-lower main-product__pdp-lower--tabbed"
+      data-product-tabs
+    >
+      <div class="main-product__pdp-bleed">
+        <div class="main-product__pdp-lower__inner">
+          <div
+            class="main-product__tablist"
+            role="tablist"
+            aria-label="{{ 'products.product.tabs_aria' | t | escape }}"
+          >
+            {%- assign first_tab = true -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'tab_description' or block.type == 'tab_rte' -%}
+                {%- assign tab_key = 'tab-' | append: block.id -%}
+                {%- assign tab_label = block.settings.heading | strip -%}
+                {%- if tab_label == blank -%}
+                  {%- if block.type == 'tab_description' -%}
+                    {%- assign tab_label = 'products.product.tab_label_by_block_type.tab_description' | t -%}
+                  {%- else -%}
+                    {%- assign tab_label = 'products.product.tab_label_by_block_type.tab_rte' | t -%}
+                  {%- endif -%}
+                {%- endif -%}
+                <button
+                  type="button"
+                  class="main-product__tab"
+                  id="pdp-tab-{{ block.id }}"
+                  role="tab"
+                  aria-selected="{% if first_tab %}true{% else %}false{% endif %}"
+                  aria-controls="pdp-panel-{{ block.id }}"
+                  tabindex="{% if first_tab %}0{% else %}-1{% endif %}"
+                  data-product-tab="{{ tab_key }}"
+                >
+                  {{- tab_label | escape -}}
+                </button>
+                {%- assign first_tab = false -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+
+          <div class="main-product__tab-panels">
+            {%- assign first_panel = true -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'tab_description' -%}
+                {%- assign tab_key = 'tab-' | append: block.id -%}
+                {%- assign pdp_desc_filled = false -%}
+                {%- if product.description != blank or pdp_has_accordions -%}
+                  {%- assign pdp_desc_filled = true -%}
+                {%- endif -%}
+                <div
+                  class="main-product__tab-panel"
+                  id="pdp-panel-{{ block.id }}"
+                  role="tabpanel"
+                  aria-labelledby="pdp-tab-{{ block.id }}"
+                  data-product-tab-panel="{{ tab_key }}"
+                  {% unless first_panel %}hidden{% endunless %}
+                  {{ block.shopify_attributes }}
+                >
+                  {%- if product.description != blank -%}
+                    <div class="main-product__description main-product__description--wide rte">
+                      {{- product.description -}}
+                    </div>
+                  {%- endif -%}
+                  {%- render 'pdp-accordion-blocks', section: section -%}
+                  {%- unless pdp_desc_filled -%}
+                    <p class="main-product__tab-notice" role="status">
+                      {{- 'products.product.tab_empty_description' | t -}}
+                    </p>
+                  {%- endunless -%}
+                </div>
+                {%- assign first_panel = false -%}
+
+              {%- elsif block.type == 'tab_rte' -%}
+                {%- assign tab_key = 'tab-' | append: block.id -%}
+                {%- assign pdp_rte_body = block.settings.body -%}
+                {%- assign pdp_rte_filled = false -%}
+                {%- if pdp_rte_body != blank -%}
+                  {%- assign pdp_rte_filled = true -%}
+                {%- endif -%}
+                {%- if block.settings.include_spec_rows and pdp_has_spec -%}
+                  {%- assign pdp_rte_filled = true -%}
+                {%- endif -%}
+                <div
+                  class="main-product__tab-panel"
+                  id="pdp-panel-{{ block.id }}"
+                  role="tabpanel"
+                  aria-labelledby="pdp-tab-{{ block.id }}"
+                  data-product-tab-panel="{{ tab_key }}"
+                  {% unless first_panel %}hidden{% endunless %}
+                  {{ block.shopify_attributes }}
+                >
+                  {%- if pdp_rte_body != blank -%}
+                    <div class="main-product__tab-rte rte">
+                      {{- pdp_rte_body -}}
+                    </div>
+                  {%- endif -%}
+                  {%- if block.settings.include_spec_rows and pdp_has_spec -%}
+                    {%- render 'pdp-spec-blocks', section: section, in_tab: true -%}
+                  {%- endif -%}
+                  {%- unless pdp_rte_filled -%}
+                    <p class="main-product__tab-notice" role="status">
+                      {%- if block.settings.empty_message != blank -%}
+                        {{- block.settings.empty_message | escape -}}
+                      {%- else -%}
+                        {{- 'products.product.tab_empty_rte' | t -}}
+                      {%- endif -%}
+                    </p>
+                  {%- endunless -%}
+                </div>
+                {%- assign first_panel = false -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+  {%- endif -%}
+
+  {%- if pdp_app_block_count > 0 -%}
+    <div class="main-product__pdp-lower main-product__pdp-lower--apps">
+      <div class="main-product__pdp-bleed">
+        <div class="main-product__pdp-lower__inner main-product__pdp-app-stack">
+          {%- for block in section.blocks -%}
+            {%- if block.type == '@app' -%}
+              <div class="main-product__pdp-app-block" {{ block.shopify_attributes }}>
+                {%- render block -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}

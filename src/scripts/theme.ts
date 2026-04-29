@@ -19,6 +19,7 @@ import 'swiper/css/thumbs'
 import { bootSections } from './section-registry'
 import { registerCartDrawerSection, registerAjaxCartAdd } from './cart-drawer'
 import { registerMainProductSection } from './main-product'
+import { registerProductTabsSection } from './product-tabs'
 import { registerHeaderSection } from './header'
 import { registerSectionHeroSlider } from './sections/section-hero-slider'
 import './size-guide'
@@ -31,6 +32,7 @@ document.documentElement.classList.add('js')
 registerCartDrawerSection()
 registerAjaxCartAdd()
 registerMainProductSection()
+registerProductTabsSection()
 registerHeaderSection() 
 registerSectionHeroSlider()
 
