@@ -24,7 +24,8 @@
 }
 
 /* PDP — gallery 60% | buy column 40% (md+), no “card” chrome. */
-.main-product { 
+.main-product,
+.section-product-tabs { 
   --product-border: color-mix(in srgb, var(--cs-border) 60%, var(--cs-text) 8%);
   --pdp-radius-sm: min(calc((var(--style-border-radius-inputs, 8px) + 1px) * 1), 11px);
   --pdp-radius: min(calc((var(--style-border-radius-inputs, 8px) + 2px) * 1), 15px);
@@ -34,7 +35,7 @@
   --pdp-text-muted: color-mix(in srgb, var(--cs-text) 55%, var(--cs-text-secondary) 45%);
   --pdp-text-quiet: color-mix(in srgb, var(--cs-text) 35%, var(--cs-text-secondary) 65%);
   --pdp-border-input: color-mix(in srgb, var(--cs-text) 18%, var(--product-border) 82%);
-  --pdp-border-hairline: color-mix(in srgb, var(--cs-text) 9.5%, var(--cs-background) 90.5%);
+  --pdp-border-hairline: color-mix(in srgb, var(--cs-text) 9.5%, var(--cs-background) 90.5%); 
   /* Focus ring (accent, softened) and ambient lift for controls */
   --pdp-ring-focus: color-mix(in srgb, var(--cs-accent) 38%, var(--cs-background) 62%);
   --pdp-shadow-ambient: 0 0.2rem 0.65rem color-mix(in srgb, var(--cs-text) 7.5%, transparent);
@@ -1369,6 +1370,7 @@ button.main-product__meta-link:focus-visible {
 
 .main-product__pdp-app-block {
   min-width: 0;
+  border-top: 1px solid var(--pdp-border-hairline);
 }
 
 /* Tab bar: text + bottom rule; <lg = horizontal scroll + ~44px tap targets */
