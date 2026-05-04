@@ -1,0 +1,77 @@
+---
+description: Shopify theme development practices and store-ready standards
+alwaysApply: true
+---
+
+# Shopify Theme Development
+
+## Theme Store standards
+
+This theme targets the Shopify Theme Store. All sections must:
+- Have a complete `{% schema %}` with descriptive labels
+- Support the theme editor (live preview of setting changes)
+- Be accessible (ARIA attributes, keyboard navigation, focus management)
+- Respect `prefers-reduced-motion` for animations
+- Work without JavaScript (progressive enhancement)
+
+## Section rendering API
+
+For dynamic updates (cart drawer, AJAX filters):
+```typescript
+const url = new URL(routes.root, window.location.href)
+url.searchParams.set('sections', 'section-file-name')
+const res = await fetch(url.toString(), {
+  headers: { 'X-Requested-With': 'XMLHttpRequest' }
+})
+const data = await res.json()
+const html = data['section-file-name']
+```
+
+## Cart AJAX
+
+- All cart mutations go through `.js` endpoints: `cart_add_url.js`, `cart_change_url.js`
+- Routes sourced from `window.__themeRoutes` (Liquid-injected in theme.liquid)
+- After mutation: fetch cart JSON → update header count → refresh drawer HTML → dispatch `theme:cart:change`
+- Forms with `data-ajax-add-to-cart` are intercepted globally
+
+## Theme editor integration
+
+- `shopify:section:load` / `shopify:section:unload` events handled by section-registry
+- Sections must clean up (abort listeners, kill animations) in `destroy()` 
+- `window.Shopify.designMode` is `true` in the editor — conditionally skip behaviors if needed
+
+## Accessibility requirements
+
+- Focus trap in modals/drawers (Tab/Shift+Tab cycle)
+- Escape key closes overlays; focus returns to trigger element
+- `aria-expanded` on toggle buttons
+- `aria-hidden` on hidden panels
+- Live regions (`aria-live="polite"`) for cart update announcements
+- Scroll lock via `overflow: hidden` on `<html>` when overlays are open
+
+## Translation keys
+
+- Use `"t:namespace.key"` in schema `name` and `label` fields
+- Locale files in `locales/` (JSON format)
+
+## Common data attributes
+
+| Attribute | Purpose |
+|-----------|---------|
+| `data-section-type` | Links Liquid section to TypeScript init |
+| `data-section-id` | Section instance ID for editor events |
+| `data-ajax-add-to-cart` | Marks form for AJAX cart interception |
+| `data-cart-drawer-open` | Opens cart drawer |
+| `data-cart-drawer-close` | Closes cart drawer |
+| `data-cart-drawer-panel` | The drawer panel element |
+| `data-cart-drawer-overlay` | The backdrop overlay |
+| `data-cart-drawer-body` | Scrollable drawer content area |
+| `data-cart-drawer-qty` | Quantity input with `data-line-key` |
+
+## Development workflow
+
+1. `npm run dev` — Shopify CLI + Vite watch
+2. Edit Liquid in `sections/` / `snippets/` — live reload via CLI
+3. Edit TS/SCSS in `src/` — Vite rebuilds `assets/theme.js` + `theme.css`
+4. `npm run check` — validate Liquid with Theme Check
+5. `npm run build && npm run package` — create `.zip` for upload

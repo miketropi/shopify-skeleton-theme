@@ -1,0 +1,89 @@
+---
+description: Shopify Liquid coding patterns for sections, snippets, and templates
+globs: "**/*.liquid"
+alwaysApply: false
+---
+
+# Liquid Coding Patterns
+
+## Section structure
+
+Every section follows this template:
+
+```liquid
+{% comment %} Brief description of what this section does {% endcomment %}
+
+{%- liquid
+  assign var_name = section.settings.setting_id | default: fallback
+-%}
+
+<section
+  class="section-name"
+  data-section-type="matching-ts-type"
+  data-section-id="{{ section.id }}"
+  style="--custom-prop: {{ section.settings.value }}"
+>
+  {%- comment -%} Markup here {%- endcomment -%}
+</section>
+
+{% schema %}
+{
+  "name": "t:translation.key",
+  "settings": [ ... ]
+}
+{% endschema %}
+```
+
+## Key patterns
+
+- Use `{%- liquid ... -%}` tag for multi-line variable assignments (whitespace-trimmed)
+- Use `{%- if -%}` / `{%- endif -%}` (hyphenated) to control whitespace
+- CSS variables on the section root element for dynamic settings
+- `data-section-type` must exactly match the `SECTION_TYPE` constant in the paired TypeScript file
+- `data-section-id="{{ section.id }}"` required for editor events
+- Use `data-*` attributes for JS hooks, never classes
+
+## Image rendering
+
+```liquid
+{{ image | image_url: width: 1600 | image_tag:
+    loading: 'lazy',
+    alt: image.alt,
+    class: 'class-name',
+    widths: '400,600,800,1200,1600',
+    sizes: '(min-width: 62em) 25vw, 50vw'
+}}
+```
+
+- First image above fold: `loading: 'eager'`; everything else: `loading: 'lazy'`
+- Always provide `widths` and `sizes` for responsive images
+
+## Schema conventions
+
+- Use translation keys for `name` and `label` where available: `"t:general.xxx"`
+- Settings types: `range`, `checkbox`, `select`, `text`, `richtext`, `image_picker`, `color`, `color_scheme`
+- Group related settings with `"type": "header"`
+
+## Snippet naming
+
+- PDP snippets: `pdp-gallery`, `pdp-variant-picker`, `pdp-buy-row`, etc.
+- Header snippets: `header-logo`, `header-site-nav`, `header-icons`
+- Rendered with: `{% render 'snippet-name', param: value %}`
+- Snippets are isolated scope — pass all needed variables explicitly
+
+## Section groups
+
+- Header: `{% sections 'header-group' %}` in layout
+- Footer: `{% sections 'footer-group' %}` in layout
+- Cart drawer: `{% section 'cart-drawer' %}` (always rendered in layout)
+
+## Forms
+
+- AJAX cart forms use `data-ajax-add-to-cart` attribute
+- Product forms: `{% form 'product', product %}`
+
+## Theme Check
+
+- Config: `.theme-check.yml` extends `theme-check:recommended`
+- Run: `npm run check`
+- Known exceptions documented in `.theme-check.yml` (UnclosedHTMLElement for PDP, RemoteAsset for Google Fonts)

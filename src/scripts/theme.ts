@@ -22,6 +22,7 @@ import { registerMainProductSection } from './main-product'
 import { registerProductTabsSection } from './product-tabs'
 import { registerHeaderSection } from './header'
 import { registerSectionHeroSlider } from './sections/section-hero-slider'
+import { registerCollectionGridSection } from './collection-grid'
 import './size-guide'
 
 export type { ThemeModalOptions } from './theme-modal'
@@ -35,6 +36,7 @@ registerMainProductSection()
 registerProductTabsSection()
 registerHeaderSection() 
 registerSectionHeroSlider()
+registerCollectionGridSection()
 
 bootSections()
 

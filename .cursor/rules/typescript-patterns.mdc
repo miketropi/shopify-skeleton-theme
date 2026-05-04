@@ -1,0 +1,93 @@
+---
+description: TypeScript coding patterns for storefront JavaScript modules
+globs: "src/scripts/**/*.ts"
+alwaysApply: false
+---
+
+# TypeScript Patterns
+
+## Section module structure
+
+Every section script follows this pattern:
+
+```typescript
+import { registerSection } from './section-registry'
+
+const SECTION_TYPE = 'section-name'  // must match data-section-type in Liquid
+
+function init(container: HTMLElement): void {
+  const abort = new AbortController()
+  const { signal } = abort
+
+  // Event listeners use { signal } for automatic cleanup
+  container.addEventListener('click', handler, { signal })
+
+  // Store teardown reference on the element
+  const extended = container as HTMLElement & { __teardown?: () => void }
+  extended.__teardown = () => abort.abort()
+}
+
+function destroy(container: HTMLElement): void {
+  const extended = container as HTMLElement & { __teardown?: () => void }
+  extended.__teardown?.()
+  delete extended.__teardown
+}
+
+export function registerXxxSection(): void {
+  registerSection(SECTION_TYPE, init, destroy)
+}
+```
+
+Then in `theme.ts`:
+```typescript
+import { registerXxxSection } from './xxx'
+registerXxxSection()
+```
+
+## Conventions
+
+- **AbortController** for all event listener cleanup — pass `{ signal }` to `addEventListener`
+- **No classes** for simple sections; factory functions returning a controller object for complex ones (see `cart-drawer.ts`)
+- **Type annotations** on all function signatures; use `type` not `interface` for data shapes
+- DOM queries: `container.querySelector<HTMLElement>('[data-attr]')` — always scope to container
+- Use `data-*` attributes for DOM hooks, never CSS classes
+- `prefersReducedMotion()` helper check before GSAP animations
+- GSAP for all animations: `gsap.to()`, `gsap.set()`, `gsap.timeline()`; call `gsap.killTweensOf()` in cleanup
+
+## Animation patterns
+
+```typescript
+const DURATION = 0.32
+const EASE = 'power2.out'
+
+if (prefersReducedMotion()) {
+  gsap.set(el, { opacity: 1 })
+  return
+}
+gsap.to(el, { opacity: 1, duration: DURATION, ease: EASE })
+```
+
+## Cart AJAX pattern
+
+- Routes from `window.__themeRoutes` (set in layout/theme.liquid), fallback to `window.Shopify.routes`
+- POST to `.js` endpoints with `Accept: application/json`
+- Section Rendering API: fetch `?sections=section-file` to get updated HTML
+- Dispatch `theme:cart:change` custom event after mutations
+
+## Entry point
+
+`src/scripts/theme.ts` is the single Vite entry:
+1. Imports SCSS (`../styles/theme.scss`) and Swiper CSS
+2. Imports and calls all `registerXxxSection()` functions
+3. Calls `bootSections()` to init everything
+
+## Type declarations
+
+- `src/types/shopify.d.ts` extends `Window` with `Shopify` and `__themeRoutes` globals
+- Add new global types there as needed
+
+## Build output
+
+- `assets/theme.js` (IIFE format, no code splitting)
+- `assets/theme.css` (from SCSS imports)
+- Verify with `npm run build`

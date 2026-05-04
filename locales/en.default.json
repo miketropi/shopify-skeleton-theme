@@ -49,6 +49,20 @@
         "other": "{{ count }} products"
       }
     },
+    "filtering": {
+      "filter": "Filter",
+      "filter_and_count": "Filter ({{ count }})",
+      "sort_by": "Sort by",
+      "clear_all": "Clear all",
+      "remove_filter": "Remove {{ label }}",
+      "close_filters": "Close filters",
+      "price_from": "From",
+      "price_to": "To",
+      "price_range": "Price range",
+      "active_filters": "Active filters",
+      "no_results": "No products match these filters.",
+      "clear_and_browse": "Clear filters"
+    },
     "title": "Collections"
   },
   "footer": {
@@ -220,6 +234,7 @@
   "products": {
     "product": {
       "add_to_cart": "Add to cart",
+      "choose_options": "Choose options",
       "adding_to_cart": "Adding…",
       "breadcrumb_label": "Breadcrumb",
       "breadcrumb_home": "Home",

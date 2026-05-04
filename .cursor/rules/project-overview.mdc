@@ -1,0 +1,74 @@
+---
+description: Core project context — architecture, tooling, and conventions for the Shopify Skeleton Theme
+alwaysApply: true
+---
+
+# Shopify Skeleton Theme — Project Overview
+
+## What this is
+
+A minimalist, Theme-Store-ready Shopify theme with a TypeScript + Vite build pipeline. Intentionally small and foundational — not a fully-featured theme.
+
+## Architecture
+
+```
+layout/            # theme.liquid (main), password.liquid
+sections/          # Liquid sections with {% schema %} — the core UI units
+snippets/          # Reusable Liquid partials (pdp-*, header-*, product-card, etc.)
+blocks/            # Nestable theme blocks (group.liquid, text.liquid)
+templates/         # JSON templates (index, product, collection, cart, blog, etc.)
+config/            # settings_schema.json + settings_data.json
+locales/           # Translation JSON
+assets/            # Static files + Vite output (theme.js, theme.css, critical.css)
+src/scripts/       # TypeScript source → compiled to assets/theme.js
+src/styles/        # SCSS source → compiled to assets/theme.css
+src/types/         # TypeScript declarations (shopify.d.ts)
+docs/              # Internal development docs
+```
+
+## Build system
+
+- **Vite** (`vite.config.ts`): single entry `src/scripts/theme.ts` → `assets/theme.js` (IIFE)
+- SCSS compiled through Vite; `loadPaths: ['src/styles']` enables bare `@use` imports
+- `emptyOutDir: false` — Vite writes to `assets/` without deleting other files
+- `npm run dev` = `concurrently "shopify theme dev" "vite build --watch"`
+- `npm run build` = production Vite build
+
+## Key dependencies
+
+- **gsap** — all JS animations (drawer slide, submenu reveal, hero transitions)
+- **swiper** — carousels/sliders (hero, product gallery thumbs)
+- **@shopify/cli** — theme dev server, theme check, packaging
+
+## Code formatting
+
+- Prettier: no semicolons, single quotes, 2-space indent, trailing commas (es5)
+- ESLint: `@typescript-eslint/recommended`, `no-explicit-any: warn`
+- TypeScript: strict mode, ES2020 target, bundler module resolution
+
+## Section registration pattern
+
+Every interactive section follows this flow:
+1. Define `registerXxxSection()` in `src/scripts/xxx.ts`
+2. Call `registerSection(SECTION_TYPE, init, destroy)` from section-registry
+3. Import and call `registerXxxSection()` in `theme.ts`
+4. Liquid section uses `data-section-type="xxx"` and `data-section-id="{{ section.id }}"`
+5. `bootSections()` auto-inits on DOMContentLoaded; MutationObserver catches dynamically added sections
+6. Shopify editor events (`shopify:section:load/unload`) handled automatically
+
+## Liquid conventions
+
+- Sections expose settings via `{% schema %}` JSON
+- CSS variables on section root for dynamic settings: `style="--gap: {{ block.settings.gap }}px"`
+- Prefer `{% stylesheet %}` / `{% javascript %}` for co-located section CSS/JS
+- Critical CSS in `assets/critical.css`; non-critical via Vite (`assets/theme.css`)
+- Font loading via `snippets/font-pairing-loader.liquid` in `<head>`
+- Cart routes set in `layout/theme.liquid` as `window.__themeRoutes` (preferred over `Shopify.routes`)
+
+## When editing this project
+
+- Always check `data-section-type` matches between Liquid and TypeScript
+- Run `npm run check` (Theme Check) after Liquid changes
+- Run `npm run build` after TypeScript/SCSS changes to verify compilation
+- Respect `prefers-reduced-motion` in all JS animations
+- Use AbortController for section cleanup in `destroy()` functions

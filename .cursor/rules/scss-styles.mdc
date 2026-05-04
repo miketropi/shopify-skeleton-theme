@@ -1,0 +1,102 @@
+---
+description: SCSS styling conventions and architecture
+globs: "src/styles/**/*.scss"
+alwaysApply: false
+---
+
+# SCSS Conventions
+
+## File organization
+
+```
+src/styles/
+├── theme.scss                    # Main entry: imports base + sections
+├── base/
+│   ├── _variables.scss           # Design tokens ($space-xs..xl, $font-stack-system)
+│   ├── _breakpoints.scss         # $breakpoints map + mq-up() mixin
+│   ├── _fonts.scss               # Font-face / typography base
+│   └── _section-wrapper.scss     # Shared section container styles
+├── components/
+│   ├── _theme-modal.scss         # Reusable modal component
+│   └── _image-lightbox.scss      # Image lightbox overlay
+└── sections/
+    ├── index.scss                # @forward all section partials
+    ├── _header.scss
+    ├── _footer.scss
+    ├── _main-product.scss
+    ├── _main-collection.scss
+    ├── _cart-drawer.scss
+    └── ...
+```
+
+## Import system
+
+- `theme.scss` uses `@use` for base, `@use 'sections/index'` for all sections
+- Section files use `@forward` in `sections/index.scss`
+- Vite `loadPaths: ['src/styles']` enables bare imports like `@use 'base/variables'`
+- Use `@use 'base/breakpoints' as *` to get `mq-up()` without namespace
+
+## Breakpoints (mobile-first)
+
+```scss
+@use 'base/breakpoints' as *;
+
+.element {
+  padding: 1rem;
+
+  @include mq-up('md') {  // 48em = 768px
+    padding: 2rem;
+  }
+
+  @include mq-up('lg') {  // 62em = 992px
+    padding: 3rem;
+  }
+}
+```
+
+| Token | Value | Approx px |
+|-------|-------|-----------|
+| `sm`  | 36em  | 576px     |
+| `md`  | 48em  | 768px     |
+| `lg`  | 62em  | 992px     |
+| `xl`  | 75em  | 1200px    |
+
+## Naming convention
+
+- Section-scoped BEM-like prefixes: `mcol__hero`, `mcol__card-img`, `pdp-gallery__thumb`
+- Short prefixes per section (not full BEM block names)
+- Modifier classes: `mcol__pag-arrow--disabled`, `cart-drawer--open`
+- State classes: `is-ajax-loading`, `is-active`
+
+## Design tokens
+
+```scss
+$space-xs: 0.25rem;
+$space-sm: 0.5rem;
+$space-md: 1rem;
+$space-lg: 1.5rem;
+$space-xl: 2rem;
+```
+
+- Prefer CSS custom properties for values controlled by Liquid settings
+- Use Sass variables for static design tokens shared across partials
+
+## CSS custom properties pattern
+
+Liquid sets properties on the section root:
+```liquid
+<section style="--collection-cols: {{ cols }};">
+```
+
+SCSS consumes them:
+```scss
+.col-grid {
+  grid-template-columns: repeat(var(--collection-cols, 4), 1fr);
+}
+```
+
+## Critical vs non-critical CSS
+
+- `assets/critical.css` — manually maintained, loaded with `preload` in `<head>`
+- `assets/theme.css` — Vite output from SCSS, loaded normally
+- Section-specific CSS can also use `{% stylesheet %}` in Liquid (deduplicated by Shopify)
