@@ -1,0 +1,103 @@
+@use '../base/variables' as *;
+@use '../base/breakpoints' as *;
+
+// ═══════════════════════════════════════════════════════════
+//  COLLECTIONS LIST — Modern grid with overlay cards
+//
+//  Structure:
+//    .mclst                    section root + max-width container
+//    .mclst__header            page title + optional intro
+//    .mclst__grid              responsive collection grid
+//    .mclst__card              collection card with image + overlay
+// ═══════════════════════════════════════════════════════════
+
+$_ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+$_ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+$_radius-sm: 8px;
+$_radius-md: 12px;
+$_radius-lg: 16px;
+
+// ─── Section root ─────────────────────────────────────────
+
+.mclst {
+  max-width: var(--page-width, 110rem);
+  padding-block: clamp(#{$space-lg}, 4vw, 3rem) clamp(2rem, 6vw, 5rem);
+}
+
+// ─── Header ───────────────────────────────────────────────
+
+.mclst__header {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  margin-bottom: clamp(#{$space-xl}, 4vw, 3rem);
+}
+
+.mclst__title {
+  font-family: var(--cs-font-heading);
+  font-size: clamp(1.625rem, 4.5vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  color: var(--cs-heading);
+  margin: 0;
+}
+
+.mclst__intro {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--cs-text-secondary);
+  max-width: 38rem;
+  margin: 0;
+}
+
+// ─── Grid ─────────────────────────────────────────────────
+
+.mclst__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(#{$space-md}, 3vw, $space-xl) clamp(#{$space-sm}, 2vw, $space-lg);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @include mq-up('md') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include mq-up('lg') {
+    grid-template-columns: repeat(var(--mclst-cols, 3), 1fr);
+  }
+}
+
+.mclst__grid-item {
+  min-width: 0;
+}
+
+// ─── Empty state ──────────────────────────────────────────
+
+.mclst__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $space-md;
+  text-align: center;
+  padding: clamp(3rem, 10vw, 6rem) $space-lg;
+  border: 1.5px dashed color-mix(in srgb, var(--cs-text) 12%, var(--cs-background));
+  border-radius: $_radius-lg;
+}
+
+.mclst__empty-icon {
+  color: color-mix(in srgb, var(--cs-text) 20%, transparent);
+}
+
+.mclst__empty-text {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--cs-text-secondary);
+}
+
+// ─── Reduced motion ───────────────────────────────────────
+
+// reduced-motion for card components is in _tcard.scss

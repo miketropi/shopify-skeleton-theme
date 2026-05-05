@@ -24,6 +24,7 @@ import { registerHeaderSection } from './header'
 import { registerSectionHeroSlider } from './sections/section-hero-slider'
 import { registerCollectionGridSection } from './collection-grid'
 import './size-guide'
+import { initSearchModal } from './search-modal'
 
 export type { ThemeModalOptions } from './theme-modal'
 export { ThemeModal, THEME_MODAL_COMPACT_MQ } from './theme-modal'
@@ -39,5 +40,6 @@ registerSectionHeroSlider()
 registerCollectionGridSection()
 
 bootSections()
+initSearchModal()
 
 console.log('Theme loaded')

@@ -1,0 +1,42 @@
+{%- comment -%}
+  Collection overlay card — used in list-collections and any collection grid.
+
+  @param {object}  collection       - Collection object
+  @param {boolean} show_count       - Show product count (default: false)
+  @param {boolean} show_description - Show truncated description below card (default: false)
+{%- endcomment -%}
+
+<a class="tcard-coll" href="{{ collection.url }}">
+  <div class="tcard-coll__media">
+    {%- if collection.image -%}
+      {{
+        collection.image
+        | image_url: width: 1200
+        | image_tag:
+            loading: 'lazy',
+            alt: collection.title,
+            class: 'tcard-coll__img',
+            widths: '360,480,640,900,1200',
+            sizes: '(min-width:75em) 25vw, (min-width:48em) 33vw, 50vw'
+      }}
+    {%- else -%}
+      <div class="tcard-coll__placeholder" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+      </div>
+    {%- endif -%}
+    <div class="tcard-coll__scrim"></div>
+    <div class="tcard-coll__overlay">
+      <span class="tcard-coll__name">{{ collection.title | escape }}</span>
+      {%- if show_count -%}
+        <span class="tcard-coll__count">
+          {{ 'collections.general.product_count' | t: count: collection.products_count }}
+        </span>
+      {%- endif -%}
+    </div>
+  </div>
+  {%- if show_description and collection.description != blank -%}
+    <div class="tcard-coll__body">
+      <p class="tcard-coll__desc">{{ collection.description | strip_html | truncate: 100 }}</p>
+    </div>
+  {%- endif -%}
+</a>

@@ -531,6 +531,7 @@
   object-fit: cover;
   display: block;
   pointer-events: none;
+  border-radius: min(.5rem, var(--pdp-figure-radius));
 }
 
 .main-product__media-placeholder {
@@ -964,6 +965,7 @@ button.main-product__meta-link:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: min(.5rem, var(--pdp-figure-radius));
 }
 
 .main-product__swatch-fallback {
@@ -1097,6 +1099,7 @@ button.main-product__meta-link:focus-visible {
   border-radius: var(--pdp-figure-radius);
   background: var(--pdp-canvas);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--cs-background) 65%, transparent);
+  overflow: hidden;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -1225,7 +1228,6 @@ button.main-product__meta-link:focus-visible {
   padding: 0.65rem 1.5rem;
   font: inherit;
   font-size: 1rem;
-  font-weight: 600;
   letter-spacing: 0.03em;
   text-align: center;
   text-transform: none;

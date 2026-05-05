@@ -210,9 +210,9 @@ function init(container: HTMLElement): void {
   container.addEventListener(
     'mouseenter',
     (e) => {
-      const card = (e.target as HTMLElement).closest<HTMLElement>('.mcol__card--has-alt')
+      const card = (e.target as HTMLElement).closest<HTMLElement>('.tcard--has-alt')
       if (!card) return
-      const secondary = card.querySelector<HTMLImageElement>('.mcol__card-img--secondary')
+      const secondary = card.querySelector<HTMLImageElement>('.tcard__img--secondary')
       if (secondary && !secondary.complete) {
         secondary.loading = 'eager'
       }

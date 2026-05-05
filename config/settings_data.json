@@ -32,7 +32,7 @@
     "type_font_mono": "ibm_plex_mono_n4",
     "max_page_width": "90rem",
     "min_page_margin": 24,
-    "input_corner_radius": 0,
+
     "color_schemes": {
       "scheme-1": {
         "settings": {

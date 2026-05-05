@@ -39,7 +39,12 @@
     },
     "remove": "Remove",
     "title": "Cart",
-    "update": "Update"
+    "update": "Update",
+    "page": {
+      "order_summary": "Order summary",
+      "note_label": "Order notes",
+      "note_placeholder": "Add a note to your order…"
+    }
   },
   "collections": {
     "general": {
@@ -63,7 +68,10 @@
       "no_results": "No products match these filters.",
       "clear_and_browse": "Clear filters"
     },
-    "title": "Collections"
+    "title": "Collections",
+    "list": {
+      "no_collections": "No collections found."
+    }
   },
   "footer": {
     "menu_primary_aria": "Footer menu",
@@ -315,7 +323,16 @@
     "result_type_product": "Product",
     "results_for_html": "{{ count }} results for “{{ terms }}”",
     "submit": "Search",
-    "title": "Search"
+    "title": "Search",
+    "open_search": "Open search",
+    "close_search": "Close search",
+    "spotlight_hint": "Enter to search, Esc to close",
+    "view_all_results": "View all results for \"{{ terms }}\"",
+    "no_results": "No results found",
+    "group_products": "Products",
+    "group_collections": "Collections",
+    "group_articles": "Articles",
+    "group_pages": "Pages"
   },
   "hero_slider": {
     "carousel": "Carousel",

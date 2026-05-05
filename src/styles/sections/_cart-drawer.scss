@@ -3,7 +3,7 @@
   --cart-drawer-z: 1000;
   --cart-drawer-radius-sm: min(calc((var(--style-border-radius-inputs, 8px) + 1px) * 1), 11px);
   --cart-drawer-radius: min(calc((var(--style-border-radius-inputs, 8px) + 2px) * 1), 15px);
-  --cart-drawer-figure-radius: min(0.6875rem, var(--cart-drawer-radius));
+  --cart-drawer-figure-radius: min(0.6875rem, var(--style-border-radius-inputs));
   /* Inner vertical edge of the sheet (toward the viewport). */
   --cart-drawer-panel-radius: min(calc(var(--style-border-radius-inputs, 8px) + 6px), 22px);
   /* Hairlines only (no per-line “cards”) */
@@ -252,8 +252,8 @@
 
 .cart-drawer__item-price {
   font-size: 0.8125rem;
-  font-weight: 600;
   color: var(--cs-text);
+  font-weight: normal;
 }
 
 .cart-drawer__item-price--was {
@@ -269,7 +269,8 @@
   flex: 0 0 auto;
   width: auto;
   padding: 0;
-  border-radius: var(--pdp-figure-radius);
+  border-radius: var(--cart-drawer-radius-sm);
+  overflow: hidden;
 }
 
 /* Inline stepper: no box chrome; keeps visual weight on title + line price */
@@ -285,7 +286,8 @@
   padding: 0;
   background: transparent;
   border: none;
-  border-radius: 0;
+  border-radius: var(--cart-drawer-radius-sm);
+  overflow: hidden;
   box-shadow: none;
 }
 
@@ -305,7 +307,7 @@
   color: color-mix(in srgb, var(--cs-text) 72%, var(--cs-text-secondary) 28%);
   background: transparent;
   border: none;
-  border-radius: var(--cart-drawer-radius-sm);
+  // border-radius: var(--cart-drawer-radius-sm);
   cursor: pointer;
   opacity: 0.9;
   transition:
@@ -425,7 +427,7 @@
   justify-content: space-between;
   align-items: baseline;
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: normal;
   color: var(--cs-heading);
 }
 
@@ -440,7 +442,7 @@
   min-height: 2.75rem;
   font: inherit;
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: normal;
   color: var(--cs-btn-primary-text);
   background-color: var(--cs-btn-primary-bg);
   border: 1px solid var(--cs-btn-primary-border);
@@ -467,7 +469,7 @@
 .cart-drawer__continue {
   text-align: center;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: normal;
   color: var(--cs-text);
   text-decoration: underline;
   text-underline-offset: 0.2em;

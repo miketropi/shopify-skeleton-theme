@@ -7,6 +7,9 @@ declare global {
       cart_add_url: string
       cart_change_url: string
       cart_update_url: string
+      search_url: string
+      predictive_search_url: string
+      money_format: string
     }
     Shopify: {
       shop: string

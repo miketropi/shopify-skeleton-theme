@@ -1,7 +1,7 @@
 @forward 'header';
 @forward 'footer';
 @forward 'page-templates';
-@forward 'product-card';
+@forward 'tcard';
 @forward 'section-hero-slider';
 @forward 'section-feature-grid';
 @forward 'main-collection';
@@ -9,3 +9,6 @@
 @forward 'size-guide';
 @forward 'cart-drawer';
 @forward 'search';
+@forward 'search-modal';
+@forward 'list-collections';
+@forward 'main-cart';

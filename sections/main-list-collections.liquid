@@ -1,39 +1,101 @@
+{%- liquid
+  assign cols = section.settings.columns | default: 3
+  assign image_ratio = section.settings.image_ratio | default: '3/4'
+  assign show_count = section.settings.show_count
+  assign show_description = section.settings.show_description
+-%}
+
 <div
-  class="section-{{ section.id }} section-main-list-collections"
-  data-section-type="main-list-collections"
+  class="section-{{ section.id }} mclst"
+  data-section-type="list-collections"
   data-section-id="{{ section.id }}"
+  style="--mclst-cols: {{ cols }}; --tcard-coll-image-ratio: {{ image_ratio }};"
   {% render 'color-scheme-vars' %}
 >
-  <h1 class="main-list-collections__title">
-    {{- section.settings.title | default: 'Collections' | escape -}}
-  </h1>
+  <header class="mclst__header">
+    <h1 class="mclst__title">{{ 'collections.title' | t }}</h1>
+    {%- if section.settings.description != blank -%}
+      <p class="mclst__intro">{{ section.settings.description | escape }}</p>
+    {%- endif -%}
+  </header>
 
-  <ul class="main-list-collections__grid" role="list">
-    {%- for collection in collections -%}
-      <li class="main-list-collections__item">
-        <a href="{{ collection.url }}" class="main-list-collections__link">
-          {%- if collection.image -%}
-            {{
-              collection.image
-              | image_url: width: 600
-              | image_tag: loading: 'lazy', alt: collection.title, class: 'main-list-collections__image'
-            }}
-          {%- endif -%}
-          <span class="main-list-collections__name">{{- collection.title | escape -}}</span>
-        </a>
-      </li>
-    {%- endfor -%}
-  </ul>
+  {%- if collections.size > 0 -%}
+    <ul class="mclst__grid" role="list">
+      {%- for collection in collections -%}
+        {%- unless collection.empty? -%}
+          <li class="mclst__grid-item">
+            {%- render 'tcard-collection',
+              collection: collection,
+              show_count: show_count,
+              show_description: show_description
+            -%}
+          </li>
+        {%- endunless -%}
+      {%- endfor -%}
+    </ul>
+  {%- else -%}
+    <div class="mclst__empty">
+      <div class="mclst__empty-icon" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </div>
+      <p class="mclst__empty-text">{{ 'collections.list.no_collections' | t }}</p>
+    </div>
+  {%- endif -%}
 </div>
 
 {% schema %}
 {
-  "name": "All collections",
+  "name": "t:sections.list_collections.name",
   "tag": "section",
   "class": "section",
   "settings": [
-    { "type": "text", "id": "title", "label": "Heading", "default": "Collections" }
-  ],
-  "presets": [{ "name": "All collections" }]
+    {
+      "type": "header",
+      "content": "t:sections.list_collections.headers.layout"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "t:sections.list_collections.labels.description"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "t:sections.list_collections.labels.desktop_columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "image_ratio", 
+      "label": "t:sections.list_collections.labels.image_ratio",
+      "options": [
+        { "value": "1/1", "label": "t:sections.list_collections.options.image_ratio.square" },
+        { "value": "4/5", "label": "t:sections.list_collections.options.image_ratio.tall" },
+        { "value": "3/4", "label": "t:sections.list_collections.options.image_ratio.portrait" },
+        { "value": "2/3", "label": "t:sections.list_collections.options.image_ratio.classic" },
+        { "value": "4/3", "label": "t:sections.list_collections.options.image_ratio.landscape" }
+      ],
+      "default": "1/1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.list_collections.headers.card_options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "t:sections.list_collections.labels.show_count",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "t:sections.list_collections.labels.show_description",
+      "default": false
+    }
+  ]
 }
 {% endschema %}

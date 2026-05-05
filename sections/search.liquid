@@ -6,39 +6,45 @@
     assign per_page = 48
   endif
   assign scope = section.settings.search_scope | default: 'all'
+  assign cols = section.settings.columns | default: 3
+  assign image_ratio = section.settings.image_ratio | default: '3/4'
+  assign show_vendor = section.settings.show_vendor
+  assign show_secondary_image = section.settings.show_secondary_image
 -%}
 
 <div
-  class="section-{{ section.id }} section-search"
+  class="section-{{ section.id }} msrch"
   data-section-type="search"
   data-section-id="{{ section.id }}"
+  style="--msrch-cols: {{ cols }}; --tcard-image-ratio: {{ image_ratio }};"
   {% render 'color-scheme-vars' %}
 >
-  <div class="section-search__inner">
-    <header class="section-search__header">
-      <h1 class="section-search__title">{{ 'search.title' | t }}</h1>
-      {%- unless search.performed -%}
-        <p class="section-search__intro">{{ 'search.intro' | t }}</p>
-      {%- endunless -%}
-    </header>
+  <header class="msrch__header">
+    <h1 class="msrch__title">{{ 'search.title' | t }}</h1>
+    {%- unless search.performed -%}
+      <p class="msrch__intro">{{ 'search.intro' | t }}</p>
+    {%- endunless -%}
+  </header>
 
-    <form
-      class="section-search__form"
-      action="{{ routes.search_url }}"
-      method="get"
-      role="search"
-      accept-charset="UTF-8"
-    >
-      {%- if scope == 'product' -%}
-        <input type="hidden" name="type" value="product">
-      {%- endif -%}
-      <div class="section-search__fields">
-        <label class="section-search__label visually-hidden" for="SearchInput-{{ section.id }}">
-          {{- 'search.label' | t -}}
-        </label>
+  <form
+    class="msrch__form"
+    action="{{ routes.search_url }}"
+    method="get"
+    role="search"
+    accept-charset="UTF-8"
+  >
+    {%- if scope == 'product' -%}
+      <input type="hidden" name="type" value="product">
+    {%- endif -%}
+    <div class="msrch__fields">
+      <label class="visually-hidden" for="SearchInput-{{ section.id }}">
+        {{- 'search.label' | t -}}
+      </label>
+      <div class="msrch__input-wrap">
+        <svg class="msrch__input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input
           id="SearchInput-{{ section.id }}"
-          class="section-search__input"
+          class="msrch__input"
           type="search"
           name="q"
           value="{{ search.terms | escape }}"
@@ -48,81 +54,87 @@
           autocapitalize="off"
           spellcheck="false"
         >
-        <button type="submit" class="section-search__submit">
-          {{- 'search.submit' | t -}}
-        </button>
       </div>
-    </form>
+      <button type="submit" class="msrch__submit">
+        {{- 'search.submit' | t -}}
+      </button>
+    </div>
+  </form>
 
-    {%- if search.performed -%}
-      {%- if search.results_count == 0 -%}
-        <div class="section-search__empty" role="status">
-          <p class="section-search__empty-text">{{ 'search.no_results_html' | t: terms: search.terms }}</p>
-          <a class="section-search__link" href="{{ routes.all_products_collection_url }}">
-            {{- 'search.browse_products' | t -}}
-          </a>
+  {%- if search.performed -%}
+    {%- if search.results_count == 0 -%}
+      <div class="msrch__empty">
+        <div class="msrch__empty-icon" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         </div>
-      {%- else -%}
-        <p class="section-search__summary">
-          {{ 'search.results_for_html' | t: terms: search.terms, count: search.results_count }}
-        </p>
+        <p class="msrch__empty-text">{{ 'search.no_results_html' | t: terms: search.terms }}</p>
+        <a class="msrch__empty-link" href="{{ routes.all_products_collection_url }}">
+          {{- 'search.browse_products' | t -}}
+        </a>
+      </div>
+    {%- else -%}
+      <p class="msrch__summary">
+        {{ 'search.results_for_html' | t: terms: search.terms, count: search.results_count }}
+      </p>
 
-        {%- paginate search.results by per_page -%}
-          <ul class="section-search__grid" role="list">
-            {%- for result in search.results -%}
-              <li class="section-search__item">
-                {%- if result.object_type == 'product' -%}
-                  {%- render 'product-card', product: result -%}
+      {%- paginate search.results by per_page -%}
+        <ul class="msrch__grid" role="list">
+          {%- for result in search.results -%}
+            <li class="msrch__grid-item">
+              {%- if result.object_type == 'product' -%}
+                {%- render 'tcard-product',
+                  product: result,
+                  show_secondary_image: show_secondary_image,
+                  show_vendor: show_vendor,
+                  show_quick_add: false
+                -%}
+              {%- else -%}
+                {%- render 'tcard-content', result: result -%}
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="msrch__pag" aria-label="{{ 'general.pagination.label' | t }}">
+            {%- if paginate.previous -%}
+              <a class="msrch__pag-arrow" href="{{ paginate.previous.url }}" aria-label="Previous page">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </a>
+            {%- else -%}
+              <span class="msrch__pag-arrow msrch__pag-arrow--disabled" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </span>
+            {%- endif -%}
+
+            <ol class="msrch__pag-list">
+              {%- for part in paginate.parts -%}
+                {%- if part.is_link -%}
+                  <li><a class="msrch__pag-item" href="{{ part.url }}">{{ part.title }}</a></li>
                 {%- else -%}
-                  {%- liquid
-                    assign result_image = result.featured_image | default: result.image
-                    assign type_key = 'search.result_type_' | append: result.object_type
-                  -%}
-                  <a class="section-search__content-card" href="{{ result.url }}">
-                    <div class="section-search__content-media">
-                      {%- if result_image != blank -%}
-                        {{
-                          result_image
-                          | image_url: width: 600
-                          | image_tag:
-                            loading: 'lazy',
-                            class: 'section-search__content-img',
-                            sizes: '(min-width: 62em) 280px, (min-width: 36em) 40vw, 100vw',
-                            widths: '240, 360, 480, 600'
-                        }}
-                      {%- else -%}
-                        <span class="section-search__content-placeholder" aria-hidden="true"></span>
-                      {%- endif -%}
-                    </div>
-                    <div class="section-search__content-body">
-                      <span class="section-search__content-type">{{ type_key | t }}</span>
-                      <span class="section-search__content-title">{{ result.title | escape }}</span>
-                      {%- if result.object_type == 'article' -%}
-                        {%- liquid
-                          assign excerpt_source = result.excerpt | default: result.content
-                        -%}
-                        {%- if excerpt_source != blank -%}
-                          <span class="section-search__content-excerpt">
-                            {{- excerpt_source | strip_html | truncate: 120 -}}
-                          </span>
-                        {%- endif -%}
-                      {%- endif -%}
-                    </div>
-                  </a>
+                  {%- if part.title == paginate.current_page -%}
+                    <li><span class="msrch__pag-item msrch__pag-item--active" aria-current="page">{{ part.title }}</span></li>
+                  {%- else -%}
+                    <li><span class="msrch__pag-item msrch__pag-item--gap">{{ part.title }}</span></li>
+                  {%- endif -%}
                 {%- endif -%}
-              </li>
-            {%- endfor -%}
-          </ul>
+              {%- endfor -%}
+            </ol>
 
-          {%- if paginate.pages > 1 -%}
-            <nav class="section-search__pagination" aria-label="{{ 'general.pagination.label' | t }}">
-              {{- paginate | default_pagination -}}
-            </nav>
-          {%- endif -%}
-        {%- endpaginate -%}
-      {%- endif -%}
+            {%- if paginate.next -%}
+              <a class="msrch__pag-arrow" href="{{ paginate.next.url }}" aria-label="Next page">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </a>
+            {%- else -%}
+              <span class="msrch__pag-arrow msrch__pag-arrow--disabled" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </span>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- endpaginate -%}
     {%- endif -%}
-  </div>
+  {%- endif -%}
 </div>
 
 {% schema %}
@@ -131,6 +143,10 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.search.headers.results"
+    },
     {
       "type": "range",
       "id": "results_per_page",
@@ -150,6 +166,49 @@
       ],
       "default": "all",
       "info": "t:info.search_scope"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.search.headers.grid"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "t:sections.search.labels.desktop_columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "t:sections.search.labels.image_ratio",
+      "info": "t:sections.search.info.image_ratio",
+      "options": [
+        { "value": "1/1", "label": "t:sections.search.options.image_ratio.square" },
+        { "value": "4/5", "label": "t:sections.search.options.image_ratio.tall" },
+        { "value": "3/4", "label": "t:sections.search.options.image_ratio.portrait" },
+        { "value": "2/3", "label": "t:sections.search.options.image_ratio.classic" },
+        { "value": "4/3", "label": "t:sections.search.options.image_ratio.landscape" }
+      ],
+      "default": "3/4"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.search.headers.card_options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "t:sections.search.labels.show_vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "t:sections.search.labels.show_secondary_image",
+      "default": true
     }
   ]
 }
