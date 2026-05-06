@@ -183,14 +183,13 @@ $_radius-md: 12px;
 }
 
 .tcard__price--sale {
-  color: var(--cs-accent, #dc3545);
+  
 }
 
 .tcard__price--compare {
-  font-size: 0.8125rem;
   font-weight: 400;
-  color: var(--cs-text-secondary);
   text-decoration: line-through;
+  opacity: .5;
 }
 
 // ── Quick-add ──

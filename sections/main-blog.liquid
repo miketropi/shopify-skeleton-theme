@@ -1,23 +1,161 @@
+{%- liquid
+  assign per_page      = section.settings.articles_per_page | default: 12
+  assign show_hero     = section.settings.show_hero
+  assign hero_size     = section.settings.hero_size | default: 'small'
+  assign hero_image    = section.settings.hero_image
+  assign hero_video    = section.settings.hero_video
+  assign hero_parallax = section.settings.hero_parallax
+  assign show_tags     = section.settings.show_tags
+  assign layout        = section.settings.layout | default: 'grid'
+  assign show_image    = section.settings.show_image
+  assign show_excerpt  = section.settings.show_excerpt
+  assign show_date     = section.settings.show_date
+  assign show_author   = section.settings.show_author
+  assign columns       = section.settings.columns | default: 3
+  assign gap_size      = section.settings.gap | default: 'medium'
+  assign animate       = section.settings.animate
+  assign current_tag   = current_tags | first
+
+  assign has_hero_media = false
+  if hero_video != blank
+    assign has_hero_media = true
+  elsif hero_image
+    assign has_hero_media = true
+  endif
+-%}
+
 <div
-  class="section-{{ section.id }} section-main-blog"
+  class="mblog"
   data-section-type="main-blog"
   data-section-id="{{ section.id }}"
+  {% if animate %}data-mblog-animate{% endif %}
   {% render 'color-scheme-vars' %}
 >
-  <h1 class="main-blog__title">{{- blog.title | escape -}}</h1>
+  {%- if show_hero -%}
+    <header class="mblog__hero mblog__hero--{{ hero_size }}{% if has_hero_media %} mblog__hero--has-media{% endif %}{% if hero_parallax and has_hero_media %} mblog__hero--parallax{% endif %}" {% if hero_parallax and has_hero_media %}data-mblog-parallax{% endif %}>
+      {%- if hero_video != blank -%}
+        {{
+          hero_video
+          | video_tag:
+              autoplay: true,
+              loop: true,
+              muted: true,
+              playsinline: true,
+              class: 'mblog__hero-media',
+              image_size: '1600x'
+        }}
+        <div class="mblog__hero-overlay"></div>
+      {%- elsif hero_image -%}
+        {{
+          hero_image
+          | image_url: width: 1600
+          | image_tag:
+              loading: 'eager',
+              class: 'mblog__hero-media',
+              sizes: '100vw',
+              widths: '600, 900, 1200, 1600'
+        }}
+        <div class="mblog__hero-overlay"></div>
+      {%- endif -%}
+      <div class="mblog__hero-inner">
+        <h1 class="mblog__heading">{{ blog.title | escape }}</h1>
+        {%- if blog.articles_count > 0 -%}
+          <p class="mblog__count">
+            {{ 'blog.articles_count' | t: count: blog.articles_count }}
+          </p>
+        {%- endif -%}
+      </div>
+    </header>
+  {%- else -%}
+    <header class="mblog__header">
+      <h1 class="mblog__heading">{{ blog.title | escape }}</h1>
+    </header>
+  {%- endif -%}
 
-  {%- paginate blog.articles by section.settings.articles_per_page -%}
-    <ul class="main-blog__grid" role="list">
-      {%- for article in blog.articles -%}
-        <li class="main-blog__item">
-          {%- render 'article-card', article: article, show_excerpt: section.settings.show_excerpt -%}
-        </li>
+  {%- if show_tags and blog.all_tags.size > 0 -%}
+    {%- assign tags_limit = 7 -%}
+    {%- assign overflow_count = blog.all_tags.size | minus: tags_limit -%}
+    <nav class="mblog__tags{% if overflow_count > 0 %} mblog__tags--has-overflow{% endif %}" aria-label="{{ 'blog.tags_label' | t }}" data-mblog-tags>
+      <a
+        href="{{ blog.url }}"
+        class="mblog__tag{% unless current_tag %} mblog__tag--active{% endunless %}"
+      >
+        {{ 'blog.all_posts' | t }}
+      </a>
+      {%- for tag in blog.all_tags -%}
+        {%- if current_tags contains tag -%}
+          <a href="{{ blog.url }}" class="mblog__tag mblog__tag--active" {% if forloop.index > tags_limit %}data-mblog-tag-overflow{% endif %}>{{ tag }}</a>
+        {%- else -%}
+          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="mblog__tag" {% if forloop.index > tags_limit %}data-mblog-tag-overflow{% endif %}>{{ tag }}</a>
+        {%- endif -%}
       {%- endfor -%}
-    </ul>
+      {%- if overflow_count > 0 -%}
+        <button type="button" class="mblog__tags-toggle" data-mblog-tags-toggle aria-expanded="false">
+          <span data-mblog-tags-more>+{{ overflow_count }} {{ 'blog.more_tags' | t }}</span>
+          <span data-mblog-tags-less hidden>{{ 'blog.less_tags' | t }}</span>
+        </button>
+      {%- endif -%}
+    </nav>
+  {%- endif -%}
+
+  {%- paginate blog.articles by per_page -%}
+    {%- if blog.articles.size > 0 -%}
+      <ul class="mblog__grid mblog__grid--{{ layout }} mblog__grid--cols-{{ columns }} mblog__grid--gap-{{ gap_size }}" role="list">
+        {%- for article in blog.articles -%}
+          <li class="mblog__item">
+            {%- render 'article-card',
+              article: article,
+              layout: layout,
+              show_image: show_image,
+              show_excerpt: show_excerpt,
+              show_date: show_date,
+              show_author: show_author,
+              is_latest: forloop.first
+            -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <p class="mblog__empty">{{ 'blog.no_articles' | t }}</p>
+    {%- endif -%}
 
     {%- if paginate.pages > 1 -%}
-      <nav class="main-blog__pagination" aria-label="{{ 'general.pagination.label' | t }}">
-        {{- paginate | default_pagination -}}
+      <nav class="mblog__pagination" aria-label="{{ 'general.pagination.label' | t }}">
+        {%- if paginate.previous -%}
+          <a href="{{ paginate.previous.url }}" class="mblog__page mblog__page--prev">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            {{ 'blog.prev' | t }}
+          </a>
+        {%- else -%}
+          <span class="mblog__page mblog__page--prev is-disabled" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            {{ 'blog.prev' | t }}
+          </span>
+        {%- endif -%}
+
+        {%- for part in paginate.parts -%}
+          {%- if part.is_link -%}
+            <a href="{{ part.url }}" class="mblog__page">{{ part.title }}</a>
+          {%- else -%}
+            {%- if part.title == '&hellip;' -%}
+              <span class="mblog__page mblog__page--ellipsis" aria-hidden="true">…</span>
+            {%- else -%}
+              <span class="mblog__page is-current" aria-current="page">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- if paginate.next -%}
+          <a href="{{ paginate.next.url }}" class="mblog__page mblog__page--next">
+            {{ 'blog.next' | t }}
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+        {%- else -%}
+          <span class="mblog__page mblog__page--next is-disabled" aria-hidden="true">
+            {{ 'blog.next' | t }}
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </span>
+        {%- endif -%}
       </nav>
     {%- endif -%}
   {%- endpaginate -%}
@@ -25,26 +163,135 @@
 
 {% schema %}
 {
-  "name": "Blog",
+  "name": "t:sections.blog.name",
   "tag": "section",
-  "class": "section",
+  "class": "section-main-blog",
   "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.blog.header_layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hero",
+      "label": "t:sections.blog.show_hero",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "hero_size",
+      "label": "t:sections.blog.hero_size",
+      "default": "small",
+      "options": [
+        { "value": "small",  "label": "t:sections.blog.hero_small" },
+        { "value": "medium", "label": "t:sections.blog.hero_medium" },
+        { "value": "large",  "label": "t:sections.blog.hero_large" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "t:sections.blog.hero_image"
+    },
+    {
+      "type": "video",
+      "id": "hero_video",
+      "label": "t:sections.blog.hero_video",
+      "info": "t:sections.blog.hero_video_info"
+    },
+    {
+      "type": "checkbox",
+      "id": "hero_parallax",
+      "label": "t:sections.blog.hero_parallax",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "t:sections.blog.show_tags",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.blog.layout",
+      "default": "grid",
+      "options": [
+        { "value": "grid", "label": "t:sections.blog.layout_grid" },
+        { "value": "list", "label": "t:sections.blog.layout_list" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "t:sections.blog.columns",
+      "default": "3",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "gap",
+      "label": "t:sections.blog.gap",
+      "default": "medium",
+      "options": [
+        { "value": "small",  "label": "t:sections.blog.gap_small" },
+        { "value": "medium", "label": "t:sections.blog.gap_medium" },
+        { "value": "large",  "label": "t:sections.blog.gap_large" }
+      ]
+    },
     {
       "type": "range",
       "id": "articles_per_page",
-      "label": "Articles per page",
+      "label": "t:sections.blog.articles_per_page",
       "min": 4,
       "max": 24,
       "step": 2,
       "default": 12
     },
     {
+      "type": "header",
+      "content": "t:sections.blog.header_card"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "t:sections.blog.show_image",
+      "default": true
+    },
+    {
       "type": "checkbox",
       "id": "show_excerpt",
-      "label": "Show article excerpt",
+      "label": "t:sections.blog.show_excerpt",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "t:sections.blog.show_date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "t:sections.blog.show_author",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.blog.header_animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "animate",
+      "label": "t:sections.blog.animate",
+      "info": "t:sections.blog.animate_info",
       "default": true
     }
   ],
-  "presets": [{ "name": "Blog" }]
+  "presets": [{ "name": "t:sections.blog.name" }]
 }
 {% endschema %}

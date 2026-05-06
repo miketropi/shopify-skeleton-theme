@@ -11,12 +11,23 @@
   "type": "header",
   "name": "t:general.header",
   "sections": {
+    "top-bar": {
+      "type": "header-top-bar",
+      "blocks": {
+        "announcement": {
+          "type": "announcement"
+        }
+      },
+      "block_order": ["announcement"],
+      "settings": {}
+    },
     "header": {
       "type": "header",
       "settings": {}
     }
   },
   "order": [
+    "top-bar",
     "header"
-  ],
+  ]
 }

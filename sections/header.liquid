@@ -58,6 +58,13 @@
     </button>
 
     {%- case desktop_header_layout -%}
+      {%- when 'logo_nav_center_actions' -%}
+        <div class="header__heading">
+          {% render 'header-logo', section: section %}
+        </div>
+        {% render 'header-site-nav', section: section %}
+        {% render 'header-icons', section: section %}
+
       {%- when 'nav_logo_center_actions' -%}
         {% render 'header-site-nav', section: section %}
         <div class="header__heading">
@@ -178,6 +185,7 @@
       "default": "logo_nav_actions",
       "options": [
         { "value": "logo_nav_actions", "label": "t:options.desktop_header_layout.logo_nav_actions" },
+        { "value": "logo_nav_center_actions", "label": "t:options.desktop_header_layout.logo_nav_center_actions" },
         { "value": "nav_logo_center_actions", "label": "t:options.desktop_header_layout.nav_logo_center_actions" },
         { "value": "two_row", "label": "t:options.desktop_header_layout.two_row" }
       ]

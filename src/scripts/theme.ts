@@ -25,6 +25,9 @@ import { registerSectionHeroSlider } from './sections/section-hero-slider'
 import { registerCollectionGridSection } from './collection-grid'
 import './size-guide'
 import { initSearchModal } from './search-modal'
+import { registerHeaderTopBarSection } from './header-top-bar'
+import { registerMainBlogSection } from './main-blog'
+import { registerMainArticleSection } from './main-article'
 
 export type { ThemeModalOptions } from './theme-modal'
 export { ThemeModal, THEME_MODAL_COMPACT_MQ } from './theme-modal'
@@ -38,6 +41,9 @@ registerProductTabsSection()
 registerHeaderSection() 
 registerSectionHeroSlider()
 registerCollectionGridSection()
+registerHeaderTopBarSection()
+registerMainBlogSection()
+registerMainArticleSection()
 
 bootSections()
 initSearchModal()

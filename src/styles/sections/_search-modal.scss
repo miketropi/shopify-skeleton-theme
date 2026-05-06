@@ -373,19 +373,18 @@ $_radius-lg: 16px;
 .search-modal__item-price {
   flex-shrink: 0;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: normal;
   color: var(--cs-heading, #000);
   white-space: nowrap;
 
   &--sale {
-    color: var(--cs-accent, #dc3545);
+    
   }
 
   &--compare {
-    font-size: 0.75rem;
     font-weight: 400;
-    color: var(--cs-text-secondary, #888);
     text-decoration: line-through;
+    opacity: .5;
   }
 
   &--soldout {

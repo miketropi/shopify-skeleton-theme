@@ -1,4 +1,5 @@
 @forward 'header';
+@forward 'header-top-bar';
 @forward 'footer';
 @forward 'page-templates';
 @forward 'tcard';
@@ -12,3 +13,5 @@
 @forward 'search-modal';
 @forward 'list-collections';
 @forward 'main-cart';
+@forward 'main-blog';
+@forward 'main-article';

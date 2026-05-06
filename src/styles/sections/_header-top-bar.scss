@@ -1,0 +1,497 @@
+@use '../base/variables' as *;
+@use '../base/breakpoints' as *;
+
+// ═══════════════════════════════════════════════════════════
+//  HEADER TOP BAR  —  iOS-inspired
+// ═══════════════════════════════════════════════════════════
+
+$_spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+$_ease:   cubic-bezier(0.25, 0.1, 0.25, 1);
+$_r-group: 10px;
+$_r-card:  16px;
+
+.section-header-top-bar { display: block; }
+
+// ── Strip ───────────────────────────────────────────────
+
+.htbar {
+  --htbar-bg:      var(--cs-background);
+  --htbar-text:    var(--cs-text);
+  --htbar-heading: var(--cs-heading);
+  --htbar-accent:  var(--cs-accent);
+  --_sep:          color-mix(in srgb, var(--htbar-text) 10%, var(--htbar-bg));
+  --_tint:         color-mix(in srgb, var(--htbar-text) 4%, var(--htbar-bg));
+
+  display: grid;
+  grid-template-columns: var(--content-grid);
+  background: var(--htbar-bg);
+  color: var(--htbar-text);
+  border-bottom: 0.5px solid var(--_sep);
+  font-size: 12px;
+  line-height: 1.38;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+
+  @include mq-up('md') {
+    font-size: 13px;
+  }
+}
+
+.htbar--hide-mobile {
+  display: none;
+  @include mq-up('md') { display: grid; }
+}
+
+// ── Row ─────────────────────────────────────────────────
+
+.htbar__row {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: var(--htbar-align, center);
+  gap: 0 8px;
+  padding-block: 5px;
+  overflow: hidden;
+  min-width: 0;
+
+  @include mq-up('md') {
+    gap: 4px 14px;
+    padding-block: 6px;
+    overflow: visible;
+  }
+}
+
+// ── Messages ────────────────────────────────────────────
+
+.htbar__msg {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex-shrink: 1;
+
+  @include mq-up('md') {
+    flex-shrink: 0;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  a {
+    color: var(--htbar-accent);
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
+// ── Separator ───────────────────────────────────────────
+
+.htbar__sep {
+  display: none;
+  @include mq-up('md') {
+    display: block;
+    width: 3px;
+    height: 3px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--htbar-text) 20%, var(--htbar-bg));
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ROTATING TEXT
+// ═══════════════════════════════════════════════════════════
+
+.htbar__rotator {
+  position: relative;
+  display: grid;
+  align-items: center;
+  justify-items: var(--rt-align, center);
+  white-space: nowrap;
+  max-width: var(--rt-max-w, 100%);
+}
+
+.htbar__rotator-item {
+  grid-area: 1 / 1;
+  text-align: var(--rt-align, center);
+  will-change: transform, opacity, filter;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &[aria-hidden='true'] {
+    pointer-events: none;
+  }
+
+  &.is-truncated {
+    cursor: pointer;
+  }
+}
+
+.htbar__rt-modal .theme-modal__panel {
+  --theme-modal-panel-w: min(100%, 32rem);
+}
+
+.htbar__rt-modal .theme-modal__body {
+  white-space: normal;
+  word-break: break-word;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  STORE INFO
+// ═══════════════════════════════════════════════════════════
+
+.htbar__info {
+  position: relative;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// ── Trigger ─────────────────────────────────────────────
+
+.htbar__info-trigger {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font: inherit;
+  font-weight: 500;
+  color: var(--htbar-trigger-color, var(--htbar-accent));
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 28px;
+
+  &:focus-visible {
+    outline: 2px solid var(--htbar-trigger-color, var(--htbar-accent));
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+.htbar__caret {
+  opacity: 0.6;
+  transition: transform 0.35s $_spring;
+
+  .htbar__info.is-open &,
+  .htbar__info:focus-within & {
+    transform: scaleY(-1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .htbar__info:hover & {
+      transform: scaleY(-1);
+    }
+  }
+}
+
+// ── Overlay (mobile backdrop) ───────────────────────────
+
+.htbar__overlay {
+  display: none;
+
+  @media (max-width: 35.99em) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 399;
+    background: color-mix(in srgb, var(--htbar-text, #000) 36%, transparent);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+
+    @supports (backdrop-filter: blur(8px)) {
+      background: color-mix(in srgb, var(--htbar-text, #000) 22%, transparent);
+      backdrop-filter: blur(10px) saturate(1.1);
+      -webkit-backdrop-filter: blur(10px) saturate(1.1);
+    }
+  }
+}
+
+// ── Dropdown ─────────────────────────────────────────────
+
+.htbar__dropdown {
+  position: absolute;
+  top: 100%;
+  z-index: 400;
+  padding-top: 8px;
+  pointer-events: none;
+
+  @media (max-width: 35.99em) {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding-top: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    transform: none;
+  }
+
+  @media (min-width: 36em) and (max-width: 47.99em) {
+    max-width: calc(100vw - 2rem);
+
+    &.htbar__dropdown--left {
+      left: auto;
+      right: auto;
+    }
+
+    &.htbar__dropdown--right {
+      left: auto;
+      right: auto;
+    }
+  }
+}
+
+.htbar__dropdown--center {
+  left: 50%;
+  transform: translateX(-50%);
+
+  @media (max-width: 35.99em) {
+    left: 0;
+    transform: none;
+  }
+}
+
+.htbar__dropdown--left {
+  left: 0;
+}
+
+.htbar__dropdown--right {
+  right: 0;
+}
+
+.htbar__info.is-open .htbar__dropdown {
+  pointer-events: auto;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .htbar__info:hover .htbar__dropdown {
+    pointer-events: auto;
+  }
+}
+
+// ── Card ─────────────────────────────────────────────────
+
+.htbar__card {
+  width: 288px;
+  padding: 6px;
+  background: var(--htbar-bg);
+  border: 0.5px solid var(--_sep);
+  border-radius: $_r-card;
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--htbar-text) 12%, var(--htbar-bg));
+
+  opacity: 0;
+  transform: translateY(6px) scale(0.92);
+  transform-origin: top center;
+  transition:
+    opacity 0.2s $_ease,
+    transform 0.35s $_spring;
+
+  .htbar__info.is-open & {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .htbar__info:hover & {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (max-width: 35.99em) {
+    width: 100%;
+    border-radius: $_r-card $_r-card 0 0;
+    opacity: 1;
+    transform: translateY(100%);
+    transform-origin: bottom center;
+    transition: none;
+  }
+}
+
+// ── Section spacing ─────────────────────────────────────
+
+.htbar__card-section {
+  & + & { margin-top: 6px; }
+}
+
+// ── Social icons ────────────────────────────────────────
+
+.htbar__socials {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 14px 8px 8px;
+
+  a {
+    display: flex;
+    color: var(--htbar-heading);
+    text-decoration: none;
+    transition: opacity 0.15s $_ease;
+
+    &:hover  { opacity: 0.5; }
+    &:active { opacity: 0.3; }
+
+    &:focus-visible {
+      outline: 2px solid var(--htbar-accent);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    svg { width: 18px; height: 18px; display: block; }
+  }
+}
+
+// ── Description ─────────────────────────────────────────
+
+.htbar__desc {
+  margin: 0;
+  text-align: center;
+  padding: 4px 12px 8px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.38;
+  color: color-mix(in srgb, var(--htbar-text) 55%, var(--htbar-bg));
+}
+
+// ── Grouped cells (iOS Settings style) ──────────────────
+
+.htbar__group {
+  background: var(--_tint);
+  border-radius: $_r-group;
+  overflow: hidden;
+}
+
+.htbar__cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 14px;
+  font-size: 14px;
+  color: var(--htbar-text);
+  text-decoration: none;
+  transition: background 0.08s $_ease;
+
+  &:active {
+    background: color-mix(in srgb, var(--htbar-text) 6%, var(--htbar-bg));
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      background: color-mix(in srgb, var(--htbar-text) 6%, var(--htbar-bg));
+    }
+  }
+
+  & + & {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 42px;
+      right: 0;
+      border-top: 0.5px solid var(--_sep);
+    }
+  }
+}
+
+.htbar__cell-icon {
+  flex-shrink: 0;
+  color: var(--htbar-icon-color, var(--htbar-accent));
+  opacity: 0.85;
+}
+
+.htbar__cell-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.htbar__cell-chevron {
+  flex-shrink: 0;
+  opacity: 0.25;
+}
+
+// ── Subscribe ───────────────────────────────────────────
+
+.htbar__subscribe {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.htbar__subscribe-title {
+  margin: 0;
+  text-align: center;
+  padding: 4px 12px 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.38;
+  color: var(--htbar-heading);
+}
+
+.htbar__subscribe-row {
+  display: flex;
+  background: var(--_tint);
+  border-radius: $_r-group;
+  overflow: hidden;
+}
+
+.htbar__subscribe-input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--htbar-text);
+  background: transparent;
+  border: none;
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--htbar-text) 32%, var(--htbar-bg));
+  }
+
+  &:focus { outline: none; }
+}
+
+.htbar__subscribe-btn {
+  flex-shrink: 0;
+  height: 44px;
+  padding: 0 16px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--htbar-btn-color, var(--htbar-accent));
+  background: transparent;
+  border: none;
+  border-left: 0.5px solid var(--_sep);
+  cursor: pointer;
+  transition: opacity 0.1s $_ease;
+
+  &:hover  { opacity: 0.7; }
+  &:active { opacity: 0.5; }
+
+  &:focus-visible {
+    outline: 2px solid var(--htbar-btn-color, var(--htbar-accent));
+    outline-offset: -2px;
+    border-radius: 4px;
+  }
+}
+
+// ─── Reduced motion ─────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  .htbar__card,
+  .htbar__caret,
+  .htbar__cell,
+  .htbar__overlay,
+  .htbar__subscribe-btn,
+  .htbar__socials a,
+  .htbar__msg a {
+    transition: none;
+  }
+}

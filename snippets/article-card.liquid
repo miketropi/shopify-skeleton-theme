@@ -1,13 +1,99 @@
 {%- comment -%}
-  @param {object} article - Article object
-  @param {boolean} [show_excerpt] - Show excerpt text
+  Article card — blog listing, search results.
+
+  @param {object}  article        - Article object
+  @param {string}  [layout]       - 'grid' (default) or 'list'
+  @param {boolean} [show_image]   - Show featured image (default true)
+  @param {boolean} [show_excerpt] - Show excerpt text (default true)
+  @param {boolean} [show_date]    - Show publish date (default true)
+  @param {boolean} [show_author]  - Show author name (default true)
+  @param {boolean} [is_latest]    - Show "Latest" badge (default false)
 {%- endcomment -%}
 
-<article class="article-card">
-  <a href="{{ article.url }}" class="article-card__link">
-    <h2 class="article-card__title">{{- article.title | escape -}}</h2>
-  </a>
-  {%- if show_excerpt and article.excerpt_or_content != blank -%}
-    <p class="article-card__excerpt">{{- article.excerpt_or_content | strip_html | truncatewords: 30 -}}</p>
+{%- liquid
+  if show_image == null
+    assign show_image = true
+  endif
+  if show_excerpt == null
+    assign show_excerpt = true
+  endif
+  if show_date == null
+    assign show_date = true
+  endif
+  if show_author == null
+    assign show_author = true
+  endif
+  if is_latest == null
+    assign is_latest = false
+  endif
+  if layout == null
+    assign layout = 'grid'
+  endif
+-%}
+
+<article class="acard{% if layout == 'list' %} acard--list{% endif %}">
+  {%- if show_image -%}
+    <a href="{{ article.url }}" class="acard__media" aria-hidden="true" tabindex="-1">
+      {%- if is_latest -%}
+        <span class="acard__badge">{{ 'blog.latest' | t }}</span>
+      {%- endif -%}
+      {%- if article.image -%}
+        {{
+          article.image
+          | image_url: width: 1200
+          | image_tag:
+              loading: 'lazy',
+              class: 'acard__img',
+              sizes: '(min-width: 75em) 380px, (min-width: 48em) 33vw, 100vw',
+              widths: '300, 450, 600, 900, 1200'
+        }}
+      {%- else -%}
+        <span class="acard__placeholder" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/>
+          </svg>
+        </span>
+      {%- endif -%}
+    </a>
   {%- endif -%}
+
+  <div class="acard__body">
+    {%- if article.tags.size > 0 -%}
+      <div class="acard__tags">
+        {%- for tag in article.tags limit: 2 -%}
+          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="acard__tag">{{ tag }}</a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <h2 class="acard__title">
+      <a href="{{ article.url }}">{{ article.title | escape }}</a>
+    </h2>
+
+    {%- if show_excerpt and article.excerpt_or_content != blank -%}
+      <p class="acard__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 24 }}</p>
+    {%- endif -%}
+
+    <footer class="acard__footer">
+      <div class="acard__meta">
+        {%- if show_date -%}
+          <span class="acard__meta-item">
+            <svg class="acard__meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+              {{ article.published_at | date: '%b %d, %Y' }}
+            </time>
+          </span>
+        {%- endif -%}
+        {%- if show_author and article.author != blank -%}
+          <span class="acard__meta-item">
+            <svg class="acard__meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+            {{ article.author }}
+          </span>
+        {%- endif -%}
+      </div>
+      <a href="{{ article.url }}" class="acard__read" aria-label="{{ article.title | escape }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </footer>
+  </div>
 </article>

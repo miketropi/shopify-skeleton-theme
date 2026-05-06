@@ -4,9 +4,34 @@
     "not_found": "Page not found.",
     "back_to_shopping": "Back to shopping"
   },
+  "article": {
+    "breadcrumb": "Breadcrumb",
+    "read_time": "{{ minutes }} min read",
+    "share": "Share",
+    "share_x": "Share on X",
+    "share_facebook": "Share on Facebook",
+    "share_email": "Share via email",
+    "copy_link": "Copy link",
+    "link_copied": "Link copied",
+    "nav_label": "Article navigation",
+    "prev_post": "Previous",
+    "next_post": "Next"
+  },
   "blog": {
     "article_comments": "Comments",
     "article_metadata_html": "{{ date }} by {{ author }}",
+    "articles_count": {
+      "one": "{{ count }} article",
+      "other": "{{ count }} articles"
+    },
+    "all_posts": "All",
+    "latest": "Latest",
+    "more_tags": "more",
+    "less_tags": "Show less",
+    "prev": "Prev",
+    "next": "Next",
+    "tags_label": "Filter by topic",
+    "no_articles": "No articles found.",
     "comment_form_body": "Comment",
     "comment_form_email": "Email",
     "comment_form_name": "Name",
@@ -194,6 +219,7 @@
     }
   },
   "general": {
+    "close": "Close",
     "modal": {
       "hints_intro": "Tips",
     "hints_aria": "Escape closes this dialog. Tab moves focus between controls. Click the dimmed background to close.",
@@ -347,5 +373,11 @@
     "goto": "Go to slide {{ n }}",
     "add_slides": "Add slide blocks",
     "placeholder_heading": "Hero slider"
+  },
+  "sections": {
+    "header_top_bar": {
+      "rt_read_more": "Read more",
+      "rt_modal_title": "Message"
+    }
   }
 }
