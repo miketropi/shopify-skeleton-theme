@@ -88,6 +88,6 @@ gsap.to(el, { opacity: 1, duration: DURATION, ease: EASE })
 
 ## Build output
 
-- `assets/theme.js` (IIFE format, no code splitting)
+- `assets/theme.js` (ES module entry; lazy chunks `theme-*.js` for heavy sections / Swiper / highlight.js)
 - `assets/theme.css` (from SCSS imports)
 - Verify with `npm run build`

@@ -1,6 +1,6 @@
 {%- comment -%}
-  Product (PDP) — block-based layout: breadcrumbs, gallery, title/price, variant picker, buy buttons, meta, lede, app blocks.
-  Product description / specs / accordions live in the separate **Product tabs** section.
+  Product (PDP) — block-based layout: breadcrumbs, gallery, title/price, variant picker, buy buttons, meta, lede, optional accordion blocks, app blocks.
+  Product description / specs / tab accordions live in the separate **Product tabs** section.
 {%- endcomment -%}
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
@@ -175,6 +175,8 @@
                       {{- lede | escape -}}
                     </p>
                   {%- endif -%}
+                {%- when 'pdp_accordion' -%}
+                  {%- render 'pdp-product-accordion', block: block -%}
               {%- endcase -%}
             {%- endif -%}
           {%- endunless -%}
@@ -206,7 +208,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "t:sections.main_product.layout_info"
+      "content": "t:sections.main_product.layout_info_v2"
     },
     {
       "type": "checkbox",
@@ -311,6 +313,29 @@
       "name": "t:sections.main_product.block_lede",
       "limit": 1,
       "settings": []
+    },
+    {
+      "type": "pdp_accordion",
+      "name": "t:sections.main_product.block_pdp_accordion",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "t:sections.main_product.pdp_accordion_icon",
+          "info": "t:sections.main_product.pdp_accordion_icon_info"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "t:sections.main_product.pdp_accordion_label",
+          "default": "Details"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "t:sections.main_product.pdp_accordion_content"
+        }
+      ]
     },
     {
       "type": "@app"

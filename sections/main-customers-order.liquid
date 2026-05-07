@@ -44,26 +44,26 @@
             {%- endif -%}
           </td>
           <td>{{- line_item.sku | escape -}}</td>
-          <td>{{- line_item.final_price | money -}}</td>
+          <td>{%- render 'price-display', price: line_item.final_price, variant: 'table' -%}</td>
           <td>{{- line_item.quantity -}}</td>
-          <td>{{- line_item.final_line_price | money -}}</td>
+          <td>{%- render 'price-display', price: line_item.final_line_price, variant: 'table' -%}</td>
         </tr>
       {%- endfor -%}
     </tbody>
   </table>
 
   <div class="customers-order__summary">
-    <p>{{- 'customer.order.subtotal' | t -}}: {{- order.subtotal_price | money -}}</p>
+    <p>{{- 'customer.order.subtotal' | t -}}: {% render 'price-display', price: order.subtotal_price, variant: 'account' %}</p>
     {%- for discount in order.cart_level_discount_applications -%}
-      <p>{{- discount.title | escape -}}: -{{- discount.total_allocated_amount | money -}}</p>
+      <p>{{- discount.title | escape -}}: -&nbsp;{% render 'price-display', price: discount.total_allocated_amount, variant: 'account' %}</p>
     {%- endfor -%}
     {%- for shipping_method in order.shipping_methods -%}
-      <p>{{- shipping_method.title | escape -}}: {{- shipping_method.price | money -}}</p>
+      <p>{{- shipping_method.title | escape -}}: {% render 'price-display', price: shipping_method.price, variant: 'account' %}</p>
     {%- endfor -%}
     {%- for tax_line in order.tax_lines -%}
-      <p>{{- tax_line.title | escape -}} ({{ tax_line.rate | times: 100 }}%): {{- tax_line.price | money -}}</p>
+      <p>{{- tax_line.title | escape -}} ({{ tax_line.rate | times: 100 }}%): {% render 'price-display', price: tax_line.price, variant: 'account' %}</p>
     {%- endfor -%}
-    <p><strong>{{- 'customer.order.total' | t -}}: {{- order.total_price | money_with_currency -}}</strong></p>
+    <p><strong>{{- 'customer.order.total' | t -}}: {% render 'price-display', price: order.total_price, variant: 'account', with_currency: true %}</strong></p>
   </div>
 </div>
 

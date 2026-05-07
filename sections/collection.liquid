@@ -143,10 +143,10 @@
 
                   <div class="cg-card__price-row">
                     {%- if on_sale -%}
-                      <s class="cg-card__price cg-card__price--was">{{ product.compare_at_price | money }}</s>
+                      <s class="cg-card__price cg-card__price--was">{%- render 'price-display', price: product.compare_at_price, variant: 'card' -%}</s>
                     {%- endif -%}
                     <span class="cg-card__price cg-card__price--now{% if on_sale %} cg-card__price--sale{% endif %}">
-                      {{ product.price | money }}
+                      {%- render 'price-display', price: product.price, variant: 'card' -%}
                     </span>
                   </div>
                 </div>

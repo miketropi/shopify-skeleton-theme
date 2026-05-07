@@ -28,7 +28,7 @@ docs/              # Internal development docs
 
 ## Build system
 
-- **Vite** (`vite.config.ts`): single entry `src/scripts/theme.ts` → `assets/theme.js` (IIFE)
+- **Vite** (`vite.config.ts`): entry `src/scripts/theme.ts` → `assets/theme.js` (ES module + code-split chunks in `assets/`, see `chunkFileNames`). One bundled `theme.css` (`cssCodeSplit: false`).
 - SCSS compiled through Vite; `loadPaths: ['src/styles']` enables bare `@use` imports
 - `emptyOutDir: false` — Vite writes to `assets/` without deleting other files
 - `npm run dev` = `concurrently "shopify theme dev" "vite build --watch"`

@@ -104,7 +104,7 @@
     "colors_custom": "These colours apply site-wide. The preset scheme editor further down is ignored while Custom is selected.",
     "typography_intro": "Curated mode loads Google Fonts (preconnect + display=swap) into --cs-font-heading, --cs-font-body, and --cs-font-mono. Custom mode uses Shopify’s font_picker and @font-face (Shop fonts and Google in the library). Global colours are under Colors, not here.",
     "typography_custom": "Heading, body, and code use these fonts. They map to --cs-font-heading, --cs-font-body, and --cs-font-mono.",
-    "typography_preset_research": "Three curated pairings: Neutral (versatile sans), Vision (Fraunces + Manrope: editorial serif + modern sans; Fira Code for mono), Technology (monospace headings + Inter body). To add or change a slug, update config/settings_schema.json, snippets/font-pairing-link.liquid, font-pairing-loader.liquid, snippets/css-variables.liquid, and src/styles/base/_fonts.scss. Keep href on fonts.googleapis.com.",
+    "typography_preset_research": "Presets: Arial (system stack, no Google Fonts), Neutral (versatile sans), Vision (Fraunces + Manrope; Fira Code mono), Technology (mono-led + Inter). To add or change a slug, update config/settings_schema.json, snippets/font-pairing-link.liquid, font-pairing-loader.liquid, snippets/css-variables.liquid, and src/styles/base/_fonts.scss. Non-Arial hrefs stay on fonts.googleapis.com.",
     "search_scope": "Product-only search uses Shopify’s type=product parameter. Articles and pages are excluded.",
     "header_menu_nested": "Add nested links in Online Store → Navigation (up to two levels under a top-level item). On large screens they appear as dropdowns and flyouts; in the mobile drawer they expand in place.",
     "sticky_header": "Controls whether the header stays visible when scrolling.",
@@ -163,6 +163,7 @@
       "scroll_up": "Visible when scrolling up"
     },
     "font_pairing": {
+      "arial": "Arial — system sans (heading + body; no web fonts)",
       "neutral": "Neutral — Plus Jakarta Sans + DM Sans (global)",
       "vision": "Vision — Fraunces + Manrope (business, artistic)",
       "technology": "Technology — JetBrains Mono + Inter (mono-led)"
@@ -265,11 +266,30 @@
       "width_narrow": "Narrow",
       "width_wide": "Wide",
       "show_featured_image": "Show featured image",
-      "show_meta": "Show author, date & read time",
-      "show_tags": "Show tags",
-      "show_share": "Show share buttons",
       "show_nav": "Show previous / next navigation",
-      "show_comments": "Show comments"
+      "show_comments": "Show comments",
+      "comments_per_page": "Comments per page",
+      "blocks": {
+        "heading": {
+          "label": "Heading",
+          "info": "Leave blank to use the default label for this block."
+        },
+        "details": {
+          "name": "Article intro"
+        },
+        "category_tags": {
+          "name": "Category & tags",
+          "show_blog": "Show blog link",
+          "show_tags": "Show tags"
+        },
+        "related_posts": {
+          "name": "Related posts",
+          "post_count": "Number of posts"
+        },
+        "share": {
+          "name": "Share"
+        }
+      }
     },
     "cart": {
       "name": "Cart",
@@ -407,7 +427,8 @@
     },
     "main_product": {
       "name": "Product",
-      "layout_info": "Reorder blocks to change the product page; app blocks follow block order and temporarily close the product form so app markup is not nested inside it. Description, specs, and accordions use the **Product tabs** section.",
+      "layout_info": "Reorder blocks to change the product page; app blocks follow block order and temporarily close the product form so app markup is not nested inside it. Description, specs, and nested accordions use the **Product tabs** section.",
+      "layout_info_v2": "Reorder blocks to change the product page; app blocks follow block order and temporarily close the product form so app markup is not nested inside it. Use **Accordion** blocks for optional collapsible content (icon, label, rich text) next to the buy box. Description, specs, and tab accordions use **Product tabs**.",
       "show_breadcrumbs": "Show breadcrumbs",
       "show_vendor": "Show vendor",
       "show_quantity": "Show quantity selector",
@@ -426,7 +447,12 @@
       "block_variant_picker": "Variant picker",
       "block_buy_buttons": "Add to cart",
       "block_meta": "SKU, tags & share",
-      "block_lede": "Product lede (metafield)"
+      "block_lede": "Product lede (metafield)",
+      "block_pdp_accordion": "Accordion",
+      "pdp_accordion_icon": "Icon",
+      "pdp_accordion_icon_info": "Optional small image shown beside the label (e.g. simple line icon). Shown at a fixed size in the summary row.",
+      "pdp_accordion_label": "Label",
+      "pdp_accordion_content": "Content"
     },
     "product_tabs": {
       "name": "Product tabs",

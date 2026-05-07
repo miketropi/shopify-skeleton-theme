@@ -116,10 +116,10 @@
                 <div class="cart-drawer__item-total" aria-label="{{ 'cart.label.line_total' | t | escape }}">
                   {%- if item.original_line_price > item.final_line_price -%}
                     <s class="cart-drawer__item-price cart-drawer__item-price--was">
-                      {{- item.original_line_price | money -}}
+                      {%- render 'price-display', price: item.original_line_price, variant: 'drawer' -%}
                     </s>
                   {%- endif -%}
-                  <span class="cart-drawer__item-price">{{- item.final_line_price | money -}}</span>
+                  <span class="cart-drawer__item-price">{%- render 'price-display', price: item.final_line_price, variant: 'drawer' -%}</span>
                 </div>
               </div>
 
@@ -142,7 +142,7 @@
     <div class="cart-drawer__footer">
       <div class="cart-drawer__subtotal">
         <span>{{- 'cart.general.subtotal' | t -}}</span>
-        <span data-cart-drawer-subtotal>{{- cart.total_price | money_with_currency -}}</span>
+        <span data-cart-drawer-subtotal>{% render 'price-display', price: cart.total_price, variant: 'summary', with_currency: true %}</span>
       </div>
       <p class="cart-drawer__taxes-note">
         {{- 'cart.general.taxes_and_shipping_at_checkout_html' | t -}}

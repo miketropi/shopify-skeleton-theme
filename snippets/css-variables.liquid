@@ -42,6 +42,10 @@
     unless use_custom_fonts
       assign fp = settings.font_pairing
       case fp
+        when 'arial'
+          assign root_font_heading = "Arial, 'Helvetica Neue', Helvetica, system-ui, sans-serif"
+          assign root_font_body = "Arial, 'Helvetica Neue', Helvetica, system-ui, sans-serif"
+          assign root_font_mono = "ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', 'Roboto Mono', Menlo, Consolas, monospace"
         when 'neutral', 'modern'
           assign root_font_heading = "'Plus Jakarta Sans', system-ui, sans-serif"
           assign root_font_body = "'DM Sans', system-ui, sans-serif"

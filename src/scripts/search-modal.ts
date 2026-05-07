@@ -1,3 +1,5 @@
+import { buildPriceDisplayHtml } from './price-display-html'
+
 const DEBOUNCE_MS = 300
 const RESULT_LIMIT = 6
 const RESOURCE_TYPES = 'product,collection,article,page'
@@ -364,9 +366,9 @@ function renderResults(
         url: p.url,
         image: imgUrl,
         price: hasPriceRange
-          ? `${formatMoney(p.price_min)} – ${formatMoney(p.price_max)}`
-          : formatMoney(p.price),
-        compareAtPrice: hasCompare ? formatMoney(p.compare_at_price_min) : undefined,
+          ? `${buildPriceDisplayHtml(p.price_min, { variant: 'search' })} – ${buildPriceDisplayHtml(p.price_max, { variant: 'search' })}`
+          : buildPriceDisplayHtml(p.price, { variant: 'search' }),
+        compareAtPrice: hasCompare ? buildPriceDisplayHtml(p.compare_at_price_min, { variant: 'search' }) : undefined,
         vendor: p.vendor || undefined,
         available: p.available,
         type: 'product',
@@ -461,22 +463,3 @@ function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-function formatMoney(cents: string | number): string {
-  const amount = typeof cents === 'string' ? parseFloat(cents) : cents
-  if (isNaN(amount)) return ''
-  const fmt = window.__themeRoutes?.money_format ?? '${{amount}}'
-  const valueWithDecimals = amount.toFixed(2)
-  const [whole, dec = '00'] = valueWithDecimals.split('.')
-  const withCommas = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  const withDotsComma = whole.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-  const withSpaces = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-
-  return fmt
-    .replace('{{amount_with_comma_separator}}', `${withDotsComma},${dec}`)
-    .replace('{{amount_no_decimals_with_comma_separator}}', withDotsComma)
-    .replace('{{amount_no_decimals_with_space_separator}}', withSpaces)
-    .replace('{{amount_with_apostrophe_separator}}', `${whole.replace(/\B(?=(\d{3})+(?!\d))/g, "'")}.${dec}`)
-    .replace('{{amount_no_decimals}}', withCommas.split('.')[0])
-    .replace('{{amount}}', `${withCommas}.${dec}`)
-    .replace('{{amount_with_space_separator}}', `${withSpaces},${dec}`)
-}

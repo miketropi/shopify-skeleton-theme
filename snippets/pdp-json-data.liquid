@@ -18,6 +18,12 @@
         {%- endif -%},
         "compare_at_cents": {% if variant.compare_at_price %}{{ variant.compare_at_price }}{% else %}0{% endif %},
         "price_cents": {{ variant.price }},
+        "price_display_pdp": {% capture price_display_pdp_html %}{% render 'price-display', price: variant.price, variant: 'pdp' %}{% endcapture %}{{ price_display_pdp_html | json }},
+        "compare_at_display_pdp": {% if variant.compare_at_price > variant.price -%}
+          {% capture compare_display_pdp_html %}{% render 'price-display', price: variant.compare_at_price, variant: 'pdp' %}{% endcapture %}{{ compare_display_pdp_html | json }}
+        {%- else -%}
+          null
+        {%- endif -%},
         "featured_media_id": {% if variant.featured_media -%}
           {{ variant.featured_media.id }}
         {%- else -%}

@@ -281,7 +281,7 @@
   align-items: center;
   min-height: 2.25rem;
   max-width: 100%;
-  gap: 0.1rem;
+  // gap: 0.1rem;
   margin: 0;
   padding: 0;
   background: transparent;
@@ -289,14 +289,15 @@
   border-radius: var(--cart-drawer-radius-sm);
   overflow: hidden;
   box-shadow: none;
-}
+  border: 1.5px solid color-mix(in srgb, var(--cs-text) 15%, var(--cs-background))
+} 
 
 .cart-drawer__qty-stepper:focus-within {
   box-shadow: none;
 }
 
 .cart-drawer__qty-btn {
-  flex: 0 0 2.25rem;
+  flex: 0 0 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -366,6 +367,7 @@
   border-radius: 0;
   box-shadow: none;
   appearance: textfield;
+  border-inline: 1.5px solid color-mix(in srgb, var(--cs-text) 15%, var(--cs-background));
 }
 
 .cart-drawer__qty-input::-webkit-outer-spin-button,

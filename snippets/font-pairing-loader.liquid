@@ -18,9 +18,9 @@
     add the host to layout/content_security_policy.liquid per Shopify docs; a <link>
     alone is not sufficient.
 
-  Preset mode: three Google Font bundles (neutral, vision, technology). Custom: Shopify font_face in css-variables.liquid.
+  Preset mode: Arial uses system fonts only; neutral / vision / technology load Google Fonts bundles. Custom: Shopify font_face in css-variables.liquid.
 {%- endcomment -%}
-{%- if settings.typography_mode != 'custom' -%}
+{%- if settings.typography_mode != 'custom' and settings.font_pairing != 'arial' -%}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   {%- liquid

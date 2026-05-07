@@ -36,7 +36,7 @@
               <td>{{ order.created_at | date: format: 'date' }}</td>
               <td>{{ order.financial_status_label }}</td>
               <td>{{ order.fulfillment_status_label }}</td>
-              <td>{{ order.total_price | money }}</td>
+              <td>{% render 'price-display', price: order.total_price, variant: 'account', with_currency: true %}</td>
             </tr>
           {%- endfor -%}
         </tbody>

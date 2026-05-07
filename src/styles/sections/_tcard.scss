@@ -166,7 +166,7 @@ $_radius-md: 12px;
   }
 }
 
-// ── Prices ──
+// ── Prices (see typography in components/price-display + snippets/price-display.liquid) ──
 
 .tcard__prices {
   display: flex;
@@ -177,7 +177,7 @@ $_radius-md: 12px;
 }
 
 .tcard__price {
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--cs-text);
   letter-spacing: -0.01em;
 }

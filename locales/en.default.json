@@ -6,6 +6,28 @@
   },
   "article": {
     "breadcrumb": "Breadcrumb",
+    "toc_label": "On this page",
+    "toc_title": "Table of contents",
+    "toc_toggle_aria": "Show or hide table of contents",
+    "sidebar_intro_heading": "About this article",
+    "intro_eyebrow": "At a glance",
+    "intro_stats_label": "Article snapshot",
+    "intro_word_count": "words in this story",
+    "intro_read_minutes": "minutes to read",
+    "sidebar_details": "Details",
+    "sidebar_author": "Author",
+    "sidebar_date": "Published",
+    "sidebar_read": "Reading time",
+    "byline_written_by": "Written by",
+    "byline_after_author": ", published on ",
+    "byline_published_lead": "Published on ",
+    "byline_read_suffix": " — {{ read }}",
+    "sidebar_category_tags_heading": "Category & tags",
+    "taxonomy_blog_label": "Blog",
+    "taxonomy_tags_label": "Tags",
+    "sidebar_category": "Category",
+    "sidebar_related": "Related posts",
+    "related_nav_label": "Related articles",
     "read_time": "{{ minutes }} min read",
     "share": "Share",
     "share_x": "Share on X",
@@ -15,7 +37,12 @@
     "link_copied": "Link copied",
     "nav_label": "Article navigation",
     "prev_post": "Previous",
-    "next_post": "Next"
+    "next_post": "Next",
+    "discuss_title": "Join the discussion",
+    "discuss_subtitle_count": "{{ count }} comments — have your say",
+    "discuss_subtitle_empty": "No comments yet — start the conversation",
+    "discuss_aria_with_count": "Jump to comments, {{ count }} so far",
+    "discuss_aria_empty": "Jump to comments"
   },
   "blog": {
     "article_comments": "Comments",
@@ -35,8 +62,14 @@
     "comment_form_body": "Comment",
     "comment_form_email": "Email",
     "comment_form_name": "Name",
-    "comment_form_submit": "Post",
-    "comment_form_title": "Add a comment"
+    "comment_form_submit": "Post comment",
+    "comment_form_title": "Leave a reply",
+    "comments_count_label": {
+      "one": "{{ count }} response",
+      "other": "{{ count }} responses"
+    },
+    "comments_empty_state": "No comments yet.",
+    "comments_form_note": "Your email will not be published."
   },
   "cart": {
     "drawer": {
@@ -255,6 +288,7 @@
       "expired": "Expired",
       "gift_card_code": "Gift card code",
       "remaining_html": "{{ balance }} remaining",
+      "remaining_suffix": "remaining",
       "shop_link": "Shop now",
       "subtext": "Your gift card",
       "title": "{{ value }} gift card for {{ shop }}"

@@ -8,7 +8,7 @@
 }
 
 .section-main-product {
-  /* Sticky product column was removed: grid + full-bleed rows + common overflow ancestor chains break `position: sticky` reliably. */
+  /* `overflow: visible` on this section + `.shopify-section:has(.section-main-product)` keeps buy column `position: sticky` working. */
   overflow: visible;
   padding-block: clamp(2rem, 4.25vw, 3.5rem);
 
@@ -558,6 +558,9 @@
     gap: clamp(1.7rem, 2.65vw, 2.25rem);
     align-self: start;
     padding: clamp(0.2rem, 0.45vw, 0.45rem) 0 0;
+    position: sticky;
+    top: calc(var(--header-height, 0px) + 0.75rem + env(safe-area-inset-top, 0px));
+    z-index: 1;
   }
 }
 
@@ -663,7 +666,7 @@
   max-width: 100%;
   margin: 0;
   padding: clamp(0.85rem, 1.2vw, 1rem) 0 0;
-  border-top: 1px solid var(--pdp-border-hairline);
+  // border-top: 1px solid var(--pdp-border-hairline);
   font-size: 0.875rem;
   line-height: 1.5;
   color: var(--pdp-text-muted);
@@ -780,11 +783,33 @@ button.main-product__meta-link:focus-visible {
 .main-product__form {
   display: flex;
   flex-direction: column;
-  gap: clamp(1.5rem, 2.25vw, 1.85rem);
+  // gap: clamp(1.5rem, 2.25vw, 1.85rem);
   padding: 0;
   margin: 0;
   border: none;
   background: none;
+}
+
+.main-product__block {
+  margin-bottom: 1.65rem;
+
+  &--accordion {
+    margin-bottom: 0;
+  }
+}
+
+.main-product__block--accordion {
+
+  + :not(.main-product__block--accordion) {
+    margin-top: 1.65rem;
+  }
+
+  + .main-product__block--accordion {
+
+    .main-product__accordion--pdp {
+      border-top: none !important;
+    }
+  }
 }
 
 .main-product__block--variant-picker {
@@ -1605,6 +1630,37 @@ button.main-product__meta-link:focus-visible {
   gap: 0.5rem;
 }
 
+.main-product__accordion-summary:focus-visible {
+  outline: 2px solid var(--cs-accent, #345bff);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.main-product__accordion-summary-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.main-product__accordion-icon {
+  flex-shrink: 0;
+  display: flex;
+  width: 1.5rem;
+  height: 1.5rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.main-product__accordion-label {
+  min-width: 0;
+}
+
 .main-product__accordion-summary::after {
   content: '▾';
   font-size: 0.7rem;
@@ -1618,12 +1674,176 @@ button.main-product__meta-link:focus-visible {
   transform: scaleY(-1);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .main-product__accordion-summary::after {
+    transition: none;
+  }
+}
+
 .main-product__accordion-body {
   padding: 0.15rem 0 0.85rem;
   font-size: 1rem;
   line-height: 1.65;
   letter-spacing: 0.01em;
   color: var(--cs-text);
+}
+
+/* PDP column accordions — unframed row, SVG toggle, smooth height reveal */
+.main-product__accordion--pdp {
+  --pdp-acc-ease: cubic-bezier(0.33, 1, 0.68, 1);
+  --pdp-acc-duration: 0.5s;
+
+  max-width: min(38rem, 100%);
+  margin: 0;
+  padding: 0.65rem 0;
+  border: 0;
+  border-top: 1px solid var(--pdp-border-hairline);
+  border-bottom: 1px solid var(--pdp-border-hairline);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.main-product__accordion--pdp .main-product__accordion-summary {
+  padding: 0.5rem 0;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+  color: var(--cs-heading);
+  transition: color 0.22s var(--pdp-acc-ease);
+  position: relative;
+  z-index: 0;
+}
+
+.main-product__accordion--pdp .main-product__accordion-summary:focus-visible {
+  outline: 2px solid var(--cs-accent, #345bff);
+  outline-offset: 3px;
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+.main-product__accordion--pdp .main-product__accordion-summary:hover {
+  color: color-mix(in srgb, var(--cs-heading) 78%, var(--cs-text));
+}
+
+.main-product__accordion--pdp .main-product__accordion-summary::after {
+  content: none;
+  display: none;
+}
+
+.main-product__accordion--pdp .main-product__accordion-summary-inner {
+  gap: 0.65rem;
+}
+
+.main-product__accordion--pdp .main-product__accordion-icon {
+  width: 1.375rem;
+  height: 1.375rem;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.92;
+  transition: opacity 0.22s var(--pdp-acc-ease);
+}
+
+.main-product__accordion--pdp .main-product__accordion-summary:hover .main-product__accordion-icon {
+  opacity: 1;
+}
+
+.main-product__accordion--pdp[open] .main-product__accordion-icon {
+  opacity: 1;
+}
+
+.main-product__accordion--pdp .main-product__accordion-label {
+  letter-spacing: 0.055em;
+  line-height: 1.35;
+}
+
+.main-product__accordion--pdp .main-product__accordion-toggle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: -0.15rem -0.25rem -0.15rem 0.25rem;
+  border-radius: 0;
+  color: var(--pdp-text-muted);
+  transition: color 0.22s var(--pdp-acc-ease);
+}
+
+.main-product__accordion--pdp .main-product__accordion-summary:hover .main-product__accordion-toggle {
+  color: var(--cs-heading);
+}
+
+.main-product__accordion--pdp .main-product__accordion-toggle-icon {
+  display: block;
+  transition: transform var(--pdp-acc-duration) var(--pdp-acc-ease);
+  transform-origin: 50% 55%;
+}
+
+.main-product__accordion--pdp[open] .main-product__accordion-toggle-icon {
+  transform: rotate(180deg);
+}
+
+.main-product__accordion--pdp .main-product__accordion-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--pdp-acc-duration) var(--pdp-acc-ease);
+}
+
+.main-product__accordion--pdp[open] .main-product__accordion-panel {
+  grid-template-rows: 1fr;
+}
+
+.main-product__accordion--pdp .main-product__accordion-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* GSAP height drive — drop CSS grid tween (progressive enhancement) */
+.main-product__accordion--pdp.main-product__accordion--gsap .main-product__accordion-panel {
+  display: block;
+  grid-template-rows: unset;
+  transition: none;
+}
+
+.main-product__accordion--pdp.main-product__accordion--gsap[open] .main-product__accordion-panel {
+  grid-template-rows: unset;
+}
+
+.main-product__accordion--pdp .main-product__accordion-body {
+  padding: 0.25rem 0 0.85rem;
+  margin: 0;
+  border: 0;
+  font-size: 0.9375rem;
+  line-height: 1.64;
+  letter-spacing: 0.01em;
+  color: var(--cs-text);
+}
+
+.main-product__accordion--pdp .main-product__accordion-body p {
+  margin: 0 0 0.65em;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-product__accordion--pdp .main-product__accordion-summary,
+  .main-product__accordion--pdp .main-product__accordion-icon,
+  .main-product__accordion--pdp .main-product__accordion-toggle,
+  .main-product__accordion--pdp .main-product__accordion-toggle-icon {
+    transition: none;
+  }
+
+  .main-product__accordion--pdp .main-product__accordion-panel {
+    transition: none;
+  }
 }
 
 .visually-hidden,

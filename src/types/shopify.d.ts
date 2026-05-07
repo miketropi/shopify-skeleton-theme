@@ -10,6 +10,9 @@ declare global {
       search_url: string
       predictive_search_url: string
       money_format: string
+      currency_iso: string
+      currency_symbol: string
+      price_decimal_sep: string
     }
     Shopify: {
       shop: string

@@ -347,6 +347,10 @@
         "label": "t:labels.font_pairing",
         "options": [
           {
+            "value": "arial",
+            "label": "t:options.font_pairing.arial"
+          },
+          {
             "value": "neutral",
             "label": "t:options.font_pairing.neutral"
           },
@@ -359,7 +363,7 @@
             "label": "t:options.font_pairing.technology"
           }
         ],
-        "default": "neutral",
+        "default": "arial",
         "visible_if": "{{ settings.typography_mode == 'preset' }}"
       },
       {

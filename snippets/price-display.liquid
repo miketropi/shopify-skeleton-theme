@@ -1,0 +1,89 @@
+{%- comment -%}
+  Stylized money: compact currency symbol, large integer, superscript minor units.
+  @param {number} price - Shopify amount (minor units)
+  @param {string} [variant] - card | pdp | drawer | cart | summary | search | table | gift | pill | account
+  @param {string} [extra_class] - extra classes on the root span
+  @param {boolean} [with_currency] - screen reader uses money_with_currency; visual shows ISO code
+  @param {boolean} [omit_zero_cents] - hide fraction when zero (e.g. gift cards)
+{%- endcomment -%}
+{%- liquid
+  assign iso = cart.currency.iso_code | upcase
+  assign subunit = 100
+  assign frac_digits = 2
+
+  case iso
+    when 'BHD', 'IQD', 'JOD', 'KWD', 'LYD', 'OMR', 'TND'
+      assign subunit = 1000
+      assign frac_digits = 3
+    when 'JPY', 'KRW', 'VND', 'CLP', 'PYG', 'UGX', 'XOF', 'XAF', 'BIF', 'DJF', 'GNF', 'ISK', 'KMF', 'RWF', 'VUV', 'XPF', 'HUF'
+      assign subunit = 1
+      assign frac_digits = 0
+  endcase
+
+  assign sym = cart.currency.symbol | strip
+
+  assign probe = 105 | money_without_currency | strip
+  assign dec_sep = '.'
+  if probe contains ','
+    assign dec_sep = ','
+  endif
+
+  assign main = price | divided_by: subunit
+  assign frac = price | modulo: subunit
+
+  if subunit > 1
+    assign major_amount = main | times: subunit
+    assign mf = major_amount | money_without_currency | strip
+    if dec_sep == '.'
+      assign int_display = mf | split: '.' | first
+    else
+      assign int_display = mf | split: ',' | first
+    endif
+  else
+    assign int_display = price | money_without_currency | strip
+  endif
+
+  if frac_digits == 3
+    assign frac_str = frac | prepend: '000' | slice: -3, 3
+  elsif frac_digits == 2
+    assign frac_str = frac | prepend: '00' | slice: -2, 2
+  elsif frac_digits == 1
+    assign frac_str = frac
+  else
+    assign frac_str = ''
+  endif
+
+  assign hide_frac = false
+  if omit_zero_cents and frac_digits > 0 and frac == 0
+    assign hide_frac = true
+  endif
+
+  assign root_class = 'price-display'
+  if variant != blank
+    assign root_class = root_class | append: ' price-display--' | append: variant
+  endif
+  if extra_class != blank
+    assign root_class = root_class | append: ' ' | append: extra_class
+  endif
+-%}
+<span class="{{ root_class | strip }}">
+  <span class="visually-hidden">
+    {%- if with_currency -%}
+      {{- price | money_with_currency -}}
+    {%- else -%}
+      {{- price | money -}}
+    {%- endif -%}
+  </span>
+  <span class="price-display__visual" aria-hidden="true" translate="no">
+    {%- if sym != blank -%}
+      <span class="price-display__sym">{{ sym }}</span>
+    {%- endif -%}
+    <span class="price-display__int">{{ int_display }}</span>
+    {%- if frac_digits > 0 and hide_frac == false -%}
+      <sup class="price-display__frac">{{ dec_sep }}{{ frac_str }}</sup>
+    {%- endif -%}
+    {%- if with_currency and cart.currency.iso_code != blank -%}
+      <span class="price-display__code">{{ cart.currency.iso_code }}</span>
+    {%- endif -%}
+  </span>
+</span>

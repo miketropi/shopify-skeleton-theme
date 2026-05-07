@@ -1,0 +1,118 @@
+// Shared product/catalog money display (snippets/price-display.liquid + price-display-html.ts)
+
+.price-display {
+  display: inline;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+.price-display__visual {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  gap: 0.1rem;
+  letter-spacing: 0.05rem;
+}
+
+.price-display__sym {
+  font-size: 0.76em;
+  // font-weight: 620;
+  margin-right: 0.16em;
+  line-height: 1;
+  transform: translateY(0.05em);
+}
+
+.price-display__int {
+  font-size: 1em;
+  // font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.price-display__sep {
+  font-size: 0.94em;
+  // font-weight: 650;
+  line-height: 1;
+}
+
+.price-display__frac {
+  font-size: 0.72em;
+  // font-weight: 620;
+  line-height: 0;
+  vertical-align: baseline;
+  position: relative;
+  top: -0.52em;
+}
+
+.price-display__code {
+  margin-left: 0.28em;
+  font-size: 0.68em;
+  // font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cs-text) 72%, var(--cs-background));
+  line-height: 1;
+  transform: translateY(0.02em);
+}
+
+// Contextual base sizes (parent wrappers can still set color / weight)
+.price-display--card {
+  font-size: 1.05rem;
+}
+
+.price-display--pdp {
+  font-size: inherit;
+}
+
+.price-display--drawer {
+  font-size: 0.9375rem;
+}
+
+.price-display--cart {
+  font-size: 0.9375rem;
+}
+
+.price-display--summary {
+  font-size: 1.0625rem;
+}
+
+.price-display--search {
+  font-size: 0.9375rem;
+}
+
+.price-display--table {
+  font-size: 0.9375rem;
+}
+
+.price-display--gift {
+  font-size: clamp(1.75rem, 4vw, 2.35rem);
+  font-weight: 600;
+}
+
+.price-display--pill {
+  font-size: 0.8125rem;
+}
+
+.price-display--account {
+  font-size: 0.9375rem;
+}
+
+// Gift card template (templates/gift_card.liquid loads theme.css for price-display)
+.gift-card__balance,
+.gift-card__initial-value {
+  margin: 0;
+}
+
+.gift-card__balance {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.gift-card__balance-note {
+  font-size: 0.95rem;
+  font-weight: 500;
+  opacity: 0.82;
+}

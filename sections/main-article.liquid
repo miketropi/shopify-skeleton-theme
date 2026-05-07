@@ -1,212 +1,582 @@
 {%- liquid
-  assign show_hero    = section.settings.show_featured_image
-  assign show_meta    = section.settings.show_meta
-  assign show_tags    = section.settings.show_tags
-  assign show_share   = section.settings.show_share
-  assign show_nav     = section.settings.show_nav
+  assign show_hero     = section.settings.show_featured_image
+  assign show_nav      = section.settings.show_nav
   assign show_comments = section.settings.show_comments
   assign content_width = section.settings.content_width | default: 'narrow'
+  assign share_url     = article.url | prepend: request.origin
+  assign comments_per_page = section.settings.comments_per_page | default: 15
+  if comments_per_page < 5
+    assign comments_per_page = 5
+  elsif comments_per_page > 40
+    assign comments_per_page = 40
+  endif
+  assign word_count = 0
+  assign show_read_meta = false
+  assign read_time     = 1
+  if article.content != blank
+    assign word_count = article.content | strip_html | split: ' ' | size
+    assign read_time = word_count | divided_by: 200 | at_least: 1
+    assign show_read_meta = true
+  endif
+  assign show_foot_nav = false
+  if show_nav
+    if blog.previous_article or blog.next_article
+      assign show_foot_nav = true
+    endif
+  endif
+  assign show_discuss = false
+  if show_comments and blog.comments_enabled?
+    assign show_discuss = true
+  endif
 -%}
 
 <article
-  class="marticle marticle--{{ content_width }}"
+  class="marticle marticle--{{ content_width }}{% if section.blocks.size == 0 %} marticle--no-sidebar{% endif %} full-width"
   data-section-type="main-article"
   data-section-id="{{ section.id }}"
   {% render 'color-scheme-vars' %}
 >
-  {%- comment -%} ── Breadcrumb ── {%- endcomment -%}
-  <nav class="marticle__breadcrumb" aria-label="{{ 'article.breadcrumb' | t }}">
-    <a href="{{ blog.url }}">{{ blog.title }}</a>
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-    <span aria-current="page">{{ article.title | truncate: 40 }}</span>
-  </nav>
-
-  {%- comment -%} ── Hero image ── {%- endcomment -%}
-  {%- if show_hero and article.image -%}
-    <figure class="marticle__hero">
-      {{
-        article.image
-        | image_url: width: 1600
-        | image_tag:
-            loading: 'eager',
-            class: 'marticle__hero-img',
-            sizes: '(min-width: 75em) 960px, (min-width: 48em) 80vw, 100vw',
-            widths: '600, 900, 1200, 1600'
-      }}
-    </figure>
-  {%- endif -%}
-
-  {%- comment -%} ── Header ── {%- endcomment -%}
-  <header class="marticle__header">
-    {%- if article.tags.size > 0 and show_tags -%}
-      <div class="marticle__tags marticle__tags--top">
-        {%- for tag in article.tags limit: 3 -%}
-          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="marticle__tag">{{ tag }}</a>
-        {%- endfor -%}
-      </div>
-    {%- endif -%}
-
-    <h1 class="marticle__title">{{ article.title | escape }}</h1>
-
-    <div class="marticle__header-rule" aria-hidden="true"></div>
-
-    {%- if show_meta -%}
-      <div class="marticle__meta">
-        {%- if article.author != blank -%}
-          <span class="marticle__meta-item">
-            <svg class="marticle__meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
-            {{ article.author }}
-          </span>
-        {%- endif -%}
-        <span class="marticle__meta-item">
-          <svg class="marticle__meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
-            {{ article.published_at | date: '%B %d, %Y' }}
-          </time>
-        </span>
-        {%- if article.content != blank -%}
-          {%- assign word_count = article.content | strip_html | split: ' ' | size -%}
-          {%- assign read_time = word_count | divided_by: 200 | at_least: 1 -%}
-          <span class="marticle__meta-item">
-            <svg class="marticle__meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            {{ 'article.read_time' | t: minutes: read_time }}
-          </span>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-  </header>
-
-  {%- comment -%} ── Article body (editorial prose surface) ── {%- endcomment -%}
-  <div class="marticle__prose">
-    <div class="marticle__body rte">
-      {{ article.content }}
-    </div>
-  </div>
-
-  {%- comment -%} ── Footer: tags + share ── {%- endcomment -%}
-  <footer class="marticle__footer">
-    {%- if show_tags and article.tags.size > 0 -%}
-      <div class="marticle__tags">
-        {%- for tag in article.tags -%}
-          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="marticle__tag">{{ tag }}</a>
-        {%- endfor -%}
-      </div>
-    {%- endif -%}
-
-    {%- if show_share -%}
-      {%- assign share_url = article.url | prepend: request.origin -%}
-      <div class="marticle__share">
-        <span class="marticle__share-label">{{ 'article.share' | t }}</span>
-        <div class="marticle__share-links">
-          <a href="https://x.com/intent/tweet?url={{ share_url | url_encode }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener noreferrer" class="marticle__share-link" aria-label="{{ 'article.share_x' | t }}">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </a>
-          <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url | url_encode }}" target="_blank" rel="noopener noreferrer" class="marticle__share-link" aria-label="{{ 'article.share_facebook' | t }}">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01Z"/></svg>
-          </a>
-          <a href="mailto:?subject={{ article.title | url_encode }}&body={{ share_url | url_encode }}" class="marticle__share-link" aria-label="{{ 'article.share_email' | t }}">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          </a>
-          <button type="button" class="marticle__share-link" data-copy-url="{{ share_url }}" aria-label="{{ 'article.copy_link' | t }}">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          </button>
-        </div>
-      </div>
-    {%- endif -%}
-  </footer>
-
-  {%- comment -%} ── Prev / Next navigation ── {%- endcomment -%}
-  {%- if show_nav -%}
-    {%- if blog.previous_article or blog.next_article -%}
-      <nav class="marticle__nav" aria-label="{{ 'article.nav_label' | t }}">
-        {%- if blog.previous_article -%}
-          <a href="{{ blog.previous_article.url }}" class="marticle__nav-link marticle__nav-link--prev">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-            <div class="marticle__nav-text">
-              <span class="marticle__nav-label">{{ 'article.prev_post' | t }}</span>
-              <span class="marticle__nav-title">{{ blog.previous_article.title | truncate: 50 }}</span>
-            </div>
-          </a>
-        {%- else -%}
-          <span></span>
-        {%- endif -%}
-
-        {%- if blog.next_article -%}
-          <a href="{{ blog.next_article.url }}" class="marticle__nav-link marticle__nav-link--next">
-            <div class="marticle__nav-text">
-              <span class="marticle__nav-label">{{ 'article.next_post' | t }}</span>
-              <span class="marticle__nav-title">{{ blog.next_article.title | truncate: 50 }}</span>
-            </div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-          </a>
-        {%- else -%}
-          <span></span>
-        {%- endif -%}
+  <div class="marticle__layout">
+    <div class="marticle__lead">
+      <nav class="marticle__breadcrumb" aria-label="{{ 'article.breadcrumb' | t }}">
+        <a href="{{ blog.url }}">{{ blog.title }}</a>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        <span aria-current="page">{{ article.title | truncate: 48 }}</span>
       </nav>
-    {%- endif -%}
-  {%- endif -%}
 
-  {%- comment -%} ── Comments ── {%- endcomment -%}
-  {%- if show_comments and blog.comments_enabled? -%}
-    <section class="marticle__comments" id="comments">
-      <h2 class="marticle__comments-heading">{{ 'blog.article_comments' | t }}</h2>
+      {%- if show_hero and article.image -%}
+        <figure class="marticle__hero">
+          {{
+            article.image
+            | image_url: width: 1600
+            | image_tag:
+                loading: 'eager',
+                class: 'marticle__hero-img',
+                sizes: '(min-width: 62em) min(860px, 65vw), 100vw',
+                widths: '600, 900, 1200, 1600'
+          }}
+        </figure>
+      {%- endif -%}
 
-      {%- paginate article.comments by 10 -%}
-        {%- if article.comments_count > 0 -%}
-          <div class="marticle__comments-list">
-            {%- for comment in article.comments -%}
-              <div class="marticle__comment">
-                <div class="marticle__comment-avatar">
-                  {{ comment.author | slice: 0 | upcase }}
-                </div>
-                <div class="marticle__comment-body">
-                  <div class="marticle__comment-header">
-                    <strong class="marticle__comment-author">{{ comment.author }}</strong>
-                    <time class="marticle__comment-date" datetime="{{ comment.created_at | date: '%Y-%m-%d' }}">
-                      {{ comment.created_at | date: '%b %d, %Y' }}
-                    </time>
+      <header class="marticle__header">
+        <h1 class="marticle__title">{{ article.title | escape }}</h1>
+      </header>
+    </div>
+
+    {%- comment -%} Order: after title on small screens; right rail on lg+ {%- endcomment -%}
+    {%- comment -%} ── Sidebar (sticky) — blocks define order & presence ── {%- endcomment -%}
+    {%- if section.blocks.size > 0 -%}
+      <aside class="marticle__sidebar" data-marticle-sidebar>
+        <div class="marticle__sidebar-sticky">
+          <div class="marticle__sidebar-inner">
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'details' -%}
+                  {%- liquid
+                    assign read_phrase = 'article.read_time' | t: minutes: read_time
+                    assign author_initials = ''
+                    if article.author != blank
+                      assign a_clean = article.author | strip | strip_html
+                      if a_clean != blank
+                        assign w = a_clean | split: ' '
+                        assign first_w = ''
+                        assign last_w = ''
+                        for token in w
+                          if token != blank
+                            if first_w == ''
+                              assign first_w = token
+                            endif
+                            assign last_w = token
+                          endif
+                        endfor
+                        if first_w != '' and last_w != '' and first_w != last_w
+                          assign author_initials = first_w | slice: 0, 1 | upcase | append: last_w | slice: 0, 1 | upcase
+                        elsif first_w != ''
+                          if first_w.size >= 2
+                            assign author_initials = first_w | slice: 0, 1 | upcase | append: first_w | slice: 1, 1 | upcase
+                          else
+                            assign author_initials = first_w | slice: 0, 1 | upcase
+                          endif
+                        endif
+                        if author_initials == blank and a_clean != blank
+                          assign author_initials = a_clean | slice: 0, 1 | upcase
+                        endif
+                      endif
+                    endif
+                  -%}
+                  <div class="marticle__sidebar-block marticle__sidebar-block--intro" {{ block.shopify_attributes }}>
+                    <div class="marticle__intro-card">
+                      <div class="marticle__intro-card-top">
+                        {%- if article.author != blank -%}
+                          <span class="marticle__intro-avatar" aria-hidden="true">{{ author_initials }}</span>
+                        {%- else -%}
+                          <span class="marticle__intro-avatar marticle__intro-avatar--symbol" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                              <path d="M14 2v6h6"/>
+                              <path d="M10 13h4"/><path d="M10 17h7"/>
+                            </svg>
+                          </span>
+                        {%- endif -%}
+                        <div class="marticle__intro-card-titles">
+                          <p class="marticle__intro-eyebrow">{{ 'article.intro_eyebrow' | t }}</p>
+                          {%- assign bh = block.settings.heading | strip -%}
+                          {%- if bh != blank -%}
+                            <h2 class="marticle__intro-title">{{ bh | escape }}</h2>
+                          {%- else -%}
+                            <h2 class="marticle__intro-title">{{ 'article.sidebar_intro_heading' | t }}</h2>
+                          {%- endif -%}
+                        </div>
+                      </div>
+
+                      <div class="marticle__byline marticle__byline--sidebar">
+                        <p class="marticle__byline-text">
+                          {%- if article.author != blank -%}
+                            <span class="marticle__byline-lead">{{ 'article.byline_written_by' | t }}</span>
+                            <span class="marticle__byline-name">{{ article.author | escape }}</span><span class="marticle__byline-mid">{{ 'article.byline_after_author' | t }}</span>
+                          {%- else -%}
+                            <span class="marticle__byline-lead">{{ 'article.byline_published_lead' | t }}</span>
+                          {%- endif -%}
+                          <time
+                            class="marticle__byline-date"
+                            datetime="{{ article.published_at | date: '%Y-%m-%d' }}"
+                          >
+                            {{- article.published_at | date: '%B %d, %Y' -}}
+                          </time>
+                          {%- if show_read_meta -%}
+                            <span class="marticle__byline-read">{{ 'article.byline_read_suffix' | t: read: read_phrase }}</span>
+                          {%- endif -%}
+                        </p>
+                      </div>
+
+                      {%- if word_count > 0 or show_read_meta -%}
+                        <div class="marticle__intro-stats" role="list" aria-label="{{ 'article.intro_stats_label' | t }}">
+                          {%- if word_count > 0 -%}
+                            <div class="marticle__intro-stat" role="listitem">
+                              <span class="marticle__intro-stat-icon" aria-hidden="true">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 7h6"/><path d="M12 11h6"/><path d="M12 15h3"/></svg>
+                              </span>
+                              <span class="marticle__intro-stat-body">
+                                <span class="marticle__intro-stat-value">{{ word_count }}</span>
+                                <span class="marticle__intro-stat-label">{{ 'article.intro_word_count' | t }}</span>
+                              </span>
+                            </div>
+                          {%- endif -%}
+                          {%- if show_read_meta -%}
+                            <div class="marticle__intro-stat" role="listitem">
+                              <span class="marticle__intro-stat-icon" aria-hidden="true">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                              </span>
+                              <span class="marticle__intro-stat-body">
+                                <span class="marticle__intro-stat-value">{{ read_time }}</span>
+                                <span class="marticle__intro-stat-label">{{ 'article.intro_read_minutes' | t }}</span>
+                              </span>
+                            </div>
+                          {%- endif -%}
+                        </div>
+                      {%- endif -%}
+                    </div>
                   </div>
-                  <div class="marticle__comment-content">{{ comment.content }}</div>
-                </div>
-              </div>
+
+                {%- when 'category_tags' -%}
+                  {%- liquid
+                    assign tax_show_blog = true
+                    if block.settings.show_blog_link == false
+                      assign tax_show_blog = false
+                    endif
+                    assign tax_show_tags = true
+                    if block.settings.show_article_tags == false
+                      assign tax_show_tags = false
+                    endif
+                    assign tax_show_block = false
+                    if tax_show_blog
+                      assign tax_show_block = true
+                    endif
+                    if tax_show_tags and article.tags.size > 0
+                      assign tax_show_block = true
+                    endif
+                    assign tax_show_sep = false
+                    if tax_show_blog and tax_show_tags and article.tags.size > 0
+                      assign tax_show_sep = true
+                    endif
+                  -%}
+                  {%- if tax_show_block -%}
+                    <div class="marticle__sidebar-block marticle__sidebar-block--taxonomy" {{ block.shopify_attributes }}>
+                      {%- assign bh = block.settings.heading | strip -%}
+                      <h2 class="marticle__sidebar-heading">
+                        {%- if bh != blank -%}
+                          {{ bh | escape }}
+                        {%- else -%}
+                          {{ 'article.sidebar_category_tags_heading' | t }}
+                        {%- endif -%}
+                      </h2>
+                      <div class="marticle__taxonomy-panel">
+                        {%- if tax_show_blog -%}
+                          <a
+                            href="{{ blog.url }}"
+                            class="marticle__taxonomy-blog"
+                          >
+                            <span class="marticle__taxonomy-blog-label">{{ 'article.taxonomy_blog_label' | t }}</span>
+                            <span class="marticle__taxonomy-blog-title">{{ blog.title | escape }}</span>
+                            <span class="marticle__taxonomy-blog-icon" aria-hidden="true">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m9 18 6-6-6-6"/>
+                              </svg>
+                            </span>
+                          </a>
+                        {%- endif -%}
+                        {%- if tax_show_sep -%}
+                          <div class="marticle__taxonomy-sep" aria-hidden="true"></div>
+                        {%- endif -%}
+                        {%- if tax_show_tags and article.tags.size > 0 -%}
+                          <div class="marticle__taxonomy-tags">
+                            <p class="marticle__taxonomy-tags-label">{{ 'article.taxonomy_tags_label' | t }}</p>
+                            <div class="marticle__tags marticle__tags--sidebar marticle__tags--taxonomy">
+                              {%- for tag in article.tags -%}
+                                <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="marticle__tag">{{ tag }}</a>
+                              {%- endfor -%}
+                            </div>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  {%- endif -%}
+
+                {%- when 'related_posts' -%}
+                  {%- if blog.articles_count > 1 -%}
+                    {%- liquid
+                      assign related_posts_count = block.settings.post_count | default: 4
+                      if related_posts_count < 2
+                        assign related_posts_count = 2
+                      elsif related_posts_count > 8
+                        assign related_posts_count = 8
+                      endif
+                      assign rel_seen = '|'
+                      assign rel_added = 0
+                    -%}
+                    {%- capture related_items -%}
+                      {%- if article.tags.size > 0 -%}
+                        {%- for rel in blog.articles limit: 48 -%}
+                          {%- if rel.id != article.id and rel_added < related_posts_count -%}
+                            {%- assign rel_needle = '|' | append: rel.id | append: '|' -%}
+                            {%- unless rel_seen contains rel_needle -%}
+                              {%- assign rel_match = false -%}
+                              {%- for t in article.tags -%}
+                                {%- if rel.tags contains t -%}
+                                  {%- assign rel_match = true -%}
+                                  {%- break -%}
+                                {%- endif -%}
+                              {%- endfor -%}
+                              {%- if rel_match -%}
+                                <li class="marticle__related-item">
+                                  <a href="{{ rel.url }}" class="marticle__related-link">
+                                    <span class="marticle__related-title">{{ rel.title | escape }}</span>
+                                    <time class="marticle__related-date" datetime="{{ rel.published_at | date: '%Y-%m-%d' }}">
+                                      {{ rel.published_at | date: '%b %d, %Y' }}
+                                    </time>
+                                  </a>
+                                </li>
+                                {%- assign rel_seen = rel_seen | append: rel.id | append: '|' -%}
+                                {%- assign rel_added = rel_added | plus: 1 -%}
+                              {%- endif -%}
+                            {%- endunless -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                      {%- endif -%}
+                      {%- for rel in blog.articles limit: 48 -%}
+                        {%- if rel.id != article.id and rel_added < related_posts_count -%}
+                          {%- assign rel_needle = '|' | append: rel.id | append: '|' -%}
+                          {%- unless rel_seen contains rel_needle -%}
+                            <li class="marticle__related-item">
+                              <a href="{{ rel.url }}" class="marticle__related-link">
+                                <span class="marticle__related-title">{{ rel.title | escape }}</span>
+                                <time class="marticle__related-date" datetime="{{ rel.published_at | date: '%Y-%m-%d' }}">
+                                  {{ rel.published_at | date: '%b %d, %Y' }}
+                                </time>
+                              </a>
+                            </li>
+                            {%- assign rel_seen = rel_seen | append: rel.id | append: '|' -%}
+                            {%- assign rel_added = rel_added | plus: 1 -%}
+                          {%- endunless -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                    {%- endcapture -%}
+                    {%- if rel_added > 0 -%}
+                      <div class="marticle__sidebar-block" {{ block.shopify_attributes }}>
+                        {%- assign bh = block.settings.heading | strip -%}
+                        <h2 class="marticle__sidebar-heading">
+                          {%- if bh != blank -%}{{ bh | escape }}{%- else -%}{{ 'article.sidebar_related' | t }}{%- endif -%}
+                        </h2>
+                        <nav class="marticle__related" aria-label="{{ 'article.related_nav_label' | t }}">
+                          <ul class="marticle__related-list">
+                            {{ related_items }}
+                          </ul>
+                        </nav>
+                      </div>
+                    {%- endif -%}
+                  {%- endif -%}
+
+                {%- when 'share' -%}
+                  <div class="marticle__sidebar-block" {{ block.shopify_attributes }}>
+                    {%- assign bh = block.settings.heading | strip -%}
+                    <h2 class="marticle__sidebar-heading">
+                      {%- if bh != blank -%}{{ bh | escape }}{%- else -%}{{ 'article.share' | t }}{%- endif -%}
+                    </h2>
+                    <div class="marticle__share marticle__share--sidebar">
+                      <div class="marticle__share-links">
+                        <a href="https://x.com/intent/tweet?url={{ share_url | url_encode }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener noreferrer" class="marticle__share-link" aria-label="{{ 'article.share_x' | t }}">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url | url_encode }}" target="_blank" rel="noopener noreferrer" class="marticle__share-link" aria-label="{{ 'article.share_facebook' | t }}">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01Z"/></svg>
+                        </a>
+                        <a href="mailto:?subject={{ article.title | url_encode }}&body={{ share_url | url_encode }}" class="marticle__share-link" aria-label="{{ 'article.share_email' | t }}">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        </a>
+                        <button type="button" class="marticle__share-link" data-copy-url="{{ share_url }}" aria-label="{{ 'article.copy_link' | t }}">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+              {%- endcase -%}
             {%- endfor -%}
           </div>
-        {%- endif -%}
-
-        {%- if paginate.pages > 1 -%}
-          <nav class="marticle__comments-pagination" aria-label="{{ 'general.pagination.label' | t }}">
-            {{ paginate | default_pagination: anchor: 'comments' }}
-          </nav>
-        {%- endif -%}
-      {%- endpaginate -%}
-
-      {%- form 'new_comment', article -%}
-        <div class="marticle__comment-form">
-          <h3 class="marticle__comment-form-title">{{ 'blog.comment_form_title' | t }}</h3>
-
-          {{ form.errors | default_errors }}
-
-          <div class="marticle__form-row">
-            <div class="marticle__form-field">
-              <label for="comment-author">{{ 'blog.comment_form_name' | t }}</label>
-              <input type="text" name="comment[author]" id="comment-author" value="{{ form.author }}" required>
-            </div>
-            <div class="marticle__form-field">
-              <label for="comment-email">{{ 'blog.comment_form_email' | t }}</label>
-              <input type="email" name="comment[email]" id="comment-email" value="{{ form.email }}" required>
-            </div>
-          </div>
-
-          <div class="marticle__form-field">
-            <label for="comment-body">{{ 'blog.comment_form_body' | t }}</label>
-            <textarea name="comment[body]" id="comment-body" rows="4" required>{{ form.body }}</textarea>
-          </div>
-
-          <button type="submit" class="marticle__submit">{{ 'blog.comment_form_submit' | t }}</button>
         </div>
-      {%- endform -%}
-    </section>
-  {%- endif -%}
+      </aside>
+    {%- endif -%}
+
+    <div class="marticle__flow">
+      {%- assign marticle_toc_panel_id = 'marticle-toc-panel-' | append: section.id -%}
+      {%- assign marticle_toc_heading_id = 'marticle-toc-heading-' | append: section.id -%}
+      <nav
+        class="marticle__toc is-empty"
+        data-marticle-toc
+        aria-label="{{ 'article.toc_label' | t }}"
+        hidden
+      >
+        <div class="marticle__toc-head">
+          <h2 class="marticle__toc-title" id="{{ marticle_toc_heading_id }}">{{ 'article.toc_title' | t }}</h2>
+          <button
+            type="button"
+            class="marticle__toc-toggle"
+            data-marticle-toc-toggle
+            aria-expanded="false"
+            aria-controls="{{ marticle_toc_panel_id }}"
+            aria-label="{{ 'article.toc_toggle_aria' | t }}"
+          >
+            <span class="marticle__toc-toggle-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+          </button>
+        </div>
+        <div
+          class="marticle__toc-panel"
+          id="{{ marticle_toc_panel_id }}"
+          data-marticle-toc-panel
+          role="region"
+          aria-labelledby="{{ marticle_toc_heading_id }}"
+          hidden
+        >
+          <ol class="marticle__toc-list" data-marticle-toc-list></ol>
+        </div>
+      </nav>
+
+      <div class="marticle__prose">
+        <div class="marticle__body rte" data-marticle-body>
+          {{ article.content }}
+        </div>
+      </div>
+
+      {%- if show_foot_nav or show_discuss -%}
+        <div class="marticle__post-foot">
+          {%- if show_foot_nav -%}
+            <nav class="marticle__nav" aria-label="{{ 'article.nav_label' | t }}">
+              {%- if blog.previous_article -%}
+                <a
+                  href="{{ blog.previous_article.url }}"
+                  class="marticle__nav-link marticle__nav-link--prev"
+                >
+                  <span class="marticle__nav-arrow" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  </span>
+                  <span class="marticle__nav-main">
+                    <span class="marticle__nav-kicker">{{ 'article.prev_post' | t }}</span>
+                    <span class="marticle__nav-title">{{ blog.previous_article.title | truncate: 56 }}</span>
+                  </span>
+                </a>
+              {%- endif -%}
+
+              {%- if blog.next_article -%}
+                <a
+                  href="{{ blog.next_article.url }}"
+                  class="marticle__nav-link marticle__nav-link--next"
+                >
+                  <span class="marticle__nav-arrow" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </span>
+                  <span class="marticle__nav-main">
+                    <span class="marticle__nav-kicker">{{ 'article.next_post' | t }}</span>
+                    <span class="marticle__nav-title">{{ blog.next_article.title | truncate: 56 }}</span>
+                  </span>
+                </a>
+              {%- endif -%}
+            </nav>
+          {%- endif -%}
+
+          {%- if show_discuss -%}
+            <a
+              href="#comments"
+              class="marticle__discuss"
+              aria-label="{% if article.comments_count > 0 %}{{ 'article.discuss_aria_with_count' | t: count: article.comments_count }}{% else %}{{ 'article.discuss_aria_empty' | t }}{% endif %}"
+            >
+              <span class="marticle__discuss-icon-wrap" aria-hidden="true">
+                <svg
+                  class="marticle__discuss-icon"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+              </span>
+              <span class="marticle__discuss-text">
+                <span class="marticle__discuss-title">{{ 'article.discuss_title' | t }}</span>
+                <span class="marticle__discuss-sub">
+                  {%- if article.comments_count > 0 -%}
+                    {{ 'article.discuss_subtitle_count' | t: count: article.comments_count }}
+                  {%- else -%}
+                    {{ 'article.discuss_subtitle_empty' | t }}
+                  {%- endif -%}
+                </span>
+              </span>
+              {%- if article.comments_count > 0 -%}
+                <span class="marticle__discuss-badge">{{ article.comments_count }}</span>
+              {%- endif -%}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if show_comments and blog.comments_enabled? -%}
+        <section class="marticle__comments" id="comments" aria-label="{{ 'blog.article_comments' | t }}">
+          <header class="marticle__comments-head">
+            <h2 class="marticle__comments-heading">{{ 'blog.article_comments' | t }}</h2>
+            {%- if article.comments_count > 0 -%}
+              <p class="marticle__comments-meta">{{ 'blog.comments_count_label' | t: count: article.comments_count }}</p>
+            {%- else -%}
+              <p class="marticle__comments-meta marticle__comments-meta--empty">{{ 'blog.comments_empty_state' | t }}</p>
+            {%- endif -%}
+          </header>
+
+          {%- paginate article.comments by comments_per_page -%}
+            {%- if article.comments_count > 0 -%}
+              <div class="marticle__comments-list">
+                {%- for comment in article.comments -%}
+                  {%- liquid
+                    assign author_clean = comment.author | strip | strip_html
+                    assign author_parts = author_clean | split: ' '
+                    assign comment_initial = author_clean | slice: 0, 1 | upcase
+                    if author_parts.size > 1 and author_parts[1] != blank
+                      assign comment_initial = author_parts[0] | slice: 0, 1 | upcase | append: author_parts[1] | slice: 0, 1 | upcase
+                    endif
+                    if comment_initial == blank
+                      assign comment_initial = '?'
+                    endif
+                  -%}
+                  <article class="marticle__comment" id="Comment-{{ comment.id }}" data-marticle-comment>
+                    <div class="marticle__comment-aside">
+                      <div class="marticle__comment-avatar" aria-hidden="true">{{ comment_initial }}</div>
+                    </div>
+                    <div class="marticle__comment-body">
+                      <header class="marticle__comment-header">
+                        <cite class="marticle__comment-author">{{ comment.author }}</cite>
+                        <time class="marticle__comment-date" datetime="{{ comment.created_at | date: '%Y-%m-%d' }}">
+                          {{ comment.created_at | date: '%b %d, %Y' }}
+                        </time>
+                      </header>
+                      <div class="marticle__comment-content rte">{{ comment.content }}</div>
+                    </div>
+                  </article>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+
+            {%- if paginate.pages > 1 -%}
+              <nav class="marticle__comments-pagination" aria-label="{{ 'general.pagination.label' | t }}">
+                {{ paginate | default_pagination: anchor: 'comments' }}
+              </nav>
+            {%- endif -%}
+          {%- endpaginate -%}
+
+          {%- form 'new_comment', article, class: 'marticle__comment-form-wrap' -%}
+            <div class="marticle__comment-form">
+              <header class="marticle__comment-form-head">
+                <h3 class="marticle__comment-form-title">{{ 'blog.comment_form_title' | t }}</h3>
+                <p class="marticle__comment-form-note">{{ 'blog.comments_form_note' | t }}</p>
+              </header>
+
+              {%- if form.errors -%}
+                <div class="marticle__comment-form-errors" role="alert" tabindex="-1">
+                  {{ form.errors | default_errors }}
+                </div>
+              {%- endif -%}
+
+              <div class="marticle__form-grid">
+                <div class="marticle__form-row">
+                  <div class="marticle__form-field">
+                    <label class="marticle__form-label" for="comment-author">{{ 'blog.comment_form_name' | t }}</label>
+                    <input
+                      type="text"
+                      name="comment[author]"
+                      id="comment-author"
+                      class="marticle__input"
+                      value="{{ form.author }}"
+                      autocomplete="name"
+                      required
+                    >
+                  </div>
+                  <div class="marticle__form-field">
+                    <label class="marticle__form-label" for="comment-email">{{ 'blog.comment_form_email' | t }}</label>
+                    <input
+                      type="email"
+                      name="comment[email]"
+                      id="comment-email"
+                      class="marticle__input"
+                      value="{{ form.email }}"
+                      autocomplete="email"
+                      required
+                    >
+                  </div>
+                </div>
+
+                <div class="marticle__form-field marticle__form-field--full">
+                  <label class="marticle__form-label" for="comment-body">{{ 'blog.comment_form_body' | t }}</label>
+                  <textarea
+                    name="comment[body]"
+                    id="comment-body"
+                    class="marticle__textarea"
+                    rows="5"
+                    required
+                  >{{ form.body }}</textarea>
+                </div>
+
+                <div class="marticle__form-actions">
+                  <button type="submit" class="marticle__comment-submit">{{ 'blog.comment_form_submit' | t }}</button>
+                </div>
+              </div>
+            </div>
+          {%- endform -%}
+        </section>
+      {%- endif -%}
+    </div>
+
+  </div>
 </article>
 
 {% schema %}
@@ -233,24 +603,6 @@
     },
     {
       "type": "checkbox",
-      "id": "show_meta",
-      "label": "t:sections.article.show_meta",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_tags",
-      "label": "t:sections.article.show_tags",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_share",
-      "label": "t:sections.article.show_share",
-      "default": true
-    },
-    {
-      "type": "checkbox",
       "id": "show_nav",
       "label": "t:sections.article.show_nav",
       "default": true
@@ -260,8 +612,102 @@
       "id": "show_comments",
       "label": "t:sections.article.show_comments",
       "default": true
+    },
+    {
+      "type": "range",
+      "id": "comments_per_page",
+      "min": 5,
+      "max": 40,
+      "step": 1,
+      "default": 15,
+      "label": "t:sections.article.comments_per_page"
     }
   ],
-  "presets": [{ "name": "t:sections.article.name" }]
+  "blocks": [
+    {
+      "type": "details",
+      "name": "t:sections.article.blocks.details.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.article.blocks.heading.label",
+          "info": "t:sections.article.blocks.heading.info"
+        }
+      ]
+    },
+    {
+      "type": "category_tags",
+      "name": "t:sections.article.blocks.category_tags.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.article.blocks.heading.label",
+          "info": "t:sections.article.blocks.heading.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_blog_link",
+          "label": "t:sections.article.blocks.category_tags.show_blog",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_article_tags",
+          "label": "t:sections.article.blocks.category_tags.show_tags",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "related_posts",
+      "name": "t:sections.article.blocks.related_posts.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.article.blocks.heading.label",
+          "info": "t:sections.article.blocks.heading.info"
+        },
+        {
+          "type": "range",
+          "id": "post_count",
+          "min": 2,
+          "max": 8,
+          "step": 1,
+          "default": 4,
+          "label": "t:sections.article.blocks.related_posts.post_count"
+        }
+      ]
+    },
+    {
+      "type": "share",
+      "name": "t:sections.article.blocks.share.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.article.blocks.heading.label",
+          "info": "t:sections.article.blocks.heading.info"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.article.name",
+      "blocks": [
+        { "type": "details" },
+        { "type": "category_tags" },
+        { "type": "related_posts" },
+        { "type": "share" }
+      ]
+    }
+  ]
 }
 {% endschema %}

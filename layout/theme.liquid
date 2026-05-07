@@ -45,6 +45,14 @@
       a missing cart_add_url becomes the string "undefined.js", which resolves on PDPs to
       /products/undefined.js and breaks the dev proxy.
     {% endcomment %}
+    {%- liquid
+      assign price_probe = 105 | money_without_currency | strip
+      if price_probe contains ','
+        assign theme_price_dec = ','
+      else
+        assign theme_price_dec = '.'
+      endif
+    -%}
     <script>
       window.__themeRoutes = {
         root: {{ routes.root_url | json }},
@@ -54,9 +62,12 @@
         cart_update_url: {{ routes.cart_update_url | json }},
         search_url: {{ routes.search_url | json }},
         predictive_search_url: {{ routes.predictive_search_url | json }},
-        money_format: {{ shop.money_format | json }}
+        money_format: {{ shop.money_format | json }},
+        currency_iso: {{ cart.currency.iso_code | json }},
+        currency_symbol: {{ cart.currency.symbol | json }},
+        price_decimal_sep: {{ theme_price_dec | json }}
       };
     </script>
-    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+    <script type="module" src="{{ 'theme.js' | asset_url }}" defer></script>
   </body>
 </html>

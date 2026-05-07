@@ -11,13 +11,13 @@
   <div class="main-product__price-col" data-product-price-row>
     {%- if show_compare -%}
       <s class="main-product__price main-product__price--compare" data-product-compare>
-        {{- current_variant.compare_at_price | money -}}
+        {%- render 'price-display', price: current_variant.compare_at_price, variant: 'pdp' -%}
       </s>
     {%- else -%}
       <s class="main-product__price main-product__price--compare is-visually-hidden" data-product-compare></s>
     {%- endif -%}
     <span class="main-product__price main-product__price--current" data-product-price>
-      {{- current_variant.price | money -}}
+      {%- render 'price-display', price: current_variant.price, variant: 'pdp' -%}
     </span>
   </div>
 </div>

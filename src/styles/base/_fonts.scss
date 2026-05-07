@@ -1,8 +1,9 @@
 // Font pairing registry (slug → heading / body / mono).
-// Runtime --cs-font-* values come from snippets/color-scheme-vars.liquid; Google URLs from
-// snippets/font-pairing-link.liquid. Keep those three in sync when adding a pairing.
+// Runtime --cs-font-* values come from snippets/css-variables.liquid; Google URLs from
+// snippets/font-pairing-link.liquid (skipped for arial). Keep in sync when adding a pairing.
 //
-// Preset count: 3. Slug → (heading, body, mono)
+// Preset count: 4. Slug → (heading, body, mono)
+// arial      Arial / Helvetica stack (system) for heading + body; ui-monospace stack for code
 // neutral    Plus Jakarta Sans   / DM Sans          / DM Mono          (global, neutral)
 // vision     Fraunces (soft serif) / Manrope        / Fira Code       (business / editorial, artistic; variable opsz)
 // technology JetBrains Mono      / Inter            / JetBrains Mono  (tech: mono for headings + code; GF v2)

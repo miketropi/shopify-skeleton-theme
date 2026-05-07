@@ -75,10 +75,10 @@
 
                     <div class="mcart__item-price-unit">
                       {%- if item.original_price > item.final_price -%}
-                        <s class="mcart__price mcart__price--compare">{{ item.original_price | money }}</s>
+                        <s class="mcart__price mcart__price--compare">{%- render 'price-display', price: item.original_price, variant: 'cart' -%}</s>
                       {%- endif -%}
                       <span class="mcart__price{% if item.original_price > item.final_price %} mcart__price--sale{% endif %}">
-                        {{ item.final_price | money }}
+                        {%- render 'price-display', price: item.final_price, variant: 'cart' -%}
                       </span>
                     </div>
                   </div>
@@ -119,10 +119,10 @@
 
                     <div class="mcart__item-total" aria-label="{{ 'cart.label.line_total' | t }}">
                       {%- if on_sale -%}
-                        <s class="mcart__price mcart__price--compare">{{ item.original_line_price | money }}</s>
+                        <s class="mcart__price mcart__price--compare">{%- render 'price-display', price: item.original_line_price, variant: 'cart' -%}</s>
                       {%- endif -%}
                       <span class="mcart__price{% if on_sale %} mcart__price--sale{% endif %}">
-                        {{ item.final_line_price | money }}
+                        {%- render 'price-display', price: item.final_line_price, variant: 'cart' -%}
                       </span>
                     </div>
                   </div>
@@ -146,7 +146,7 @@
 
             <div class="mcart__summary-row">
               <span>{{ 'cart.general.subtotal' | t }}</span>
-              <span class="mcart__summary-value">{{ cart.total_price | money_with_currency }}</span>
+              <span class="mcart__summary-value">{% render 'price-display', price: cart.total_price, variant: 'summary', with_currency: true %}</span>
             </div>
 
             {%- if cart.cart_level_discount_applications.size > 0 -%}
@@ -157,7 +157,7 @@
                     {{ discount.title }}
                   </span>
                   <span class="mcart__summary-value mcart__summary-value--discount">
-                    &minus;{{ discount.total_allocated_amount | money }}
+                    &minus;{% render 'price-display', price: discount.total_allocated_amount, variant: 'summary' %}
                   </span>
                 </div>
               {%- endfor -%}

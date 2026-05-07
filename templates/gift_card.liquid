@@ -12,6 +12,7 @@
     {{ content_for_header }}
 
     {{ 'critical.css' | asset_url | stylesheet_tag }}
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
   </head>
 
   <body class="gift-card">
@@ -41,13 +42,13 @@
 
         <div class="gift-card__price">
           {%- if gift_card.balance != gift_card.initial_value -%}
-            {%- assign balance_formatted = gift_card.balance | money -%}
             <p class="gift-card__balance">
-              {{- 'gift_cards.issued.remaining_html' | t: balance: balance_formatted -}}
+              {%- render 'price-display', price: gift_card.balance, variant: 'gift' -%}
+              <span class="gift-card__balance-note">{{ 'gift_cards.issued.remaining_suffix' | t }}</span>
             </p>
           {%- endif -%}
           <p class="gift-card__initial-value">
-            {{- gift_card.initial_value | money_without_trailing_zeros -}}
+            {%- render 'price-display', price: gift_card.initial_value, variant: 'gift', omit_zero_cents: true -%}
           </p>
         </div>
 

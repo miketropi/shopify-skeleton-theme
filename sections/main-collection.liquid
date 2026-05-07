@@ -237,11 +237,14 @@
               {%- if filter.type == 'price_range' -%}
                 {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
                   {%- liquid
-                    assign pmin = filter.min_value.value | default: 0 | money
-                    assign pmax = filter.max_value.value | default: filter.range_max | money
+                    assign pmin_cents = filter.min_value.value | default: 0
+                    assign pmax_cents = filter.max_value.value | default: filter.range_max
                   -%}
                   <a class="mcol__pill" href="{{ collection.url }}">
-                    {{ filter.label }}: {{ pmin }} &ndash; {{ pmax }}
+                    {{ filter.label }}:
+                    {%- render 'price-display', price: pmin_cents, variant: 'pill' %}
+                    &ndash;
+                    {%- render 'price-display', price: pmax_cents, variant: 'pill' %}
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   </a>
                 {%- endif -%}

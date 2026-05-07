@@ -11,10 +11,43 @@
   "sections": {
     "main": {
       "type": "main-article",
-      "settings": {}
+      "settings": {
+        "content_width": "narrow",
+        "show_featured_image": true,
+        "show_nav": true,
+        "show_comments": true,
+        "comments_per_page": 15
+      },
+      "blocks": {
+        "sidebar_details": {
+          "type": "details",
+          "settings": {}
+        },
+        "sidebar_taxonomy": {
+          "type": "category_tags",
+          "settings": {
+            "show_blog_link": true,
+            "show_article_tags": true
+          }
+        },
+        "sidebar_related": {
+          "type": "related_posts",
+          "settings": {
+            "post_count": 4
+          }
+        },
+        "sidebar_share": {
+          "type": "share",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "sidebar_details",
+        "sidebar_taxonomy",
+        "sidebar_related",
+        "sidebar_share"
+      ]
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["main"]
 }

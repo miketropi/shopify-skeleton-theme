@@ -73,10 +73,12 @@
 
     <div class="tcard__prices">
       <span class="tcard__price{% if on_sale %} tcard__price--sale{% endif %}">
-        {{ product.price | money }}
+        {%- render 'price-display', price: product.price, variant: 'card' -%}
       </span>
       {%- if on_sale -%}
-        <s class="tcard__price tcard__price--compare">{{ product.compare_at_price | money }}</s>
+        <s class="tcard__price tcard__price--compare">
+          {%- render 'price-display', price: product.compare_at_price, variant: 'card' -%}
+        </s>
       {%- endif -%}
     </div>
 

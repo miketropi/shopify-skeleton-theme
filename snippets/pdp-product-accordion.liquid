@@ -1,0 +1,50 @@
+{%- comment -%}
+  Single PDP accordion (main-product section `pdp_accordion` block).
+
+  @param {object} block — block with settings: icon, label, body
+{%- endcomment -%}
+{%- if block.settings.label != blank -%}
+  <div class="main-product__block main-product__block--accordion" {{ block.shopify_attributes }}>
+    <details class="main-product__accordion main-product__accordion--pdp" data-pdp-accordion>
+      <summary class="main-product__accordion-summary">
+        <span class="main-product__accordion-summary-inner">
+          {%- if block.settings.icon != blank -%}
+            <span class="main-product__accordion-icon" aria-hidden="true">
+              <img
+                src="{{ block.settings.icon | image_url: width: 72 }}"
+                alt=""
+                width="22"
+                height="22"
+                loading="lazy"
+              >
+            </span>
+          {%- endif -%}
+          <span class="main-product__accordion-label">{{ block.settings.label | escape }}</span>
+        </span>
+        <span class="main-product__accordion-toggle" aria-hidden="true">
+          <svg
+            class="main-product__accordion-toggle-icon"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            focusable="false"
+          >
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </span>
+      </summary>
+      {%- if block.settings.body != blank -%}
+        <div class="main-product__accordion-panel">
+          <div class="main-product__accordion-panel-inner">
+            <div class="main-product__accordion-body rte">{{ block.settings.body }}</div>
+          </div>
+        </div>
+      {%- endif -%}
+    </details>
+  </div>
+{%- endif -%}
