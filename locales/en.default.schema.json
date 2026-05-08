@@ -229,6 +229,20 @@
       "color_accent": "Accent / focus",
       "color_accent_info": "Used for focus rings and the subscribe button. Leave empty to inherit the theme accent."
     },
+    "main_collection": {
+      "filter_offcanvas_position": {
+        "label": "Filter panel slides from",
+        "left": "Left",
+        "right": "Right"
+      },
+      "filter_layout": {
+        "label": "Filter layout",
+        "info": "How the filter panel appears when customers tap Filter.",
+        "offcanvas": "Offcanvas (side panel)",
+        "toggle": "Inline toggle (below toolbar)",
+        "overlay": "Overlay (dropdown under toolbar)"
+      }
+    },
     "blog": {
       "name": "Blog",
       "header_layout": "Layout",
@@ -428,7 +442,7 @@
     "main_product": {
       "name": "Product",
       "layout_info": "Reorder blocks to change the product page; app blocks follow block order and temporarily close the product form so app markup is not nested inside it. Description, specs, and nested accordions use the **Product tabs** section.",
-      "layout_info_v2": "Reorder blocks to change the product page; app blocks follow block order and temporarily close the product form so app markup is not nested inside it. Use **Accordion** blocks for optional collapsible content (icon, label, rich text) next to the buy box. Description, specs, and tab accordions use **Product tabs**.",
+      "layout_info_v2": "Reorder blocks to change the product page; app blocks follow block order and temporarily close the product form so app markup is not nested inside it. Use **Divider** for a line between blocks, **Text** for rich text, and **Accordion** for collapsible content. Description, specs, and tab accordions use **Product tabs**.",
       "show_breadcrumbs": "Show breadcrumbs",
       "show_vendor": "Show vendor",
       "show_quantity": "Show quantity selector",
@@ -443,11 +457,27 @@
       "size_guide_image_info": "Overrides the global theme size chart for this product template when the product has no `custom.size_guide` metafield.",
       "block_breadcrumbs": "Breadcrumbs",
       "block_gallery": "Gallery",
+      "gallery_layout_label": "Layout",
+      "gallery_layout_carousel_left": "Carousel — thumbnails beside (desktop)",
+      "gallery_layout_carousel_bottom": "Carousel — thumbnails below",
+      "gallery_layout_carousel_no_thumbs": "Carousel — main only (arrows & keyboard)",
+      "gallery_layout_stacked": "Vertical stack (all images)",
+      "gallery_layout_info": "Beside: vertical thumbnail strip on the left on large screens. Below: horizontal thumbnails under the main image. Main only: large carousel with arrows/keyboard, no strip. Stack: all images listed (variant changes scroll to the featured image).",
       "block_product_title": "Title & price",
       "block_variant_picker": "Variant picker",
       "block_buy_buttons": "Add to cart",
       "block_meta": "SKU, tags & share",
-      "block_lede": "Product lede (metafield)",
+      "block_pdp_richtext": "Text",
+      "block_pdp_divider": "Divider",
+      "pdp_divider_spacing": "Space above and below line",
+      "pdp_divider_spacing_info": "Extra vertical padding around the rule so neighbouring blocks read as separate groups.",
+      "pdp_divider_spacing_compact": "Compact",
+      "pdp_divider_spacing_comfortable": "Comfortable",
+      "pdp_divider_spacing_spacious": "Spacious",
+      "pdp_divider_weight": "Line weight",
+      "pdp_divider_hairline": "Hairline",
+      "pdp_divider_medium": "Medium",
+      "pdp_richtext_label": "Text",
       "block_pdp_accordion": "Accordion",
       "pdp_accordion_icon": "Icon",
       "pdp_accordion_icon_info": "Optional small image shown beside the label (e.g. simple line icon). Shown at a fixed size in the summary row.",
@@ -456,7 +486,12 @@
     },
     "product_tabs": {
       "name": "Product tabs",
-      "intro": "Description tabs, rich text tabs, spec rows, and accordions apply to this product. App blocks stack below the tabbed area. Add this section below **Product** on the product template.",
+      "intro": "Description tabs, rich text tabs, spec rows, and nested accordions apply to this product. Choose **Layout** for top tabs, a left-hand tab rail on large screens, or an accordion. App blocks stack below. Add below **Product** on the product template.",
+      "tabs_layout_label": "Layout",
+      "tabs_layout_info": "**Top** — horizontal tabs above content. **Tab nav left** — vertical labels in a left column from tablet/desktop (horizontal tabs on small screens). **Accordion** — each tab becomes a collapsible section; browsers that support grouped `details` keep one open at a time.",
+      "tabs_layout_top": "Top navigation tabs",
+      "tabs_layout_left": "Tab nav left",
+      "tabs_layout_accordion": "Accordion",
       "content_max_width": "Content max width",
       "content_max_width_info": "Maximum width of the tab content and app blocks inside this section (centered).",
       "content_max_width_680": "Narrow (680px)",

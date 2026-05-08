@@ -1,9 +1,55 @@
+import gsap from 'gsap'
 import { registerSection } from './section-registry'
 
 const SECTION_TYPE = 'collection-grid'
 const DESKTOP_MQ = '(min-width: 75em)'
 
+type FilterLayout = 'offcanvas' | 'toggle' | 'overlay'
+
 type Teardown = () => void
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function getFilterLayout(container: HTMLElement): FilterLayout {
+  const v = container.dataset.filterLayout?.trim().toLowerCase()
+  if (v === 'toggle' || v === 'overlay') return v
+  return 'offcanvas'
+}
+
+function getOffcanvasSide(container: HTMLElement): 'left' | 'right' {
+  const v = container.dataset.filterOffcanvas?.trim().toLowerCase()
+  return v === 'right' ? 'right' : 'left'
+}
+
+function filterTweenTargets(container: HTMLElement): HTMLElement[] {
+  const layout = getFilterLayout(container)
+  const panel = container.querySelector<HTMLElement>('[data-filter-panel]')
+  const backdrop = container.querySelector<HTMLElement>('[data-filter-backdrop]')
+  if (layout === 'toggle') {
+    return [panel].filter((el): el is HTMLElement => el !== null)
+  }
+  return [panel, backdrop].filter((el): el is HTMLElement => el !== null)
+}
+
+function seedClosedFilterPanel(container: HTMLElement): void {
+  if (prefersReducedMotion()) return
+  const layout = getFilterLayout(container)
+  const panel = container.querySelector<HTMLElement>('[data-filter-panel]')
+  const backdrop = container.querySelector<HTMLElement>('[data-filter-backdrop]')
+  if (!panel || panel.classList.contains('is-open')) return
+
+  if (layout === 'offcanvas') {
+    const side = getOffcanvasSide(container)
+    gsap.set(panel, { x: side === 'left' ? '-100%' : '100%' })
+  } else if (layout === 'toggle') {
+    gsap.set(panel, { maxHeight: 0, opacity: 0, overflow: 'hidden' })
+  } else if (layout === 'overlay') {
+    gsap.set(panel, { y: -12, autoAlpha: 0 })
+    if (backdrop) gsap.set(backdrop, { autoAlpha: 0 })
+  }
+}
 
 function init(container: HTMLElement): void {
   const abort = new AbortController()
@@ -12,6 +58,11 @@ function init(container: HTMLElement): void {
   const mqlDesktop = window.matchMedia(DESKTOP_MQ)
   let priceTimer: ReturnType<typeof setTimeout> | null = null
   let fetchController: AbortController | null = null
+  const reducedMotion = prefersReducedMotion()
+  if (!reducedMotion) {
+    container.classList.add('mcol--filter-anim-gsap')
+    seedClosedFilterPanel(container)
+  }
 
   // ── Section Rendering API fetch ────────────────────────
 
@@ -35,28 +86,49 @@ function init(container: HTMLElement): void {
     const incoming = tmp.querySelector<HTMLElement>(`[data-section-id="${sectionId}"]`)
     if (!incoming) return
 
-    const toolbar = incoming.querySelector('.mcol__toolbar')
-    const body = incoming.querySelector('.mcol__body')
-
-    const existingToolbar = container.querySelector('.mcol__toolbar')
-    const existingBody = container.querySelector('.mcol__body')
-
-    if (toolbar && existingToolbar) {
-      existingToolbar.innerHTML = toolbar.innerHTML
+    const incomingStack = incoming.querySelector('.mcol__toolbar-stack')
+    const existingStack = container.querySelector('.mcol__toolbar-stack')
+    if (incomingStack && existingStack) {
+      existingStack.innerHTML = incomingStack.innerHTML
+    } else {
+      const toolbar = incoming.querySelector('.mcol__toolbar')
+      const existingToolbar = container.querySelector('.mcol__toolbar')
+      if (toolbar && existingToolbar) {
+        existingToolbar.innerHTML = toolbar.innerHTML
+      }
     }
+
+    const body = incoming.querySelector('.mcol__body')
+    const existingBody = container.querySelector('.mcol__body')
     if (body && existingBody) {
       existingBody.replaceWith(body)
+    }
+
+    if (!keepDrawerOpen && !prefersReducedMotion()) {
+      seedClosedFilterPanel(container)
     }
 
     if (keepDrawerOpen) {
       const panel = container.querySelector<HTMLElement>('[data-filter-panel]')
       const backdrop = container.querySelector<HTMLElement>('[data-filter-backdrop]')
       const toggle = container.querySelector<HTMLButtonElement>('[data-filter-toggle]')
-      if (panel && !mqlDesktop.matches) {
+      const layout = getFilterLayout(container)
+      if (panel) {
+        gsap.killTweensOf(filterTweenTargets(container))
         panel.classList.add('is-open')
-        backdrop?.classList.add('is-visible')
         toggle?.setAttribute('aria-expanded', 'true')
-        document.body.style.overflow = 'hidden'
+        if (layout === 'offcanvas') {
+          backdrop?.classList.add('is-visible')
+          document.body.style.overflow = 'hidden'
+          gsap.set(panel, { x: 0 })
+          if (backdrop) gsap.set(backdrop, { autoAlpha: 1 })
+        } else if (layout === 'toggle') {
+          gsap.set(panel, { maxHeight: 'none', opacity: 1, overflow: 'hidden' })
+        } else if (layout === 'overlay') {
+          backdrop?.classList.add('is-visible')
+          gsap.set(panel, { y: 0, autoAlpha: 1 })
+          if (backdrop) gsap.set(backdrop, { autoAlpha: 1 })
+        }
       }
     }
   }
@@ -101,7 +173,7 @@ function init(container: HTMLElement): void {
       // Filter toggle
       if (target.closest('[data-filter-toggle]')) {
         e.preventDefault()
-        toggleFilterDrawer(container, mqlDesktop)
+        toggleFilterDrawer(container)
         return
       }
 
@@ -236,17 +308,12 @@ function init(container: HTMLElement): void {
     { signal }
   )
 
-  // ── Desktop breakpoint: reset drawer state ─────────────
+  // ── Desktop breakpoint: close panel ────────────────────
 
   mqlDesktop.addEventListener(
     'change',
     () => {
-      if (mqlDesktop.matches) {
-        closeFilterDrawer(container)
-        container
-          .querySelector<HTMLElement>('.mcol__body')
-          ?.classList.remove('mcol__body--filters-collapsed')
-      }
+      closeFilterDrawer(container)
     },
     { signal }
   )
@@ -267,25 +334,17 @@ function init(container: HTMLElement): void {
   extended.__collectionGridTeardown = () => {
     if (priceTimer) clearTimeout(priceTimer)
     fetchController?.abort()
+    gsap.killTweensOf(filterTweenTargets(container))
+    document.body.style.overflow = ''
     abort.abort()
   }
 }
 
 // ── Filter drawer helpers ──────────────────────────────────
 
-function toggleFilterDrawer(container: HTMLElement, mqlDesktop: MediaQueryList): void {
+function toggleFilterDrawer(container: HTMLElement): void {
   const panel = container.querySelector<HTMLElement>('[data-filter-panel]')
   if (!panel) return
-
-  if (mqlDesktop.matches) {
-    const body = container.querySelector<HTMLElement>('.mcol__body')
-    if (!body) return
-    const isCollapsed = body.classList.toggle('mcol__body--filters-collapsed')
-    container
-      .querySelector<HTMLButtonElement>('[data-filter-toggle]')
-      ?.setAttribute('aria-expanded', String(!isCollapsed))
-    return
-  }
 
   if (panel.classList.contains('is-open')) {
     closeFilterDrawer(container)
@@ -298,22 +357,193 @@ function openFilterDrawer(container: HTMLElement): void {
   const panel = container.querySelector<HTMLElement>('[data-filter-panel]')
   const backdrop = container.querySelector<HTMLElement>('[data-filter-backdrop]')
   const toggle = container.querySelector<HTMLButtonElement>('[data-filter-toggle]')
+  if (!panel) return
 
-  panel?.classList.add('is-open')
-  backdrop?.classList.add('is-visible')
+  const layout = getFilterLayout(container)
+  const reduced = prefersReducedMotion()
+
+  panel.classList.add('is-open')
   toggle?.setAttribute('aria-expanded', 'true')
-  document.body.style.overflow = 'hidden'
+
+  if (layout === 'offcanvas') {
+    backdrop?.classList.add('is-visible')
+    document.body.style.overflow = 'hidden'
+  } else if (layout === 'overlay') {
+    backdrop?.classList.add('is-visible')
+  }
+
+  if (reduced) {
+    if (layout === 'toggle') {
+      // CSS handles visibility for reduced-motion toggle
+    }
+    return
+  }
+
+  gsap.killTweensOf(filterTweenTargets(container))
+
+  if (layout === 'offcanvas') {
+    const side = getOffcanvasSide(container)
+    const fromX = side === 'left' ? '-100%' : '100%'
+    gsap.set(panel, { x: fromX })
+    if (backdrop) gsap.set(backdrop, { autoAlpha: 0 })
+
+    gsap.to(backdrop, {
+      autoAlpha: 1,
+      duration: 0.38,
+      ease: 'power2.out',
+    })
+    gsap.to(panel, {
+      x: 0,
+      duration: 0.48,
+      ease: 'power3.out',
+    })
+    return
+  }
+
+  if (layout === 'toggle') {
+    gsap.set(panel, { overflow: 'hidden', maxHeight: 0, opacity: 0 })
+    const raw = Math.max(panel.scrollHeight, 1)
+    gsap.to(panel, {
+      maxHeight: raw,
+      opacity: 1,
+      duration: 0.45,
+      ease: 'power2.out',
+      onComplete: () => {
+        gsap.set(panel, { maxHeight: 'none', overflow: 'hidden' })
+      },
+    })
+    return
+  }
+
+  // overlay
+  gsap.set(panel, { y: -12 })
+  if (backdrop) gsap.set(backdrop, { autoAlpha: 0 })
+  gsap.to(backdrop, {
+    autoAlpha: 1,
+    duration: 0.32,
+    ease: 'power2.out',
+  })
+  gsap.to(panel, {
+    y: 0,
+    autoAlpha: 1,
+    duration: 0.38,
+    ease: 'power3.out',
+  })
 }
 
 function closeFilterDrawer(container: HTMLElement): void {
   const panel = container.querySelector<HTMLElement>('[data-filter-panel]')
   const backdrop = container.querySelector<HTMLElement>('[data-filter-backdrop]')
   const toggle = container.querySelector<HTMLButtonElement>('[data-filter-toggle]')
+  if (!panel) return
 
-  panel?.classList.remove('is-open')
-  backdrop?.classList.remove('is-visible')
-  toggle?.setAttribute('aria-expanded', 'false')
-  document.body.style.overflow = ''
+  if (!panel.classList.contains('is-open')) {
+    document.body.style.overflow = ''
+    return
+  }
+
+  const layout = getFilterLayout(container)
+  const reduced = prefersReducedMotion()
+
+  if (layout !== 'toggle') {
+    toggle?.setAttribute('aria-expanded', 'false')
+  }
+
+  if (layout === 'toggle') {
+    document.body.style.overflow = ''
+    if (reduced) {
+      toggle?.setAttribute('aria-expanded', 'false')
+      panel.classList.remove('is-open')
+      return
+    }
+
+    const h = Math.max(panel.scrollHeight, panel.getBoundingClientRect().height, 1)
+    gsap.killTweensOf(filterTweenTargets(container))
+    gsap.set(panel, { maxHeight: h, overflow: 'hidden' })
+    gsap.to(panel, {
+      maxHeight: 0,
+      opacity: 0,
+      duration: 0.45,
+      ease: 'power2.out',
+      onComplete: () => {
+        gsap.set(panel, {
+          maxHeight: 0,
+          opacity: 0,
+          overflow: 'hidden',
+        })
+        requestAnimationFrame(() => {
+          panel.classList.remove('is-open')
+          toggle?.setAttribute('aria-expanded', 'false')
+        })
+      },
+    })
+    return
+  }
+
+  if (layout === 'overlay') {
+    if (reduced) {
+      panel.classList.remove('is-open')
+      backdrop?.classList.remove('is-visible')
+      return
+    }
+
+    gsap.killTweensOf(filterTweenTargets(container))
+    gsap.to(panel, {
+      y: -12,
+      autoAlpha: 0,
+      duration: 0.32,
+      ease: 'power2.in',
+      onComplete: () => {
+        panel.classList.remove('is-open')
+        gsap.set(panel, { y: -12 })
+      },
+    })
+    gsap.to(backdrop, {
+      autoAlpha: 0,
+      duration: 0.28,
+      ease: 'power2.in',
+      onComplete: () => {
+        backdrop?.classList.remove('is-visible')
+      },
+    })
+    return
+  }
+
+  // offcanvas
+  if (reduced) {
+    panel.classList.remove('is-open')
+    backdrop?.classList.remove('is-visible')
+    document.body.style.overflow = ''
+    gsap.set(panel, { clearProps: 'transform' })
+    return
+  }
+
+  const side = getOffcanvasSide(container)
+  const toX = side === 'left' ? '-100%' : '100%'
+  gsap.killTweensOf(filterTweenTargets(container))
+
+  gsap.to(panel, {
+    x: toX,
+    duration: 0.4,
+    ease: 'power3.in',
+    onComplete: () => {
+      panel.classList.remove('is-open')
+      gsap.set(panel, { clearProps: 'transform' })
+      const p = container.querySelector<HTMLElement>('[data-filter-panel]')
+      if (p && !p.classList.contains('is-open')) {
+        gsap.set(p, { x: getOffcanvasSide(container) === 'left' ? '-100%' : '100%' })
+      }
+      document.body.style.overflow = ''
+    },
+  })
+  gsap.to(backdrop, {
+    autoAlpha: 0,
+    duration: 0.32,
+    ease: 'power2.in',
+    onComplete: () => {
+      backdrop?.classList.remove('is-visible')
+    },
+  })
 }
 
 // ── Section lifecycle ──────────────────────────────────────

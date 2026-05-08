@@ -1,0 +1,48 @@
+{%- comment -%}
+  Inner content for `tab_description` / `tab_rte` panels (product tabs).
+  @param block | product | section | pdp_has_accordions | pdp_has_spec
+{%- endcomment -%}
+{%- if block.type == 'tab_description' -%}
+  {%- assign pdp_desc_filled = false -%}
+  {%- if product.description != blank or pdp_has_accordions -%}
+    {%- assign pdp_desc_filled = true -%}
+  {%- endif -%}
+  {%- if product.description != blank -%}
+    <div class="main-product__description main-product__description--wide rte">
+      {{- product.description -}}
+    </div>
+  {%- endif -%}
+  {%- render 'pdp-accordion-blocks', section: section -%}
+  {%- unless pdp_desc_filled -%}
+    <p class="main-product__tab-notice" role="status">
+      {{- 'products.product.tab_empty_description' | t -}}
+    </p>
+  {%- endunless -%}
+
+{%- elsif block.type == 'tab_rte' -%}
+  {%- assign pdp_rte_body = block.settings.body -%}
+  {%- assign pdp_rte_filled = false -%}
+  {%- if pdp_rte_body != blank -%}
+    {%- assign pdp_rte_filled = true -%}
+  {%- endif -%}
+  {%- if block.settings.include_spec_rows and pdp_has_spec -%}
+    {%- assign pdp_rte_filled = true -%}
+  {%- endif -%}
+  {%- if pdp_rte_body != blank -%}
+    <div class="main-product__tab-rte rte">
+      {{- pdp_rte_body -}}
+    </div>
+  {%- endif -%}
+  {%- if block.settings.include_spec_rows and pdp_has_spec -%}
+    {%- render 'pdp-spec-blocks', section: section, in_tab: true -%}
+  {%- endif -%}
+  {%- unless pdp_rte_filled -%}
+    <p class="main-product__tab-notice" role="status">
+      {%- if block.settings.empty_message != blank -%}
+        {{- block.settings.empty_message | escape -}}
+      {%- else -%}
+        {{- 'products.product.tab_empty_rte' | t -}}
+      {%- endif -%}
+    </p>
+  {%- endunless -%}
+{%- endif -%}

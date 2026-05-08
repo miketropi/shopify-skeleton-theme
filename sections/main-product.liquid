@@ -1,5 +1,5 @@
 {%- comment -%}
-  Product (PDP) — block-based layout: breadcrumbs, gallery, title/price, variant picker, buy buttons, meta, lede, optional accordion blocks, app blocks.
+  Product (PDP) — block-based layout: breadcrumbs, gallery, title/price, variant picker, buy buttons, meta, optional rich text & dividers, optional accordion blocks, app blocks.
   Product description / specs / tab accordions live in the separate **Product tabs** section.
 {%- endcomment -%}
 {%- liquid
@@ -14,7 +14,6 @@
     assign off_pct = off_cents | times: 100 | divided_by: current_variant.compare_at_price
   endif
   assign product_form_id = 'product-form-' | append: section.id
-  assign lede = product.metafields.custom.lede
   assign rating = product.metafields.reviews.rating.value
   assign rating_count = product.metafields.reviews.rating_count.value
   if rating_count == blank
@@ -90,6 +89,7 @@
             {%- render 'pdp-gallery',
               product: product,
               section: section,
+              block: block,
               show_compare: show_compare,
               off_pct: off_pct
             -%}
@@ -169,11 +169,18 @@
                       -%}
                     </div>
                   {%- endif -%}
-                {%- when 'lede' -%}
-                  {%- if lede != blank -%}
-                    <p class="main-product__lede main-product__block main-product__block--lede" {{ block.shopify_attributes }}>
-                      {{- lede | escape -}}
-                    </p>
+                {%- when 'pdp_divider' -%}
+                  <div
+                    class="main-product__block main-product__block--divider main-product__block--divider-spacing-{{ block.settings.spacing }} main-product__block--divider-weight-{{ block.settings.line_weight }}"
+                    {{ block.shopify_attributes }}
+                  >
+                    <hr class="main-product__divider-hr" aria-hidden="true">
+                  </div>
+                {%- when 'pdp_richtext' -%}
+                  {%- if block.settings.text != blank -%}
+                    <div class="main-product__block main-product__block--richtext rte" {{ block.shopify_attributes }}>
+                      {{- block.settings.text -}}
+                    </div>
                   {%- endif -%}
                 {%- when 'pdp_accordion' -%}
                   {%- render 'pdp-product-accordion', block: block -%}
@@ -282,7 +289,33 @@
       "type": "gallery",
       "name": "t:sections.main_product.block_gallery",
       "limit": 1,
-      "settings": []
+      "settings": [
+        {
+          "type": "select",
+          "id": "gallery_layout",
+          "label": "t:sections.main_product.gallery_layout_label",
+          "info": "t:sections.main_product.gallery_layout_info",
+          "default": "carousel_thumbs_left",
+          "options": [
+            {
+              "value": "carousel_thumbs_left",
+              "label": "t:sections.main_product.gallery_layout_carousel_left"
+            },
+            {
+              "value": "carousel_thumbs_bottom",
+              "label": "t:sections.main_product.gallery_layout_carousel_bottom"
+            },
+            {
+              "value": "carousel_no_thumbs",
+              "label": "t:sections.main_product.gallery_layout_carousel_no_thumbs"
+            },
+            {
+              "value": "stacked",
+              "label": "t:sections.main_product.gallery_layout_stacked"
+            }
+          ]
+        }
+      ]
     },
     {
       "type": "product_title",
@@ -309,10 +342,43 @@
       "settings": []
     },
     {
-      "type": "lede",
-      "name": "t:sections.main_product.block_lede",
-      "limit": 1,
-      "settings": []
+      "type": "pdp_divider",
+      "name": "t:sections.main_product.block_pdp_divider",
+      "settings": [
+        {
+          "type": "select",
+          "id": "spacing",
+          "label": "t:sections.main_product.pdp_divider_spacing",
+          "info": "t:sections.main_product.pdp_divider_spacing_info",
+          "default": "comfortable",
+          "options": [
+            { "value": "compact", "label": "t:sections.main_product.pdp_divider_spacing_compact" },
+            { "value": "comfortable", "label": "t:sections.main_product.pdp_divider_spacing_comfortable" },
+            { "value": "spacious", "label": "t:sections.main_product.pdp_divider_spacing_spacious" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "line_weight",
+          "label": "t:sections.main_product.pdp_divider_weight",
+          "default": "hairline",
+          "options": [
+            { "value": "hairline", "label": "t:sections.main_product.pdp_divider_hairline" },
+            { "value": "medium", "label": "t:sections.main_product.pdp_divider_medium" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "pdp_richtext",
+      "name": "t:sections.main_product.block_pdp_richtext",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:sections.main_product.pdp_richtext_label"
+        }
+      ]
     },
     {
       "type": "pdp_accordion",
@@ -350,8 +416,7 @@
         "pdp_title": { "type": "product_title", "settings": {} },
         "pdp_variant": { "type": "variant_picker", "settings": {} },
         "pdp_buy": { "type": "buy_buttons", "settings": {} },
-        "pdp_meta": { "type": "meta", "settings": {} },
-        "pdp_lede": { "type": "lede", "settings": {} }
+        "pdp_meta": { "type": "meta", "settings": {} }
       },
       "block_order": [
         "pdp_breadcrumbs",
@@ -359,8 +424,7 @@
         "pdp_title",
         "pdp_variant",
         "pdp_buy",
-        "pdp_meta",
-        "pdp_lede"
+        "pdp_meta"
       ]
     }
   ]

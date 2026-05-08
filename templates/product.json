@@ -18,8 +18,7 @@
         "pdp_title": { "type": "product_title", "settings": {} },
         "pdp_variant": { "type": "variant_picker", "settings": {} },
         "pdp_buy": { "type": "buy_buttons", "settings": {} },
-        "pdp_meta": { "type": "meta", "settings": {} },
-        "pdp_lede": { "type": "lede", "settings": {} }
+        "pdp_meta": { "type": "meta", "settings": {} }
       },
       "block_order": [
         "pdp_breadcrumbs",
@@ -27,8 +26,7 @@
         "pdp_title",
         "pdp_variant",
         "pdp_buy",
-        "pdp_meta",
-        "pdp_lede"
+        "pdp_meta"
       ]
     },
     "product_tabs": {

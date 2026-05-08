@@ -562,7 +562,36 @@ export function attachMainProduct(container: HTMLElement): void {
       let mainSwiper: InstanceType<typeof Swiper> | null = null
       let thumbsSwiper: InstanceType<typeof Swiper> | null = null
 
-      if (swiperEl && thumbsEl) {
+      const galleryLayout = gallery?.dataset.galleryLayout ?? 'carousel_thumbs_left'
+      const thumbsHorizontalOnly = galleryLayout === 'carousel_thumbs_bottom'
+      const useThumbs =
+        galleryLayout !== 'carousel_no_thumbs' && galleryLayout !== 'stacked'
+
+      const onMainSlideChange = (sw: InstanceType<typeof Swiper>): void => {
+        const id = mediaOrder[sw.activeIndex] ?? null
+        if (gallery && id != null) gallery.setAttribute('data-active-media-id', String(id))
+        container.querySelectorAll<HTMLButtonElement>('[data-product-thumb]').forEach((btn) => {
+          const mid = btn.getAttribute('data-media-id')
+          btn.setAttribute('aria-pressed', mid === String(id) ? 'true' : 'false')
+        })
+      }
+
+      if (swiperEl && useThumbs && thumbsEl) {
+        const thumbBreakpoints = thumbsHorizontalOnly
+          ? {
+              480: { slidesPerView: 4.75, spaceBetween: 8 },
+              768: { slidesPerView: 6.25, spaceBetween: 10 },
+            }
+          : {
+              480: { slidesPerView: 4.5 },
+              768: {
+                direction: 'vertical' as const,
+                slidesPerView: 'auto' as const,
+                spaceBetween: 8,
+                freeMode: true,
+              },
+            }
+
         thumbsSwiper = new Swiper(thumbsEl, {
           modules: [A11y, FreeMode],
           watchSlidesProgress: true,
@@ -572,15 +601,7 @@ export function attachMainProduct(container: HTMLElement): void {
           slidesPerView: 4.2,
           freeMode: true,
           direction: 'horizontal',
-          breakpoints: {
-            480: { slidesPerView: 4.5 },
-            768: {
-              direction: 'vertical',
-              slidesPerView: 'auto',
-              spaceBetween: 8,
-              freeMode: true,
-            },
-          },
+          breakpoints: thumbBreakpoints,
         })
         mainSwiper = new Swiper(swiperEl, {
           modules: [A11y, EffectFade, Keyboard, Navigation, Thumbs],
@@ -599,18 +620,34 @@ export function attachMainProduct(container: HTMLElement): void {
           },
           thumbs: { swiper: thumbsSwiper },
           on: {
-            slideChange(sw) {
-              const id = mediaOrder[sw.activeIndex] ?? null
-              if (gallery && id != null) gallery.setAttribute('data-active-media-id', String(id))
-              container.querySelectorAll<HTMLButtonElement>('[data-product-thumb]').forEach((btn) => {
-                const mid = btn.getAttribute('data-media-id')
-                btn.setAttribute('aria-pressed', mid === String(id) ? 'true' : 'false')
-              })
-            },
+            slideChange: onMainSlideChange,
           },
         })
         queueMicrotask(() => {
           thumbsSwiper?.update()
+          mainSwiper?.update()
+        })
+      } else if (swiperEl && !useThumbs) {
+        mainSwiper = new Swiper(swiperEl, {
+          modules: [A11y, EffectFade, Keyboard, Navigation],
+          effect: 'fade',
+          fadeEffect: { crossFade: true },
+          speed: reduced ? 0 : 520,
+          keyboard: { enabled: true, onlyInViewport: true },
+          spaceBetween: 0,
+          grabCursor: !reduced,
+          watchOverflow: true,
+          observer: true,
+          observeParents: true,
+          navigation: {
+            nextEl: container.querySelector<HTMLElement>('[data-product-nav-next]') ?? undefined,
+            prevEl: container.querySelector<HTMLElement>('[data-product-nav-prev]') ?? undefined,
+          },
+          on: {
+            slideChange: onMainSlideChange,
+          },
+        })
+        queueMicrotask(() => {
           mainSwiper?.update()
         })
       }
@@ -659,10 +696,24 @@ export function attachMainProduct(container: HTMLElement): void {
       }
 
       function goToMediaId(featuredId: number | null): void {
-        if (featuredId == null || !mainSwiper || mediaOrder.length === 0) return
-        const idx = getSlideIndexForMediaId(mediaOrder, featuredId)
-        mainSwiper.slideTo(idx, reduced ? 0 : 480)
-        if (gallery) gallery.setAttribute('data-active-media-id', String(featuredId))
+        if (featuredId == null) return
+        if (mainSwiper && mediaOrder.length > 0) {
+          const idx = getSlideIndexForMediaId(mediaOrder, featuredId)
+          mainSwiper.slideTo(idx, reduced ? 0 : 480)
+          if (gallery) gallery.setAttribute('data-active-media-id', String(featuredId))
+          container.querySelectorAll<HTMLButtonElement>('[data-product-thumb]').forEach((btn) => {
+            const mid = btn.getAttribute('data-media-id')
+            btn.setAttribute('aria-pressed', mid === String(featuredId) ? 'true' : 'false')
+          })
+          return
+        }
+        const stackItem = gallery?.querySelector<HTMLElement>(
+          `[data-product-stack-item][data-media-id="${featuredId}"]`
+        )
+        if (stackItem) {
+          stackItem.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' })
+          if (gallery) gallery.setAttribute('data-active-media-id', String(featuredId))
+        }
       }
 
       function applySingleImageFromVariant(m: MediaEntry | undefined): void {
@@ -682,6 +733,10 @@ export function attachMainProduct(container: HTMLElement): void {
         const id = v.featured_media_id
         if (id == null) return
         if (mainSwiper && mediaOrder.length > 0) {
+          goToMediaId(id)
+          return
+        }
+        if (gallery?.dataset.galleryLayout === 'stacked') {
           goToMediaId(id)
           return
         }

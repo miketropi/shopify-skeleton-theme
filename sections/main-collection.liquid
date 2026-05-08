@@ -10,6 +10,14 @@
   assign image_ratio = section.settings.image_ratio | default: '3/4'
   assign show_filtering = section.settings.show_filtering
   assign show_sort = section.settings.show_sort
+  assign filter_offcanvas_position = section.settings.filter_offcanvas_position | default: 'left'
+  assign filter_layout = section.settings.filter_layout | default: 'offcanvas'
+  if filter_offcanvas_position != 'left' and filter_offcanvas_position != 'right'
+    assign filter_offcanvas_position = 'left'
+  endif
+  if filter_layout != 'offcanvas' and filter_layout != 'toggle' and filter_layout != 'overlay'
+    assign filter_layout = 'offcanvas'
+  endif
 
   assign active_count = 0
   if show_filtering
@@ -27,10 +35,12 @@
 -%}
 
 <div
-  class="section-{{ section.id }} mcol"
+  class="section-{{ section.id }} mcol mcol--filter-layout-{{ filter_layout }}"
   data-section-type="collection-grid"
   data-section-id="{{ section.id }}"
   data-collection-url="{{ collection.url }}"
+  data-filter-layout="{{ filter_layout }}"
+  data-filter-offcanvas="{{ filter_offcanvas_position }}"
   style="--mcol-cols: {{ cols }}; --tcard-image-ratio: {{ image_ratio }};"
   {% render 'color-scheme-vars' %}
 >
@@ -81,7 +91,10 @@
       </div>
     {%- endif -%}
 
-    {%- comment -%} ── Toolbar ── {%- endcomment -%}
+    {%- comment -%} ── Toolbar (+ overlay filter mount) ── {%- endcomment -%}
+    {%- if show_filtering and collection.filters.size > 0 and filter_layout == 'overlay' -%}
+      <div class="mcol__toolbar-stack">
+    {%- endif -%}
     <div class="mcol__toolbar">
       {%- if show_filtering and collection.filters.size > 0 -%}
         <button
@@ -120,113 +133,34 @@
       {%- endif -%}
     </div>
 
-    {%- comment -%} ── Filter panel + Grid wrapper ── {%- endcomment -%}
+    {%- if show_filtering and collection.filters.size > 0 and filter_layout == 'overlay' -%}
+      <div class="mcol__filter-backdrop mcol__filter-backdrop--overlay" data-filter-backdrop aria-hidden="true"></div>
+      {%- render 'mcol-filters-panel',
+        section: section,
+        collection: collection,
+        active_count: active_count,
+        filter_layout: filter_layout,
+        filter_offcanvas_position: filter_offcanvas_position
+      -%}
+    </div>
+    {%- endif -%}
+
+    {%- comment -%} ── Filter panel (offcanvas / toggle) + Grid wrapper ── {%- endcomment -%}
     <div class="mcol__body{% if show_filtering and collection.filters.size > 0 %} mcol__body--has-filters{% endif %}">
 
       {%- if show_filtering and collection.filters.size > 0 -%}
-        <div class="mcol__filter-backdrop" data-filter-backdrop></div>
-        <aside
-          class="mcol__filters"
-          id="mcol-filters-{{ section.id }}"
-          data-filter-panel
-          aria-label="{{ 'collections.filtering.filter' | t }}"
-        >
-          <div class="mcol__filters-header">
-            <span class="mcol__filters-heading">{{ 'collections.filtering.filter' | t }}</span>
-            <button class="mcol__filters-close" type="button" data-filter-close aria-label="{{ 'collections.filtering.close_filters' | t }}">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-          </div>
-
-          <form class="mcol__filters-form" data-filter-form>
-            {%- for filter in collection.filters -%}
-              <details class="mcol__filter-group" open>
-                <summary class="mcol__filter-summary">
-                  {{ filter.label }}
-                  <svg class="mcol__filter-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-                </summary>
-
-                <div class="mcol__filter-values">
-                  {%- case filter.type -%}
-                    {%- when 'list' or 'boolean' -%}
-                      <ul class="mcol__filter-list" role="list">
-                        {%- for value in filter.values -%}
-                          {%- liquid
-                            if value.active
-                              assign filter_url = value.url_to_remove
-                            else
-                              assign filter_url = value.url_to_add
-                            endif
-                          -%}
-                          <li>
-                            <a
-                              class="mcol__filter-option{% if value.active %} mcol__filter-option--active{% endif %}{% if value.count == 0 and value.active == false %} mcol__filter-option--disabled{% endif %}"
-                              href="{{ filter_url }}"
-                              {% if value.count == 0 and value.active == false %}aria-disabled="true"{% endif %}
-                            >
-                              <span class="mcol__filter-check" aria-hidden="true">
-                                {%- if value.active -%}
-                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                                {%- endif -%}
-                              </span>
-                              <span class="mcol__filter-label">{{ value.label }}</span>
-                              <span class="mcol__filter-count">({{ value.count }})</span>
-                            </a>
-                          </li>
-                        {%- endfor -%}
-                      </ul>
-
-                    {%- when 'price_range' -%}
-                      {%- liquid
-                        assign price_min = filter.min_value.value | default: '' | money_without_currency
-                        assign price_max = filter.max_value.value | default: '' | money_without_currency
-                        assign range_max = filter.range_max | money_without_currency
-                      -%}
-                      <div class="mcol__filter-price">
-                        <div class="mcol__filter-price-field">
-                          <label for="filter-price-min-{{ section.id }}">{{ 'collections.filtering.price_from' | t }}</label>
-                          <input
-                            type="number"
-                            id="filter-price-min-{{ section.id }}"
-                            class="mcol__filter-price-input"
-                            name="{{ filter.min_value.param_name }}"
-                            value="{{ price_min }}"
-                            min="0"
-                            max="{{ range_max }}"
-                            placeholder="0"
-                            data-price-range="min"
-                          >
-                        </div>
-                        <span class="mcol__filter-price-sep" aria-hidden="true">&ndash;</span>
-                        <div class="mcol__filter-price-field">
-                          <label for="filter-price-max-{{ section.id }}">{{ 'collections.filtering.price_to' | t }}</label>
-                          <input
-                            type="number"
-                            id="filter-price-max-{{ section.id }}"
-                            class="mcol__filter-price-input"
-                            name="{{ filter.max_value.param_name }}"
-                            value="{{ price_max }}"
-                            min="0"
-                            max="{{ range_max }}"
-                            placeholder="{{ range_max }}"
-                            data-price-range="max"
-                          >
-                        </div>
-                      </div>
-                  {%- endcase -%}
-                </div>
-              </details>
-            {%- endfor -%}
-          </form>
-
-          {%- if active_count > 0 -%}
-            <div class="mcol__filters-footer">
-              <a class="mcol__filters-clear" href="{{ collection.url }}">
-                {{ 'collections.filtering.clear_all' | t }}
-              </a>
-            </div>
+        {%- if filter_layout == 'offcanvas' or filter_layout == 'toggle' -%}
+          {%- if filter_layout == 'offcanvas' -%}
+            <div class="mcol__filter-backdrop" data-filter-backdrop aria-hidden="true"></div>
           {%- endif -%}
-        </aside>
+          {%- render 'mcol-filters-panel',
+            section: section,
+            collection: collection,
+            active_count: active_count,
+            filter_layout: filter_layout,
+            filter_offcanvas_position: filter_offcanvas_position
+          -%}
+        {%- endif -%}
       {%- endif -%}
 
       <div class="mcol__main">
@@ -240,7 +174,7 @@
                     assign pmin_cents = filter.min_value.value | default: 0
                     assign pmax_cents = filter.max_value.value | default: filter.range_max
                   -%}
-                  <a class="mcol__pill" href="{{ collection.url }}">
+                  <a class="mcol__pill" href="{{ filter.url_to_remove }}" aria-label="{{ 'collections.filtering.remove_filter' | t: label: filter.label }}">
                     {{ filter.label }}:
                     {%- render 'price-display', price: pmin_cents, variant: 'pill' %}
                     &ndash;
@@ -380,6 +314,29 @@
       "label": "Enable collection filtering",
       "info": "Filters must also be configured in Shopify admin under Online Store > Navigation",
       "default": true
+    },
+    {
+      "type": "select",
+      "id": "filter_layout",
+      "label": "t:sections.main_collection.filter_layout.label",
+      "info": "t:sections.main_collection.filter_layout.info",
+      "options": [
+        { "value": "offcanvas", "label": "t:sections.main_collection.filter_layout.offcanvas" },
+        { "value": "toggle", "label": "t:sections.main_collection.filter_layout.toggle" },
+        { "value": "overlay", "label": "t:sections.main_collection.filter_layout.overlay" }
+      ],
+      "default": "offcanvas"
+    },
+    {
+      "type": "select",
+      "id": "filter_offcanvas_position",
+      "label": "t:sections.main_collection.filter_offcanvas_position.label",
+      "visible_if": "{{ section.settings.filter_layout == 'offcanvas' }}",
+      "options": [
+        { "value": "left", "label": "t:sections.main_collection.filter_offcanvas_position.left" },
+        { "value": "right", "label": "t:sections.main_collection.filter_offcanvas_position.right" }
+      ],
+      "default": "left"
     },
     {
       "type": "checkbox",

@@ -179,6 +179,16 @@ $_radius-lg: 16px;
   }
 }
 
+.mcol__toolbar-stack {
+  position: relative;
+  z-index: 25;
+  margin-bottom: $space-lg;
+
+  > .mcol__toolbar {
+    margin-bottom: 0;
+  }
+}
+
 .mcol__toolbar-count {
   display: none;
   margin: 0;
@@ -299,31 +309,41 @@ $_radius-lg: 16px;
   }
 }
 
-// ─── Body layout (filter sidebar + main) ─────────────────
+// ─── Body layout (product grid + filters) ────────────────
 
 .mcol__body {
   display: block;
+  min-width: 0;
 }
 
 .mcol__body--has-filters {
-  @include mq-up('lg') {
-    display: grid;
-    grid-template-columns: 16rem 1fr;
-    gap: $space-xl;
-
-    &.mcol__body--filters-collapsed {
-      grid-template-columns: 1fr;
-
-      .mcol__filters {
-        display: none;
-      }
-    }
-  }
+  // marker class only — no sidebar grid
 }
 
 .mcol__main {
   min-width: 0;
   scroll-margin-top: 1rem;
+}
+
+// GSAP owns motion on filter panels when this class is present
+.mcol--filter-anim-gsap .mcol__filters--offcanvas,
+.mcol--filter-anim-gsap .mcol__filters--toggle,
+.mcol--filter-anim-gsap .mcol__filters--overlay {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mcol__filters--offcanvas {
+    transition: transform 0.2s ease !important;
+  }
+
+  .mcol__filters--toggle,
+  .mcol__filters--overlay {
+    transition:
+      max-height 0.2s ease,
+      opacity 0.2s ease,
+      transform 0.2s ease !important;
+  }
 }
 
 // ─── AJAX loading state ──────────────────────────────────
@@ -338,55 +358,304 @@ $_radius-lg: 16px;
   pointer-events: none;
 }
 
-// ─── Filter panel ─────────────────────────────────────────
+// ─── Filter panel (offcanvas — airy sheet, minimal edge chrome) ──
 
-.mcol__filters {
-  // Mobile: drawer overlay
+.mcol__filters--offcanvas {
+  --mcol-filter-panel-radius: min(calc(var(--style-border-radius-inputs, 8px) + 8px), 24px);
+  --mcol-filter-hairline: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
+  --mcol-filter-radius-sm: min(calc((var(--style-border-radius-inputs, 8px) + 1px) * 1), 11px);
+
   position: fixed;
-  inset: 0;
-  z-index: 100;
+  top: 0;
+  bottom: 0;
+  z-index: 991;
   display: flex;
   flex-direction: column;
+  width: min(100vw - 1.5rem, 26rem);
+  max-width: 100%;
+  padding: 0;
+  overflow: hidden;
+  color: var(--cs-text);
   background: var(--cs-background);
-  transform: translateX(-100%);
-  transition: transform 0.35s $_ease-out;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  max-width: 22rem;
-  width: 100%;
-  padding: $space-lg;
+  border: none;
+  box-shadow:
+    0 0 0 0.5px color-mix(in srgb, var(--cs-text) 7%, transparent),
+    0 28px 90px -20px color-mix(in srgb, var(--cs-text) 22%, transparent);
+  pointer-events: none;
+  visibility: hidden;
+
+  &.mcol__filters--left {
+    left: 0;
+    right: auto;
+    transform: translate3d(-100%, 0, 0);
+    border-radius: 0 var(--mcol-filter-panel-radius) var(--mcol-filter-panel-radius) 0;
+  }
+
+  &.mcol__filters--right {
+    left: auto;
+    right: 0;
+    transform: translate3d(100%, 0, 0);
+    border-radius: var(--mcol-filter-panel-radius) 0 0 var(--mcol-filter-panel-radius);
+  }
 
   &.is-open {
-    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0);
   }
 
-  @include mq-up('lg') {
-    position: static;
-    transform: none;
-    max-width: none;
-    padding: 0;
-    overflow-y: visible;
-    z-index: auto;
-    transition: none;
+  .mcol__filters-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    padding: 1.125rem 1.125rem 0.875rem;
+    margin: 0;
+    border-bottom: 1px solid var(--mcol-filter-hairline);
   }
+
+  .mcol__filters-heading {
+    margin: 0;
+    font-size: 1.1875rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--cs-heading);
+  }
+
+  .mcol__filters-form {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    padding: 0.375rem 1.125rem 1rem;
+  }
+
+  .mcol__filters-form--grid {
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    align-items: stretch;
+  }
+
+  .mcol__filters-footer {
+    flex-shrink: 0;
+    margin-top: auto;
+    padding: 0.85rem 1.125rem calc(1rem + env(safe-area-inset-bottom, 0));
+    border-top: 1px solid var(--mcol-filter-hairline);
+    background: var(--cs-background);
+  }
+
+  .mcol__filters-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: auto;
+    padding: 0;
+    font: inherit;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    color: var(--cs-accent);
+    text-align: center;
+    text-decoration: none;
+    background: none;
+    border: none;
+    border-radius: var(--mcol-filter-radius-sm);
+    transition: opacity 0.15s ease;
+
+    &:hover {
+      opacity: 0.72;
+      color: var(--cs-accent);
+      background: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--cs-accent);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.mcol--filter-anim-gsap .mcol__filters--offcanvas.is-open {
+  transform: none;
+}
+
+// ─── Filter panel: inline toggle (below toolbar) ──────────
+
+.mcol__filters--toggle {
+  --mcol-filter-hairline: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
+
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: $space-lg;
+  padding: 0;
+  background: var(--cs-background);
+  border: solid 1px var(--mcol-filter-hairline);
+  border-radius: 14px;
+  box-sizing: border-box;
+  overflow: hidden;
+  // box-shadow:
+  //   0 0 0 0.5px color-mix(in srgb, var(--cs-text) 7%, transparent),
+  //   0 10px 36px -10px color-mix(in srgb, var(--cs-text) 16%, transparent),
+  //   0 40px 80px -36px color-mix(in srgb, var(--cs-text) 12%, transparent);
+  transition:
+    opacity 0.35s $_ease-out,
+    visibility 0s linear 0.35s,
+    margin-bottom 0.35s $_ease-out,
+    padding-block 0.35s $_ease-out,
+    box-shadow 0.3s $_ease-out;
+
+  &:not(.is-open) {
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+    margin-bottom: 0;
+    padding-block: 0;
+    padding-inline: 0;
+    box-shadow: none;
+    pointer-events: none;
+  }
+
+  &.is-open {
+    max-height: none;
+    overflow: hidden;
+    visibility: visible;
+    transition:
+      opacity 0.35s $_ease-out,
+      visibility 0s linear 0s,
+      margin-bottom 0.35s $_ease-out,
+      padding-block 0.35s $_ease-out,
+      box-shadow 0.3s $_ease-out;
+  }
+
+  .mcol__filters-header {
+    flex-shrink: 0;
+    padding: 1rem 1.125rem 0.75rem;
+    margin: 0;
+    border-bottom: 1px solid var(--mcol-filter-hairline);
+  }
+
+  .mcol__filters-heading {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .mcol__filters-form--grid {
+    flex: 0 1 auto;
+    overflow: visible;
+    padding: 1.125rem 1.125rem 1.25rem;
+  }
+
+  .mcol__filters-footer {
+    flex-shrink: 0;
+    padding: 0.75rem 1.125rem 1rem;
+    margin: 0;
+    border-top: 1px solid var(--mcol-filter-hairline);
+  }
+}
+
+// ─── Filter panel: overlay (dropdown under toolbar) ───────
+
+.mcol__filters--overlay {
+  --mcol-filter-hairline: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.35rem);
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  max-height: min(85vh, 44rem);
+  padding: 0;
+  background: var(--cs-background);
+  border: none;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 0.5px color-mix(in srgb, var(--cs-text) 7%, transparent),
+    0 12px 40px -8px color-mix(in srgb, var(--cs-text) 18%, transparent),
+    0 48px 100px -40px color-mix(in srgb, var(--cs-text) 14%, transparent);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-0.5rem);
+  transition:
+    opacity 0.35s $_ease-out,
+    visibility 0s linear 0.35s,
+    transform 0.38s $_ease-out;
+
+  &.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition:
+      opacity 0.35s $_ease-out,
+      visibility 0s linear 0s,
+      transform 0.38s $_ease-out;
+  }
+
+  .mcol__filters-header {
+    flex-shrink: 0;
+    padding: 1rem 1.125rem 0.75rem;
+    margin: 0;
+    border-bottom: 1px solid var(--mcol-filter-hairline);
+  }
+
+  .mcol__filters-heading {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .mcol__filters-form--grid {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 1.25rem 1.125rem 1.375rem;
+    scrollbar-gutter: stable;
+  }
+
+  .mcol__filters-footer {
+    flex-shrink: 0;
+    padding: 0.75rem 1.125rem calc(0.875rem + env(safe-area-inset-bottom, 0));
+    margin: 0;
+    border-top: 1px solid var(--mcol-filter-hairline);
+  }
+}
+
+.mcol--filter-anim-gsap .mcol__filters--overlay.is-open {
+  transform: none;
 }
 
 .mcol__filters-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: $space-sm;
+  flex-shrink: 0;
   padding-bottom: $space-md;
-  margin-bottom: $space-md;
-  border-bottom: 1px solid color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
-
-  @include mq-up('lg') {
-    display: none;
-  }
+  margin-bottom: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--cs-text) 7%, var(--cs-background));
 }
 
 .mcol__filters-heading {
-  font-size: 1rem;
+  margin: 0;
+  font-size: 1.0625rem;
   font-weight: 600;
+  letter-spacing: -0.025em;
   color: var(--cs-heading);
 }
 
@@ -394,47 +663,65 @@ $_radius-lg: 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
   padding: 0;
-  background: none;
-  border: none;
-  color: var(--cs-text-secondary);
+  font: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--cs-text);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--style-border-radius-inputs, 8px);
   cursor: pointer;
-  border-radius: $_radius-sm;
-  transition: color 0.2s $_ease-out;
+  transition: background-color 0.15s, border-color 0.15s;
 
-  &:hover { color: var(--cs-heading); }
+  &:hover {
+    background-color: color-mix(in srgb, var(--cs-text) 6%, var(--cs-background));
+    border-color: transparent;
+  }
+
   &:focus-visible {
     outline: 2px solid var(--cs-accent);
     outline-offset: 2px;
   }
 }
 
-// ── Filter backdrop (mobile only) ──
+// ── Filter backdrop (offcanvas — match `.cart-drawer__overlay`); overlay layout keeps darker sheet shadow instead ──
 
 .mcol__filter-backdrop {
   position: fixed;
   inset: 0;
   z-index: 99;
-  background: color-mix(in srgb, #000 40%, transparent);
+  background: color-mix(in srgb, #000 45%, transparent);
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity 0.3s $_ease-out,
-    visibility 0s 0.3s;
+    opacity 0.35s $_ease-out,
+    visibility 0s 0.35s;
+  cursor: pointer;
+
+  &:not(.mcol__filter-backdrop--overlay) {
+    z-index: 990;
+    background: color-mix(in srgb, var(--cs-text) 38%, transparent);
+    border: none;
+  }
 
   &.is-visible {
     opacity: 1;
     visibility: visible;
     transition:
-      opacity 0.3s $_ease-out,
+      opacity 0.35s $_ease-out,
       visibility 0s 0s;
   }
+}
 
-  @include mq-up('lg') {
-    display: none;
-  }
+.mcol--filter-anim-gsap .mcol__filter-backdrop {
+  transition: none;
+}
+
+.mcol--filter-anim-gsap .mcol__filter-backdrop.is-visible {
+  transition: none;
 }
 
 // ── Filter form & groups ──
@@ -443,56 +730,85 @@ $_radius-lg: 16px;
   flex: 1;
 }
 
-.mcol__filter-group {
-  border-bottom: 1px solid color-mix(in srgb, var(--cs-text) 6%, var(--cs-background));
-  padding-bottom: $space-md;
-  margin-bottom: $space-md;
-
-  &:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
+.mcol__filters-form--grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 2rem 2.25rem;
+  align-items: start;
 }
 
-.mcol__filter-summary {
+.mcol__filter-group--grid {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.mcol__filter-group--grid .mcol__filter-group-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $space-sm;
-  font-size: 0.8125rem;
-  font-weight: 600;
+  gap: 0.625rem;
+  margin: 0 0 0.625rem;
+  padding: 0 0 0.5rem;
+  border: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--cs-text) 7%, var(--cs-background));
+}
+
+.mcol__filter-group-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+  letter-spacing: -0.028em;
+  text-transform: none;
   color: var(--cs-heading);
-  cursor: pointer;
-  padding: $space-xs 0;
-  list-style: none;
-  user-select: none;
+  line-height: 1.25;
+  transition: color 0.15s $_ease-out;
 
-  &::-webkit-details-marker { display: none; }
-  &::marker { display: none; }
-
-  &:hover { color: var(--cs-text); }
-  &:focus-visible {
-    outline: 2px solid var(--cs-accent);
-    outline-offset: 2px;
-    border-radius: $_radius-sm;
+  &::before {
+    content: '';
+    display: block;
+    width: 0.1875rem;
+    align-self: stretch;
+    min-height: 1.05em;
+    border-radius: 2px;
+    background: linear-gradient(
+      180deg,
+      var(--cs-accent) 0%,
+      color-mix(in srgb, var(--cs-accent) 55%, var(--cs-heading)) 100%
+    );
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0.5px color-mix(in srgb, var(--cs-accent) 22%, transparent);
   }
 }
 
-.mcol__filter-chevron {
+.mcol__filter-group-badge {
   flex-shrink: 0;
-  transition: transform 0.25s $_ease-out;
-
-  [open] > .mcol__filter-summary & {
-    transform: rotate(180deg);
-  }
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.375rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--cs-accent);
+  background: color-mix(in srgb, var(--cs-accent) 11%, var(--cs-background));
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--cs-accent) 18%, transparent);
 }
 
 .mcol__filter-values {
-  padding-top: $space-sm;
+  padding-top: 0;
 }
 
-// ── List filter options ──
+// ── List filter options (table-style rows, open layout) ──
 
 .mcol__filter-list {
   list-style: none;
@@ -500,28 +816,45 @@ $_radius-lg: 16px;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: 0;
+}
+
+.mcol__filter-list > li:not(:last-child) {
+  border-bottom: 1px solid color-mix(in srgb, var(--cs-text) 7%, var(--cs-background));
 }
 
 .mcol__filter-option {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.3125rem 0;
-  font-size: 0.8125rem;
+  gap: 0.625rem;
+  padding: 0.5625rem 0.125rem 0.5625rem 0;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
   color: var(--cs-text);
   text-decoration: none;
-  transition: color 0.15s $_ease-out;
+  border-radius: 0;
+  transition:
+    background-color 0.12s $_ease-out,
+    color 0.12s $_ease-out;
 
-  &:hover { color: var(--cs-heading); }
+  @media (hover: hover) {
+    &:hover {
+      color: var(--cs-heading);
+      background: color-mix(in srgb, var(--cs-text) 3.5%, var(--cs-background));
+    }
+  }
 
   &--active {
     color: var(--cs-heading);
     font-weight: 500;
+    background: transparent;
+    box-shadow: none;
   }
 
   &--disabled {
-    opacity: 0.35;
+    opacity: 0.4;
     pointer-events: none;
   }
 }
@@ -530,61 +863,74 @@ $_radius-lg: 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1rem;
-  height: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
   flex-shrink: 0;
-  border: 1.5px solid color-mix(in srgb, var(--cs-text) 25%, var(--cs-background));
-  border-radius: 3px;
+  border: 1.5px solid color-mix(in srgb, var(--cs-text) 14%, var(--cs-background));
+  border-radius: 50%;
   transition:
-    background-color 0.15s $_ease-out,
-    border-color 0.15s $_ease-out;
+    background-color 0.12s $_ease-out,
+    border-color 0.12s $_ease-out;
 
   .mcol__filter-option--active & {
-    background: var(--cs-heading);
-    border-color: var(--cs-heading);
+    background: var(--cs-accent);
+    border-color: var(--cs-accent);
     color: var(--cs-background);
   }
 }
 
 .mcol__filter-label {
   flex: 1;
+  min-width: 0;
 }
 
 .mcol__filter-count {
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   color: var(--cs-text-secondary);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
 }
 
-// ── Price range ──
+// ── Price range (filled iOS-style fields) ──
 
 .mcol__filter-price {
   display: flex;
   align-items: flex-end;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.625rem;
 }
 
 .mcol__filter-price-field {
   flex: 1;
+  min-width: 5rem;
 
   label {
     display: block;
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-transform: none;
     color: var(--cs-text-secondary);
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.375rem;
   }
 }
 
 .mcol__filter-price-input {
   width: 100%;
   font: inherit;
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
+  letter-spacing: -0.02em;
   color: var(--cs-heading);
-  background: transparent;
-  border: 1.5px solid color-mix(in srgb, var(--cs-text) 15%, var(--cs-background));
-  border-radius: $_radius-sm;
-  padding: 0.375rem 0.5rem;
+  background: color-mix(in srgb, var(--cs-text) 5%, var(--cs-background));
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
   -moz-appearance: textfield;
   appearance: textfield;
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--cs-text-secondary) 55%, var(--cs-background));
+  }
 
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
@@ -594,34 +940,66 @@ $_radius-lg: 16px;
 
   &:focus-visible {
     outline: 2px solid var(--cs-accent);
-    outline-offset: 2px;
+    outline-offset: 0;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--cs-accent) 22%, transparent);
   }
 }
 
 .mcol__filter-price-sep {
   font-size: 0.875rem;
   color: var(--cs-text-secondary);
-  padding-bottom: 0.375rem;
+  padding-bottom: 0.5rem;
+  opacity: 0.55;
+  font-weight: 300;
 }
 
 // ── Filter footer ──
 
 .mcol__filters-footer {
-  padding-top: $space-md;
-  margin-top: $space-md;
-  border-top: 1px solid color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
+  flex-shrink: 0;
+  padding-top: 0.875rem;
+  margin-top: auto;
+  border-top: 1px solid color-mix(in srgb, var(--cs-text) 7%, var(--cs-background));
 }
 
 .mcol__filters-clear {
-  display: inline-block;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--cs-text-secondary);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-  transition: color 0.15s $_ease-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: auto;
+  padding: 0.25rem 0;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: var(--cs-accent);
+  text-decoration: none;
+  text-align: center;
+  background: none;
+  border: none;
+  border-radius: var(--style-border-radius-inputs, 8px);
+  transition: opacity 0.15s $_ease-out;
 
-  &:hover { color: var(--cs-heading); }
+  &:hover {
+    opacity: 0.72;
+    color: var(--cs-accent);
+    background: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cs-accent);
+    outline-offset: 2px;
+  }
+}
+
+.mcol__filters--toggle .mcol__filters-clear,
+.mcol__filters--overlay .mcol__filters-clear {
+  width: auto;
+  align-self: center;
+}
+
+.mcol.is-loading .mcol__toolbar-stack {
+  pointer-events: none;
 }
 
 // ─── Active filter pills ──────────────────────────────────
@@ -831,7 +1209,6 @@ $_radius-lg: 16px;
   .mcol__sort-select,
   .mcol__filters,
   .mcol__filter-backdrop,
-  .mcol__filter-chevron,
   .mcol__filter-check,
   .mcol__filter-option,
   .mcol__pill {

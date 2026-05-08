@@ -1,5 +1,8 @@
 import { registerSection } from './section-registry'
-import { initProductDetailTabs } from './product-detail-tabs'
+import {
+  cleanupProductTabsAccordionGsap,
+  initProductDetailTabs,
+} from './product-detail-tabs'
 
 const SECTION_TYPE = 'product-tabs'
 
@@ -13,6 +16,7 @@ export function registerProductTabsSection(): void {
       initProductDetailTabs(container, abort.signal)
       const extended = container as HTMLElement & { __productTabsTeardown?: Teardown }
       extended.__productTabsTeardown = () => {
+        cleanupProductTabsAccordionGsap(container)
         abort.abort()
       }
     },

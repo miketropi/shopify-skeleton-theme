@@ -1,0 +1,67 @@
+{%- liquid
+  case filter_layout
+    when 'toggle'
+      assign filters_mod = 'mcol__filters--toggle'
+    when 'overlay'
+      assign filters_mod = 'mcol__filters--overlay'
+    else
+      assign filters_mod = 'mcol__filters--offcanvas mcol__filters--' | append: filter_offcanvas_position
+  endcase
+-%}
+<aside
+  class="mcol__filters {{ filters_mod }}"
+  id="mcol-filters-{{ section.id }}"
+  data-filter-panel
+  {% if filter_layout == 'toggle' %}
+    role="region"
+    aria-labelledby="mcol-filters-heading-{{ section.id }}"
+  {% else %}
+    aria-label="{{ 'collections.filtering.filter' | t }}"
+    aria-modal="true"
+    role="dialog"
+  {% endif %}
+>
+  <div class="mcol__filters-header">
+    <h2 class="mcol__filters-heading" id="mcol-filters-heading-{{ section.id }}">{{ 'collections.filtering.filter' | t }}</h2>
+    <button class="mcol__filters-close" type="button" data-filter-close aria-label="{{ 'collections.filtering.close_filters' | t }}">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <form class="mcol__filters-form mcol__filters-form--grid" data-filter-form>
+    {%- for filter in collection.filters -%}
+      {%- liquid
+        assign summary_badge = ''
+        if filter.type == 'price_range'
+          if filter.min_value.value != nil or filter.max_value.value != nil
+            assign summary_badge = '1'
+          endif
+        elsif filter.active_values.size > 0
+          assign summary_badge = filter.active_values.size
+        endif
+      -%}
+      <section
+        class="mcol__filter-group mcol__filter-group--grid"
+        aria-labelledby="mcol-filter-hd-{{ section.id }}-{{ forloop.index }}"
+      >
+        <div class="mcol__filter-group-head" id="mcol-filter-hd-{{ section.id }}-{{ forloop.index }}">
+          <span class="mcol__filter-group-title">{{ filter.label }}</span>
+          {%- if summary_badge != '' -%}
+            <span class="mcol__filter-group-badge">{{ summary_badge }}</span>
+          {%- endif -%}
+        </div>
+        <div class="mcol__filter-values">
+          {%- render 'mcol-filter-values', filter: filter, section: section, ix: forloop.index -%}
+        </div>
+      </section>
+    {%- endfor -%}
+  </form>
+
+  {%- if active_count > 0 -%}
+    <div class="mcol__filters-footer">
+      <a class="mcol__filters-clear" href="{{ collection.url }}">
+        {{ 'collections.filtering.clear_all' | t }}
+      </a>
+    </div>
+  {%- endif -%}
+</aside>

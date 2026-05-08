@@ -1,0 +1,81 @@
+{%- comment -%}
+  Shared filter value markup (list/boolean links or price inputs).
+  @param filter {Object}
+  @param section {Object}
+  @param ix {Number} unique index for price input ids
+{%- endcomment -%}
+{%- case filter.type -%}
+  {%- when 'list' or 'boolean' -%}
+    <ul class="mcol__filter-list" role="list">
+      {%- for value in filter.values -%}
+        {%- liquid
+          if value.active
+            assign filter_url = value.url_to_remove
+          else
+            assign filter_url = value.url_to_add
+          endif
+        -%}
+        <li>
+          <a
+            class="mcol__filter-option{% if value.active %} mcol__filter-option--active{% endif %}{% if value.count == 0 and value.active == false %} mcol__filter-option--disabled{% endif %}"
+            href="{{ filter_url }}"
+            {% if value.count == 0 and value.active == false %}aria-disabled="true"{% endif %}
+          >
+            <span class="mcol__filter-check" aria-hidden="true">
+              {%- if value.active -%}
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              {%- endif -%}
+            </span>
+            <span class="mcol__filter-label">{{ value.label }}</span>
+            <span class="mcol__filter-count">({{ value.count }})</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+  {%- when 'price_range' -%}
+    {%- liquid
+      assign range_max_major = filter.range_max | divided_by: 100.0 | ceil
+      assign price_min = ''
+      if filter.min_value.value != nil
+        assign price_min = filter.min_value.value | divided_by: 100.0
+      endif
+      assign price_max = ''
+      if filter.max_value.value != nil
+        assign price_max = filter.max_value.value | divided_by: 100.0
+      endif
+    -%}
+    <div class="mcol__filter-price">
+      <div class="mcol__filter-price-field">
+        <label for="filter-price-min-{{ section.id }}-{{ ix }}">{{ 'collections.filtering.price_from' | t }}</label>
+        <input
+          type="number"
+          id="filter-price-min-{{ section.id }}-{{ ix }}"
+          class="mcol__filter-price-input"
+          name="{{ filter.min_value.param_name }}"
+          value="{{ price_min }}"
+          min="0"
+          max="{{ range_max_major }}"
+          placeholder="0"
+          step="0.01"
+          data-price-range="min"
+        >
+      </div>
+      <span class="mcol__filter-price-sep" aria-hidden="true">&ndash;</span>
+      <div class="mcol__filter-price-field">
+        <label for="filter-price-max-{{ section.id }}-{{ ix }}">{{ 'collections.filtering.price_to' | t }}</label>
+        <input
+          type="number"
+          id="filter-price-max-{{ section.id }}-{{ ix }}"
+          class="mcol__filter-price-input"
+          name="{{ filter.max_value.param_name }}"
+          value="{{ price_max }}"
+          min="0"
+          max="{{ range_max_major }}"
+          placeholder="{{ range_max_major }}"
+          step="0.01"
+          data-price-range="max"
+        >
+      </div>
+    </div>
+{%- endcase -%}
