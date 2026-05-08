@@ -247,6 +247,12 @@ $_radius-lg: 16px;
     border-color: var(--cs-heading);
   }
 
+  &.mcol__filter-toggle--sidebar-only {
+    @include mq-up('xl') {
+      display: none;
+    }
+  }
+
   svg {
     flex-shrink: 0;
   }
@@ -320,6 +326,18 @@ $_radius-lg: 16px;
   // marker class only — no sidebar grid
 }
 
+.mcol__body--sidebar-filters {
+  display: grid;
+  gap: clamp(#{$space-lg}, 3vw, #{$space-xl});
+  align-items: start;
+  min-width: 0;
+
+  @include mq-up('xl') {
+    grid-template-columns: minmax(14rem, 19rem) minmax(0, 1fr);
+    gap: clamp(#{$space-xl}, 4vw, 2.5rem);
+  }
+}
+
 .mcol__main {
   min-width: 0;
   scroll-margin-top: 1rem;
@@ -328,7 +346,8 @@ $_radius-lg: 16px;
 // GSAP owns motion on filter panels when this class is present
 .mcol--filter-anim-gsap .mcol__filters--offcanvas,
 .mcol--filter-anim-gsap .mcol__filters--toggle,
-.mcol--filter-anim-gsap .mcol__filters--overlay {
+.mcol--filter-anim-gsap .mcol__filters--overlay,
+.mcol--filter-anim-gsap .mcol__filters--sidebar {
   transition: none !important;
 }
 
@@ -338,6 +357,7 @@ $_radius-lg: 16px;
   }
 
   .mcol__filters--toggle,
+  .mcol__filters--sidebar,
   .mcol__filters--overlay {
     transition:
       max-height 0.2s ease,
@@ -559,6 +579,117 @@ $_radius-lg: 16px;
     padding: 0.75rem 1.125rem 1rem;
     margin: 0;
     border-top: 1px solid var(--mcol-filter-hairline);
+  }
+}
+
+// ─── Filter panel: left sidebar (desktop xl+); toggle on smaller viewports ──
+
+.mcol__filters--sidebar {
+  --mcol-filter-hairline: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
+
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background: var(--cs-background);
+  border: solid 1px var(--mcol-filter-hairline);
+  border-radius: 14px;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  // < xl: same collapsible pattern as .mcol__filters--toggle
+  margin-bottom: $space-lg;
+  transition:
+    opacity 0.35s $_ease-out,
+    visibility 0s linear 0.35s,
+    margin-bottom 0.35s $_ease-out,
+    padding-block 0.35s $_ease-out;
+
+  &:not(.is-open) {
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+    margin-bottom: 0;
+    padding-block: 0;
+    padding-inline: 0;
+    pointer-events: none;
+  }
+
+  &.is-open {
+    max-height: none;
+    overflow: hidden;
+    visibility: visible;
+    transition:
+      opacity 0.35s $_ease-out,
+      visibility 0s linear 0s,
+      margin-bottom 0.35s $_ease-out,
+      padding-block 0.35s $_ease-out;
+  }
+
+  .mcol__filters-header {
+    flex-shrink: 0;
+    padding: 1rem 1.125rem 0.75rem;
+    margin: 0;
+    border-bottom: 1px solid var(--mcol-filter-hairline);
+  }
+
+  .mcol__filters-heading {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .mcol__filters-form--grid {
+    flex: 0 1 auto;
+    overflow: visible;
+    padding: 1.125rem 1.125rem 1.25rem;
+  }
+
+  .mcol__filters-footer {
+    flex-shrink: 0;
+    padding: 0.75rem 1.125rem 1rem;
+    margin: 0;
+    border-top: 1px solid var(--mcol-filter-hairline);
+  }
+
+  @include mq-up('xl') {
+    margin-bottom: 0;
+    transition: none;
+
+    &,
+    &:not(.is-open),
+    &.is-open {
+      max-height: none;
+      opacity: 1;
+      visibility: visible;
+      margin-bottom: 0;
+      padding-block: 0;
+      padding-inline: 0;
+      pointer-events: auto;
+    }
+
+    position: sticky;
+    top: max(1rem, env(safe-area-inset-top, 0));
+    align-self: start;
+    max-height: calc(100vh - max(2rem, env(safe-area-inset-top, 0) + env(safe-area-inset-bottom, 0)));
+
+    .mcol__filters-close--sidebar-desktop-hide {
+      display: none;
+    }
+
+    .mcol__filters-form--grid {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+      padding: 1rem 1.125rem 1.25rem;
+    }
   }
 }
 

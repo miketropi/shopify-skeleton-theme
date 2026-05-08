@@ -237,10 +237,11 @@
       },
       "filter_layout": {
         "label": "Filter layout",
-        "info": "How the filter panel appears when customers tap Filter.",
+        "info": "Offcanvas, inline, and overlay control how the filter panel opens. Sidebar shows filters beside the grid from the xl breakpoint up; below that, filters use the inline toggle pattern.",
         "offcanvas": "Offcanvas (side panel)",
         "toggle": "Inline toggle (below toolbar)",
-        "overlay": "Overlay (dropdown under toolbar)"
+        "overlay": "Overlay (dropdown under toolbar)",
+        "sidebar": "Left sidebar (desktop); collapsible on smaller screens"
       }
     },
     "blog": {

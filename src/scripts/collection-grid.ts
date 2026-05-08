@@ -4,7 +4,7 @@ import { registerSection } from './section-registry'
 const SECTION_TYPE = 'collection-grid'
 const DESKTOP_MQ = '(min-width: 75em)'
 
-type FilterLayout = 'offcanvas' | 'toggle' | 'overlay'
+type FilterLayout = 'offcanvas' | 'toggle' | 'overlay' | 'sidebar'
 
 type Teardown = () => void
 
@@ -14,8 +14,15 @@ function prefersReducedMotion(): boolean {
 
 function getFilterLayout(container: HTMLElement): FilterLayout {
   const v = container.dataset.filterLayout?.trim().toLowerCase()
-  if (v === 'toggle' || v === 'overlay') return v
+  if (v === 'toggle' || v === 'overlay' || v === 'sidebar') return v
   return 'offcanvas'
+}
+
+/** Sidebar template uses a sticky column at desktop; below that breakpoint it behaves like inline toggle. */
+function getEffectiveFilterLayout(container: HTMLElement): FilterLayout {
+  const base = getFilterLayout(container)
+  if (base !== 'sidebar') return base
+  return window.matchMedia(DESKTOP_MQ).matches ? 'sidebar' : 'toggle'
 }
 
 function getOffcanvasSide(container: HTMLElement): 'left' | 'right' {
@@ -24,7 +31,8 @@ function getOffcanvasSide(container: HTMLElement): 'left' | 'right' {
 }
 
 function filterTweenTargets(container: HTMLElement): HTMLElement[] {
-  const layout = getFilterLayout(container)
+  const layout = getEffectiveFilterLayout(container)
+  if (layout === 'sidebar') return []
   const panel = container.querySelector<HTMLElement>('[data-filter-panel]')
   const backdrop = container.querySelector<HTMLElement>('[data-filter-backdrop]')
   if (layout === 'toggle') {
@@ -35,7 +43,9 @@ function filterTweenTargets(container: HTMLElement): HTMLElement[] {
 
 function seedClosedFilterPanel(container: HTMLElement): void {
   if (prefersReducedMotion()) return
-  const layout = getFilterLayout(container)
+  const base = getFilterLayout(container)
+  if (base === 'sidebar' && window.matchMedia(DESKTOP_MQ).matches) return
+  const layout = getEffectiveFilterLayout(container)
   const panel = container.querySelector<HTMLElement>('[data-filter-panel]')
   const backdrop = container.querySelector<HTMLElement>('[data-filter-backdrop]')
   if (!panel || panel.classList.contains('is-open')) return
@@ -109,10 +119,12 @@ function init(container: HTMLElement): void {
     }
 
     if (keepDrawerOpen) {
+      const base = getFilterLayout(container)
+      if (base === 'sidebar' && window.matchMedia(DESKTOP_MQ).matches) return
+      const layout = getEffectiveFilterLayout(container)
       const panel = container.querySelector<HTMLElement>('[data-filter-panel]')
       const backdrop = container.querySelector<HTMLElement>('[data-filter-backdrop]')
       const toggle = container.querySelector<HTMLButtonElement>('[data-filter-toggle]')
-      const layout = getFilterLayout(container)
       if (panel) {
         gsap.killTweensOf(filterTweenTargets(container))
         panel.classList.add('is-open')
@@ -313,6 +325,20 @@ function init(container: HTMLElement): void {
   mqlDesktop.addEventListener(
     'change',
     () => {
+      if (getFilterLayout(container) === 'sidebar') {
+        const panel = container.querySelector<HTMLElement>('[data-filter-panel]')
+        const toggle = container.querySelector<HTMLButtonElement>('[data-filter-toggle]')
+        gsap.killTweensOf(filterTweenTargets(container))
+        document.body.style.overflow = ''
+        if (mqlDesktop.matches) {
+          panel?.classList.remove('is-open')
+          toggle?.setAttribute('aria-expanded', 'false')
+          if (panel) gsap.set(panel, { clearProps: 'maxHeight,opacity,overflow' })
+        } else if (!prefersReducedMotion()) {
+          seedClosedFilterPanel(container)
+        }
+        return
+      }
       closeFilterDrawer(container)
     },
     { signal }
@@ -359,7 +385,9 @@ function openFilterDrawer(container: HTMLElement): void {
   const toggle = container.querySelector<HTMLButtonElement>('[data-filter-toggle]')
   if (!panel) return
 
-  const layout = getFilterLayout(container)
+  const layout = getEffectiveFilterLayout(container)
+  if (layout === 'sidebar') return
+
   const reduced = prefersReducedMotion()
 
   panel.classList.add('is-open')
@@ -437,12 +465,18 @@ function closeFilterDrawer(container: HTMLElement): void {
   const toggle = container.querySelector<HTMLButtonElement>('[data-filter-toggle]')
   if (!panel) return
 
+  const base = getFilterLayout(container)
+  if (base === 'sidebar' && window.matchMedia(DESKTOP_MQ).matches) {
+    document.body.style.overflow = ''
+    return
+  }
+
   if (!panel.classList.contains('is-open')) {
     document.body.style.overflow = ''
     return
   }
 
-  const layout = getFilterLayout(container)
+  const layout = getEffectiveFilterLayout(container)
   const reduced = prefersReducedMotion()
 
   if (layout !== 'toggle') {

@@ -1,0 +1,20 @@
+/*
+ * ------------------------------------------------------------
+ * Collection template: filters in a left sidebar beside the grid.
+ * Assign in Shopify admin: Online store → Themes → Customize →
+ * Collections → [collection] → Change template → sidebar-filters
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "filter_layout": "sidebar"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

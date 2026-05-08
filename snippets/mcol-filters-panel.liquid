@@ -4,6 +4,8 @@
       assign filters_mod = 'mcol__filters--toggle'
     when 'overlay'
       assign filters_mod = 'mcol__filters--overlay'
+    when 'sidebar'
+      assign filters_mod = 'mcol__filters--sidebar'
     else
       assign filters_mod = 'mcol__filters--offcanvas mcol__filters--' | append: filter_offcanvas_position
   endcase
@@ -12,7 +14,7 @@
   class="mcol__filters {{ filters_mod }}"
   id="mcol-filters-{{ section.id }}"
   data-filter-panel
-  {% if filter_layout == 'toggle' %}
+  {% if filter_layout == 'toggle' or filter_layout == 'sidebar' %}
     role="region"
     aria-labelledby="mcol-filters-heading-{{ section.id }}"
   {% else %}
@@ -23,7 +25,12 @@
 >
   <div class="mcol__filters-header">
     <h2 class="mcol__filters-heading" id="mcol-filters-heading-{{ section.id }}">{{ 'collections.filtering.filter' | t }}</h2>
-    <button class="mcol__filters-close" type="button" data-filter-close aria-label="{{ 'collections.filtering.close_filters' | t }}">
+    <button
+      class="mcol__filters-close{% if filter_layout == 'sidebar' %} mcol__filters-close--sidebar-desktop-hide{% endif %}"
+      type="button"
+      data-filter-close
+      aria-label="{{ 'collections.filtering.close_filters' | t }}"
+    >
       <span aria-hidden="true">&times;</span>
     </button>
   </div>

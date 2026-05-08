@@ -15,7 +15,7 @@
   if filter_offcanvas_position != 'left' and filter_offcanvas_position != 'right'
     assign filter_offcanvas_position = 'left'
   endif
-  if filter_layout != 'offcanvas' and filter_layout != 'toggle' and filter_layout != 'overlay'
+  if filter_layout != 'offcanvas' and filter_layout != 'toggle' and filter_layout != 'overlay' and filter_layout != 'sidebar'
     assign filter_layout = 'offcanvas'
   endif
 
@@ -98,7 +98,7 @@
     <div class="mcol__toolbar">
       {%- if show_filtering and collection.filters.size > 0 -%}
         <button
-          class="mcol__filter-toggle"
+          class="mcol__filter-toggle{% if filter_layout == 'sidebar' %} mcol__filter-toggle--sidebar-only{% endif %}"
           type="button"
           data-filter-toggle
           aria-controls="mcol-filters-{{ section.id }}"
@@ -146,10 +146,10 @@
     {%- endif -%}
 
     {%- comment -%} ── Filter panel (offcanvas / toggle) + Grid wrapper ── {%- endcomment -%}
-    <div class="mcol__body{% if show_filtering and collection.filters.size > 0 %} mcol__body--has-filters{% endif %}">
+    <div class="mcol__body{% if show_filtering and collection.filters.size > 0 %} mcol__body--has-filters{% endif %}{% if show_filtering and collection.filters.size > 0 and filter_layout == 'sidebar' %} mcol__body--sidebar-filters{% endif %}">
 
       {%- if show_filtering and collection.filters.size > 0 -%}
-        {%- if filter_layout == 'offcanvas' or filter_layout == 'toggle' -%}
+        {%- if filter_layout == 'offcanvas' or filter_layout == 'toggle' or filter_layout == 'sidebar' -%}
           {%- if filter_layout == 'offcanvas' -%}
             <div class="mcol__filter-backdrop" data-filter-backdrop aria-hidden="true"></div>
           {%- endif -%}
@@ -323,7 +323,8 @@
       "options": [
         { "value": "offcanvas", "label": "t:sections.main_collection.filter_layout.offcanvas" },
         { "value": "toggle", "label": "t:sections.main_collection.filter_layout.toggle" },
-        { "value": "overlay", "label": "t:sections.main_collection.filter_layout.overlay" }
+        { "value": "overlay", "label": "t:sections.main_collection.filter_layout.overlay" },
+        { "value": "sidebar", "label": "t:sections.main_collection.filter_layout.sidebar" }
       ],
       "default": "offcanvas"
     },
