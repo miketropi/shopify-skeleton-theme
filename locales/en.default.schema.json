@@ -33,7 +33,8 @@
     "text": "Text",
     "theme": "Theme",
     "typography": "Typography",
-    "size_guide": "Size guide"
+    "size_guide": "Size guide",
+    "scrolling_promotion": "Scrolling promotion"
   },
   "labels": {
     "alignment": "Alignment",
@@ -177,6 +178,14 @@
   },
   "sections": {
     "header_top_bar": {
+      "block_currency_selector": "Currency selector",
+      "currency_selector_info": "Shows when your store has more than one country/region in Markets. Currency updates based on the selected country.",
+      "currency_selector_label_setting": "Label",
+      "currency_selector_label_info": "Leave blank to use the default (screen reader and select label).",
+      "currency_selector_dropdown_align": "Menu position",
+      "currency_selector_dropdown_align_info": "How the options menu lines up with the control on larger screens. On small screens the menu opens as a bottom sheet.",
+      "currency_selector_label": "Country and currency",
+      "currency_selector_update": "Apply",
       "name": "Top bar",
       "alignment": "Content alignment",
       "separator": "Show separators",
@@ -228,6 +237,21 @@
       "color_text": "Text",
       "color_accent": "Accent / focus",
       "color_accent_info": "Used for focus rings and the subscribe button. Leave empty to inherit the theme accent."
+    },
+    "scrolling_promotion": {
+      "name": "Scrolling promotion",
+      "speed": "Speed (loop duration)",
+      "speed_info": "Seconds for one full loop. Lower values scroll faster.",
+      "direction": "Direction",
+      "direction_left": "Left",
+      "direction_right": "Right",
+      "pause_on_hover": "Pause on hover",
+      "gap": "Space between items",
+      "padding_vertical": "Vertical padding",
+      "font_size": "Text size",
+      "block_text": "Text",
+      "logo_link": "Link (optional)",
+      "logo_height": "Logo height"
     },
     "main_collection": {
       "hero_video": "Hero video",

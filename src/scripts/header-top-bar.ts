@@ -1,6 +1,10 @@
 import gsap from 'gsap'
 import { ThemeModal } from './theme-modal'
 import { registerSection } from './section-registry'
+import {
+  initCustomSelectsInContainer,
+  destroyCustomSelectsInContainer,
+} from './custom-select'
 
 // ─── Rotator ────────────────────────────────────────────
 
@@ -345,11 +349,13 @@ function teardownStoreInfo(wrap: HTMLElement): void {
 function initSection(container: HTMLElement): void {
   initRotators(container)
   initStoreInfo(container)
+  initCustomSelectsInContainer(container)
 }
 
 function destroySection(container: HTMLElement): void {
   destroyRotators(container)
   destroyStoreInfo(container)
+  destroyCustomSelectsInContainer(container)
 }
 
 export function registerHeaderTopBarSection(): void {

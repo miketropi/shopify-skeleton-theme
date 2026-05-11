@@ -1,0 +1,141 @@
+// ── Scrolling promotion (horizontal marquee) ─────────────
+
+.scrolling-promotion {
+  overflow: hidden;
+  width: 100%;
+  background: var(--scroll-promo-bg, color-mix(in srgb, var(--cs-text) 88%, var(--cs-background)));
+  color: var(--scroll-promo-fg, var(--cs-background));
+  padding-block: var(--scroll-promo-pad-y, 10px);
+}
+
+.scrolling-promotion__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.scrolling-promotion__track {
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  animation: scrolling-promo-marquee var(--scroll-promo-duration, 40s) linear infinite;
+  will-change: transform;
+}
+
+.scrolling-promotion--dir-right .scrolling-promotion__track {
+  animation-direction: reverse;
+}
+
+.scrolling-promotion--pause-hover:hover .scrolling-promotion__track {
+  animation-play-state: paused;
+}
+
+@keyframes scrolling-promo-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.scrolling-promotion__set {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--scroll-promo-gap, 28px);
+  padding-inline: calc(var(--scroll-promo-gap, 28px) * 0.35);
+  flex: 0 0 auto;
+}
+
+.scrolling-promotion__item {
+  flex: 0 0 auto;
+}
+
+.scrolling-promotion__text {
+  font-size: var(--scroll-promo-font, 14px);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.scrolling-promotion__item--text .rte {
+  margin: 0;
+}
+
+.scrolling-promotion__item--text .rte p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.scrolling-promotion__logo-link {
+  display: block;
+  line-height: 0;
+  color: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--scroll-promo-fg, currentColor);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+.scrolling-promotion__logo-img {
+  display: block;
+  height: var(--scroll-promo-logo-h, 28px);
+  width: auto;
+  max-width: min(10rem, 28vw);
+  object-fit: contain;
+}
+
+.scrolling-promotion a:not(.scrolling-promotion__logo-link) {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+.scrolling-promotion--empty {
+  padding: 1.25rem 1rem;
+  text-align: center;
+  border: 1px dashed color-mix(in srgb, var(--cs-text) 35%, var(--cs-background));
+  color: var(--cs-text-secondary);
+  background: color-mix(in srgb, var(--cs-text) 4%, var(--cs-background));
+}
+
+.scrolling-promotion__placeholder {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrolling-promotion__track {
+    animation: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .scrolling-promotion__set--duplicate {
+    display: none;
+  }
+
+  .scrolling-promotion__set {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.5rem;
+    column-gap: var(--scroll-promo-gap, 28px);
+    padding-inline: 1rem;
+  }
+
+  .scrolling-promotion__item--text .rte p {
+    white-space: normal;
+    text-align: center;
+  }
+
+  .scrolling-promotion--pause-hover:hover .scrolling-promotion__track {
+    animation-play-state: running;
+  }
+}

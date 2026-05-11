@@ -1,0 +1,285 @@
+{%- comment -%}
+  Full-width horizontal marquee — text and logo blocks. CSS-only animation.
+{%- endcomment -%}
+{%- liquid
+  assign speed = section.settings.speed | default: 40
+  assign speed = speed | at_least: 15 | at_most: 120
+  assign direction = section.settings.direction | default: 'left'
+  assign pause_hover = section.settings.pause_on_hover
+  if pause_hover == nil
+    assign pause_hover = true
+  endif
+  assign gap = section.settings.gap | default: 28
+  assign pad_y = section.settings.padding_vertical | default: 10
+  assign font_px = section.settings.font_size | default: 14
+  assign color_bg = section.settings.color_bg
+  assign color_text = section.settings.color_text
+-%}
+
+{%- if section.blocks.size > 0 -%}
+  <div
+    class="scrolling-promotion full-width{% if direction == 'right' %} scrolling-promotion--dir-right{% endif %}{% if pause_hover %} scrolling-promotion--pause-hover{% endif %}"
+    style="
+      --scroll-promo-duration: {{ speed }}s;
+      --scroll-promo-gap: {{ gap }}px;
+      --scroll-promo-pad-y: {{ pad_y }}px;
+      --scroll-promo-font: {{ font_px }}px;
+      {%- if color_bg != blank and color_bg != 'rgba(0,0,0,0)' -%}--scroll-promo-bg: {{ color_bg }};{%- endif -%}
+      {%- if color_text != blank and color_text != 'rgba(0,0,0,0)' -%}--scroll-promo-fg: {{ color_text }};{%- endif -%}
+    "
+    role="region"
+    aria-label="{{ 'sections.scrolling_promotion.aria_region' | t | default: 'Promotional announcements' }}"
+  >
+    <div class="scrolling-promotion__viewport">
+      <div class="scrolling-promotion__track">
+        <div class="scrolling-promotion__set">
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'text' -%}
+                <div class="scrolling-promotion__item scrolling-promotion__item--text" {{ block.shopify_attributes }}>
+                  {%- if block.settings.text != blank -%}
+                    <div class="scrolling-promotion__text rte">{{ block.settings.text }}</div>
+                  {%- endif -%}
+                </div>
+              {%- when 'logo' -%}
+                <div
+                  class="scrolling-promotion__item scrolling-promotion__item--logo"
+                  style="--scroll-promo-logo-h: {{ block.settings.logo_height | default: 28 }}px;"
+                  {{ block.shopify_attributes }}
+                >
+                  {%- if block.settings.image != blank -%}
+                    {%- liquid
+                      assign fw = block.settings.logo_height | default: 28 | times: 4
+                      if fw < 80
+                        assign fw = 80
+                      endif
+                      assign fw = fw | at_most: 400
+                    -%}
+                    {%- if block.settings.link != blank -%}
+                      <a class="scrolling-promotion__logo-link" href="{{ block.settings.link }}">
+                        {{
+                          block.settings.image
+                          | image_url: width: fw
+                          | image_tag:
+                            loading: 'lazy',
+                            class: 'scrolling-promotion__logo-img',
+                            widths: '80,160,240,400',
+                            sizes: '120px',
+                            alt: block.settings.image.alt | default: shop.name
+                        }}
+                      </a>
+                    {%- else -%}
+                      {{
+                        block.settings.image
+                        | image_url: width: fw
+                        | image_tag:
+                          loading: 'lazy',
+                          class: 'scrolling-promotion__logo-img',
+                          widths: '80,160,240,400',
+                          sizes: '120px',
+                          alt: block.settings.image.alt | default: shop.name
+                      }}
+                    {%- endif -%}
+                  {%- endif -%}
+                </div>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+        <div class="scrolling-promotion__set scrolling-promotion__set--duplicate" aria-hidden="true">
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'text' -%}
+                <div class="scrolling-promotion__item scrolling-promotion__item--text">
+                  {%- if block.settings.text != blank -%}
+                    <div class="scrolling-promotion__text rte">{{ block.settings.text }}</div>
+                  {%- endif -%}
+                </div>
+              {%- when 'logo' -%}
+                <div
+                  class="scrolling-promotion__item scrolling-promotion__item--logo"
+                  style="--scroll-promo-logo-h: {{ block.settings.logo_height | default: 28 }}px;"
+                >
+                  {%- if block.settings.image != blank -%}
+                    {%- liquid
+                      assign fw = block.settings.logo_height | default: 28 | times: 4
+                      if fw < 80
+                        assign fw = 80
+                      endif
+                      assign fw = fw | at_most: 400
+                    -%}
+                    {%- if block.settings.link != blank -%}
+                      <a class="scrolling-promotion__logo-link" href="{{ block.settings.link }}" tabindex="-1">
+                        {{
+                          block.settings.image
+                          | image_url: width: fw
+                          | image_tag:
+                            loading: 'lazy',
+                            class: 'scrolling-promotion__logo-img',
+                            widths: '80,160,240,400',
+                            sizes: '120px',
+                            alt: ''
+                        }}
+                      </a>
+                    {%- else -%}
+                      {{
+                        block.settings.image
+                        | image_url: width: fw
+                        | image_tag:
+                          loading: 'lazy',
+                          class: 'scrolling-promotion__logo-img',
+                          widths: '80,160,240,400',
+                          sizes: '120px',
+                          alt: ''
+                      }}
+                    {%- endif -%}
+                  {%- endif -%}
+                </div>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- elsif request.design_mode -%}
+  <div
+    class="scrolling-promotion scrolling-promotion--empty full-width"
+    role="region"
+    aria-label="{{ 'sections.scrolling_promotion.empty_aria' | t | default: 'Scrolling promotion (empty)' }}"
+    {{ section.shopify_attributes }}
+  >
+    <p class="scrolling-promotion__placeholder">{{ 'sections.scrolling_promotion.empty' | t | default: 'Add Text or Logo blocks. Content scrolls horizontally on the storefront.' }}</p>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.scrolling_promotion.name",
+  "tag": "section",
+  "class": "section-scrolling-promotion",
+  "settings": [
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 15,
+      "max": 120,
+      "step": 5,
+      "unit": "s",
+      "label": "t:sections.scrolling_promotion.speed",
+      "info": "t:sections.scrolling_promotion.speed_info",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "t:sections.scrolling_promotion.direction",
+      "options": [
+        { "value": "left", "label": "t:sections.scrolling_promotion.direction_left" },
+        { "value": "right", "label": "t:sections.scrolling_promotion.direction_right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "t:sections.scrolling_promotion.pause_on_hover",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 8,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.scrolling_promotion.gap",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.scrolling_promotion.padding_vertical",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 11,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.scrolling_promotion.font_size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "t:labels.background"
+    },
+    {
+      "type": "color",
+      "id": "color_bg",
+      "label": "t:labels.custom_background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "t:labels.custom_text",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "t:sections.scrolling_promotion.block_text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:labels.text",
+          "default": "<p>Free shipping over $50</p>"
+        }
+      ]
+    },
+    {
+      "type": "logo",
+      "name": "t:labels.logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:labels.logo"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.scrolling_promotion.logo_link"
+        },
+        {
+          "type": "range",
+          "id": "logo_height",
+          "min": 16,
+          "max": 72,
+          "step": 2,
+          "unit": "px",
+          "label": "t:sections.scrolling_promotion.logo_height",
+          "default": 28
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.scrolling_promotion.name",
+      "blocks": [
+        { "type": "text", "settings": { "text": "<p>Free shipping over $50</p>" } },
+        { "type": "text", "settings": { "text": "<p>New arrivals every week</p>" } },
+        { "type": "text", "settings": { "text": "<p>Easy returns</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

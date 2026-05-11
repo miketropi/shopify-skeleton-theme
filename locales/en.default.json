@@ -416,7 +416,14 @@
   "sections": {
     "header_top_bar": {
       "rt_read_more": "Read more",
-      "rt_modal_title": "Message"
+      "rt_modal_title": "Message",
+      "currency_selector_label": "Country and currency",
+      "currency_selector_update": "Apply"
+    },
+    "scrolling_promotion": {
+      "aria_region": "Promotional announcements",
+      "empty_aria": "Scrolling promotion (no blocks yet)",
+      "empty": "Add Text or Logo blocks. Content scrolls horizontally on the storefront."
     }
   }
 }

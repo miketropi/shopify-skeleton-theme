@@ -1970,12 +1970,12 @@ button.main-product__meta-link:focus-visible {
   .main-product__tab-accordion-icon {
     transition: none;
   }
-}
+} 
 
 .main-product__spec {
   display: grid;
   grid-template-columns: minmax(5rem, 1fr) minmax(0, 2fr);
-  gap: 1rem 1.5rem;
+  gap: 1rem 1.5rem; 
   padding: 0.8rem 0;
   font-size: 0.9375rem;
   line-height: 1.55;

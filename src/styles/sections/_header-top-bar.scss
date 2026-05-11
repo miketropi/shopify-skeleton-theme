@@ -139,6 +139,90 @@ $_r-card:  16px;
 }
 
 // ═══════════════════════════════════════════════════════════
+//  LOCALIZATION (country / currency via Markets)
+// ═══════════════════════════════════════════════════════════
+
+.htbar__localization {
+  flex-shrink: 0;
+  min-width: 0;
+  max-width: min(100%, 14rem);
+
+  @include mq-up('md') {
+    max-width: min(100%, 18rem);
+  }
+}
+
+.htbar__localization-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.htbar__localization-select {
+  cursor: pointer;
+}
+
+// Custom select — compact strip, same visual language as `_custom-select.scss`
+.htbar__localization .cselect {
+  --cselect-fill: var(--_tint);
+  --cselect-fill-hover: color-mix(in srgb, var(--htbar-text) 9%, var(--htbar-bg));
+  --cselect-fill-open: color-mix(in srgb, var(--htbar-text) 7%, var(--htbar-bg));
+  --cselect-stroke: var(--_sep);
+  --cselect-stroke-open: color-mix(in srgb, var(--htbar-text) 22%, var(--htbar-bg));
+  --cselect-focus: var(--htbar-accent);
+  --cselect-radius: 9px;
+  --cselect-menu-radius: 11px;
+  --cselect-menu-bg: #fff;
+  --cselect-menu-fg: #1d1d1f;
+}
+
+.htbar__localization .cselect__btn {
+  position: relative;
+  min-height: 1.875rem;
+  padding: 5px 28px 5px 10px;
+  font-size: inherit;
+  letter-spacing: -0.02em;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--htbar-bg) 75%, transparent) inset,
+    0 -0.5px 0 color-mix(in srgb, var(--htbar-text) 5%, transparent) inset;
+}
+
+.htbar__localization .cselect__icon {
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.38;
+
+  .cselect.is-open & {
+    opacity: 0.52;
+  }
+}
+
+.htbar__localization-submit {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 4px 8px;
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--htbar-bg);
+  background: var(--htbar-accent);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--htbar-accent);
+    outline-offset: 2px;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 //  STORE INFO
 // ═══════════════════════════════════════════════════════════
 

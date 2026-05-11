@@ -22,6 +22,11 @@ import { bindTcardHoverVideos } from './tcard-hover-video'
 
 export type { ThemeModalOptions } from './theme-modal'
 export { ThemeModal, THEME_MODAL_COMPACT_MQ } from './theme-modal'
+export {
+  enhanceCustomSelectRoot,
+  initCustomSelectsInContainer,
+  destroyCustomSelectsInContainer,
+} from './custom-select'
 
 document.documentElement.classList.add('js')
 

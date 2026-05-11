@@ -87,6 +87,53 @@
             {%- endif -%}
           {%- endif -%}
 
+        {%- when 'currency_selector' -%}
+          {%- if localization.available_countries.size > 1 -%}
+            {%- liquid
+              assign cur_label = block.settings.label | strip
+              if cur_label == blank
+                assign cur_label = 'sections.header_top_bar.currency_selector_label' | t
+              endif
+              assign cur_form_id = 'HeaderTopBarLocalizationCurrency-' | append: block.id
+              assign cur_select_id = 'HeaderTopBarCountrySelect-' | append: block.id
+              assign cur_dropdown_align = block.settings.dropdown_align | default: 'center'
+            -%}
+            <div
+              class="htbar__localization"
+              style="--theme-color-text: var(--htbar-text); --theme-color-bg: var(--htbar-bg); --theme-color-accent: var(--htbar-accent);"
+              {{ block.shopify_attributes }}
+            >
+              {% form 'localization', id: cur_form_id, class: 'htbar__localization-form', return_to: request.path, data-custom-select: '', data-select-submit: '', data-custom-select-align: cur_dropdown_align %}
+                {%- if localization.available_languages.size > 1 -%}
+                  <input type="hidden" name="language_code" value="{{ localization.language.iso_code }}">
+                {%- endif -%}
+                <label class="visually-hidden" id="{{ cur_select_id }}-label" for="{{ cur_select_id }}">{{ cur_label | escape }}</label>
+                <select
+                  name="country_code"
+                  id="{{ cur_select_id }}"
+                  class="htbar__localization-select"
+                  autocomplete="country"
+                >
+                  {%- for country in localization.available_countries -%}
+                    <option
+                      value="{{ country.iso_code }}"
+                      {%- if country.iso_code == localization.country.iso_code %}
+                        selected
+                      {%- endif %}
+                    >
+                      {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                    </option>
+                  {%- endfor -%}
+                </select>
+                <noscript>
+                  <button type="submit" class="htbar__localization-submit">
+                    {{ 'sections.header_top_bar.currency_selector_update' | t }}
+                  </button>
+                </noscript>
+              {% endform %}
+            </div>
+          {%- endif -%}
+
         {%- when 'store_info' -%}
           {%- liquid
             assign si_label       = block.settings.label | default: 'Contact us'
@@ -375,6 +422,35 @@
           "step": 1,
           "default": 4,
           "unit": "s"
+        }
+      ]
+    },
+    {
+      "type": "currency_selector",
+      "name": "t:sections.header_top_bar.block_currency_selector",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.header_top_bar.currency_selector_info"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "t:sections.header_top_bar.currency_selector_label_setting",
+          "info": "t:sections.header_top_bar.currency_selector_label_info"
+        },
+        {
+          "type": "select",
+          "id": "dropdown_align",
+          "label": "t:sections.header_top_bar.currency_selector_dropdown_align",
+          "info": "t:sections.header_top_bar.currency_selector_dropdown_align_info",
+          "default": "center",
+          "options": [
+            { "value": "left", "label": "t:sections.header_top_bar.alignment_left" },
+            { "value": "center", "label": "t:sections.header_top_bar.alignment_center" },
+            { "value": "right", "label": "t:sections.header_top_bar.alignment_right" }
+          ]
         }
       ]
     },
