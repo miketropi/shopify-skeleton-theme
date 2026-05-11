@@ -127,7 +127,7 @@ export function buildPriceDisplayHtml(
   if (sym) visualInner += `<span class="price-display__sym">${escapeHtml(sym)}</span>`
   visualInner += `<span class="price-display__int">${escapeHtml(intDisplay)}</span>`
   if (fracDigits > 0 && !hideFrac) {
-    visualInner += `<span class="price-display__sep">${escapeHtml(decSep)}</span><sup class="price-display__frac">${escapeHtml(fracStr)}</sup>`
+    visualInner += `<sup class="price-display__frac">${escapeHtml(decSep)}${escapeHtml(fracStr)}</sup>`
   }
   if (options?.withCurrencyCode && iso) {
     visualInner += `<span class="price-display__code">${escapeHtml(iso)}</span>`
