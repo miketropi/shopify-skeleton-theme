@@ -1,43 +1,71 @@
 {% layout none %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="{{ request.locale.iso_code }}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex,nofollow">
+
+    {% comment %} Theme tokens + fonts (standalone page; no theme.liquid wrapper) {% endcomment %}
+    {% render 'font-pairing-loader' %}
+    {% render 'css-variables' %}
+
+    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+
     {%- assign gift_value = gift_card.initial_value | money_without_trailing_zeros -%}
     <title>{{ 'gift_cards.issued.title' | t: value: gift_value, shop: shop.name }}</title>
 
     {{ content_for_header }}
-
-    {{ 'critical.css' | asset_url | stylesheet_tag }}
-    {{ 'theme.css' | asset_url | stylesheet_tag }}
   </head>
 
   <body class="gift-card">
+    <a class="gift-card__skip" href="#gift-card-main">{{ 'gift_cards.issued.skip_to_main' | t }}</a>
+
     <div class="gift-card__wrapper">
       <header class="gift-card__header">
-        <a href="{{ routes.root_url }}" class="gift-card__shop-name">
-          {{- shop.name | escape -}}
-        </a>
+        <a href="{{ routes.root_url }}" class="gift-card__shop-name">{{ shop.name | escape }}</a>
       </header>
 
-      <main class="gift-card__main">
+      <main id="gift-card-main" class="gift-card__main">
         {%- if gift_card.enabled == false or gift_card.expired -%}
-          <p class="gift-card__tag">{{- 'gift_cards.issued.expired' | t -}}</p>
+          <p class="gift-card__badge gift-card__badge--alert" role="alert">
+            {{- 'gift_cards.issued.expired' | t -}}
+          </p>
         {%- endif -%}
 
-        <h1 class="gift-card__title">
-          {{- 'gift_cards.issued.subtext' | t -}}
-        </h1>
+        <h1 class="gift-card__title">{{ 'gift_cards.issued.subtext' | t }}</h1>
+
+        {%- if gift_card.product != blank -%}
+          <p class="gift-card__product-name">{{ gift_card.product.title | escape }}</p>
+        {%- endif -%}
+
+        {%- if gift_card.expires_on -%}
+          <p class="gift-card__expiry">
+            {{ 'gift_card.expires_on' | t: expires_on: gift_card.expires_on | date: format: 'abbreviated_date' }}
+          </p>
+        {%- endif -%}
 
         {%- if gift_card.image -%}
-          {{
-            gift_card.image
-            | image_url: width: 600
-            | image_tag: loading: 'eager', class: 'gift-card__image'
-          }}
+          {%- liquid
+            assign gift_card_img_alt = 'gift_card.card' | t
+            if gift_card.product != blank and gift_card.product.title != blank
+              assign gift_card_img_alt = gift_card.product.title
+            endif
+          -%}
+          <div class="gift-card__visual">
+            {{
+              gift_card.image
+              | image_url: width: 1200
+              | image_tag:
+                  loading: 'eager',
+                  alt: gift_card_img_alt,
+                  class: 'gift-card__image',
+                  widths: '400,600,800,1200',
+                  sizes: '(max-width: 480px) 100vw, 448px'
+            }}
+          </div>
         {%- endif -%}
 
         <div class="gift-card__price">
@@ -52,51 +80,91 @@
           </p>
         </div>
 
-        <div class="gift-card__code-wrapper">
-          <input
-            type="text"
-            class="gift-card__code"
-            id="GiftCardDigits"
-            value="{{ gift_card.code | format_code }}"
-            aria-label="{{ 'gift_cards.issued.gift_card_code' | t }}"
-            readonly
-          >
-          <button
-            class="gift-card__copy btn"
-            data-copy-target="GiftCardDigits"
-            type="button"
-          >
-            {{- 'gift_cards.issued.copy_code' | t -}}
-          </button>
+        <div class="gift-card__qr" aria-label="{{ 'gift_cards.issued.qr_aria' | t }}">
+          {{ gift_card | qr_code }}
         </div>
+
+        <div class="gift-card__code-block">
+          <label class="gift-card__code-label" for="GiftCardDigits">{{ 'gift_cards.issued.gift_card_code' | t }}</label>
+          <div class="gift-card__code-row">
+            <input
+              type="text"
+              class="gift-card__code"
+              id="GiftCardDigits"
+              value="{{ gift_card.code | format_code }}"
+              readonly
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <button type="button" class="gift-card__btn" data-copy-target="GiftCardDigits">
+              {{- 'gift_cards.issued.copy_code' | t -}}
+            </button>
+          </div>
+        </div>
+
+        <p class="gift-card__copy-status visually-hidden" id="gift-card-copy-status" role="status" aria-live="polite"></p>
+
+        <p class="gift-card__hint">{{ 'gift_card.use_at_checkout' | t }}</p>
+
+        {%- if gift_card.pass_url -%}
+          <a href="{{ gift_card.pass_url }}" class="gift-card__wallet gift-card__btn--full">
+            {{- 'gift_card.add_to_apple_wallet' | t -}}
+          </a>
+        {%- endif -%}
 
         <a
           href="{{ shop.url }}"
-          class="gift-card__shop-link btn btn--primary"
+          class="gift-card__btn gift-card__btn--primary gift-card__btn--full"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
         >
           {{- 'gift_cards.issued.shop_link' | t -}}
         </a>
       </main>
     </div>
+
     <script>
-      (function () {
-        var btn = document.querySelector('[data-copy-target]');
-        if (!btn) return;
+      ;(function () {
+        var btn = document.querySelector('[data-copy-target]')
+        var status = document.getElementById('gift-card-copy-status')
+        if (!btn) return
+        var ok = {{ 'gift_cards.issued.copy_success' | t | json }}
+        var err = {{ 'gift_cards.issued.copy_failed' | t | json }}
         btn.addEventListener('click', function () {
-          var id = btn.getAttribute('data-copy-target');
-          var el = id ? document.getElementById(id) : null;
-          if (!el) return;
-          el.select();
-          el.setSelectionRange(0, 99999);
-          try {
-            navigator.clipboard.writeText(el.value);
-          } catch (e) {
-            document.execCommand('copy');
+          var id = btn.getAttribute('data-copy-target')
+          var el = id ? document.getElementById(id) : null
+          if (!el || !status) return
+          el.focus({ preventScroll: true })
+          el.select()
+          el.setSelectionRange(0, el.value.length)
+          function announce(msg) {
+            status.textContent = msg
+            window.setTimeout(function () {
+              status.textContent = ''
+            }, 2500)
           }
-        });
-      })();
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(el.value).then(
+              function () {
+                announce(ok)
+              },
+              function () {
+                fallbackCopy()
+              },
+            )
+            return
+          }
+          fallbackCopy()
+          function fallbackCopy() {
+            try {
+              document.execCommand('copy')
+              announce(ok)
+            } catch (e) {
+              announce(err)
+            }
+          }
+        })
+      })()
     </script>
   </body>
 </html>

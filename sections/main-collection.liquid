@@ -6,6 +6,8 @@
   assign show_quick_add = section.settings.show_quick_add
   assign show_hero = section.settings.show_hero
   assign hero_height = section.settings.hero_height | default: 'medium'
+  assign hero_video = section.settings.hero_video
+  assign hero_parallax = section.settings.hero_parallax
   assign hero_image = collection.image | default: section.settings.hero_fallback_image
   assign image_ratio = section.settings.image_ratio | default: '3/4'
   assign show_filtering = section.settings.show_filtering
@@ -32,6 +34,21 @@
   endif
 
   assign current_sort = collection.sort_by | default: collection.default_sort_by
+
+  assign has_hero_media = false
+  if hero_video != blank
+    assign has_hero_media = true
+  elsif hero_image
+    assign has_hero_media = true
+  endif
+
+  assign hero_media_target_class = ''
+  if hero_parallax and has_hero_media
+    assign hero_media_target_class = ' mcol__hero-parallax-target'
+  endif
+
+  assign hero_video_class = 'mcol__hero-video' | append: hero_media_target_class
+  assign hero_img_class = 'mcol__hero-img' | append: hero_media_target_class
 -%}
 
 <div
@@ -56,15 +73,34 @@
 
     {%- comment -%} ── Hero ── {%- endcomment -%}
     {%- if show_hero -%}
-      <header class="mcol__hero mcol__hero--{{ hero_height }}{% unless hero_image %} mcol__hero--no-image{% endunless %}">
-        {%- if hero_image -%}
+      <header
+        class="mcol__hero mcol__hero--{{ hero_height }}{% if has_hero_media %} mcol__hero--has-media{% else %} mcol__hero--no-image{% endif %}{% if hero_parallax and has_hero_media %} mcol__hero--parallax{% endif %}"
+        {% if hero_parallax and has_hero_media %}
+          data-mcol-hero-parallax
+        {% endif %}
+      >
+        {%- if hero_video != blank -%}
+          <div class="mcol__hero-media">
+            {{
+              hero_video
+              | video_tag:
+                  autoplay: true,
+                  loop: true,
+                  muted: true,
+                  playsinline: true,
+                  class: hero_video_class,
+                  image_size: '2000x'
+            }}
+          </div>
+          <div class="mcol__hero-scrim"></div>
+        {%- elsif hero_image -%}
           <div class="mcol__hero-media">
             {{ hero_image
               | image_url: width: 2000
               | image_tag:
                   loading: 'eager',
                   alt: '',
-                  class: 'mcol__hero-img',
+                  class: hero_img_class,
                   widths: '600,900,1200,1600,2000',
                   sizes: '100vw'
             }}
@@ -284,7 +320,7 @@
       "type": "checkbox",
       "id": "show_hero",
       "label": "Show hero banner",
-      "info": "Displays the collection image, description, and product count in a hero section",
+      "info": "Shows collection title, description, product count, and optional image or video hero",
       "default": true
     },
     {
@@ -292,6 +328,20 @@
       "id": "hero_fallback_image",
       "label": "Default hero image",
       "info": "Used when a collection has no image set"
+    },
+    {
+      "type": "video",
+      "id": "hero_video",
+      "label": "t:sections.main_collection.hero_video",
+      "info": "t:sections.main_collection.hero_video_info",
+      "visible_if": "{{ section.settings.show_hero }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "hero_parallax",
+      "label": "t:sections.main_collection.hero_parallax",
+      "default": false,
+      "visible_if": "{{ section.settings.show_hero }}"
     },
     {
       "type": "select",
@@ -356,7 +406,7 @@
       "min": 2,
       "max": 5,
       "step": 1,
-      "default": 3
+      "default": 4
     },
     {
       "type": "range",

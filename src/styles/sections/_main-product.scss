@@ -491,6 +491,78 @@
   }
 }
 
+.main-product__figure--video {
+  cursor: default;
+  width: 100%;
+  max-width: 100%;
+
+  video {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    vertical-align: middle;
+  }
+
+  iframe {
+    width: 100%;
+    display: block;
+    aspect-ratio: 16 / 9;
+    min-height: 12rem;
+    border: 0;
+  }
+}
+
+.main-product__video {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.main-product__figure--model {
+  width: 100%;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  model-viewer {
+    display: block;
+    width: 100%;
+    height: min(70vh, 36rem);
+  }
+}
+
+.main-product__thumb--video {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: rgb(0 0 0 / 0.22);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    width: 0;
+    height: 0;
+    margin-top: -0.28rem;
+    margin-left: -0.2rem;
+    border-style: solid;
+    border-width: 0.32rem 0 0.32rem 0.48rem;
+    border-color: transparent transparent transparent rgb(255 255 255 / 0.95);
+    pointer-events: none;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.35));
+  }
+}
+
 .main-product__slide {
   box-sizing: border-box;
   width: 100%;
@@ -534,13 +606,13 @@
   left: 0.9rem;
   padding: 0.4rem 0.65rem;
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 300;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--cs-btn-primary-text);
-  background: var(--cs-btn-primary-bg);
+  color: #fff;
+  background: #f33736;
   border: 0;
-  border-radius: var(--pdp-radius-sm);
+  border-radius: 999px;
   pointer-events: none;
   box-shadow: 0 0.12rem 0.4rem color-mix(in srgb, var(--cs-text) 12%, transparent);
 }
@@ -1615,7 +1687,7 @@ button.main-product__meta-link:focus-visible {
     flex: 0 1 auto;
     min-height: 0;
     padding: 0.4rem 0.1rem 0.65rem;
-    font-size: 0.8125rem;
+    font-size: 1.1rem;
     scroll-snap-align: unset;
   }
 }

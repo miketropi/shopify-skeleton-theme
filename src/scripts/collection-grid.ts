@@ -1,5 +1,7 @@
 import gsap from 'gsap'
+import { initMcolHeroParallax } from './mcol-hero-parallax'
 import { registerSection } from './section-registry'
+import { bindTcardHoverVideos } from './tcard-hover-video'
 
 const SECTION_TYPE = 'collection-grid'
 const DESKTOP_MQ = '(min-width: 75em)'
@@ -74,6 +76,10 @@ function init(container: HTMLElement): void {
     seedClosedFilterPanel(container)
   }
 
+  const teardownHeroParallax = initMcolHeroParallax(container)
+
+  bindTcardHoverVideos(container, signal)
+
   // ── Section Rendering API fetch ────────────────────────
 
   async function fetchSection(url: string): Promise<string> {
@@ -113,6 +119,8 @@ function init(container: HTMLElement): void {
     if (body && existingBody) {
       existingBody.replaceWith(body)
     }
+
+    bindTcardHoverVideos(container, signal)
 
     if (!keepDrawerOpen && !prefersReducedMotion()) {
       seedClosedFilterPanel(container)
@@ -358,6 +366,7 @@ function init(container: HTMLElement): void {
 
   const extended = container as HTMLElement & { __collectionGridTeardown?: Teardown }
   extended.__collectionGridTeardown = () => {
+    teardownHeroParallax()
     if (priceTimer) clearTimeout(priceTimer)
     fetchController?.abort()
     gsap.killTweensOf(filterTweenTargets(container))

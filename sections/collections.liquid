@@ -1,81 +1,66 @@
 {% comment %}
-  This section is used in the list-collections template to render a list of
-  collections.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
+  Legacy section type `collections` — same UX as main-list-collections via `mclst-list-inner`.
+  Prefer `main-list-collections` in `templates/list-collections.json`; this remains for presets
+  or manual adds in the theme editor.
 {% endcomment %}
 
-<h1>{{ 'collections.title' | t }}</h1>
-
-<div
-  class="collections {{ section.settings.grid_item_width }}"
-  style="--grid-gap: {{ section.settings.grid_gap }}px"
->
-  {% for collection in collections %}
-    <a class="collection-card" href="{{ collection.url }}">
-      {% if collection.featured_image %}
-        {% render 'image',
-          class: 'collection-card__image',
-          image: collection.featured_image,
-          width: 600,
-          height: 600,
-          crop: 'center'
-        %}
-      {% endif %}
-
-      <div class="collection-card__content">
-        <p>{{ collection.title }}</p>
-
-        {% if collection.description %}
-          <p>{{ collection.description | strip_html | truncatewords: 15 }}</p>
-        {% endif %}
-      </div>
-    </a>
-  {% endfor %}
-</div>
-
-{% stylesheet %}
-  .collections {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(var(--collection-card-size), 100%), 1fr));
-    gap: var(--grid-gap);
-  }
-  .collections--compact {
-    --collection-card-size: 160px;
-  }
-  .collections--full {
-    --collection-card-size: 280px;
-  }
-  .collection-card {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-{% endstylesheet %}
+{% render 'mclst-list-inner', section: section %}
 
 {% schema %}
 {
   "name": "t:general.collections_grid",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["list-collections"]
+  },
   "settings": [
     {
-      "type": "select",
-      "id": "grid_item_width",
-      "label": "t:labels.grid_item_width",
-      "options": [
-        { "value": "collections--compact", "label": "t:options.size.small" },
-        { "value": "collections--full", "label": "t:options.size.large" }
-      ],
-      "default": "collections--full"
+      "type": "header",
+      "content": "t:sections.list_collections.headers.layout"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "t:sections.list_collections.labels.description"
     },
     {
       "type": "range",
-      "id": "grid_gap",
-      "label": "t:labels.grid_gap",
-      "min": 0,
-      "max": 50,
-      "step": 5,
-      "unit": "px",
-      "default": 10
+      "id": "columns",
+      "label": "t:sections.list_collections.labels.desktop_columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "t:sections.list_collections.labels.image_ratio",
+      "options": [
+        { "value": "1/1", "label": "t:sections.list_collections.options.image_ratio.square" },
+        { "value": "4/5", "label": "t:sections.list_collections.options.image_ratio.tall" },
+        { "value": "3/4", "label": "t:sections.list_collections.options.image_ratio.portrait" },
+        { "value": "2/3", "label": "t:sections.list_collections.options.image_ratio.classic" },
+        { "value": "4/3", "label": "t:sections.list_collections.options.image_ratio.landscape" }
+      ],
+      "default": "1/1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.list_collections.headers.card_options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "t:sections.list_collections.labels.show_count",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "t:sections.list_collections.labels.show_description",
+      "default": false
     }
   ],
   "presets": [{ "name": "t:general.collections_grid" }]

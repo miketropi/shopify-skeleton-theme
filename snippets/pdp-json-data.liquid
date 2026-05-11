@@ -40,6 +40,7 @@
     {%- for media in product.media -%}
       {{ media.id | json -}}: {
       "id": {{ media.id }},
+      "media_type": {{ media.media_type | json }},
       "src": {{ media | image_url: width: 1600 | json }},
       "alt": {{ media.alt | default: product.title | json }},
       "w": 1600,

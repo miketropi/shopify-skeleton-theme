@@ -230,6 +230,9 @@
       "color_accent_info": "Used for focus rings and the subscribe button. Leave empty to inherit the theme accent."
     },
     "main_collection": {
+      "hero_video": "Hero video",
+      "hero_video_info": "Upload a video. When set, it replaces the collection image in the hero (fallback image is ignored until video is cleared).",
+      "hero_parallax": "Parallax scroll on hero media",
       "filter_offcanvas_position": {
         "label": "Filter panel slides from",
         "left": "Left",

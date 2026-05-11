@@ -285,11 +285,15 @@
   "gift_cards": {
     "issued": {
       "copy_code": "Copy code",
+      "copy_failed": "Could not copy. Select the code and copy manually.",
+      "copy_success": "Code copied to clipboard",
       "expired": "Expired",
       "gift_card_code": "Gift card code",
+      "qr_aria": "QR code for this gift card",
       "remaining_html": "{{ balance }} remaining",
       "remaining_suffix": "remaining",
       "shop_link": "Shop now",
+      "skip_to_main": "Skip to gift card",
       "subtext": "Your gift card",
       "title": "{{ value }} gift card for {{ shop }}"
     }
@@ -344,6 +348,7 @@
       "review_score": "{{ score }} out of 5",
       "sale": "Sale",
       "sale_off": "off",
+      "sale_badge_percent": "-{{ percent }}%",
       "sale_percent": "{{ percent }}% off",
       "size_guide": "Size guide",
       "size_guide_open": "Open size guide",

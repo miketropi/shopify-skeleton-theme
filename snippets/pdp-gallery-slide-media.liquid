@@ -1,0 +1,92 @@
+{%- comment -%}
+  PDP gallery: one media unit (image, video, external video, or 3D model).
+
+  @param media {object}
+  @param product {object}
+  @param section {section}
+  @param figure_layout {string} slide | stack
+  @param is_first {boolean}
+  @param sizes {string} — sizes attribute for responsive images
+  @param stack_item {boolean} — stacked layout: id + data-product-stack-item
+{%- endcomment -%}
+{%- liquid
+  assign merchant_alt = media.alt | strip
+  assign slide_alt = merchant_alt | default: product.title
+  assign is_video = false
+  if media.media_type == 'video' or media.media_type == 'external_video'
+    assign is_video = true
+  endif
+  assign is_model = false
+  if media.media_type == 'model'
+    assign is_model = true
+  endif
+  assign loading_attr = 'lazy'
+  if is_first
+    assign loading_attr = 'eager'
+  endif
+-%}
+{%- if is_video -%}
+  <figure
+    class="main-product__figure main-product__figure--{{ figure_layout }} main-product__figure--video"
+    data-product-feature-figure
+    data-media-id="{{ media.id }}"
+    {%- if stack_item -%}
+      data-product-stack-item
+      id="ProductGallery-{{ section.id }}-{{ media.id }}"
+    {%- endif -%}
+  >
+    {{
+      media
+      | video_tag:
+        image_size: '1920x',
+        autoplay: false,
+        loop: true,
+        muted: true,
+        controls: true,
+        playsinline: true,
+        class: 'main-product__video'
+    }}
+  </figure>
+{%- elsif is_model -%}
+  <figure
+    class="main-product__figure main-product__figure--{{ figure_layout }} main-product__figure--model"
+    data-product-feature-figure
+    data-media-id="{{ media.id }}"
+    {%- if stack_item -%}
+      data-product-stack-item
+      id="ProductGallery-{{ section.id }}-{{ media.id }}"
+    {%- endif -%}
+  >
+    {{ media | model_viewer_tag: image_size: '2048x', reveal: 'interaction', toggleable: true }}
+  </figure>
+{%- else -%}
+  <figure
+    class="main-product__figure main-product__figure--{{ figure_layout }} main-product__figure--zoomable"
+    data-product-feature-figure
+    data-media-id="{{ media.id }}"
+    role="button"
+    tabindex="0"
+    aria-label="{{ 'products.product.lightbox_open' | t | escape }}"
+    {%- if stack_item -%}
+      data-product-stack-item
+      id="ProductGallery-{{ section.id }}-{{ media.id }}"
+    {%- endif -%}
+  >
+    <img
+      class="main-product__image"
+      data-product-slide-img
+      src="{{ media | image_url: width: 1600 }}"
+      srcset="{{ media | image_url: width: 480 }} 480w, {{ media | image_url: width: 720 }} 720w, {{ media | image_url: width: 960 }} 960w, {{ media | image_url: width: 1200 }} 1200w, {{ media | image_url: width: 1600 }} 1600w"
+      sizes="{{ sizes }}"
+      width="1600"
+      height="{{ 1600 | divided_by: media.aspect_ratio | ceil }}"
+      alt="{{ slide_alt | escape }}"
+      data-lightbox-caption="{{ merchant_alt | escape }}"
+      data-lightbox-has-caption="{% if merchant_alt != blank %}true{% else %}false{% endif %}"
+      loading="{{ loading_attr }}"
+      {%- if is_first -%}
+        fetchpriority="high"
+      {%- endif -%}
+    >
+  </figure>
+{%- endif -%}

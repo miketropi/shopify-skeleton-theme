@@ -25,6 +25,7 @@ type VariantJson = {
 
 type MediaEntry = {
   id: number
+  media_type?: string
   src: string
   alt: string
   w: number
@@ -80,6 +81,21 @@ function getMediaIdOrder(container: HTMLElement): number[] {
     .split(',')
     .map((s) => parseInt(s.trim(), 10))
     .filter((n) => Number.isFinite(n))
+}
+
+/** HTML5 product videos only: play the active slide/stack item, pause the rest. */
+function syncProductGalleryVideos(
+  gallery: HTMLElement,
+  activeRoot: HTMLElement | null | undefined,
+  autoplayActive: boolean,
+): void {
+  gallery.querySelectorAll<HTMLVideoElement>('video').forEach((v) => {
+    if (activeRoot?.contains(v)) {
+      if (autoplayActive) void v.play().catch(() => {})
+    } else {
+      v.pause()
+    }
+  })
 }
 
 function normOpt(v: string | null | undefined): string {
@@ -574,6 +590,10 @@ export function attachMainProduct(container: HTMLElement): void {
           const mid = btn.getAttribute('data-media-id')
           btn.setAttribute('aria-pressed', mid === String(id) ? 'true' : 'false')
         })
+        if (gallery) {
+          const activeSlide = sw.slides[sw.activeIndex] as HTMLElement | undefined
+          syncProductGalleryVideos(gallery, activeSlide, !reduced)
+        }
       }
 
       if (swiperEl && useThumbs && thumbsEl) {
@@ -620,6 +640,7 @@ export function attachMainProduct(container: HTMLElement): void {
           },
           thumbs: { swiper: thumbsSwiper },
           on: {
+            init: onMainSlideChange,
             slideChange: onMainSlideChange,
           },
         })
@@ -644,6 +665,7 @@ export function attachMainProduct(container: HTMLElement): void {
             prevEl: container.querySelector<HTMLElement>('[data-product-nav-prev]') ?? undefined,
           },
           on: {
+            init: onMainSlideChange,
             slideChange: onMainSlideChange,
           },
         })
@@ -713,6 +735,7 @@ export function attachMainProduct(container: HTMLElement): void {
         if (stackItem) {
           stackItem.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' })
           if (gallery) gallery.setAttribute('data-active-media-id', String(featuredId))
+          if (gallery) syncProductGalleryVideos(gallery, stackItem, !reduced)
         }
       }
 

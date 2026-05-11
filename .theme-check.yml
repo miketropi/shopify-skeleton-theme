@@ -1,5 +1,11 @@
 extends: theme-check:recommended
 
+# Hosted gift card template: Shopify provides filters (e.g. qr_code) Theme Check
+# doesn’t catalog; runtime on storefront is valid.
+UnknownFilter:
+  ignore:
+    - templates/gift_card.liquid
+
 # PDP: HTML `<form>` is opened/closed around `@app` blocks; pairing spans branches Theme Check cannot prove.
 UnclosedHTMLElement:
   ignore:

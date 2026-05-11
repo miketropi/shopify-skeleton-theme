@@ -1,53 +1,17 @@
-{%- liquid
-  assign cols = section.settings.columns | default: 3
-  assign image_ratio = section.settings.image_ratio | default: '3/4'
-  assign show_count = section.settings.show_count
-  assign show_description = section.settings.show_description
--%}
+{% comment %}
+  All-collections template section. Shared markup lives in `snippets/mclst-list-inner.liquid`.
+{% endcomment %}
 
-<div
-  class="section-{{ section.id }} mclst"
-  data-section-type="list-collections"
-  data-section-id="{{ section.id }}"
-  style="--mclst-cols: {{ cols }}; --tcard-coll-image-ratio: {{ image_ratio }};"
-  {% render 'color-scheme-vars' %}
->
-  <header class="mclst__header">
-    <h1 class="mclst__title">{{ 'collections.title' | t }}</h1>
-    {%- if section.settings.description != blank -%}
-      <p class="mclst__intro">{{ section.settings.description | escape }}</p>
-    {%- endif -%}
-  </header>
-
-  {%- if collections.size > 0 -%}
-    <ul class="mclst__grid" role="list">
-      {%- for collection in collections -%}
-        {%- unless collection.empty? -%}
-          <li class="mclst__grid-item">
-            {%- render 'tcard-collection',
-              collection: collection,
-              show_count: show_count,
-              show_description: show_description
-            -%}
-          </li>
-        {%- endunless -%}
-      {%- endfor -%}
-    </ul>
-  {%- else -%}
-    <div class="mclst__empty">
-      <div class="mclst__empty-icon" aria-hidden="true">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      </div>
-      <p class="mclst__empty-text">{{ 'collections.list.no_collections' | t }}</p>
-    </div>
-  {%- endif -%}
-</div>
+{% render 'mclst-list-inner', section: section %}
 
 {% schema %}
 {
   "name": "t:sections.list_collections.name",
   "tag": "section",
   "class": "section",
+  "enabled_on": {
+    "templates": ["list-collections"]
+  },
   "settings": [
     {
       "type": "header",
@@ -69,7 +33,7 @@
     },
     {
       "type": "select",
-      "id": "image_ratio", 
+      "id": "image_ratio",
       "label": "t:sections.list_collections.labels.image_ratio",
       "options": [
         { "value": "1/1", "label": "t:sections.list_collections.options.image_ratio.square" },

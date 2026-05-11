@@ -18,6 +18,7 @@ import { initSearchModal } from './search-modal'
 import { registerHeaderTopBarSection } from './header-top-bar'
 import { registerMainBlogSection } from './main-blog'
 import { registerMainArticleSection } from './main-article'
+import { bindTcardHoverVideos } from './tcard-hover-video'
 
 export type { ThemeModalOptions } from './theme-modal'
 export { ThemeModal, THEME_MODAL_COMPACT_MQ } from './theme-modal'
@@ -37,5 +38,9 @@ registerMainArticleSection()
 
 bootSections()
 initSearchModal()
+
+document.addEventListener('DOMContentLoaded', () => {
+  bindTcardHoverVideos(document.body)
+})
 
 console.log('Theme loaded')

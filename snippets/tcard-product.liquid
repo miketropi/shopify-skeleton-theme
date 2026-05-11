@@ -9,24 +9,67 @@
 
 {%- liquid
   assign on_sale = false
+  assign sale_discount_pct = 0
   if product.compare_at_price > product.price
     assign on_sale = true
+    if product.compare_at_price > 0
+      assign sale_save = product.compare_at_price | minus: product.price
+      assign sale_discount_pct = sale_save | times: 100.0 | divided_by: product.compare_at_price | round
+      if sale_discount_pct < 1
+        assign sale_discount_pct = 1
+      endif
+    endif
+  endif
+
+  assign first_media = blank
+  assign leading_is_video = false
+  if product.media.size > 0
+    assign first_media = product.media.first
+    if first_media.media_type == 'video' or first_media.media_type == 'external_video'
+      assign leading_is_video = true
+    endif
   endif
 
   assign has_second = false
-  if show_secondary_image and product.images.size > 1
-    assign has_second = true
-  endif
+  unless leading_is_video
+    if show_secondary_image and product.images.size > 1
+      assign has_second = true
+      assign secondary_alt = product.images[1].alt | default: product.title
+    endif
+  endunless
 
   assign primary_alt = product.featured_image.alt | default: product.title
-  if has_second
-    assign secondary_alt = product.images[1].alt | default: product.title
+  if leading_is_video
+    assign primary_alt = first_media.alt | default: product.title
   endif
+
+  assign tcard_hover_video = leading_is_video
 -%}
 
-<article class="tcard{% if has_second %} tcard--has-alt{% endif %}{% unless product.available %} tcard--unavailable{% endunless %}">
-  <a class="tcard__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
-    {%- if product.featured_image != blank -%}
+<article class="tcard{% if leading_is_video %} tcard--leading-video{% endif %}{% if has_second %} tcard--has-alt{% endif %}{% unless product.available %} tcard--unavailable{% endunless %}">
+  <a
+    class="tcard__media{% if leading_is_video %} tcard__media--video-lead{% endif %}"
+    href="{{ product.url }}"
+    tabindex="-1"
+    aria-hidden="true"
+    {% if tcard_hover_video %}data-tcard-hover-video{% endif %}
+  >
+    {%- if leading_is_video -%}
+      <span class="tcard__video-track">
+        {{
+          first_media
+          | video_tag:
+            image_size: '900x',
+            autoplay: false,
+            loop: true,
+            muted: true,
+            controls: false,
+            playsinline: true,
+            preload: 'metadata',
+            class: 'tcard__video'
+        }}
+      </span>
+    {%- elsif product.featured_image != blank -%}
       {{
         product.featured_image
         | image_url: width: 900
@@ -55,10 +98,37 @@
       </div>
     {%- endif -%}
 
-    {%- if on_sale -%}
-      <span class="tcard__badge tcard__badge--sale">{{ 'products.product.sale' | t | default: 'Sale' }}</span>
-    {%- elsif product.available == false -%}
-      <span class="tcard__badge tcard__badge--soldout">{{ 'products.product.sold_out' | t | default: 'Sold out' }}</span>
+    {%- if on_sale or leading_is_video or product.available == false -%}
+      <div class="tcard__badges">
+        {%- if leading_is_video -%}
+          <span class="tcard__badge tcard__badge--video">
+            <svg
+              class="tcard__badge-video-icon tcard__badge-video-icon--play"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+              focusable="false"
+            ><path d="M8 5v14l11-7L8 5z"/></svg>
+            <svg
+              class="tcard__badge-video-icon tcard__badge-video-icon--pause"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+              focusable="false"
+            ><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </span>
+        {%- endif -%}
+        {%- if on_sale -%}
+          <span class="tcard__badge tcard__badge--sale">{{ 'products.product.sale_badge_percent' | t: percent: sale_discount_pct }}</span>
+        {%- endif -%}
+        {%- if product.available == false -%}
+          <span class="tcard__badge tcard__badge--soldout">{{ 'products.product.sold_out' | t | default: 'Sold out' }}</span>
+        {%- endif -%}
+      </div>
     {%- endif -%}
   </a>
 

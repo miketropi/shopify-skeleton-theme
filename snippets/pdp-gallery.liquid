@@ -35,8 +35,6 @@
     </div>
   {%- elsif product.media.size == 1 -%}
     {%- assign one_media = product.media.first -%}
-    {%- assign merchant_alt_one = one_media.alt | strip -%}
-    {%- assign one_alt = merchant_alt_one | default: product.title -%}
     <div class="main-product__media-inner main-product__media-inner--static">
       {%- if section.settings.show_sale_badge -%}
         <span
@@ -44,36 +42,22 @@
           data-product-badge
           {% unless show_compare and off_pct > 0 %}
             hidden
-          {% endunless %}
+          {% endunless %} 
         >
           {%- if show_compare and off_pct > 0 -%}
-            {{- 'products.product.sale_percent' | t: percent: off_pct -}}
+            {{- 'products.product.sale_percent' | t: percent: off_pct -}} 
           {%- endif -%}
         </span>
       {%- endif -%}
-      <figure
-        class="main-product__figure main-product__figure--slide main-product__figure--zoomable"
-        data-product-feature-figure
-        data-media-id="{{ one_media.id }}"
-        role="button"
-        tabindex="0"
-        aria-label="{{ 'products.product.lightbox_open' | t | escape }}"
-      >
-        <img
-          class="main-product__image"
-          data-product-slide-img
-          src="{{ one_media | image_url: width: 1600 }}"
-          srcset="{{ one_media | image_url: width: 480 }} 480w, {{ one_media | image_url: width: 720 }} 720w, {{ one_media | image_url: width: 960 }} 960w, {{ one_media | image_url: width: 1200 }} 1200w, {{ one_media | image_url: width: 1600 }} 1600w"
-          sizes="(min-width: 900px) 48vw, 100vw"
-          width="1600"
-          height="{{ 1600 | divided_by: one_media.aspect_ratio | ceil }}"
-          alt="{{ one_alt | escape }}"
-          data-lightbox-caption="{{ merchant_alt_one | escape }}"
-          data-lightbox-has-caption="{% if merchant_alt_one != blank %}true{% else %}false{% endif %}"
-          fetchpriority="high"
-          loading="eager"
-        >
-      </figure>
+      {%- render 'pdp-gallery-slide-media',
+        media: one_media,
+        product: product,
+        section: section,
+        figure_layout: 'slide',
+        is_first: true,
+        sizes: '(min-width: 900px) 48vw, 100vw',
+        stack_item: false
+      -%}
     </div>
   {%- elsif gallery_layout == 'stacked' -%}
     <div class="main-product__gallery-frame{{ gallery_frame_modifier }}" data-product-gallery-frame>
@@ -92,35 +76,15 @@
       {%- endif -%}
       <div class="main-product__gallery-stack">
         {%- for media in product.media -%}
-          {%- assign merchant_alt = media.alt | strip -%}
-          {%- assign slide_alt = merchant_alt | default: product.title -%}
-          <figure
-            class="main-product__figure main-product__figure--stack main-product__figure--zoomable"
-            data-product-feature-figure
-            data-product-stack-item
-            data-media-id="{{ media.id }}"
-            id="ProductGallery-{{ section.id }}-{{ media.id }}"
-            role="button"
-            tabindex="0"
-            aria-label="{{ 'products.product.lightbox_open' | t | escape }}"
-          >
-            <img
-              class="main-product__image"
-              data-product-slide-img
-              src="{{ media | image_url: width: 1600 }}"
-              srcset="{{ media | image_url: width: 480 }} 480w, {{ media | image_url: width: 720 }} 720w, {{ media | image_url: width: 960 }} 960w, {{ media | image_url: width: 1200 }} 1200w, {{ media | image_url: width: 1600 }} 1600w"
-              sizes="(min-width: 900px) 48vw, 100vw"
-              width="1600"
-              height="{{ 1600 | divided_by: media.aspect_ratio | ceil }}"
-              alt="{{ slide_alt | escape }}"
-              data-lightbox-caption="{{ merchant_alt | escape }}"
-              data-lightbox-has-caption="{% if merchant_alt != blank %}true{% else %}false{% endif %}"
-              loading="{% if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
-              {%- if forloop.first -%}
-                fetchpriority="high"
-              {%- endif -%}
-            >
-          </figure>
+          {%- render 'pdp-gallery-slide-media',
+            media: media,
+            product: product,
+            section: section,
+            figure_layout: 'stack',
+            is_first: forloop.first,
+            sizes: '(min-width: 900px) 48vw, 100vw',
+            stack_item: true
+          -%}
         {%- endfor -%}
       </div>
     </div>
@@ -144,34 +108,16 @@
         <div class="swiper main-product__swiper" data-product-swiper>
           <div class="swiper-wrapper">
             {%- for media in product.media -%}
-              {%- assign merchant_alt = media.alt | strip -%}
-              {%- assign slide_alt = merchant_alt | default: product.title -%}
               <div class="swiper-slide main-product__slide" data-media-id="{{ media.id }}">
-                <figure
-                  class="main-product__figure main-product__figure--slide main-product__figure--zoomable"
-                  data-product-feature-figure
-                  data-media-id="{{ media.id }}"
-                  role="button"
-                  tabindex="0"
-                  aria-label="{{ 'products.product.lightbox_open' | t | escape }}"
-                >
-                  <img
-                    class="main-product__image"
-                    data-product-slide-img
-                    src="{{ media | image_url: width: 1600 }}"
-                    srcset="{{ media | image_url: width: 480 }} 480w, {{ media | image_url: width: 720 }} 720w, {{ media | image_url: width: 960 }} 960w, {{ media | image_url: width: 1200 }} 1200w, {{ media | image_url: width: 1600 }} 1600w"
-                    sizes="(min-width: 900px) 42vw, 100vw"
-                    width="1600"
-                    height="{{ 1600 | divided_by: media.aspect_ratio | ceil }}"
-                    alt="{{ slide_alt | escape }}"
-                    data-lightbox-caption="{{ merchant_alt | escape }}"
-                    data-lightbox-has-caption="{% if merchant_alt != blank %}true{% else %}false{% endif %}"
-                    loading="{% if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
-                    {%- if forloop.first -%}
-                      fetchpriority="high"
-                    {%- endif -%}
-                  >
-                </figure>
+                {%- render 'pdp-gallery-slide-media',
+                  media: media,
+                  product: product,
+                  section: section,
+                  figure_layout: 'slide',
+                  is_first: forloop.first,
+                  sizes: '(min-width: 900px) 42vw, 100vw',
+                  stack_item: false
+                -%}
               </div>
             {%- endfor -%}
           </div>
@@ -207,27 +153,39 @@
           <div class="swiper main-product__thumbs-swiper" data-product-thumbs-swiper>
             <div class="swiper-wrapper">
               {%- for media in product.media -%}
-                {%- assign t_alt = media.alt | default: product.title -%}
+                {%- liquid
+                  assign thumb_image = media
+                  if media.media_type != 'image'
+                    assign thumb_image = media.preview_image
+                  endif
+                  assign t_alt = media.alt | default: product.title
+                  assign thumb_is_video = false
+                  if media.media_type == 'video' or media.media_type == 'external_video'
+                    assign thumb_is_video = true
+                  endif
+                -%}
                 <div class="swiper-slide main-product__thumb-slide" data-media-id="{{ media.id }}">
                   <button
                     type="button"
-                    class="main-product__thumb"
+                    class="main-product__thumb{% if thumb_is_video %} main-product__thumb--video{% endif %}"
                     data-product-thumb
                     data-media-id="{{ media.id }}"
                     aria-label="{{ 'products.product.open_image' | t }}"
                     aria-pressed="{% if forloop.first -%}true{%- else -%}false{%- endif -%}"
                   >
-                    {{
-                      media
-                      | image_url: width: 400
-                      | image_tag:
-                        loading: 'lazy',
-                        class: 'main-product__thumb-img',
-                        widths: '200, 400',
-                        sizes: '80px',
-                        alt: '',
-                        title: t_alt
-                    }}
+                    {%- if thumb_image != blank -%}
+                      {{
+                        thumb_image
+                        | image_url: width: 400
+                        | image_tag:
+                          loading: 'lazy',
+                          class: 'main-product__thumb-img',
+                          widths: '200, 400',
+                          sizes: '80px',
+                          alt: '',
+                          title: t_alt
+                      }}
+                    {%- endif -%}
                   </button>
                 </div>
               {%- endfor -%}
