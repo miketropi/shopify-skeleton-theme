@@ -6,6 +6,7 @@
   id="HeaderNav-{{ section.id }}"
   data-header-nav
   aria-label="{{ 'header.navigation' | t }}"
+  aria-labelledby="HeaderOffcanvasTitle-{{ section.id }}"
 >
   <div class="header__offcanvas-head">
     <div class="header__offcanvas-head-main">
@@ -26,79 +27,163 @@
     </button>
   </div>
   <div class="header__offcanvas-body">
-    <ul class="header__menu" role="list">
-      {% for link in section.settings.menu.links %}
-        <li
-          class="header__menu-item{% if link.links != blank %} header__menu-item--has-children{% endif %}"
-        >
-          {% if link.links != blank %}
-            {% assign top_index = forloop.index %}
-            <div class="header__menu-row">
-              <a class="header__menu-link header__menu-link--parent" href="{{ link.url }}">
-                {{- link.title | escape -}}
-              </a>
-              <button
-                type="button"
-                class="header__submenu-toggle"
-                data-header-submenu-toggle
-                aria-expanded="false"
-                aria-controls="HeaderSub-{{ section.id }}-{{ top_index }}"
-                aria-label="{{ 'header.submenu_toggle' | t: title: link.title | escape }}"
-              >
-                <span class="header__chevron" aria-hidden="true"></span>
-              </button>
-            </div>
-            <ul
-              class="header__submenu"
-              id="HeaderSub-{{ section.id }}-{{ top_index }}"
-              role="list"
-              hidden
-            >
-              {% for child in link.links %}
-                <li
-                  class="header__submenu-item{% if child.links != blank %} header__submenu-item--has-children{% endif %}"
+    <div class="header__drawer-pane-nav">
+      <div class="header__menu-shell">
+      <ul class="header__menu" role="list">
+        {% for link in section.settings.menu.links %}
+          <li
+            class="header__menu-item{% if link.links != blank %} header__menu-item--has-children{% endif %}"
+          >
+            {% if link.links != blank %}
+              {% assign top_index = forloop.index %}
+              <div class="header__menu-row">
+                <a class="header__menu-link header__menu-link--parent" href="{{ link.url }}">
+                  {{- link.title | escape -}}
+                </a>
+                <button
+                  type="button"
+                  class="header__submenu-toggle"
+                  data-header-submenu-toggle
+                  aria-expanded="false"
+                  aria-controls="HeaderSub-{{ section.id }}-{{ top_index }}"
+                  aria-label="{{ 'header.submenu_toggle' | t: title: link.title | escape }}"
                 >
-                  {% if child.links != blank %}
-                    <div class="header__submenu-row">
-                      <a class="header__submenu-link header__submenu-link--parent" href="{{ child.url }}">
-                        {{- child.title | escape -}}
-                      </a>
-                      <button
-                        type="button"
-                        class="header__submenu-toggle"
-                        data-header-submenu-toggle
-                        aria-expanded="false"
-                        aria-controls="HeaderSub2-{{ section.id }}-{{ top_index }}-{{ forloop.index }}"
-                        aria-label="{{ 'header.submenu_toggle' | t: title: child.title | escape }}"
+                  <span class="header__chevron" aria-hidden="true"></span>
+                </button>
+              </div>
+              <ul
+                class="header__submenu"
+                id="HeaderSub-{{ section.id }}-{{ top_index }}"
+                role="list"
+                hidden
+              >
+                {% for child in link.links %}
+                  <li
+                    class="header__submenu-item{% if child.links != blank %} header__submenu-item--has-children{% endif %}"
+                  >
+                    {% if child.links != blank %}
+                      <div class="header__submenu-row">
+                        <a class="header__submenu-link header__submenu-link--parent" href="{{ child.url }}">
+                          {{- child.title | escape -}}
+                        </a>
+                        <button
+                          type="button"
+                          class="header__submenu-toggle"
+                          data-header-submenu-toggle
+                          aria-expanded="false"
+                          aria-controls="HeaderSub2-{{ section.id }}-{{ top_index }}-{{ forloop.index }}"
+                          aria-label="{{ 'header.submenu_toggle' | t: title: child.title | escape }}"
+                        >
+                          <span class="header__chevron" aria-hidden="true"></span>
+                        </button>
+                      </div>
+                      <ul
+                        class="header__submenu-nested"
+                        id="HeaderSub2-{{ section.id }}-{{ top_index }}-{{ forloop.index }}"
+                        role="list"
+                        hidden
                       >
-                        <span class="header__chevron" aria-hidden="true"></span>
-                      </button>
-                    </div>
-                    <ul
-                      class="header__submenu-nested"
-                      id="HeaderSub2-{{ section.id }}-{{ top_index }}-{{ forloop.index }}"
-                      role="list"
-                      hidden
-                    >
-                      {% for grandchild in child.links %}
-                        <li class="header__submenu-item">
-                          <a class="header__submenu-link header__submenu-link--deep" href="{{ grandchild.url }}">
-                            {{- grandchild.title | escape -}}
-                          </a>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  {% else %}
-                    <a class="header__submenu-link" href="{{ child.url }}">{{ child.title | escape }}</a>
-                  {% endif %}
-                </li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            <a class="header__menu-link" href="{{ link.url }}">{{ link.title | escape }}</a>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
+                        {% for grandchild in child.links %}
+                          <li class="header__submenu-item">
+                            <a class="header__submenu-link header__submenu-link--deep" href="{{ grandchild.url }}">
+                              {{- grandchild.title | escape -}}
+                            </a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      <a class="header__submenu-link" href="{{ child.url }}">{{ child.title | escape }}</a>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <a class="header__menu-link" href="{{ link.url }}">{{ link.title | escape }}</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      {%- comment -%} Fixed order: social → localization (50/50 grid when both fields) → account; rich text after that. {%- endcomment -%}
+      {%- capture drawer_social_html -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'drawer_social' -%}
+            {%- render 'header-drawer-block', block: block, section: section, chrome: 'ios_primary' -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- assign drawer_social_html = drawer_social_html | strip -%}
+
+      {%- capture drawer_localization_html -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'drawer_localization' -%}
+            {%- render 'header-drawer-block', block: block, section: section, chrome: 'ios_primary' -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- assign drawer_localization_html = drawer_localization_html | strip -%}
+
+      {%- capture drawer_account_html -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'drawer_account' -%}
+            {%- render 'header-drawer-block', block: block, section: section, chrome: 'ios_primary' -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- assign drawer_account_html = drawer_account_html | strip -%}
+
+      {%- capture drawer_richtext_html -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'drawer_richtext' -%}
+            {%- liquid
+              assign dr_slot = block.settings.drawer_slot | strip | default: 'primary'
+              assign dr_chrome = 'ios_primary'
+              if dr_slot == 'actions'
+                assign dr_chrome = 'ios_action'
+              elsif dr_slot == 'footer'
+                assign dr_chrome = 'ios_footer'
+              endif
+            -%}
+            {%- render 'header-drawer-block', block: block, section: section, chrome: dr_chrome -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- assign drawer_richtext_html = drawer_richtext_html | strip -%}
+
+      {%- if drawer_social_html != blank
+        or drawer_localization_html != blank
+        or drawer_account_html != blank
+        or drawer_richtext_html != blank
+      -%}
+        <div class="header__drawer-utilities">
+          {%- if drawer_social_html != blank -%}
+            <div class="header__drawer-region header__drawer-region--social">
+              {{ drawer_social_html }}
+            </div>
+          {%- endif -%}
+
+          {%- if drawer_localization_html != blank -%}
+            <div class="header__drawer-region header__drawer-region--localization">
+              {{ drawer_localization_html }}
+            </div>
+          {%- endif -%}
+
+          {%- if drawer_account_html != blank -%}
+            <div class="header__drawer-region header__drawer-region--account">
+              {{ drawer_account_html }}
+            </div>
+          {%- endif -%}
+
+          {%- if drawer_richtext_html != blank -%}
+            <div class="header__drawer-region header__drawer-region--richtext">
+              {{ drawer_richtext_html }}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
   </div>
 </nav>

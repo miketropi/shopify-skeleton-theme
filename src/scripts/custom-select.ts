@@ -6,6 +6,9 @@
  * Optional on the root: `data-custom-select-align="left" | "center" | "right"` — how
  * the anchored menu lines up with the trigger (default center). On compact viewports the
  * menu opens as a centered modal instead.
+ *
+ * Optional: `data-custom-select-variant="text"` — minimal underline/text trigger that
+ * matches body copy (fills width, no filled “pill”). Omit or `default` for the standard control.
  */
 
 import gsap from 'gsap'
@@ -52,6 +55,14 @@ function scrollOptionIntoView(option: HTMLElement): void {
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
   option.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' })
+}
+
+type CustomSelectVariant = 'default' | 'text'
+
+function parseCustomSelectVariant(el: HTMLElement): CustomSelectVariant {
+  const raw = (el.dataset.customSelectVariant || '').trim().toLowerCase()
+  if (raw === 'text') return 'text'
+  return 'default'
 }
 
 type DropdownAlign = 'left' | 'center' | 'right'
@@ -115,6 +126,9 @@ export function enhanceCustomSelectRoot(
 
   const wrap = document.createElement('div')
   wrap.className = 'cselect'
+  if (parseCustomSelectVariant(root) === 'text') {
+    wrap.classList.add('cselect--text')
+  }
 
   const btn = document.createElement('button')
   btn.type = 'button'

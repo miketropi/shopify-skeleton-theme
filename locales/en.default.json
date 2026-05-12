@@ -273,7 +273,8 @@
     "menu_close": "Close menu",
     "menu_toggle": "Menu",
     "navigation": "Primary navigation",
-    "submenu_toggle": "Submenu for {{ title }}"
+    "submenu_toggle": "Submenu for {{ title }}",
+    "drawer_account_signed_out_cta": "Log in"
   },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",

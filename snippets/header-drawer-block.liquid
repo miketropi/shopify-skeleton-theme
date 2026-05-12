@@ -1,0 +1,213 @@
+{%- comment -%}
+  Renders one header drawer dashboard block (mobile only). Returns nothing if block has no visible output.
+  @param block {Block}
+  @param section {Section}
+  @param chrome {String} primary | action | footer (output as ios_* for CSS hooks)
+{%- endcomment -%}
+{%- liquid
+  assign chrome = chrome | default: 'ios_primary'
+-%}
+{%- case block.type -%}
+  {%- when 'drawer_richtext' -%}
+    {%- assign dr_plain = block.settings.body | strip_html | strip -%}
+    {%- if dr_plain != blank -%}
+      <div
+        class="header__drawer-block header__drawer-block--richtext header__drawer-block--{{ chrome }}"
+        {{ block.shopify_attributes }}
+      >
+        {%- if block.settings.heading != blank -%}
+          <p class="header__drawer-muted-label">{{ block.settings.heading | escape }}</p>
+        {%- endif -%}
+        <div class="header__drawer-block-body rte">
+          {{ block.settings.body }}
+        </div>
+      </div>
+    {%- endif -%}
+
+  {%- when 'drawer_social' -%}
+    {%- liquid
+      assign has_social = false
+      if settings.social_instagram != blank or settings.social_facebook != blank or settings.social_pinterest != blank or settings.social_youtube != blank or settings.social_tiktok != blank or settings.social_x != blank
+        assign has_social = true
+      endif
+    -%}
+    {%- if has_social -%}
+      <div
+        class="header__drawer-block header__drawer-block--social header__drawer-block--{{ chrome }}"
+        {{ block.shopify_attributes }}
+      >
+        {%- if block.settings.heading != blank -%}
+          <p class="header__drawer-muted-label">{{ block.settings.heading | escape }}</p>
+        {%- endif -%}
+        <div class="header__drawer-social-wrap">
+          {% render 'social-icons-row',
+            list_class: 'header__drawer-social-list',
+            link_class: 'header__drawer-social-link'
+          %}
+        </div>
+      </div>
+    {%- endif -%}
+
+  {%- when 'drawer_localization' -%}
+    {%- liquid
+      assign dr_loc_show_currency = block.settings.show_currency
+      assign dr_loc_show_language = block.settings.show_language
+      if dr_loc_show_currency and localization.available_countries.size > 1
+        assign dr_loc_render_currency = true
+      else
+        assign dr_loc_render_currency = false
+      endif
+      if dr_loc_show_language and localization.available_languages.size > 1
+        assign dr_loc_render_language = true
+      else
+        assign dr_loc_render_language = false
+      endif
+    -%}
+    {%- if dr_loc_render_currency or dr_loc_render_language -%}
+      {%- liquid
+        assign dr_loc_form_id = 'HeaderDrawerLocalization-' | append: block.id
+        assign dr_loc_currency_select_id = 'HeaderDrawerCountry-' | append: block.id
+        assign dr_loc_language_select_id = 'HeaderDrawerLanguage-' | append: block.id
+        assign dr_loc_currency_heading = block.settings.currency_heading | strip
+        if dr_loc_currency_heading == blank
+          assign dr_loc_currency_heading = 'sections.header_top_bar.localization_country_heading' | t
+        endif
+        assign dr_loc_language_heading = block.settings.language_heading | strip
+        if dr_loc_language_heading == blank
+          assign dr_loc_language_heading = 'sections.header_top_bar.localization_language_heading' | t
+        endif
+      -%}
+      {%- liquid
+        if dr_loc_render_currency and dr_loc_render_language
+          assign dr_loc_form_class = 'header__drawer-localization-form header__drawer-localization-form--split'
+        else
+          assign dr_loc_form_class = 'header__drawer-localization-form'
+        endif
+      -%}
+      <div
+        class="header__drawer-block header__drawer-block--localization header__drawer-block--{{ chrome }}"
+        {{ block.shopify_attributes }}
+      >
+        {% form 'localization', id: dr_loc_form_id, class: dr_loc_form_class, return_to: request.path %}
+          {%- if dr_loc_render_currency -%}
+            <div class="header__drawer-field header__drawer-field--inline">
+              <span class="visually-hidden" id="{{ dr_loc_currency_select_id }}-label">
+                {{- dr_loc_currency_heading | escape -}}
+              </span>
+              <span class="header__drawer-field-glyph" aria-hidden="true">
+                {{- 'icon-map-pin.svg' | inline_asset_content -}}
+              </span>
+              <div class="header__drawer-field-control">
+                <div
+                  data-custom-select
+                  data-select-submit
+                  data-custom-select-align="right"
+                  data-custom-select-variant="text"
+                >
+                  <select
+                    name="country_code"
+                    id="{{ dr_loc_currency_select_id }}"
+                    class="header__drawer-localization-select"
+                    autocomplete="country"
+                    aria-labelledby="{{ dr_loc_currency_select_id }}-label"
+                  >
+                    {%- for country in localization.available_countries -%}
+                      <option
+                        value="{{ country.iso_code }}"
+                        {%- if country.iso_code == localization.country.iso_code %}
+                          selected
+                        {%- endif %}
+                      >
+                        {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                </div>
+              </div>
+            </div>
+          {%- else -%}
+            <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+          {%- endif -%}
+
+          {%- if dr_loc_render_language -%}
+            <div class="header__drawer-field header__drawer-field--inline">
+              <span class="visually-hidden" id="{{ dr_loc_language_select_id }}-label">
+                {{- dr_loc_language_heading | escape -}}
+              </span>
+              <span class="header__drawer-field-glyph" aria-hidden="true">
+                {{- 'icon-globe.svg' | inline_asset_content -}}
+              </span>
+              <div class="header__drawer-field-control">
+                <div
+                  data-custom-select
+                  data-select-submit
+                  data-custom-select-align="right"
+                  data-custom-select-variant="text"
+                >
+                  <select
+                    name="language_code"
+                    id="{{ dr_loc_language_select_id }}"
+                    class="header__drawer-localization-select"
+                    autocomplete="off"
+                    aria-labelledby="{{ dr_loc_language_select_id }}-label"
+                  >
+                    {%- for language in localization.available_languages -%}
+                      <option
+                        value="{{ language.iso_code }}"
+                        {%- if language.iso_code == localization.language.iso_code %}
+                          selected
+                        {%- endif %}
+                      >
+                        {{ language.endonym_name | default: language.name | default: language.iso_code }}
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                </div>
+              </div>
+            </div>
+          {%- else -%}
+            <input type="hidden" name="language_code" value="{{ localization.language.iso_code }}">
+          {%- endif -%}
+
+          <noscript>
+            <div class="header__drawer-field header__drawer-field--submit">
+              <button type="submit" class="header__drawer-localization-submit">
+                {{ 'sections.header_top_bar.currency_selector_update' | t }}
+              </button>
+            </div>
+          </noscript>
+        {% endform %}
+      </div>
+    {%- endif -%}
+
+  {%- when 'drawer_account' -%}
+    {%- if shop.customer_accounts_enabled -%}
+      {%- liquid
+        assign acc_signed_out_label = block.settings.signed_out_button_label | strip
+        if acc_signed_out_label == blank
+          assign acc_signed_out_label = 'header.drawer_account_signed_out_cta' | t
+        endif
+      -%}
+      <div
+        class="header__drawer-block header__drawer-block--account header__drawer-block--{{ chrome }}"
+        {{ block.shopify_attributes }}
+      >
+        {%- if block.settings.heading != blank -%}
+          <p class="header__drawer-muted-label">{{ block.settings.heading | escape }}</p>
+        {%- endif -%}
+        <div class="header__drawer-account-toolbar">
+          <shopify-account menu="{{ section.settings.customer_account_menu }}">
+            <div slot="signed-out-avatar" class="header__drawer-account-signed-out-markup">
+              <span class="header__drawer-account-signed-out-markup__glyph" aria-hidden="true">
+                {{- 'icon-account.svg' | inline_asset_content -}}
+              </span>
+              <span class="header__drawer-account-signed-out-markup__text">
+                {{- acc_signed_out_label | escape -}}
+              </span>
+            </div>
+          </shopify-account>
+        </div>
+      </div>
+    {%- endif -%}
+
+{%- endcase -%}

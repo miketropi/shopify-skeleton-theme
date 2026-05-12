@@ -177,6 +177,20 @@ $_r-card:  16px;
 .htbar__loc-trigger-label {
   flex: 1;
   min-width: 0;
+
+  &.rte {
+    line-height: 1.3;
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 0.14em;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+  }
 }
 
 .htbar__localization-form {

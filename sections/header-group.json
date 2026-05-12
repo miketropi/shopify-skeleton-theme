@@ -23,6 +23,27 @@
     },
     "header": {
       "type": "header",
+      "blocks": {
+        "drawer_localization": {
+          "type": "drawer_localization",
+          "settings": {}
+        },
+        "drawer_account": {
+          "type": "drawer_account",
+          "settings": {}
+        },
+        "drawer_social": {
+          "type": "drawer_social",
+          "settings": {
+            "heading": "Follow us"
+          }
+        }
+      },
+      "block_order": [
+        "drawer_social",
+        "drawer_localization",
+        "drawer_account"
+      ],
       "settings": {}
     }
   },

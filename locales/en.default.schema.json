@@ -185,6 +185,27 @@
     }
   },
   "sections": {
+    "header": {
+      "drawer_block_richtext": "Rich text",
+      "drawer_block_social": "Social icons",
+      "drawer_block_localization": "Country / language",
+      "drawer_block_account": "Account links",
+      "drawer_heading": "Heading",
+      "drawer_heading_info": "Optional title above this block.",
+      "drawer_richtext_body": "Text",
+      "drawer_social_heading_info": "URLs come from Theme settings → Social media.",
+      "drawer_localization_info": "Only appears when your store offers multiple countries/regions or languages. Country and language show side by side when both are available. Icons are visible; the text fields below are for screen readers. Selection changes apply immediately.",
+      "drawer_localization_field_sr_heading_info": "Used as the accessible name for this control (screen readers). Icons are shown visually.",
+      "drawer_account_info": "Renders Shopify’s customer account control (same as the header account icon). Uses the Customer account menu setting in this section. Only appears when customer accounts are enabled for your store.",
+      "drawer_account_signed_out_button_label": "Signed-out button label",
+      "drawer_account_signed_out_button_info": "Shown on the mobile menu control before a customer signs in. After sign-in, their avatar appears instead.",
+      "drawer_utilities_order_note": "Mobile menu (bottom of the panel): Social → Country/language → Account. Block order in the editor does not change this. Rich text blocks (if added) appear after those.",
+      "drawer_slot": "Rich text layout variant",
+      "drawer_slot_info": "Applies to rich text blocks only. Controls styling; all rich text appears after Social, Country/language, and Account in the mobile menu.",
+      "drawer_slot_primary": "Main list — full width (grouped)",
+      "drawer_slot_actions": "Quick actions — 2-column row",
+      "drawer_slot_footer": "Footer — full width"
+    },
     "header_top_bar": {
       "block_localization_menu": "Currency & language",
       "localization_menu_info": "Choose what shoppers can change. Each option appears only if your store supports multiple countries/regions or multiple languages (Markets / languages settings). Uses the same pattern as Store contact info: click the bar label to open a panel (sheet on small screens).",
@@ -193,7 +214,7 @@
       "localization_show_language": "Language",
       "localization_menu_header_trigger": "Trigger",
       "currency_selector_label_setting": "Button label",
-      "localization_menu_label_info": "Leave blank to use the default. Shown on the top bar before opening the menu.",
+      "localization_menu_label_info": "Shown on the top bar before opening the menu. Supports bold, italic, and links. Leave blank to use the default label.",
       "localization_menu_header_labels": "Labels inside menu",
       "localization_currency_heading_setting": "Country / currency label",
       "localization_language_heading_setting": "Language label",

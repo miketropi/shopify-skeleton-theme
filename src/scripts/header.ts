@@ -1,5 +1,9 @@
 import gsap from 'gsap'
 import { init as initHeaderLayout, destroy as destroyHeaderLayout } from './sections/header'
+import {
+  initCustomSelectsInContainer,
+  destroyCustomSelectsInContainer,
+} from './custom-select'
 import { registerSection } from './section-registry'
 
 const SECTION_TYPE = 'header'
@@ -124,6 +128,7 @@ export function registerHeaderSection(): void {
     SECTION_TYPE,
     (container) => {
       initHeaderLayout(container)
+      initCustomSelectsInContainer(container)
 
       const toggle = container.querySelector<HTMLButtonElement>('[data-header-menu-toggle]')
       const nav = container.querySelector<HTMLElement>('[data-header-nav]')
@@ -315,6 +320,7 @@ export function registerHeaderSection(): void {
       container.querySelectorAll<HTMLElement>('.header__submenu, .header__submenu-nested').forEach((el) => {
         killSubmenuAnimations(el)
       })
+      destroyCustomSelectsInContainer(container)
       const extended = container as HTMLElement & { __headerTeardown?: () => void }
       extended.__headerTeardown?.()
       delete extended.__headerTeardown

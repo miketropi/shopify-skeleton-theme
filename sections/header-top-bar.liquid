@@ -104,10 +104,7 @@
           -%}
           {%- if loc_render_currency or loc_render_language -%}
             {%- liquid
-              assign loc_label = block.settings.label | strip
-              if loc_label == blank
-                assign loc_label = 'sections.header_top_bar.localization_menu_label_default' | t
-              endif
+              assign loc_label_plain = block.settings.label | strip_html | strip
               assign loc_form_id = 'HeaderTopBarLocalization-' | append: block.id
               assign loc_position = block.settings.dropdown_position | default: 'center'
               assign loc_currency_select_id = 'HeaderTopBarCountry-' | append: block.id
@@ -160,7 +157,13 @@
                     {%- endcase -%}
                   </span>
                 {%- endif -%}
-                <span class="htbar__loc-trigger-label">{{ loc_label | escape }}</span>
+                <span class="htbar__loc-trigger-label rte">
+                  {%- if loc_label_plain != blank -%}
+                    {{ block.settings.label }}
+                  {%- else -%}
+                    {{ 'sections.header_top_bar.localization_menu_label_default' | t }}
+                  {%- endif -%}
+                </span>
                 <svg class="htbar__caret" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
               </button>
 
@@ -578,10 +581,11 @@
           "content": "t:sections.header_top_bar.localization_menu_header_trigger"
         },
         {
-          "type": "text",
+          "type": "inline_richtext",
           "id": "label",
           "label": "t:sections.header_top_bar.currency_selector_label_setting",
-          "info": "t:sections.header_top_bar.localization_menu_label_info"
+          "info": "t:sections.header_top_bar.localization_menu_label_info",
+          "default": "Region / language"
         },
         {
           "type": "select",
