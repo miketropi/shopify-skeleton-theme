@@ -16,7 +16,7 @@
   assign menu_secondary = section.settings.secondary_menu
   assign show_social_block = false
   if section.settings.show_social
-    if section.settings.social_instagram != blank or section.settings.social_facebook != blank or section.settings.social_pinterest != blank or section.settings.social_youtube != blank or section.settings.social_tiktok != blank or section.settings.social_x != blank
+    if settings.social_instagram != blank or settings.social_facebook != blank or settings.social_pinterest != blank or settings.social_youtube != blank or settings.social_tiktok != blank or settings.social_x != blank
       assign show_social_block = true
     endif
   endif
@@ -75,7 +75,7 @@
       {%- if show_social_block -%}
         <div class="site-footer__social">
           <h3 class="site-footer__col-heading">{{ 'footer.follow' | t }}</h3>
-          {% render 'footer-socials', section: section %}
+          {% render 'footer-socials' %}
         </div>
       {%- endif -%}
     </div>
@@ -176,34 +176,8 @@
       "default": true
     },
     {
-      "type": "url",
-      "id": "social_instagram",
-      "label": "Instagram"
-    },
-    {
-      "type": "url",
-      "id": "social_facebook",
-      "label": "Facebook"
-    },
-    {
-      "type": "url",
-      "id": "social_pinterest",
-      "label": "Pinterest"
-    },
-    {
-      "type": "url",
-      "id": "social_youtube",
-      "label": "YouTube"
-    },
-    {
-      "type": "url",
-      "id": "social_tiktok",
-      "label": "TikTok"
-    },
-    {
-      "type": "url",
-      "id": "social_x",
-      "label": "X (Twitter)"
+      "type": "paragraph",
+      "content": "t:sections.footer.social_urls_theme_settings"
     },
     {
       "type": "header",

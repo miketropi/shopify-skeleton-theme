@@ -4,8 +4,8 @@
  * fixed positioning so parent `overflow` cannot clip it — better on tablet/mobile.
  *
  * Optional on the root: `data-custom-select-align="left" | "center" | "right"` — how
- * the anchored menu lines up with the trigger (default center). Ignored in compact
- * bottom-sheet mode.
+ * the anchored menu lines up with the trigger (default center). On compact viewports the
+ * menu opens as a centered modal instead.
  */
 
 import gsap from 'gsap'
@@ -17,6 +17,8 @@ const BACKDROP_Z = 10049
 const GUTTER = 8
 const VIEW_MARGIN = 10
 const SHEET_EDGE = 12
+/** Max width (px) for the compact centered options modal. */
+const COMPACT_MODAL_MAX_W = 400
 
 let bodyScrollLockCount = 0
 
@@ -239,13 +241,25 @@ export function enhanceCustomSelectRoot(
     panel.classList.toggle('cselect__panel--anchored', !sheetMode)
 
     if (sheetMode) {
-      panel.style.left = `${SHEET_EDGE}px`
-      panel.style.right = `${SHEET_EDGE}px`
-      panel.style.width = 'auto'
-      panel.style.top = 'auto'
-      panel.style.bottom = `calc(${SHEET_EDGE}px + env(safe-area-inset-bottom, 0px))`
-      const maxH = Math.min(window.innerHeight * 0.52, 420)
-      panel.style.maxHeight = `${maxH}px`
+      const vw = window.innerWidth
+      const vh = window.innerHeight
+      const hPad = SHEET_EDGE
+      const vPad = Math.max(VIEW_MARGIN, SHEET_EDGE + 4)
+      const maxW = Math.min(vw - 2 * hPad, COMPACT_MODAL_MAX_W)
+      const maxH = Math.min(vh - 2 * vPad, Math.floor(vh * 0.78))
+
+      panel.style.right = 'auto'
+      panel.style.bottom = 'auto'
+      panel.style.width = `${Math.round(maxW)}px`
+      panel.style.maxHeight = `${Math.round(maxH)}px`
+      void panel.offsetHeight
+
+      const boxW = panel.offsetWidth
+      const boxH = Math.min(panel.offsetHeight, maxH)
+      const left = Math.max(hPad, (vw - boxW) / 2)
+      const top = Math.max(vPad, (vh - boxH) / 2)
+      panel.style.left = `${Math.round(left)}px`
+      panel.style.top = `${Math.round(top)}px`
       return
     }
 
@@ -360,14 +374,13 @@ export function enhanceCustomSelectRoot(
     if (sheetMode) {
       gsap.set(panel, {
         opacity: 0,
-        y: 28,
-        scale: 1,
-        transformOrigin: '50% 100%',
+        scale: 0.94,
+        transformOrigin: '50% 50%',
       })
       gsap.to(panel, {
         opacity: 1,
-        y: 0,
-        duration: 0.38,
+        scale: 1,
+        duration: 0.32,
         ease: 'power3.out',
       })
       return
@@ -397,8 +410,8 @@ export function enhanceCustomSelectRoot(
     if (sheetMode) {
       gsap.to(panel, {
         opacity: 0,
-        y: 20,
-        duration: 0.24,
+        scale: 0.96,
+        duration: 0.22,
         ease: 'power3.in',
         onComplete: onDone,
       })
@@ -468,10 +481,10 @@ export function enhanceCustomSelectRoot(
     if (open) return
     killPanelTweens()
     open = true
-    applyPanelGeometry()
-    syncMenuThemeFromWrap()
     wrap.classList.add('is-open')
     panel.hidden = false
+    syncMenuThemeFromWrap()
+    applyPanelGeometry()
     btn.setAttribute('aria-expanded', 'true')
     if (sheetMode) {
       showBackdrop()
@@ -549,7 +562,7 @@ export function enhanceCustomSelectRoot(
     if (reduceMotion) {
       gsap.set(panel, { opacity: 1, clearProps: 'transform' })
     } else {
-      gsap.set(panel, { opacity: 1, y: 0, scale: 1 })
+      gsap.set(panel, { opacity: 1, scale: 1, clearProps: 'transform' })
     }
   }
   compactMq.addEventListener('change', onCompactMq)

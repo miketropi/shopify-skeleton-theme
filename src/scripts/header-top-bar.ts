@@ -180,7 +180,7 @@ function stopRotator(el: HTMLElement): void {
   rotatorStates.delete(el)
 }
 
-// ─── Store info (tap-to-toggle) ─────────────────────────
+// ─── Top bar menus (store info + localization — click to open) ──
 
 interface StoreInfoState {
   wrap: HTMLElement
@@ -195,6 +195,28 @@ interface StoreInfoState {
 
 const mobileMq = window.matchMedia('(max-width: 35.99em)')
 const infoStates = new WeakMap<HTMLElement, StoreInfoState>()
+
+function htbarPanel(wrap: HTMLElement): HTMLElement | null {
+  return wrap.querySelector<HTMLElement>('.htbar__dropdown')
+}
+
+function setHtbarPanelHidden(wrap: HTMLElement, hidden: boolean): void {
+  const panel = htbarPanel(wrap)
+  if (panel) {
+    panel.setAttribute('aria-hidden', hidden ? 'true' : 'false')
+  }
+}
+
+function firstFocusableIn(container: HTMLElement): HTMLElement | null {
+  const sel =
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  for (const el of container.querySelectorAll<HTMLElement>(sel)) {
+    if (el.closest('.visually-hidden')) continue
+    if (el.getClientRects().length === 0) continue
+    return el
+  }
+  return null
+}
 
 function initStoreInfo(container: HTMLElement): void {
   container
@@ -239,6 +261,8 @@ function setupStoreInfo(wrap: HTMLElement): void {
 
   infoStates.set(wrap, state)
 
+  setHtbarPanelHidden(wrap, true)
+
   trigger.addEventListener('click', (e) => {
     e.preventDefault()
     if (state.open) {
@@ -260,10 +284,18 @@ function openStoreInfo(wrap: HTMLElement): void {
   state.tween?.kill()
 
   wrap.classList.add('is-open')
+  setHtbarPanelHidden(wrap, false)
   state.trigger.setAttribute('aria-expanded', 'true')
 
   document.addEventListener('click', state.boundOutsideClick, true)
   document.addEventListener('keydown', state.boundEscape, true)
+
+  if (state.card) {
+    requestAnimationFrame(() => {
+      const el = firstFocusableIn(state.card!)
+      el?.focus()
+    })
+  }
 
   if (mobileMq.matches && state.card && state.overlay) {
     document.documentElement.style.overflow = 'hidden'
@@ -294,10 +326,15 @@ function closeStoreInfo(wrap: HTMLElement): void {
   state.open = false
   state.tween?.kill()
 
+  setHtbarPanelHidden(wrap, true)
   state.trigger.setAttribute('aria-expanded', 'false')
 
   document.removeEventListener('click', state.boundOutsideClick, true)
   document.removeEventListener('keydown', state.boundEscape, true)
+
+  const returnFocus = (): void => {
+    state.trigger.focus()
+  }
 
   if (mobileMq.matches && state.card && state.overlay) {
     const tl = gsap.timeline({
@@ -305,6 +342,7 @@ function closeStoreInfo(wrap: HTMLElement): void {
         wrap.classList.remove('is-open')
         document.documentElement.style.overflow = ''
         gsap.set(state.overlay!, { visibility: 'hidden', opacity: 0, pointerEvents: 'none' })
+        returnFocus()
       },
     })
 
@@ -325,6 +363,7 @@ function closeStoreInfo(wrap: HTMLElement): void {
   } else {
     wrap.classList.remove('is-open')
     document.documentElement.style.overflow = ''
+    returnFocus()
   }
 }
 
@@ -336,6 +375,7 @@ function teardownStoreInfo(wrap: HTMLElement): void {
   if (state.open) {
     state.open = false
     wrap.classList.remove('is-open')
+    setHtbarPanelHidden(wrap, true)
     state.trigger.setAttribute('aria-expanded', 'false')
     document.documentElement.style.overflow = ''
     document.removeEventListener('click', state.boundOutsideClick, true)

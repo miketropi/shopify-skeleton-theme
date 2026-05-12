@@ -139,35 +139,160 @@ $_r-card:  16px;
 }
 
 // ═══════════════════════════════════════════════════════════
-//  LOCALIZATION (country / currency via Markets)
+//  LOCALIZATION (Markets — country & language, store-info style)
 // ═══════════════════════════════════════════════════════════
 
-.htbar__localization {
-  flex-shrink: 0;
-  min-width: 0;
-  max-width: min(100%, 14rem);
+// Outer wrapper removed; markup uses `.htbar__info--localization` + `.htbar__card--localization`.
 
-  @include mq-up('md') {
-    max-width: min(100%, 18rem);
+.htbar__info--localization {
+  max-width: min(100%, 15rem);
+
+  .htbar__info-trigger {
+    gap: 6px;
+    align-items: center;
+    white-space: normal;
+    text-align: left;
+    justify-content: flex-start;
   }
+
+  .htbar__caret {
+    flex-shrink: 0;
+  }
+}
+
+.htbar__loc-trigger-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--htbar-icon-color, var(--htbar-trigger-color, var(--htbar-accent)));
+
+  svg {
+    display: block;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+}
+
+.htbar__loc-trigger-label {
+  flex: 1;
+  min-width: 0;
 }
 
 .htbar__localization-form {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
   margin: 0;
   position: relative;
   width: 100%;
   min-width: 0;
+
+  .htbar__card--localization & {
+    gap: 0;
+  }
+}
+
+.htbar__locale-heading {
+  display: block;
+  margin: 0 0 6px;
+  padding: 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  color: color-mix(in srgb, var(--htbar-text) 52%, var(--htbar-bg));
+}
+
+.htbar__card--localization .htbar__card-section + .htbar__card-section {
+  margin-top: 12px;
+}
+
+// In-panel notice (currency & language block) — compact callout, minimal chrome
+.htbar__loc-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 1rem 0;
+  padding: 8px 10px 8px 9px;
+  border-radius: 8px;
+  border: none;
+  background: var(--_tint);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.htbar__loc-notice-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+  color: color-mix(in srgb, var(--htbar-accent) 72%, var(--htbar-text));
+
+  svg {
+    display: block;
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.htbar__loc-notice-body {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: -0.008em;
+  color: color-mix(in srgb, var(--htbar-text) 64%, var(--htbar-bg));
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-height: min(32vh, 9rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+
+  p {
+    margin: 0 0 0.35em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  strong {
+    font-weight: 600;
+    color: color-mix(in srgb, var(--htbar-text) 78%, var(--htbar-bg));
+  }
+
+  a {
+    color: var(--htbar-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: color-mix(in srgb, var(--htbar-accent) 45%, transparent);
+  }
+
+  ul,
+  ol {
+    margin: 0.25em 0 0.35em;
+    padding-left: 1.1em;
+  }
+
+  li {
+    margin: 0.08em 0;
+  }
+}
+
+.htbar__loc-notice + .htbar__localization-form {
+  margin-top: 10px;
 }
 
 .htbar__localization-select {
   cursor: pointer;
 }
 
-// Custom select — compact strip, same visual language as `_custom-select.scss`
-.htbar__localization .cselect {
+.htbar__info--localization .cselect {
   --cselect-fill: var(--_tint);
   --cselect-fill-hover: color-mix(in srgb, var(--htbar-text) 9%, var(--htbar-bg));
   --cselect-fill-open: color-mix(in srgb, var(--htbar-text) 7%, var(--htbar-bg));
@@ -177,21 +302,23 @@ $_r-card:  16px;
   --cselect-radius: 9px;
   --cselect-menu-radius: 11px;
   --cselect-menu-bg: #fff;
-  --cselect-menu-fg: #1d1d1f;
+  --cselect-menu-fg: #3a3a3c;
+  width: 100%;
+  max-width: 100%;
 }
 
-.htbar__localization .cselect__btn {
+.htbar__info--localization .cselect__btn {
   position: relative;
   min-height: 1.875rem;
   padding: 5px 28px 5px 10px;
-  font-size: inherit;
+  font-size: 13px;
   letter-spacing: -0.02em;
   box-shadow:
     0 1px 0 color-mix(in srgb, var(--htbar-bg) 75%, transparent) inset,
     0 -0.5px 0 color-mix(in srgb, var(--htbar-text) 5%, transparent) inset;
 }
 
-.htbar__localization .cselect__icon {
+.htbar__info--localization .cselect__icon {
   position: absolute;
   right: 9px;
   top: 50%;
@@ -206,14 +333,15 @@ $_r-card:  16px;
 .htbar__localization-submit {
   flex-shrink: 0;
   margin: 0;
-  padding: 4px 8px;
+  width: 100%;
+  padding: 8px 12px;
   font: inherit;
   font-weight: 600;
   line-height: 1.25;
   color: var(--htbar-bg);
   background: var(--htbar-accent);
   border: none;
-  border-radius: 6px;
+  border-radius: $_r-group;
   cursor: pointer;
 
   &:focus-visible {
@@ -228,8 +356,12 @@ $_r-card:  16px;
 
 .htbar__info {
   position: relative;
-  white-space: nowrap;
+  // white-space: nowrap;
   flex-shrink: 0;
+
+  &.is-open {
+    z-index: 450;
+  }
 }
 
 // ── Trigger ─────────────────────────────────────────────
@@ -254,18 +386,12 @@ $_r-card:  16px;
 }
 
 .htbar__caret {
+  flex-shrink: 0;
   opacity: 0.6;
-  transition: transform 0.35s $_spring;
+  transition: transform 0.28s $_ease;
 
-  .htbar__info.is-open &,
-  .htbar__info:focus-within & {
+  .htbar__info.is-open & {
     transform: scaleY(-1);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .htbar__info:hover & {
-      transform: scaleY(-1);
-    }
   }
 }
 
@@ -301,6 +427,12 @@ $_r-card:  16px;
   padding-top: 8px;
   pointer-events: none;
 
+  @media (min-width: 36em) {
+    .htbar__info:not(.is-open) & {
+      visibility: hidden;
+    }
+  }
+
   @media (max-width: 35.99em) {
     position: fixed;
     top: auto;
@@ -310,6 +442,10 @@ $_r-card:  16px;
     padding-top: 0;
     padding-bottom: env(safe-area-inset-bottom);
     transform: none;
+
+    .htbar__info:not(.is-open) & {
+      visibility: hidden;
+    }
   }
 
   @media (min-width: 36em) and (max-width: 47.99em) {
@@ -347,12 +483,7 @@ $_r-card:  16px;
 
 .htbar__info.is-open .htbar__dropdown {
   pointer-events: auto;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .htbar__info:hover .htbar__dropdown {
-    pointer-events: auto;
-  }
+  visibility: visible;
 }
 
 // ── Card ─────────────────────────────────────────────────
@@ -375,13 +506,9 @@ $_r-card:  16px;
   .htbar__info.is-open & {
     opacity: 1;
     transform: translateY(0) scale(1);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .htbar__info:hover & {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
+    box-shadow:
+      0 4px 8px -4px color-mix(in srgb, var(--htbar-text) 10%, transparent),
+      0 14px 44px color-mix(in srgb, var(--htbar-text) 14%, var(--htbar-bg));
   }
 
   @media (max-width: 35.99em) {
@@ -391,6 +518,16 @@ $_r-card:  16px;
     transform: translateY(100%);
     transform-origin: bottom center;
     transition: none;
+  }
+}
+
+// Slightly wider card for stacked country + language selectors
+.htbar__card.htbar__card--localization {
+  width: min(100vw - 2rem, 17.5rem);
+  padding: 10px 8px 8px;
+
+  @media (max-width: 35.99em) {
+    width: 100%;
   }
 }
 
@@ -427,16 +564,63 @@ $_r-card:  16px;
   }
 }
 
-// ── Description ─────────────────────────────────────────
+// ── Description (store info panel) ─────────────────────
 
 .htbar__desc {
   margin: 0;
-  text-align: center;
-  padding: 4px 12px 8px;
-  font-size: 13px;
+  text-align: start;
+  padding: 4px 6px 6px;
+  font-size: 12px;
   font-weight: 400;
-  line-height: 1.38;
-  color: color-mix(in srgb, var(--htbar-text) 55%, var(--htbar-bg));
+  line-height: 1.5;
+  letter-spacing: -0.006em;
+  color: color-mix(in srgb, var(--htbar-text) 62%, var(--htbar-bg));
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-height: min(32vh, 9.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+
+  &--center {
+    text-align: center;
+  }
+
+  p {
+    margin: 0 0 0.35em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  strong {
+    font-weight: 600;
+    color: color-mix(in srgb, var(--htbar-text) 78%, var(--htbar-bg));
+  }
+
+  a {
+    color: var(--htbar-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: color-mix(in srgb, var(--htbar-accent) 45%, transparent);
+
+    &:hover {
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  ul,
+  ol {
+    margin: 0.25em 0 0.4em;
+    padding-left: 1.1em;
+  }
+
+  li {
+    margin: 0.08em 0;
+  }
 }
 
 // ── Grouped cells (iOS Settings style) ──────────────────

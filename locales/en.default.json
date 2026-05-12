@@ -417,6 +417,10 @@
     "header_top_bar": {
       "rt_read_more": "Read more",
       "rt_modal_title": "Message",
+      "localization_menu_label_default": "Region / language", 
+      "localization_country_heading": "Country / currency",
+      "localization_language_heading": "Language",
+      "localization_notice_aria": "Information",
       "currency_selector_label": "Country and currency",
       "currency_selector_update": "Apply"
     },

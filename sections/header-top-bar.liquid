@@ -88,56 +88,168 @@
           {%- endif -%}
 
         {%- when 'currency_selector' -%}
-          {%- if localization.available_countries.size > 1 -%}
+          {%- liquid
+            assign loc_show_currency = block.settings.show_currency
+            assign loc_show_language = block.settings.show_language
+            if loc_show_currency and localization.available_countries.size > 1
+              assign loc_render_currency = true
+            else
+              assign loc_render_currency = false
+            endif
+            if loc_show_language and localization.available_languages.size > 1
+              assign loc_render_language = true
+            else
+              assign loc_render_language = false
+            endif
+          -%}
+          {%- if loc_render_currency or loc_render_language -%}
             {%- liquid
-              assign cur_label = block.settings.label | strip
-              if cur_label == blank
-                assign cur_label = 'sections.header_top_bar.currency_selector_label' | t
+              assign loc_label = block.settings.label | strip
+              if loc_label == blank
+                assign loc_label = 'sections.header_top_bar.localization_menu_label_default' | t
               endif
-              assign cur_form_id = 'HeaderTopBarLocalizationCurrency-' | append: block.id
-              assign cur_select_id = 'HeaderTopBarCountrySelect-' | append: block.id
-              assign cur_dropdown_align = block.settings.dropdown_align | default: 'center'
+              assign loc_form_id = 'HeaderTopBarLocalization-' | append: block.id
+              assign loc_position = block.settings.dropdown_position | default: 'center'
+              assign loc_currency_select_id = 'HeaderTopBarCountry-' | append: block.id
+              assign loc_language_select_id = 'HeaderTopBarLanguage-' | append: block.id
+              assign loc_currency_heading = block.settings.currency_heading | strip
+              if loc_currency_heading == blank
+                assign loc_currency_heading = 'sections.header_top_bar.localization_country_heading' | t
+              endif
+              assign loc_language_heading = block.settings.language_heading | strip
+              if loc_language_heading == blank
+                assign loc_language_heading = 'sections.header_top_bar.localization_language_heading' | t
+              endif
+              assign loc_trig = block.settings.trigger_color
+              assign loc_icon = block.settings.icon_color
+              assign loc_trigger_icon = block.settings.trigger_icon | default: 'none'
+              assign loc_panel_id = 'HtbarPanel-' | append: block.id
+              assign loc_trigger_id = 'HtbarTrigger-' | append: block.id
             -%}
             <div
-              class="htbar__localization"
-              style="--theme-color-text: var(--htbar-text); --theme-color-bg: var(--htbar-bg); --theme-color-accent: var(--htbar-accent);"
+              class="htbar__info htbar__info--localization"
+              style="
+                --theme-color-text: var(--htbar-text);
+                --theme-color-bg: var(--htbar-bg);
+                --theme-color-accent: var(--htbar-accent);
+                {%- if loc_trig != blank and loc_trig != 'rgba(0,0,0,0)' -%}--htbar-trigger-color: {{ loc_trig }};{%- endif -%}
+                {%- if loc_icon != blank and loc_icon != 'rgba(0,0,0,0)' -%}--htbar-icon-color: {{ loc_icon }};{%- endif -%}
+              "
               {{ block.shopify_attributes }}
             >
-              {% form 'localization', id: cur_form_id, class: 'htbar__localization-form', return_to: request.path, data-custom-select: '', data-select-submit: '', data-custom-select-align: cur_dropdown_align %}
-                {%- if localization.available_languages.size > 1 -%}
-                  <input type="hidden" name="language_code" value="{{ localization.language.iso_code }}">
+              <button
+                type="button"
+                id="{{ loc_trigger_id }}"
+                class="htbar__info-trigger"
+                data-htbar-trigger
+                aria-expanded="false"
+                aria-controls="{{ loc_panel_id }}"
+                aria-haspopup="true"
+              >
+                {%- if loc_trigger_icon != 'none' -%}
+                  <span class="htbar__loc-trigger-icon" aria-hidden="true">
+                    {%- case loc_trigger_icon -%}
+                      {%- when 'globe' -%}
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                      {%- when 'map_pin' -%}
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      {%- when 'translate' -%}
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+                      {%- when 'currency' -%}
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
+                    {%- endcase -%}
+                  </span>
                 {%- endif -%}
-                <label class="visually-hidden" id="{{ cur_select_id }}-label" for="{{ cur_select_id }}">{{ cur_label | escape }}</label>
-                <select
-                  name="country_code"
-                  id="{{ cur_select_id }}"
-                  class="htbar__localization-select"
-                  autocomplete="country"
-                >
-                  {%- for country in localization.available_countries -%}
-                    <option
-                      value="{{ country.iso_code }}"
-                      {%- if country.iso_code == localization.country.iso_code %}
-                        selected
-                      {%- endif %}
-                    >
-                      {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
-                    </option>
-                  {%- endfor -%}
-                </select>
-                <noscript>
-                  <button type="submit" class="htbar__localization-submit">
-                    {{ 'sections.header_top_bar.currency_selector_update' | t }}
-                  </button>
-                </noscript>
-              {% endform %}
+                <span class="htbar__loc-trigger-label">{{ loc_label | escape }}</span>
+                <svg class="htbar__caret" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
+              </button>
+
+              <div class="htbar__overlay" data-htbar-overlay></div>
+
+              <div class="htbar__dropdown htbar__dropdown--{{ loc_position }}" id="{{ loc_panel_id }}" role="region" aria-labelledby="{{ loc_trigger_id }}" aria-hidden="true">
+                <div class="htbar__card htbar__card--localization">
+                  {%- assign loc_menu_desc_plain = block.settings.menu_description | strip_html | strip -%}
+                  {%- if loc_menu_desc_plain != blank -%}
+                    <div class="htbar__loc-notice htbar__card-section" role="note" aria-label="{{ 'sections.header_top_bar.localization_notice_aria' | t }}">
+                      <span class="htbar__loc-notice-icon" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                      </span>
+                      <div class="htbar__loc-notice-body rte">
+                        {{ block.settings.menu_description }}
+                      </div>
+                    </div>
+                  {%- endif -%}
+                  {% form 'localization', id: loc_form_id, class: 'htbar__localization-form', return_to: request.path %}
+                    {%- if loc_render_currency -%}
+                      <div class="htbar__card-section">
+                        <label class="htbar__locale-heading" for="{{ loc_currency_select_id }}">{{ loc_currency_heading | escape }}</label>
+                        <div data-custom-select data-select-submit data-custom-select-align="center">
+                          <select
+                            name="country_code"
+                            id="{{ loc_currency_select_id }}"
+                            class="htbar__localization-select"
+                            autocomplete="country"
+                          >
+                            {%- for country in localization.available_countries -%}
+                              <option
+                                value="{{ country.iso_code }}"
+                                {%- if country.iso_code == localization.country.iso_code %}
+                                  selected
+                                {%- endif %}
+                              >
+                                {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                              </option>
+                            {%- endfor -%}
+                          </select>
+                        </div>
+                      </div>
+                    {%- else -%}
+                      <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+                    {%- endif -%}
+
+                    {%- if loc_render_language -%}
+                      <div class="htbar__card-section">
+                        <label class="htbar__locale-heading" for="{{ loc_language_select_id }}">{{ loc_language_heading | escape }}</label>
+                        <div data-custom-select data-select-submit data-custom-select-align="center">
+                          <select
+                            name="language_code"
+                            id="{{ loc_language_select_id }}"
+                            class="htbar__localization-select"
+                            autocomplete="off"
+                          >
+                            {%- for language in localization.available_languages -%}
+                              <option
+                                value="{{ language.iso_code }}"
+                                {%- if language.iso_code == localization.language.iso_code %}
+                                  selected
+                                {%- endif %}
+                              >
+                                {{ language.endonym_name | default: language.name | default: language.iso_code }}
+                              </option>
+                            {%- endfor -%}
+                          </select>
+                        </div>
+                      </div>
+                    {%- else -%}
+                      <input type="hidden" name="language_code" value="{{ localization.language.iso_code }}">
+                    {%- endif -%}
+
+                    <noscript>
+                      <div class="htbar__card-section">
+                        <button type="submit" class="htbar__localization-submit">
+                          {{ 'sections.header_top_bar.currency_selector_update' | t }}
+                        </button>
+                      </div>
+                    </noscript>
+                  {% endform %}
+                </div>
+              </div>
             </div>
           {%- endif -%}
 
         {%- when 'store_info' -%}
           {%- liquid
             assign si_label       = block.settings.label | default: 'Contact us'
-            assign si_desc        = block.settings.description
             assign si_show_email  = block.settings.show_email
             assign si_show_phone  = block.settings.show_phone
             assign si_show_social = block.settings.show_social
@@ -146,10 +258,12 @@
             assign si_trigger_color = block.settings.trigger_color
             assign si_icon_color    = block.settings.icon_color
             assign si_button_color  = block.settings.button_color
+            assign si_panel_id = 'HtbarPanel-' | append: block.id
+            assign si_trigger_id = 'HtbarTrigger-' | append: block.id
 
             assign has_social = false
             if si_show_social
-              if block.settings.facebook != blank or block.settings.instagram != blank or block.settings.x != blank or block.settings.tiktok != blank or block.settings.youtube != blank or block.settings.pinterest != blank
+              if settings.social_facebook != blank or settings.social_instagram != blank or settings.social_x != blank or settings.social_tiktok != blank or settings.social_youtube != blank or settings.social_pinterest != blank
                 assign has_social = true
               endif
             endif
@@ -172,53 +286,62 @@
             "
             {{ block.shopify_attributes }}
           >
-            <button type="button" class="htbar__info-trigger" data-htbar-trigger aria-expanded="false">
+            <button
+              type="button"
+              id="{{ si_trigger_id }}"
+              class="htbar__info-trigger"
+              data-htbar-trigger
+              aria-expanded="false"
+              aria-controls="{{ si_panel_id }}"
+              aria-haspopup="true"
+            >
               {{ si_label }}
               <svg class="htbar__caret" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
             </button>
 
             <div class="htbar__overlay" data-htbar-overlay></div>
 
-            <div class="htbar__dropdown htbar__dropdown--{{ si_position }}">
+            <div class="htbar__dropdown htbar__dropdown--{{ si_position }}" id="{{ si_panel_id }}" role="region" aria-labelledby="{{ si_trigger_id }}" aria-hidden="true">
               <div class="htbar__card">
 
                 {%- if has_social -%}
                   <div class="htbar__card-section htbar__socials">
-                    {%- if block.settings.facebook != blank -%}
-                      <a href="{{ block.settings.facebook }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                      </a>
-                    {%- endif -%}
-                    {%- if block.settings.instagram != blank -%}
-                      <a href="{{ block.settings.instagram }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                    {%- if settings.social_instagram != blank -%}
+                      <a href="{{ settings.social_instagram }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
                       </a>
                     {%- endif -%}
-                    {%- if block.settings.x != blank -%}
-                      <a href="{{ block.settings.x }}" target="_blank" rel="noopener noreferrer" aria-label="X">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    {%- if settings.social_facebook != blank -%}
+                      <a href="{{ settings.social_facebook }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                       </a>
                     {%- endif -%}
-                    {%- if block.settings.tiktok != blank -%}
-                      <a href="{{ block.settings.tiktok }}" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                    {%- if settings.social_pinterest != blank -%}
+                      <a href="{{ settings.social_pinterest }}" target="_blank" rel="noopener noreferrer" aria-label="Pinterest">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12.017 24c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641 0 12.017 0z"/></svg>
                       </a>
                     {%- endif -%}
-                    {%- if block.settings.youtube != blank -%}
-                      <a href="{{ block.settings.youtube }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                    {%- if settings.social_youtube != blank -%}
+                      <a href="{{ settings.social_youtube }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                       </a>
                     {%- endif -%}
-                    {%- if block.settings.pinterest != blank -%}
-                      <a href="{{ block.settings.pinterest }}" target="_blank" rel="noopener noreferrer" aria-label="Pinterest">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12.017 24c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641 0 12.017 0z"/></svg>
+                    {%- if settings.social_tiktok != blank -%}
+                      <a href="{{ settings.social_tiktok }}" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                      </a>
+                    {%- endif -%}
+                    {%- if settings.social_x != blank -%}
+                      <a href="{{ settings.social_x }}" target="_blank" rel="noopener noreferrer" aria-label="X">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                       </a>
                     {%- endif -%}
                   </div>
                 {%- endif -%}
 
-                {%- if si_desc != blank -%}
-                  <p class="htbar__card-section htbar__desc">{{ si_desc | escape }}</p>
+                {%- assign si_desc_plain = block.settings.description | strip_html | strip -%}
+                {%- if si_desc_plain != blank -%}
+                  <div class="htbar__card-section htbar__desc rte htbar__desc--center">{{ block.settings.description }}</div>
                 {%- endif -%}
 
                 {%- if has_contact -%}
@@ -427,30 +550,96 @@
     },
     {
       "type": "currency_selector",
-      "name": "t:sections.header_top_bar.block_currency_selector",
+      "name": "t:sections.header_top_bar.block_localization_menu",
       "limit": 1,
       "settings": [
         {
           "type": "paragraph",
-          "content": "t:sections.header_top_bar.currency_selector_info"
+          "content": "t:sections.header_top_bar.localization_menu_info"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.header_top_bar.localization_menu_header_display"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_currency",
+          "label": "t:sections.header_top_bar.localization_show_currency",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_language",
+          "label": "t:sections.header_top_bar.localization_show_language",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "t:sections.header_top_bar.localization_menu_header_trigger"
         },
         {
           "type": "text",
           "id": "label",
           "label": "t:sections.header_top_bar.currency_selector_label_setting",
-          "info": "t:sections.header_top_bar.currency_selector_label_info"
+          "info": "t:sections.header_top_bar.localization_menu_label_info"
         },
         {
           "type": "select",
-          "id": "dropdown_align",
-          "label": "t:sections.header_top_bar.currency_selector_dropdown_align",
-          "info": "t:sections.header_top_bar.currency_selector_dropdown_align_info",
+          "id": "dropdown_position",
+          "label": "t:sections.header_top_bar.si_dropdown_position",
           "default": "center",
           "options": [
             { "value": "left", "label": "t:sections.header_top_bar.alignment_left" },
             { "value": "center", "label": "t:sections.header_top_bar.alignment_center" },
             { "value": "right", "label": "t:sections.header_top_bar.alignment_right" }
           ]
+        },
+        {
+          "type": "color",
+          "id": "trigger_color",
+          "label": "t:sections.header_top_bar.si_trigger_color"
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "t:sections.header_top_bar.si_icon_color"
+        },
+        {
+          "type": "select",
+          "id": "trigger_icon",
+          "label": "t:sections.header_top_bar.localization_trigger_icon",
+          "info": "t:sections.header_top_bar.localization_trigger_icon_info",
+          "default": "none",
+          "options": [
+            { "value": "none", "label": "t:sections.header_top_bar.localization_icon_none" },
+            { "value": "globe", "label": "t:sections.header_top_bar.localization_icon_globe" },
+            { "value": "map_pin", "label": "t:sections.header_top_bar.localization_icon_map_pin" },
+            { "value": "translate", "label": "t:sections.header_top_bar.localization_icon_translate" },
+            { "value": "currency", "label": "t:sections.header_top_bar.localization_icon_currency" }
+          ]
+        },
+        {
+          "type": "inline_richtext",
+          "id": "menu_description",
+          "label": "t:sections.header_top_bar.localization_menu_description",
+          "info": "t:sections.header_top_bar.localization_menu_description_info",
+          "default": "Prices and checkout follow your region and language. Update them below."
+        },
+        {
+          "type": "header",
+          "content": "t:sections.header_top_bar.localization_menu_header_labels"
+        },
+        {
+          "type": "text",
+          "id": "currency_heading",
+          "label": "t:sections.header_top_bar.localization_currency_heading_setting",
+          "info": "t:sections.header_top_bar.localization_field_heading_info"
+        },
+        {
+          "type": "text",
+          "id": "language_heading",
+          "label": "t:sections.header_top_bar.localization_language_heading_setting",
+          "info": "t:sections.header_top_bar.localization_field_heading_info"
         }
       ]
     },
@@ -493,7 +682,7 @@
           ]
         },
         {
-          "type": "textarea",
+          "type": "inline_richtext",
           "id": "description",
           "label": "t:sections.header_top_bar.si_description",
           "default": "We're here to help! Reach out anytime."
@@ -540,12 +729,10 @@
           "label": "t:sections.header_top_bar.si_show_social",
           "default": true
         },
-        { "type": "url", "id": "facebook",  "label": "Facebook"   },
-        { "type": "url", "id": "instagram", "label": "Instagram"  },
-        { "type": "url", "id": "x",         "label": "X (Twitter)" },
-        { "type": "url", "id": "tiktok",    "label": "TikTok"     },
-        { "type": "url", "id": "youtube",   "label": "YouTube"    },
-        { "type": "url", "id": "pinterest", "label": "Pinterest"  },
+        {
+          "type": "paragraph",
+          "content": "t:sections.header_top_bar.si_social_theme_settings_info"
+        },
         {
           "type": "header",
           "content": "t:sections.header_top_bar.si_header_subscribe"
