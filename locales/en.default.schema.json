@@ -71,6 +71,7 @@
     "type_font_mono": "Monospace font",
     "color_mode": "Colour source",
     "global_color_scheme": "Store colour scheme",
+    "section_color_scheme_source": "Colour scheme source",
     "custom_background": "Background",
     "custom_background_secondary": "Background secondary",
     "custom_border": "Border",
@@ -107,8 +108,8 @@
     "custom_colors": "Custom colours"
   },
   "info": {
-    "colors_intro": "Choose preset named schemes for the whole store, or one custom palette. Colours are never set per section.",
-    "colors_preset": "There are five named schemes (sage, peach, dark, plus mist blue and soft lilac). Edit them below, then pick Store colour scheme for the site. Sections do not have their own colour scheme.",
+    "colors_intro": "Choose preset named schemes for the whole store, or one custom palette. The store default applies everywhere unless a section chooses its own colours.",
+    "colors_preset": "Named schemes are shared across the theme. Set Store colour scheme for the usual site-wide palette. Header and footer can use that default or override with a section-specific scheme (see each section → Colour scheme source).",
     "colors_custom": "These colours apply site-wide. The preset scheme editor further down is ignored while Custom is selected.",
     "typography_intro": "Curated mode loads Google Fonts (preconnect + display=swap) into --cs-font-heading, --cs-font-body, and --cs-font-mono. Custom mode uses Shopify’s font_picker and @font-face (Shop fonts and Google in the library). Global colours are under Colors, not here.",
     "typography_custom": "Heading, body, and code use these fonts. They map to --cs-font-heading, --cs-font-body, and --cs-font-mono.",
@@ -125,7 +126,8 @@
     "logo_mobile_width": "Display width of the mobile logo.",
     "desktop_header_layout": "Large screens only. Phone and tablet still use the menu drawer and top bar.",
     "size_guide_default_image": "Shown in the size guide modal when a product has no `custom.size_guide` metafield. Upload a size chart (e.g. PNG or SVG).",
-    "social_media": "Add your profile URLs once; they can appear in the footer, header contact panel, and other theme areas that support social links."
+    "social_media": "Add your profile URLs once; they can appear in the footer, header contact panel, and other theme areas that support social links.",
+    "section_color_scheme_source": "Default follows Theme settings → Color schemes → Store colour scheme. Custom uses the colour scheme(s) you choose below for this section only."
   },
   "options": {
     "alignment": {
@@ -182,6 +184,10 @@
       "logo_nav_center_actions": "Logo left — menu centred — cart/icons right",
       "nav_logo_center_actions": "Menu left — logo centred — cart/icons right",
       "two_row": "Two rows — logo and cart/icons on top, menu below"
+    },
+    "section_color_scheme_source": {
+      "global": "Default (store colour scheme)",
+      "custom": "Custom (override)"
     }
   },
   "sections": {
@@ -594,6 +600,7 @@
     "footer": {
       "name": "Footer",
       "color_scheme": "Colour scheme",
+      "color_scheme_custom_intro": "When source is Custom, pick a scheme for this footer.",
       "heading_brand": "Brand",
       "show_branding": "Show shop name and tagline",
       "tagline": "Tagline",

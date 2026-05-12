@@ -11,7 +11,7 @@
     assign hero_scheme = settings.global_color_scheme
   endif
   if hero_scheme == blank or hero_scheme.settings == blank
-    assign hero_scheme = settings.color_schemes['scheme-1']
+    assign hero_scheme = settings.color_schemes['scheme-6']
   endif
 
   assign overlay_alpha = section.settings.overlay_softness | divided_by: 100.0
@@ -316,7 +316,7 @@
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:headers.colour",
-      "default": "scheme-1"
+      "default": "scheme-6"
     },
     {
       "type": "range",
@@ -384,7 +384,7 @@
           "id": "color_scheme",
           "label": "t:sections.hero_slider.blocks.slide.color_scheme",
           "info": "t:sections.hero_slider.blocks.slide.color_scheme_info",
-          "default": "scheme-1"
+          "default": "scheme-6"
         },
         {
           "type": "select",

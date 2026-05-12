@@ -7,17 +7,29 @@
   assign desktop_header_layout = section.settings.desktop_header_layout | default: 'logo_nav_actions'
   assign layout_modifier = desktop_header_layout | replace: '_', '-'
 
-  assign scheme_default = section.settings.color_scheme
+  assign header_color_src = section.settings.color_scheme_source | default: 'custom'
+  if header_color_src == 'global'
+    assign scheme_default = settings.global_color_scheme
+  else
+    assign scheme_default = section.settings.color_scheme
+  endif
   if scheme_default == blank or scheme_default.settings == blank
     assign scheme_default = settings.global_color_scheme
   endif
   if scheme_default == blank or scheme_default.settings == blank
-    assign scheme_default = settings.color_schemes['scheme-1']
+    assign scheme_default = settings.color_schemes['scheme-6']
   endif
 
-  assign scheme_transparent = section.settings.color_scheme_transparent
+  if header_color_src == 'global'
+    assign scheme_transparent = settings.global_color_scheme
+  else
+    assign scheme_transparent = section.settings.color_scheme_transparent
+  endif
   if scheme_transparent == blank or scheme_transparent.settings == blank
     assign scheme_transparent = scheme_default
+  endif
+  if scheme_transparent == blank or scheme_transparent.settings == blank
+    assign scheme_transparent = settings.color_schemes['scheme-6']
   endif
 -%}
 {%- capture header_scheme_solid -%}
@@ -107,18 +119,31 @@
       "content": "t:headers.colour"
     },
     {
+      "type": "select",
+      "id": "color_scheme_source",
+      "label": "t:labels.section_color_scheme_source",
+      "info": "t:info.section_color_scheme_source",
+      "default": "global",
+      "options": [
+        { "value": "global", "label": "t:options.section_color_scheme_source.global" },
+        { "value": "custom", "label": "t:options.section_color_scheme_source.custom" }
+      ]
+    },
+    {
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:labels.header_color_scheme",
       "info": "t:info.header_color_scheme_solid",
-      "default": "scheme-1"
+      "default": "scheme-6",
+      "visible_if": "{{ section.settings.color_scheme_source == 'custom' }}"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme_transparent",
       "label": "t:labels.header_color_scheme_transparent",
       "info": "t:info.header_color_scheme_transparent",
-      "default": "scheme-1"
+      "default": "scheme-6",
+      "visible_if": "{{ section.settings.color_scheme_source == 'custom' }}"
     },
     {
       "type": "header",

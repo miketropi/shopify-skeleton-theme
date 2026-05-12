@@ -10,7 +10,7 @@
 {
   "current": {
     "color_mode": "preset",
-    "global_color_scheme": "scheme-1",
+    "global_color_scheme": "scheme-6",
     "custom_color_background": "#ffffff",
     "custom_color_background_secondary": "#f4f4f5",
     "custom_color_border": "#e4e4e7",
@@ -127,6 +127,25 @@
           "btn_secondary_bg": "#e2d8ed",
           "btn_secondary_text": "#2d2438",
           "btn_secondary_border": "#9d8cb5"
+        }
+      },
+      "scheme-6": {
+        "settings": {
+          "background": "#ffffff",
+          "background_gradient": "",
+          "background_secondary": "#f4f4f5",
+          "border": "#e4e4e7",
+          "text": "#18181b",
+          "text_secondary": "#71717a",
+          "heading": "#09090b",
+          "accent": "#18181b",
+          "accent_text": "#fafafa",
+          "btn_primary_bg": "#09090b",
+          "btn_primary_text": "#fafafa",
+          "btn_primary_border": "#09090b",
+          "btn_secondary_bg": "#ffffff",
+          "btn_secondary_text": "#18181b",
+          "btn_secondary_border": "#d4d4d8"
         }
       }
     }

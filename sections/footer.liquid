@@ -1,10 +1,15 @@
 {%- liquid
-  assign footer_scheme = section.settings.color_scheme
+  assign footer_color_src = section.settings.color_scheme_source | default: 'custom'
+  if footer_color_src == 'global'
+    assign footer_scheme = settings.global_color_scheme
+  else
+    assign footer_scheme = section.settings.color_scheme
+  endif
   if footer_scheme == blank or footer_scheme.settings == blank
     assign footer_scheme = settings.global_color_scheme
   endif
   if footer_scheme == blank or footer_scheme.settings == blank
-    assign footer_scheme = settings.color_schemes['scheme-1']
+    assign footer_scheme = settings.color_schemes['scheme-6']
   endif
 -%}
 {%- capture footer_scheme_vars -%}
@@ -118,10 +123,23 @@
   "class": "section-footer",
   "settings": [
     {
+      "type": "select",
+      "id": "color_scheme_source",
+      "label": "t:labels.section_color_scheme_source",
+      "info": "t:info.section_color_scheme_source",
+      "default": "global",
+      "options": [
+        { "value": "global", "label": "t:options.section_color_scheme_source.global" },
+        { "value": "custom", "label": "t:options.section_color_scheme_source.custom" }
+      ]
+    },
+    {
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:sections.footer.color_scheme",
-      "default": "scheme-1"
+      "info": "t:sections.footer.color_scheme_custom_intro",
+      "default": "scheme-6",
+      "visible_if": "{{ section.settings.color_scheme_source == 'custom' }}"
     },
     {
       "type": "header",
