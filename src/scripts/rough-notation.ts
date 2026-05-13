@@ -210,8 +210,8 @@ function showAnnotation(span: HTMLElement): void {
 
   activeBySpan.set(span, annotation)
   span.classList.remove('arn-pending')
-  span.classList.add('arn-ready')
-  annotation.show()
+  span.classList.add('arn-ready') 
+  annotation.show() 
 }
 
 function observeTargets(root: HTMLElement): void {
