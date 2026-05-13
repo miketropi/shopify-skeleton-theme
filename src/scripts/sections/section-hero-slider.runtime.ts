@@ -92,6 +92,30 @@ function updateSlideFraction(root: HTMLElement, activeIndex: number, totalSlides
   }
 }
 
+/** Slide blocks ship `--cs-*` (and optional `--hero-ov-*`) on each `.swiper-slide`; chrome sits outside slides, so copy only those tokens onto the mid pill (never copy layout from slide `style`). */
+function syncChromeMidFromActiveSlide(root: HTMLElement, slide: HTMLElement | undefined): void {
+  const mid = root.querySelector<HTMLElement>('[data-hero-chrome-mid]')
+  if (!mid) return
+  const raw = slide?.getAttribute('style')?.trim()
+  if (!raw) {
+    mid.removeAttribute('style')
+    return
+  }
+  const tokens = raw
+    .split(';')
+    .map((s) => s.trim())
+    .filter((s) => /^--[-\w]+\s*:/.test(s))
+  if (tokens.length === 0) {
+    mid.removeAttribute('style')
+    return
+  }
+  mid.setAttribute('style', `${tokens.join('; ')};`)
+}
+
+function resetChromeMidScheme(container: HTMLElement): void {
+  container.querySelector<HTMLElement>('[data-hero-chrome-mid]')?.removeAttribute('style')
+}
+
 function setupHeroParallax(root: HTMLElement, reduced: boolean): () => void {
   if (reduced || root.dataset.heroParallax === 'false') {
     return () => {}
@@ -168,11 +192,13 @@ export function init(container: HTMLElement): void {
     swiper?.destroy(true, true)
     swiper = undefined
     killCopyTweens(container)
+    resetChromeMidScheme(root)
     pauseHeroVideos(root)
   }
 
   if (slideEls.length <= 1) {
     runIntroForIndex(0)
+    syncChromeMidFromActiveSlide(root, slideEls[0])
     pauseHeroVideos(root)
     if (!reduced) {
       playHeroVideosInSlide(slideEls[0])
@@ -230,9 +256,11 @@ export function init(container: HTMLElement): void {
     on: {
       init(s) {
         updateSlideFraction(root, s.activeIndex, totalSlides)
+        syncChromeMidFromActiveSlide(root, slideEls[s.activeIndex])
       },
       slideChange(s) {
         updateSlideFraction(root, s.activeIndex, totalSlides)
+        syncChromeMidFromActiveSlide(root, slideEls[s.activeIndex])
       },
       slideChangeTransitionStart(s) {
         const prevSlide = slideEls[s.previousIndex]

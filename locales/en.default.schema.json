@@ -500,8 +500,11 @@
       "blocks": {
         "slide": {
           "name": "Slide",
-          "color_scheme": "Colour scheme",
-          "color_scheme_info": "Optional. Falls back to the section scheme.",
+          "slide_color_scheme_mode": "Colour scheme",
+          "slide_color_scheme_mode_default": "Default (global theme)",
+          "slide_color_scheme_mode_custom": "Custom",
+          "color_scheme": "Scheme",
+          "color_scheme_info": "Used when Colour scheme is set to Custom. Otherwise the slide uses the theme’s global colour scheme.",
           "background_media": "Background type",
           "background_media_info": "Choose a still image or a video file hosted in your store.",
           "image": "Background image",
@@ -525,7 +528,7 @@
           "content_overlay_coverage_info": "Text column only tints behind the copy. Full slide covers the entire hero.",
           "heading_content_colors": "Copy colours",
           "content_color_override": "Override text and control colours",
-          "content_color_override_info": "Applies to this slide’s eyebrow, heading, body, text links, and primary/secondary actions. The slide colour scheme still controls the overall palette when overrides are not set, or for anything these fields do not cover (e.g. focus rings use the scheme accent).",
+          "content_color_override_info": "Applies to this slide’s eyebrow, heading, body, text links, and primary/secondary actions. The slide’s chosen colour scheme (default or custom) still controls the overall palette when overrides are not set, or for anything these fields do not cover (e.g. focus rings use the scheme accent).",
           "content_color_kicker": "Eyebrow",
           "content_color_heading": "Heading",
           "content_color_body": "Body",
@@ -534,6 +537,96 @@
           "content_color_btn_border": "Primary button — border",
           "content_color_btn_bg": "Primary button — background",
           "content_color_btn_bg_info": "Use a transparent or semi-transparent value for the outline look. Solid fills for a pill button."
+        }
+      }
+    },
+    "feature_grid": {
+      "name": "Feature grid",
+      "headers": {
+        "content": "Content",
+        "colour": "Colour",
+        "grid": "Grid",
+        "layout": "Layout",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "heading": "Heading",
+        "subheading": "Subheading",
+        "heading_alignment": "Heading alignment",
+        "columns": "Columns (desktop & tablet)",
+        "columns_info": "One column on small screens; then follows your choice.",
+        "card_style": "Card style",
+        "section_density": "Card spacing",
+        "entrance_animation": "Scroll-in animation",
+        "full_width": "Full width (edge-to-edge background)",
+        "full_width_info": "Section background fills the browser width. Content stays in the page column.",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "background_color_info": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "border_color_info": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "heading_align": {
+          "left": "Left",
+          "center": "Centre"
+        },
+        "columns": {
+          "auto": "Auto (1 → 2 → 3)",
+          "2": "2 columns",
+          "3": "3 columns",
+          "4": "4 columns"
+        },
+        "card_style": {
+          "elevated": "Elevated",
+          "soft": "Soft",
+          "minimal": "Minimal"
+        },
+        "density": {
+          "compact": "Compact",
+          "default": "Default",
+          "spacious": "Spacious"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "color_scheme": "Scheme",
+      "color_scheme_info": "Used when Colour scheme is set to Custom. Otherwise the section uses the theme’s global colour scheme.",
+      "blocks": {
+        "feature": {
+          "name": "Feature",
+          "image": "Image or icon",
+          "image_info": "Optional. Square works best.",
+          "image_alt": "Image alt text",
+          "image_alt_info": "For accessibility. Leave empty if decorative.",
+          "kicker": "Label",
+          "title": "Title",
+          "text": "Text",
+          "link": "Link",
+          "link_label": "Link label",
+          "open_in_new_tab": "Open link in a new tab"
         }
       }
     },

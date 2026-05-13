@@ -6,10 +6,7 @@
     endif
   endfor
 
-  assign hero_scheme = section.settings.color_scheme
-  if hero_scheme == blank or hero_scheme.settings == blank
-    assign hero_scheme = settings.global_color_scheme
-  endif
+  assign hero_scheme = settings.global_color_scheme
   if hero_scheme == blank or hero_scheme.settings == blank
     assign hero_scheme = settings.color_schemes['scheme-6']
   endif
@@ -84,9 +81,20 @@
           {%- for block in section.blocks -%}
             {%- if block.type == 'slide' -%}
               {%- liquid
-                assign slide_scheme = block.settings.color_scheme
-                if slide_scheme == blank or slide_scheme.settings == blank
+                assign slide_scheme = hero_scheme
+                assign scm = block.settings.slide_color_scheme_mode
+                if scm == 'custom'
+                  assign picked_scheme = block.settings.color_scheme
+                  if picked_scheme != blank and picked_scheme.settings != blank
+                    assign slide_scheme = picked_scheme
+                  endif
+                elsif scm == 'default'
                   assign slide_scheme = hero_scheme
+                else
+                  assign picked_scheme = block.settings.color_scheme
+                  if picked_scheme != blank and picked_scheme.settings != blank
+                    assign slide_scheme = picked_scheme
+                  endif
                 endif
               -%}
               {%- capture slide_scheme_css -%}
@@ -260,18 +268,18 @@
 
       {%- if slide_count > 1 -%}
         <div class="hero-slider__chrome" data-hero-chrome>
+          <div class="hero-slider__chrome-gradient" aria-hidden="true"></div>
           <button
             type="button"
-            class="swiper-button-prev hero-slider__nav-btn hero-slider__nav-btn--prev"
+            class="swiper-button-prev hero-slider__nav-btn hero-slider__nav-btn--side hero-slider__nav-btn--prev"
             data-hero-prev
             aria-label="{{ 'hero_slider.prev' | t }}"
           >
-            <span class="hero-slider__nav-label">
-              <span class="hero-slider__nav-arrow" aria-hidden="true">←</span>
-              <span class="hero-slider__nav-text">{{ 'hero_slider.nav_previous' | t }}</span>
+            <span class="hero-slider__nav-label-text">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left-icon lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
             </span>
           </button>
-          <div class="hero-slider__chrome-mid">
+          <div class="hero-slider__chrome-mid" data-hero-chrome-mid>
             <div
               class="hero-slider__fraction"
               data-hero-fraction
@@ -288,13 +296,12 @@
           </div>
           <button
             type="button"
-            class="swiper-button-next hero-slider__nav-btn hero-slider__nav-btn--next"
+            class="swiper-button-next hero-slider__nav-btn hero-slider__nav-btn--side hero-slider__nav-btn--next"
             data-hero-next
             aria-label="{{ 'hero_slider.next' | t }}"
           >
-            <span class="hero-slider__nav-label">
-              <span class="hero-slider__nav-text">{{ 'hero_slider.nav_next' | t }}</span>
-              <span class="hero-slider__nav-arrow" aria-hidden="true">→</span>
+            <span class="hero-slider__nav-label-text">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
             </span>
           </button>
         </div>
@@ -312,12 +319,6 @@
     "groups": ["header", "footer"]
   },
   "settings": [
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:headers.colour",
-      "default": "scheme-6"
-    },
     {
       "type": "range",
       "id": "min_height",
@@ -380,11 +381,22 @@
       "limit": 8,
       "settings": [
         {
+          "type": "select",
+          "id": "slide_color_scheme_mode",
+          "label": "t:sections.hero_slider.blocks.slide.slide_color_scheme_mode",
+          "options": [
+            { "value": "default", "label": "t:sections.hero_slider.blocks.slide.slide_color_scheme_mode_default" },
+            { "value": "custom", "label": "t:sections.hero_slider.blocks.slide.slide_color_scheme_mode_custom" }
+          ],
+          "default": "default"
+        },
+        {
           "type": "color_scheme",
           "id": "color_scheme",
           "label": "t:sections.hero_slider.blocks.slide.color_scheme",
           "info": "t:sections.hero_slider.blocks.slide.color_scheme_info",
-          "default": "scheme-6"
+          "default": "scheme-6",
+          "visible_if": "{{ block.settings.slide_color_scheme_mode == 'custom' }}"
         },
         {
           "type": "select",

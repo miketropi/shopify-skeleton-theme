@@ -12,7 +12,6 @@
     "hero": {
       "type": "section-hero-slider",
       "settings": {
-        "color_scheme": "scheme-6",
         "min_height": 560,
         "overlay_softness": 15,
         "autoplay": true,
@@ -50,31 +49,42 @@
     },
     "feature_grid": {
       "type": "section-feature-grid",
-      "settings": {},
+      "settings": {
+        "heading": "Why shop with us",
+        "subheading": "<p>We focus on the details that make shopping simple and products that last.</p>",
+        "columns": "4",
+      },
       "blocks": {
         "feature_1": {
           "type": "feature",
           "settings": {
-            "title": "Designed to last",
-            "text": "<p>Materials and construction chosen for durability and everyday comfort—not disposable trends.</p>"
+            "title": "14 Day Returns Policy",
+            "text": "<p>Rick-free shopping with easy returns.</p>"
           }
         },
         "feature_2": {
           "type": "feature",
           "settings": {
-            "title": "Transparent sourcing",
-            "text": "<p>We partner with makers we trust so you always know what you are buying.</p>"
+            "title": "Free Shipping",
+            "text": "<p>No extra costs, just the price you see.</p>"
           }
         },
         "feature_3": {
           "type": "feature",
           "settings": {
-            "title": "Simple returns",
-            "text": "<p>Try pieces at home. If they are not right, send them back within 30 days.</p>"
+            "title": "24/7 Support",
+            "text": "<p>We're here to help you every step of the way.</p>"
+          }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "title": "Member Offers",
+            "text": "<p>Special discounts and perks just for you.</p>"
           }
         }
       },
-      "block_order": ["feature_1", "feature_2", "feature_3"]
+      "block_order": ["feature_1", "feature_2", "feature_3", "feature_4"]
     }
   },
   "order": ["hero", "feature_grid"]
