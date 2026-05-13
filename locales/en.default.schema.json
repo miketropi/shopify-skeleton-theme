@@ -191,6 +191,25 @@
     }
   },
   "sections": {
+    "annotated": {
+      "name": "Annotated",
+      "richtext_label": "Rich text",
+      "richtext_info": "Use shortcodes around words or phrases (see the usage note below). Hand-drawn emphasis appears when this block scrolls into view.",
+      "editor_description": "This block is for storytelling and highlights: normal paragraphs with optional Rough Notation effects on selected phrases. Effects respect reduced-motion preferences.",
+      "editor_usage": "Shortcodes — [underline]…[/underline], [circle]…[/circle], [highlight]…[/highlight], [box]…[/box], [strike]…[/strike], [bracket]…[/bracket], [crossed-off]…[/crossed-off]. Optional colour: [highlight color=#E8593C]…[/highlight]. Opening and closing tags must match; keep nesting simple if you mix bold, italics, or links inside a marked phrase.",
+      "header_layout": "Layout",
+      "content_width_label": "Content width",
+      "content_width_narrow": "Narrow (article)",
+      "content_width_page": "Page column",
+      "content_width_wide": "Wide",
+      "text_align_label": "Text alignment",
+      "text_align_left": "Left",
+      "text_align_center": "Centre",
+      "text_align_right": "Right",
+      "text_align_justify": "Justify",
+      "padding_top": "Top",
+      "padding_bottom": "Bottom"
+    },
     "header": {
       "drawer_block_richtext": "Rich text",
       "drawer_block_social": "Social icons",

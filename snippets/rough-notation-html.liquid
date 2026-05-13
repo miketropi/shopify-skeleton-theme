@@ -1,0 +1,37 @@
+{% doc %}
+  Expands Rough Notation shortcodes in HTML to annotation spans (matches client rough-notation.ts).
+
+  @param {string} html - Richtext / HTML from a setting or object field
+
+  Use for server-side parsing so shortcodes are not visible before theme.js runs.
+  Do not nest the same shortcode type. Optional color: no `]` inside the colour value.
+
+  @example
+  {% render 'rough-notation-html', html: section.settings.text %}
+{% enddoc %}
+
+{%- liquid
+  assign out = html | default: ''
+  assign type_map = 'crossed-off|crossed-off,bracket|bracket,strike|strike-through,box|box,highlight|highlight,circle|circle,underline|underline'
+  assign pairs = type_map | split: ','
+-%}
+
+{%- for pair in pairs -%}
+  {%- assign kv = pair | split: '|' -%}
+  {%- assign sc = kv[0] -%}
+  {%- assign rn = kv[1] -%}
+  {%- for i in (1..50) -%}
+    {%- capture next_out -%}
+      {%- render 'rough-notation-replace-first', body: out, shortcode: sc, rn_type: rn -%}
+    {%- endcapture -%}
+    {%- assign next_out = next_out | strip -%}
+    {%- if next_out == out -%}
+      {%- break -%}
+    {%- endif -%}
+    {%- assign out = next_out -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+{% # theme-check-disable UnknownFilter %}
+{{- out | raw -}}
+{% # theme-check-enable UnknownFilter %}

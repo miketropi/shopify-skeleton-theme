@@ -19,6 +19,11 @@ import { registerHeaderTopBarSection } from './header-top-bar'
 import { registerMainBlogSection } from './main-blog'
 import { registerMainArticleSection } from './main-article'
 import { bindTcardHoverVideos } from './tcard-hover-video'
+import {
+  initRoughNotation,
+  bindRoughNotationSectionEvents,
+  attachRoughNotationGlobalShim,
+} from './rough-notation'
 
 export type { ThemeModalOptions } from './theme-modal'
 export { ThemeModal, THEME_MODAL_COMPACT_MQ } from './theme-modal'
@@ -27,6 +32,12 @@ export {
   initCustomSelectsInContainer,
   destroyCustomSelectsInContainer,
 } from './custom-select'
+export {
+  initRoughNotation,
+  refreshRoughNotation,
+  processContainer,
+  ROUGH_NOTATION_DEFAULTS,
+} from './rough-notation'
 
 document.documentElement.classList.add('js')
 
@@ -43,9 +54,12 @@ registerMainArticleSection()
 
 bootSections()
 initSearchModal()
+bindRoughNotationSectionEvents()
+attachRoughNotationGlobalShim()
 
 document.addEventListener('DOMContentLoaded', () => {
   bindTcardHoverVideos(document.body)
+  initRoughNotation(document.body)
 })
 
 console.log('Theme loaded')

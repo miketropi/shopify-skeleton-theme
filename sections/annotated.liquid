@@ -1,0 +1,112 @@
+{%- liquid
+  assign content_width = section.settings.content_width | default: 'page'
+  assign raw_align = section.settings.text_align | default: 'left'
+  if raw_align == 'center' or raw_align == 'right' or raw_align == 'justify'
+    assign text_align = raw_align
+  else
+    assign text_align = 'left'
+  endif
+-%}
+
+{%- render 'section-styles', section: section -%}
+
+<div
+  class="section-{{ section.id }} section-annotated shopify-section-wrapper full-width"
+  data-section-type="annotated"
+  data-section-id="{{ section.id }}"
+  data-annotated-text
+  {% render 'color-scheme-vars' %}
+  {{ section.shopify_attributes }}
+>
+  <div class="section-annotated__inner section-annotated__inner--{{ content_width }} section-annotated__inner--align-{{ text_align }}">
+    {%- if section.settings.text != blank -%}
+      <div class="section-annotated__body rte marticle__body">
+        {%- render 'rough-notation-html', html: section.settings.text -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.annotated.name",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:sections.annotated.richtext_label",
+      "info": "t:sections.annotated.richtext_info",
+      "default": "<p>Add your copy here. Try wrapping a phrase in <strong>[underline]shortcodes like this[/underline]</strong> or <strong>[highlight]a highlight[/highlight]</strong> — hand-drawn effects run when shoppers scroll to this block.</p>"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.annotated.editor_description"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.annotated.editor_usage"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.annotated.header_layout"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:sections.annotated.content_width_label",
+      "options": [
+        { "value": "narrow", "label": "t:sections.annotated.content_width_narrow" },
+        { "value": "page", "label": "t:sections.annotated.content_width_page" },
+        { "value": "wide", "label": "t:sections.annotated.content_width_wide" }
+      ],
+      "default": "page"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "t:sections.annotated.text_align_label",
+      "options": [
+        { "value": "left", "label": "t:sections.annotated.text_align_left" },
+        { "value": "center", "label": "t:sections.annotated.text_align_center" },
+        { "value": "right", "label": "t:sections.annotated.text_align_right" },
+        { "value": "justify", "label": "t:sections.annotated.text_align_justify" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.annotated.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.annotated.padding_bottom",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.annotated.name"
+    }
+  ]
+}
+{% endschema %}

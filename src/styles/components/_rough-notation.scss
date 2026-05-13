@@ -1,0 +1,8 @@
+// Rough Notation: shortcode annotations in `.rte` and related containers.
+// @see docs/Rough Notation.md
+
+// Pending targets stay visible so server-parsed markup (Liquid) is readable before theme.js runs.
+.rte .arn-target {
+  position: relative;
+  z-index: 0;
+}

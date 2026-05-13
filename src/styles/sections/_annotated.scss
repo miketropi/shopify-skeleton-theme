@@ -1,0 +1,46 @@
+@use '../base/variables' as *;
+
+.section-annotated__inner {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  padding-left: max(var(--page-margin, #{$space-md}), env(safe-area-inset-left));
+  padding-right: max(var(--page-margin, #{$space-md}), env(safe-area-inset-right));
+}
+
+.section-annotated__inner--page {
+  max-width: var(--content-width);
+}
+
+.section-annotated__inner--narrow {
+  max-width: min(42rem, 100%);
+}
+
+.section-annotated__inner--wide {
+  max-width: min(68rem, 100%);
+}
+
+.section-annotated__inner--align-left {
+  text-align: left;
+}
+
+.section-annotated__inner--align-center {
+  text-align: center;
+}
+
+.section-annotated__inner--align-right {
+  text-align: right;
+}
+
+.section-annotated__inner--align-justify {
+  text-align: justify;
+}
+
+.section-annotated__body {
+  color: var(--cs-text, inherit);
+
+  :where(h1, h2, h3, h4, h5, h6) {
+    color: var(--cs-heading, inherit);
+  }
+}

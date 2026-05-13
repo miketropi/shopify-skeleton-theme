@@ -1,0 +1,92 @@
+{%- doc -%}
+  Replace the first occurrence of a Rough Notation shortcode in `body`.
+
+  @param {string} body - HTML / richtext string
+  @param {string} shortcode - Shortcode name (e.g. highlight, crossed-off)
+  @param {string} rn_type - Value for data-rn-type (e.g. strike-through for strike)
+
+  Limitations: Do not nest the same shortcode type. Color values must not contain `]`.
+{%- enddoc -%}
+
+{%- liquid
+  assign out = body
+  assign open_plain = '[' | append: shortcode | append: ']'
+  assign open_sp = '[' | append: shortcode | append: ' '
+  assign close_tag = '[/' | append: shortcode | append: ']'
+  assign replaced = false
+-%}
+
+{%- unless replaced -%}
+  {%- if body contains open_plain -%}
+    {%- assign parts = body | split: open_plain -%}
+    {%- if parts.size >= 2 -%}
+      {%- assign head = parts[0] -%}
+      {%- assign mid = parts[1] -%}
+      {%- for extra in parts offset: 2 -%}
+        {%- assign mid = mid | append: open_plain | append: extra -%}
+      {%- endfor -%}
+      {%- assign midparts = mid | split: close_tag -%}
+      {%- if midparts.size >= 2 -%}
+        {%- assign inner = midparts[0] -%}
+        {%- assign tail = '' -%}
+        {%- for frag in midparts offset: 1 -%}
+          {%- if forloop.first -%}
+            {%- assign tail = frag -%}
+          {%- else -%}
+            {%- assign tail = tail | append: close_tag | append: frag -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- assign span_open = '<span class="arn-target arn-pending" data-rn-type="' | append: rn_type | append: '">' -%}
+        {%- assign out = head | append: span_open | append: inner | append: '</span>' | append: tail -%}
+        {%- assign replaced = true -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endunless -%}
+
+{%- unless replaced -%}
+  {%- if body contains open_sp -%}
+    {%- assign parts = body | split: open_sp -%}
+    {%- if parts.size >= 2 -%}
+      {%- assign head = parts[0] -%}
+      {%- assign mid = parts[1] -%}
+      {%- for extra in parts offset: 2 -%}
+        {%- assign mid = mid | append: open_sp | append: extra -%}
+      {%- endfor -%}
+      {%- assign trimmed = mid | strip -%}
+      {%- if trimmed contains 'color=' -%}
+        {%- assign segs = trimmed | split: ']' -%}
+        {%- if segs.size >= 2 -%}
+          {%- assign color_raw = segs[0] | remove_first: 'color=' | strip | replace: '"', '' | replace: "'", '' -%}
+          {%- assign remainder = '' -%}
+          {%- for s in segs offset: 1 -%}
+            {%- if forloop.first -%}
+              {%- assign remainder = s -%}
+            {%- else -%}
+              {%- assign remainder = remainder | append: ']' | append: s -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- assign midparts = remainder | split: close_tag -%}
+          {%- if midparts.size >= 2 -%}
+            {%- assign inner = midparts[0] -%}
+            {%- assign tail = '' -%}
+            {%- for frag in midparts offset: 1 -%}
+              {%- if forloop.first -%}
+                {%- assign tail = frag -%}
+              {%- else -%}
+                {%- assign tail = tail | append: close_tag | append: frag -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- assign esc = color_raw | replace: '&', '&amp;' | replace: '"', '&quot;' | replace: "'", '&#39;' -%}
+            {%- assign span_open = '<span class="arn-target arn-pending" data-rn-type="' | append: rn_type | append: '" data-rn-color="' | append: esc | append: '">' -%}
+            {%- assign out = head | append: span_open | append: inner | append: '</span>' | append: tail -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endunless -%}
+
+{% # theme-check-disable UnknownFilter %}
+{{- out | raw -}}
+{% # theme-check-enable UnknownFilter %}
