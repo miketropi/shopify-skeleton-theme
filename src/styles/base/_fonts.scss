@@ -10,6 +10,8 @@
 
 body {
   font-family: var(--cs-font-body);
+  font-size: var(--font-size-base, 1rem);
+  line-height: var(--line-height-normal, 1.55);
   color: var(--cs-text);
   background-color: var(--cs-background);
 }
@@ -22,6 +24,37 @@ h5,
 h6 {
   font-family: var(--cs-font-heading);
   color: var(--cs-heading);
+}
+
+h1 {
+  font-size: var(--font-size-4xl, 3.05rem);
+  line-height: var(--line-height-tight, 1.12);
+}
+
+h2 {
+  font-size: var(--font-size-3xl, 2.44rem);
+  line-height: var(--line-height-tight, 1.12);
+}
+
+h3 {
+  font-size: var(--font-size-2xl, 1.95rem);
+  line-height: var(--line-height-snug, 1.25);
+}
+
+h4 {
+  font-size: var(--font-size-xl, 1.56rem);
+  line-height: var(--line-height-snug, 1.25);
+}
+
+h5 {
+  font-size: var(--font-size-lg, 1.25rem);
+  line-height: var(--line-height-snug, 1.25);
+}
+
+h6 {
+  font-size: var(--font-size-base, 1rem);
+  line-height: var(--line-height-normal, 1.55);
+  font-weight: 700;
 }
 
 code,

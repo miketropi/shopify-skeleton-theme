@@ -1,16 +1,81 @@
+{%- liquid
+  assign use_custom_fonts = false
+  if settings.typography_mode == 'custom'
+    assign use_custom_fonts = true
+  endif
+
+  assign use_custom_colors = false
+  if settings.color_mode == 'custom'
+    assign use_custom_colors = true
+  endif
+
+  assign s = false
+  unless use_custom_colors
+    assign gs = settings.global_color_scheme
+    if gs == blank or gs.settings == blank
+      assign gs = settings.color_schemes['scheme-6']
+    endif
+    if gs != blank and gs.settings != blank
+      assign s = gs.settings
+    endif
+  endunless
+
+  unless use_custom_fonts
+    assign fp = settings.font_pairing
+    case fp
+      when 'arial'
+        assign root_font_heading = "Arial, 'Helvetica Neue', Helvetica, system-ui, sans-serif"
+        assign root_font_body = "Arial, 'Helvetica Neue', Helvetica, system-ui, sans-serif"
+        assign root_font_mono = "ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', 'Roboto Mono', Menlo, Consolas, monospace"
+      when 'neutral', 'modern'
+        assign root_font_heading = "'Plus Jakarta Sans', system-ui, sans-serif"
+        assign root_font_body = "'DM Sans', system-ui, sans-serif"
+        assign root_font_mono = "'DM Mono', monospace"
+      when 'vision', 'atelier', 'meridian'
+        assign root_font_heading = "'Fraunces', Georgia, serif"
+        assign root_font_body = "'Manrope', system-ui, sans-serif"
+        assign root_font_mono = "'Fira Code', ui-monospace, monospace"
+      when 'technology', 'technical'
+        assign root_font_heading = "'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace"
+        assign root_font_body = "'Inter', system-ui, sans-serif"
+        assign root_font_mono = "'JetBrains Mono', ui-monospace, monospace"
+      else
+        assign root_font_heading = "'Plus Jakarta Sans', system-ui, sans-serif"
+        assign root_font_body = "'DM Sans', system-ui, sans-serif"
+        assign root_font_mono = "'DM Mono', monospace"
+    endcase
+  endunless
+
+  assign fsb_key = settings.font_size_base | append: ''
+  if fsb_key == blank
+    assign fsb_key = '16'
+  endif
+  case fsb_key
+    when '18'
+      assign base_num = 18
+    when '20'
+      assign base_num = 20
+    else
+      assign base_num = 16
+  endcase
+
+  assign fs_xs = base_num | times: 0.64 | round: 2
+  assign fs_sm = base_num | times: 0.8 | round: 2
+  assign fs_base = base_num | round: 2
+  assign fs_lg = base_num | times: 1.25 | round: 2
+  assign fs_xl = base_num | times: 1.5625 | round: 2
+  assign fs_2xl = base_num | times: 1.953125 | round: 2
+  assign fs_3xl = base_num | times: 2.44140625 | round: 2
+  assign fs_4xl = base_num | times: 3.0517578125 | round: 2
+
+  assign fs_base_min = base_num | times: 0.875 | round: 2
+  assign fs_lg_min = fs_lg | times: 0.85 | round: 2
+  assign fs_xl_min = fs_xl | times: 0.8 | round: 2
+  assign fs_2xl_min = fs_2xl | times: 0.75 | round: 2
+  assign fs_3xl_min = fs_3xl | times: 0.7 | round: 2
+  assign fs_4xl_min = fs_4xl | times: 0.65 | round: 2
+-%}
 {% style %}
-  {%- liquid
-    assign use_custom_fonts = false
-    if settings.typography_mode == 'custom'
-      assign use_custom_fonts = true
-    endif
-
-    assign use_custom_colors = false
-    if settings.color_mode == 'custom'
-      assign use_custom_colors = true
-    endif
-  -%}
-
   {%- if use_custom_fonts -%}
     {%- unless settings.type_font_heading.system? -%}
       {{ settings.type_font_heading | font_face: font_display: 'swap' }}
@@ -26,45 +91,6 @@
       {{ settings.type_font_mono | font_face: font_display: 'swap' }}
     {%- endunless -%}
   {%- endif -%}
-
-  {%- liquid
-    assign s = false
-    unless use_custom_colors
-      assign gs = settings.global_color_scheme
-      if gs == blank or gs.settings == blank
-        assign gs = settings.color_schemes['scheme-6']
-      endif
-      if gs != blank and gs.settings != blank
-        assign s = gs.settings
-      endif
-    endunless
-
-    unless use_custom_fonts
-      assign fp = settings.font_pairing
-      case fp
-        when 'arial'
-          assign root_font_heading = "Arial, 'Helvetica Neue', Helvetica, system-ui, sans-serif"
-          assign root_font_body = "Arial, 'Helvetica Neue', Helvetica, system-ui, sans-serif"
-          assign root_font_mono = "ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', 'Roboto Mono', Menlo, Consolas, monospace"
-        when 'neutral', 'modern'
-          assign root_font_heading = "'Plus Jakarta Sans', system-ui, sans-serif"
-          assign root_font_body = "'DM Sans', system-ui, sans-serif"
-          assign root_font_mono = "'DM Mono', monospace"
-        when 'vision', 'atelier', 'meridian'
-          assign root_font_heading = "'Fraunces', Georgia, serif"
-          assign root_font_body = "'Manrope', system-ui, sans-serif"
-          assign root_font_mono = "'Fira Code', ui-monospace, monospace"
-        when 'technology', 'technical'
-          assign root_font_heading = "'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace"
-          assign root_font_body = "'Inter', system-ui, sans-serif"
-          assign root_font_mono = "'JetBrains Mono', ui-monospace, monospace"
-        else
-          assign root_font_heading = "'Plus Jakarta Sans', system-ui, sans-serif"
-          assign root_font_body = "'DM Sans', system-ui, sans-serif"
-          assign root_font_mono = "'DM Mono', monospace"
-      endcase
-    endunless
-  -%}
 
   :root {
     --page-width: {{ settings.max_page_width }};
@@ -131,5 +157,55 @@
       --cs-font-body: {{ root_font_body }};
       --cs-font-mono: {{ root_font_mono }};
     {%- endif -%}
+
+    --line-height-tight: 1.12;
+    --line-height-snug: 1.25;
+    --line-height-normal: 1.55;
+    --line-height-relaxed: 1.625;
+
+    --font-size-xs: {{ fs_xs }}px;
+    --font-size-sm: {{ fs_sm }}px;
+    --font-size-base: clamp(
+      {{ fs_base_min }}px,
+      calc(
+        {{ fs_base_min }}px + ({{ fs_base }}px - {{ fs_base_min }}px) * ((100vw - 375px) / (1440px - 375px))
+      ),
+      {{ fs_base }}px
+    );
+    --font-size-lg: clamp(
+      {{ fs_lg_min }}px,
+      calc(
+        {{ fs_lg_min }}px + ({{ fs_lg }}px - {{ fs_lg_min }}px) * ((100vw - 375px) / (1440px - 375px))
+      ),
+      {{ fs_lg }}px
+    );
+    --font-size-xl: clamp(
+      {{ fs_xl_min }}px,
+      calc(
+        {{ fs_xl_min }}px + ({{ fs_xl }}px - {{ fs_xl_min }}px) * ((100vw - 375px) / (1440px - 375px))
+      ),
+      {{ fs_xl }}px
+    );
+    --font-size-2xl: clamp(
+      {{ fs_2xl_min }}px,
+      calc(
+        {{ fs_2xl_min }}px + ({{ fs_2xl }}px - {{ fs_2xl_min }}px) * ((100vw - 375px) / (1440px - 375px))
+      ),
+      {{ fs_2xl }}px
+    );
+    --font-size-3xl: clamp(
+      {{ fs_3xl_min }}px,
+      calc(
+        {{ fs_3xl_min }}px + ({{ fs_3xl }}px - {{ fs_3xl_min }}px) * ((100vw - 375px) / (1440px - 375px))
+      ),
+      {{ fs_3xl }}px
+    );
+    --font-size-4xl: clamp(
+      {{ fs_4xl_min }}px,
+      calc(
+        {{ fs_4xl_min }}px + ({{ fs_4xl }}px - {{ fs_4xl_min }}px) * ((100vw - 375px) / (1440px - 375px))
+      ),
+      {{ fs_4xl }}px
+    );
   }
 {% endstyle %}

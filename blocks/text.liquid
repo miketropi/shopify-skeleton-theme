@@ -18,11 +18,17 @@
     text-align: var(--text-align);
   }
   .text--title {
-    font-size: 2rem;
+    font-size: var(--font-size-3xl, 2.44rem);
+    line-height: var(--line-height-tight, 1.12);
     font-weight: 700;
   }
   .text--subtitle {
-    font-size: 1.5rem;
+    font-size: var(--font-size-xl, 1.56rem);
+    line-height: var(--line-height-snug, 1.25);
+  }
+  .text--normal {
+    font-size: var(--font-size-base, 1rem);
+    line-height: var(--line-height-normal, 1.55);
   }
 {% endstylesheet %}
 

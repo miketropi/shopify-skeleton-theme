@@ -401,6 +401,22 @@
         "label": "t:labels.type_font_mono",
         "default": "ibm_plex_mono_n4",
         "visible_if": "{{ settings.typography_mode == 'custom' }}"
+      },
+      {
+        "type": "header",
+        "content": "t:headers.type_scale"
+      },
+      {
+        "type": "select",
+        "id": "font_size_base",
+        "label": "t:labels.font_size_base",
+        "default": "16",
+        "options": [
+          { "value": "16", "label": "t:options.font_size_base.16" },
+          { "value": "18", "label": "t:options.font_size_base.18" },
+          { "value": "20", "label": "t:options.font_size_base.20" }
+        ],
+        "info": "t:info.font_size_base"
       }
     ]
   },

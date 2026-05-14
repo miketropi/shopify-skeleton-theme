@@ -77,7 +77,7 @@ $_r-md: 12px;
 .mblog__heading {
   margin: 0;
   font-family: var(--cs-font-heading, inherit);
-  font-size: clamp(1.75rem, 2.5vw + 0.5rem, 3rem);
+  font-size: var(--font-size-4xl, 3rem);
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.025em;
@@ -86,7 +86,7 @@ $_r-md: 12px;
 
 .mblog__count {
   margin: 0.5rem 0 0;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   color: var(--cs-text-secondary, color-mix(in srgb, var(--cs-text) 55%, var(--cs-background)));
 }
 
@@ -114,7 +114,7 @@ $_r-md: 12px;
   display: inline-flex;
   align-items: center;
   padding: 5px 13px;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   font-weight: 500;
   line-height: 1.35;
   color: var(--cs-text);
@@ -151,7 +151,7 @@ $_r-md: 12px;
   display: inline-flex;
   align-items: center;
   padding: 5px 13px;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   font-weight: 500;
   line-height: 1.35;
   color: color-mix(in srgb, var(--cs-text) 55%, var(--cs-background));
@@ -246,7 +246,7 @@ $_r-md: 12px;
   grid-column: 1 / -1;
   text-align: center;
   padding: 4rem 1rem;
-  font-size: 1rem;
+  font-size: var(--font-size-base, 1rem);
   color: var(--cs-text-secondary, color-mix(in srgb, var(--cs-text) 50%, var(--cs-background)));
 }
 
@@ -258,7 +258,7 @@ $_r-md: 12px;
   align-items: center;
   gap: 2px;
   margin-top: clamp(2.5rem, 5vw, 3.5rem);
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -313,7 +313,7 @@ a.mblog__page:hover {
   &--ellipsis {
     min-width: 1.25rem;
     color: color-mix(in srgb, var(--cs-text) 32%, var(--cs-background));
-    font-size: 0.75rem;
+    font-size: var(--font-size-sm, 0.75rem);
     user-select: none;
     pointer-events: none;
   }
@@ -443,7 +443,7 @@ $_card-r: 16px;
   display: inline-flex;
   align-items: center;
   padding: 4px 10px;
-  font-size: 0.6875rem;
+  font-size: var(--font-size-xs, 0.6875rem);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -488,7 +488,7 @@ $_card-r: 16px;
   align-items: center;
   gap: 3px;
   padding: 0;
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   font-weight: 500;
   color: var(--cs-text);
   text-decoration: none;
@@ -515,7 +515,7 @@ $_card-r: 16px;
 .acard__title {
   margin: 0;
   font-family: var(--cs-font-heading, inherit);
-  font-size: clamp(1.0625rem, 0.65vw + 0.88rem, 1.3125rem);
+  font-size: var(--font-size-lg, 1.3125rem);
   font-weight: 620;
   line-height: 1.28;
   letter-spacing: -0.02em;
@@ -531,7 +531,7 @@ $_card-r: 16px;
 
 .acard__excerpt {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   line-height: 1.58;
   color: color-mix(in srgb, var(--cs-text) 76%, var(--cs-background));
   display: -webkit-box;
@@ -555,7 +555,7 @@ $_card-r: 16px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   color: color-mix(in srgb, var(--cs-text) 58%, var(--cs-background));
 }
 

@@ -35,7 +35,7 @@ $_radius-lg: 16px;
 
 .mclst__title {
   font-family: var(--cs-font-heading);
-  font-size: clamp(1.625rem, 4.5vw, 3.25rem);
+  font-size: var(--font-size-4xl, 3.25rem);
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.08;
@@ -44,7 +44,7 @@ $_radius-lg: 16px;
 }
 
 .mclst__intro {
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   line-height: 1.6;
   color: var(--cs-text-secondary);
   max-width: 38rem;
@@ -94,7 +94,7 @@ $_radius-lg: 16px;
 
 .mclst__empty-text {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   color: var(--cs-text-secondary);
 }
 

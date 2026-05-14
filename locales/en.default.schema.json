@@ -69,6 +69,7 @@
     "type_font_heading": "Heading font",
     "type_font_body": "Body font",
     "type_font_mono": "Monospace font",
+    "font_size_base": "Base font size",
     "color_mode": "Colour source",
     "global_color_scheme": "Store colour scheme",
     "section_color_scheme_source": "Colour scheme source",
@@ -104,6 +105,7 @@
     "navigation": "Navigation",
     "curated_font_pairing": "Curated pairing",
     "custom_fonts": "Custom fonts",
+    "type_scale": "Type scale",
     "preset_color_schemes": "Preset colour schemes",
     "custom_colors": "Custom colours"
   },
@@ -127,7 +129,8 @@
     "desktop_header_layout": "Large screens only. Phone and tablet still use the menu drawer and top bar.",
     "size_guide_default_image": "Shown in the size guide modal when a product has no `custom.size_guide` metafield. Upload a size chart (e.g. PNG or SVG).",
     "social_media": "Add your profile URLs once; they can appear in the footer, header contact panel, and other theme areas that support social links.",
-    "section_color_scheme_source": "Default follows Theme settings → Color schemes → Store colour scheme. Custom uses the colour scheme(s) you choose below for this section only."
+    "section_color_scheme_source": "Default follows Theme settings → Color schemes → Store colour scheme. Custom uses the colour scheme(s) you choose below for this section only.",
+    "font_size_base": "Sets the body text size. Heading levels and theme CSS variables (e.g. --font-size-lg) scale from this value using a fixed ratio. Individual components may still use their own sizes until they adopt those tokens."
   },
   "options": {
     "alignment": {
@@ -142,6 +145,11 @@
     "typography_mode": {
       "preset": "Curated pairings (Google Fonts)",
       "custom": "Custom (theme fonts)"
+    },
+    "font_size_base": {
+      "16": "Default (16px)",
+      "18": "Medium (18px)",
+      "20": "Large (20px)"
     },
     "color_mode": {
       "preset": "Preset schemes (per section)",

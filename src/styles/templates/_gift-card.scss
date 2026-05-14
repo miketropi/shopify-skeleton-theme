@@ -22,7 +22,7 @@ body.gift-card {
   margin: 0;
   min-height: 100dvh;
   font-family: var(--cs-font-body, system-ui, sans-serif);
-  font-size: 1rem;
+  font-size: var(--font-size-base, 1rem);
   line-height: 1.5;
   color: var(--cs-text);
   background: var(--cs-background);
@@ -63,7 +63,7 @@ body.gift-card {
 
 .gift-card__shop-name {
   font-family: var(--cs-font-heading, inherit);
-  font-size: 1rem;
+  font-size: var(--font-size-base, 1rem);
   font-weight: 650;
   letter-spacing: -0.02em;
   color: var(--cs-heading);
@@ -92,7 +92,7 @@ body.gift-card {
   align-self: center;
   margin: 0;
   padding: 0.35rem 0.75rem;
-  font-size: 0.6875rem;
+  font-size: var(--font-size-xs, 0.6875rem);
   font-weight: 650;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -111,7 +111,7 @@ body.gift-card {
 .gift-card__title {
   margin: 0;
   font-family: var(--cs-font-heading, inherit);
-  font-size: clamp(1.35rem, 3.5vw, 1.875rem);
+  font-size: var(--font-size-2xl, 1.875rem);
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.15;
@@ -120,13 +120,13 @@ body.gift-card {
 
 .gift-card__product-name {
   margin: -0.35rem 0 0;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   color: var(--cs-text-secondary);
 }
 
 .gift-card__expiry {
   margin: -0.5rem 0 0;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   color: var(--cs-text-secondary);
 }
 
@@ -173,7 +173,7 @@ body.gift-card {
 
 .gift-card__code-label {
   display: block;
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   font-weight: 650;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -197,7 +197,7 @@ body.gift-card {
   min-width: 0;
   padding: 0.75rem 1rem;
   font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   font-weight: 500;
   letter-spacing: 0.06em;
   color: var(--cs-heading);
@@ -212,7 +212,7 @@ body.gift-card {
   min-height: 2.75rem;
   padding: 0.625rem 1.25rem;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   font-weight: 600;
   text-decoration: none;
   border-radius: var(--style-border-radius-inputs, 8px);
@@ -259,7 +259,7 @@ body.gift-card {
   gap: 0.5rem;
   min-height: 2.75rem;
   padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   font-weight: 600;
   text-decoration: none;
   color: var(--cs-heading);
@@ -284,7 +284,7 @@ body.gift-card {
 
 .gift-card__hint {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   color: var(--cs-text-secondary);
   line-height: 1.55;
 }

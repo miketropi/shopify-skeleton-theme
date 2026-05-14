@@ -40,7 +40,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 
 .mcart__title {
   font-family: var(--cs-font-heading);
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-size: var(--font-size-3xl, 2.5rem);
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.1;
@@ -49,7 +49,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 }
 
 .mcart__continue-link {
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   font-weight: 500;
   color: var(--cs-text-secondary);
   text-decoration: underline;
@@ -156,7 +156,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 }
 
 .mcart__item-title {
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   font-weight: 500;
   line-height: 1.35;
   color: var(--cs-heading);
@@ -172,7 +172,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 .mcart__item-variant,
 .mcart__item-plan {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   color: var(--cs-text-secondary);
 }
 
@@ -186,7 +186,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 }
 
 .mcart__item-prop {
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   color: var(--cs-text-secondary);
 }
 
@@ -219,7 +219,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 }
 
 .mcart__item-remove {
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   font-weight: 500;
   color: var(--cs-text-secondary);
   text-decoration: underline;
@@ -238,7 +238,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 // ── Prices ──
 
 .mcart__price {
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   font-weight: 500;
   color: var(--cs-text);
   white-space: nowrap;
@@ -249,7 +249,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 }
 
 .mcart__price--compare {
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   font-weight: 400;
   color: var(--cs-text-secondary);
   text-decoration: line-through;
@@ -292,7 +292,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
   width: 2.5rem;
   height: 2rem;
   font: inherit;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   font-weight: 500;
   text-align: center;
   color: var(--cs-heading);
@@ -335,7 +335,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 
 .mcart__summary-title {
   font-family: var(--cs-font-heading);
-  font-size: 1.125rem;
+  font-size: var(--font-size-lg, 1.125rem);
   font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--cs-heading);
@@ -347,7 +347,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
   align-items: center;
   justify-content: space-between;
   gap: $space-md;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   color: var(--cs-text);
 
   &--discount {
@@ -371,7 +371,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 
 .mcart__taxes-note {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   line-height: 1.5;
   color: var(--cs-text-secondary);
 }
@@ -385,7 +385,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 }
 
 .mcart__note-label {
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   font-weight: 500;
   color: var(--cs-heading);
 }
@@ -393,7 +393,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 .mcart__note-textarea {
   width: 100%;
   font: inherit;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   color: var(--cs-text);
   background: var(--cs-background);
   border: 1.5px solid color-mix(in srgb, var(--cs-text) 15%, var(--cs-background));
@@ -422,7 +422,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
   min-height: 3rem;
   padding: 0.75rem $space-lg;
   font: inherit;
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--cs-btn-primary-text);
@@ -468,7 +468,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
 
 .mcart__empty-text {
   margin: 0;
-  font-size: 1.0625rem;
+  font-size: var(--font-size-lg, 1.0625rem);
   color: var(--cs-text-secondary);
 }
 
@@ -479,7 +479,7 @@ $_border: color-mix(in srgb, var(--cs-text) 8%, var(--cs-background));
   min-height: 2.75rem;
   padding: 0.5rem 1.5rem;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   font-weight: 600;
   text-decoration: none;
   color: var(--cs-btn-primary-text);

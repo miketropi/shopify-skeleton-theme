@@ -107,7 +107,7 @@ html.js .theme-modal {
 .theme-modal__title {
   margin: 0;
   font-family: var(--cs-font-heading, inherit);
-  font-size: 1.125rem;
+  font-size: var(--font-size-lg, 1.125rem);
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -152,7 +152,7 @@ html.js .theme-modal {
   flex: 0 0 auto;
   overflow-x: hidden;
   padding: 1rem 1.5rem 1.5rem;
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   line-height: 1.65;
 }
 
@@ -182,7 +182,7 @@ html.js .theme-modal {
 
 .theme-modal__hints-label {
   flex: 0 0 auto;
-  font-size: 0.6875rem;
+  font-size: var(--font-size-xs, 0.6875rem);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -204,7 +204,7 @@ html.js .theme-modal {
   align-items: center;
   gap: 0.4rem;
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   line-height: 1.3;
   color: var(--cs-text-secondary, #52525b);
 }
@@ -247,7 +247,7 @@ html.js .theme-modal {
   min-width: 1.65rem;
   padding: 0.15rem 0.45rem;
   font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   font-weight: 600;
   line-height: 1.25;
   text-align: center;
@@ -290,7 +290,7 @@ html.js .theme-modal {
   margin: 0;
   padding: 2.5rem 1.5rem;
   text-align: center;
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   line-height: 1.5;
   color: var(--cs-text-secondary, #71717a);
   background: var(--cs-background, #fff);
@@ -369,7 +369,7 @@ html.js .theme-modal {
   }
 
   .theme-modal__title {
-    font-size: clamp(1.125rem, 0.6rem + 1.5vw, 1.25rem);
+    font-size: var(--font-size-lg, 1.25rem);
   }
 
   .theme-modal__close {
@@ -386,7 +386,7 @@ html.js .theme-modal {
 
   .theme-modal__body {
     padding: 1rem 1.25rem 1.5rem;
-    font-size: 1rem;
+    font-size: var(--font-size-base, 1rem);
     line-height: 1.62;
   }
 

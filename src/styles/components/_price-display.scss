@@ -57,7 +57,7 @@
 
 // Contextual base sizes (parent wrappers can still set color / weight)
 .price-display--card {
-  font-size: 1.05rem;
+  font-size: var(--font-size-lg, 1.05rem);
 }
 
 .price-display--pdp {
@@ -65,36 +65,36 @@
 }
 
 .price-display--drawer {
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
 }
 
 .price-display--cart {
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
 }
 
 .price-display--summary {
-  font-size: 1.0625rem;
+  font-size: var(--font-size-lg, 1.0625rem);
 }
 
 .price-display--search {
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
 }
 
 .price-display--table {
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
 }
 
 .price-display--gift {
-  font-size: clamp(1.75rem, 4vw, 2.35rem);
+  font-size: var(--font-size-3xl, 2.35rem);
   font-weight: 600;
 }
 
 .price-display--pill {
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
 }
 
 .price-display--account {
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
 }
 
 // Gift card template (templates/gift_card.liquid loads theme.css for price-display)
@@ -112,7 +112,7 @@
 }
 
 .gift-card__balance-note {
-  font-size: 0.95rem;
+  font-size: var(--font-size-base, 0.95rem);
   font-weight: 500;
   opacity: 0.82;
 }

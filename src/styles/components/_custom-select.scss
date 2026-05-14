@@ -209,7 +209,7 @@ $_ease-pop: cubic-bezier(0.32, 0.72, 0, 1);
   border-radius: 9px;
   cursor: pointer;
   // font-family: system-ui, -apple-system, 'SF Pro Text', 'Segoe UI', sans-serif;
-  font-size: .8rem;
+  font-size: var(--font-size-sm, 0.8rem);
   line-height: 1.4;
   font-weight: 400;
   text-align: left;
@@ -226,7 +226,7 @@ $_ease-pop: cubic-bezier(0.32, 0.72, 0, 1);
   padding: 0.3125rem 0.5rem 0.3125rem 0.625rem;
 
   @media (max-width: 47.99em) {
-    font-size: 0.9375rem;
+    font-size: var(--font-size-base, 0.9375rem);
     line-height: 1.38;
     letter-spacing: -0.012em;
     min-height: 2.625rem;
@@ -310,7 +310,7 @@ $_ease-pop: cubic-bezier(0.32, 0.72, 0, 1);
   gap: 0.35rem;
   min-height: 0;
   padding: 0.2rem .5rem 0.35rem 0;
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   font-weight: 500;
   letter-spacing: -0.018em;
   line-height: 1.35;

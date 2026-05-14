@@ -2,42 +2,48 @@
 
 ## Purpose of this document
 
-This file describes a **proposed** global typographic scale (one merchant-facing base size → harmonised tokens → fluid sizing). It is **design reference and implementation guidance**, not a description of current behaviour.
-
-Use it when you add a `font_size_base` (or equivalent) setting and wire tokens into the theme.
+This file describes the theme’s **global typographic scale** (merchant base size → tokens → fluid sizing) and how to extend it. The **foundation is implemented** in code; component-level migration is ongoing.
 
 ---
 
 ## Current project status (skeleton-theme)
 
-The theme **does not yet implement** this system. Today:
+**Implemented**
 
 | Area | What exists |
 | ---- | ----------- |
-| **Theme settings** | `config/settings_schema.json` — **Typography** group: `typography_mode` (`preset` / `custom`), `font_pairing` (4 curated pairings), or custom `type_font_heading` / `type_font_body` / `type_font_mono`. **No** body/heading *size** or scale controls. |
-| **Runtime CSS variables** | `snippets/css-variables.liquid` (rendered from `layout/theme.liquid` in `<head>`) outputs `:root` with layout, colour scheme vars, and **`--cs-font-heading`**, **`--cs-font-body`**, **`--cs-font-mono`**. **No** `--font-size-*` tokens. |
-| **Base typography SCSS** | `src/styles/base/_fonts.scss` sets `font-family` (and inherited colours) for `body`, `h1–h6`, and monospace. **No** global `font-size` / line-height scale for headings vs body. |
-| **Critical CSS** | `assets/critical.css` sets `body { font-family: var(--cs-font-body); … }` — **no** explicit `font-size` (browser default applies, typically 16px). |
-| **Components** | Many `font-size` values are **hardcoded** in `src/styles/**/*.scss` using **rem**, **px**, and **`clamp()`** (e.g. `_main-product.scss`, `_header.scss`, `_theme-modal.scss`, section partials). `blocks/text.liquid` uses inline `font-size` for block levels. |
-| **Build** | Vite compiles SCSS → `assets/theme.css`. **Liquid does not run inside SCSS**; merchant-driven numbers must be emitted from Liquid (e.g. `snippets/css-variables.liquid` inside `{% style %}`), not from Vite alone. |
+| **Theme settings** | `config/settings_schema.json` — **Typography** → **Type scale**: `font_size_base` (`16` / `18` / `20` px). Works with existing `typography_mode`, `font_pairing`, and custom font pickers. |
+| **Runtime CSS variables** | `snippets/css-variables.liquid` outputs **`--font-size-xs`** through **`--font-size-4xl`** (Major Third ratio, fluid `clamp()` between 375px and 1440px for steps above `sm`), plus **`--line-height-tight`**, **`--line-height-snug`**, **`--line-height-normal`**, **`--line-height-relaxed`**. |
+| **Base typography** | `src/styles/base/_fonts.scss` — `body` uses `--font-size-base` and `--line-height-normal`; `h1–h6` map to `--font-size-4xl` … `--font-size-base` with paired line heights; `h6` is `font-weight: 700`. |
+| **Critical CSS** | `assets/critical.css` — `body` sets `font-size` / `line-height` from the same tokens for early paint. |
+| **Theme blocks** | `blocks/text.liquid` — `.text--title`, `.text--subtitle`, `.text--normal` use scale tokens + line-height vars. |
 
-**Implication:** Sections 2–6 below are the **target architecture**. Fulfilling checklist items will require schema changes, extending `css-variables.liquid`, then a gradual migration away from ad hoc sizes in SCSS (large surface area).
+**Still to migrate (follow-up)**
+
+| Area | Notes |
+| ---- | ----- |
+| **Components** | Many `font-size` values remain **hardcoded** in `src/styles/**/*.scss` (rem, px, local `clamp()`). Prefer adopting `var(--font-size-*)` where the semantic role matches. |
+| **Other layouts** | e.g. `layout/password.liquid` does not render `css-variables`; password/gift-card pages may differ unless aligned later. |
+
+**Build:** Vite compiles SCSS → `assets/theme.css`. Merchant-driven sizes come only from Liquid (`{% style %}` in `css-variables.liquid`), not from Vite.
+
+**Implication:** Sections below remain **reference** for ratios, semantics, and migration. Phase B is an incremental audit of component SCSS.
 
 ---
 
-## Overview (target behaviour)
+## Overview (behaviour)
 
-Implement a single **Font Size Base** setting in Shopify **global** settings that drives a full typographic scale across the theme. Instead of dozens of unrelated size fields, the merchant picks a base (e.g. 16 / 18 / 20px) and derived sizes follow a fixed ratio.
-
-**Goal:** One setting → coherent type system → responsive by default (e.g. `clamp()`).
+A single **Base font size** in **Theme settings → Typography** drives the scale. Derived steps use a **1.25** ratio; larger steps use **fluid `clamp()`** so type scales between mobile and wide desktop without separate breakpoint settings.
 
 ---
 
-## 1. Setting definition (proposed)
+## 1. Setting definition
+
+**Implemented** in the theme (this section documents the live shape).
 
 ### Schema (`config/settings_schema.json`)
 
-Add a **select** under the existing **Typography** group (after font pairing / font pickers, with appropriate `visible_if` if needed):
+Under **Typography**, after custom font pickers, a **Type scale** header and **select**:
 
 ```json
 {
@@ -54,13 +60,7 @@ Add a **select** under the existing **Typography** group (after font pairing / f
 }
 ```
 
-Also add matching keys under `locales/en.default.schema.json` (Theme Store convention: schema copy in `*.schema.json`).
-
-### Key points
-
-- Field ID: **`font_size_base`** (example — keep consistent with Liquid below).
-- Keep options small (3 is enough for v1).
-- `info` should state that **headings, UI labels, and body** all derive from this base.
+Matching keys live in [`locales/en.default.schema.json`](locales/en.default.schema.json) (`labels.font_size_base`, `options.font_size_base.*`, `info.font_size_base`, `headers.type_scale`).
 
 ---
 
@@ -194,13 +194,14 @@ Use as a *migration guide* when replacing hardcoded sizes — this theme’s com
 
 **Phase A — Foundation**
 
-- [ ] Add `font_size_base` (or agreed id) to `config/settings_schema.json` under Typography + `en.default.schema.json` strings.
-- [ ] Extend `snippets/css-variables.liquid` to output all `--font-size-*` (and optional line-height props) using the chosen ratio + `clamp()` rules.
-- [ ] Set global defaults in `src/styles/base/_fonts.scss` and/or `assets/critical.css` for `body` and `h1–h6` to use tokens.
+- [x] Add `font_size_base` to `config/settings_schema.json` under Typography + `en.default.schema.json` strings.
+- [x] Extend `snippets/css-variables.liquid` to output all `--font-size-*` (and line-height props) using ratio 1.25 + `clamp()` rules.
+- [x] Set global defaults in `src/styles/base/_fonts.scss` and `assets/critical.css` for `body` and `h1–h6` to use tokens.
+- [x] `blocks/text.liquid` uses tokens for title / subtitle / normal.
 
 **Phase B — Migration (large)**
 
-- [ ] Audit `src/styles/**/*.scss`, `assets/critical.css`, and Liquid (`blocks/text.liquid`, etc.) for hardcoded `font-size` / typography utilities; map to tokens or document intentional exceptions (e.g. legal minimums, one-off display locks).
+- [ ] Audit remaining `src/styles/**/*.scss` and Liquid for hardcoded `font-size`; map to tokens or document intentional exceptions (e.g. legal minimums, one-off display locks).
 - [ ] Regression-test key templates: index, collection, product, cart, article, header drawer/modal.
 
 **Phase C — QA**

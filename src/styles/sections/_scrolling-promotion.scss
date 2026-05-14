@@ -106,7 +106,7 @@
 
 .scrolling-promotion__placeholder {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
 }
 
 @media (prefers-reduced-motion: reduce) {

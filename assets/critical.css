@@ -86,6 +86,8 @@ p:empty {
 /** Theme styles below */
 body {
   font-family: var(--cs-font-body);
+  font-size: var(--font-size-base, 1rem);
+  line-height: var(--line-height-normal, 1.55);
   background-color: var(--cs-background, var(--color-background));
   color: var(--cs-text, var(--color-foreground));
 }

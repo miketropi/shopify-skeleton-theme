@@ -38,7 +38,7 @@ $_radius-lg: 16px;
 
 .msrch__title {
   font-family: var(--cs-font-heading);
-  font-size: clamp(1.625rem, 4.5vw, 3.25rem);
+  font-size: var(--font-size-4xl, 3.25rem);
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.08;
@@ -47,7 +47,7 @@ $_radius-lg: 16px;
 }
 
 .msrch__intro {
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   line-height: 1.6;
   color: var(--cs-text-secondary);
   max-width: 38rem;
@@ -92,7 +92,7 @@ $_radius-lg: 16px;
   min-height: 3rem;
   padding: 0.65rem 1rem 0.65rem 2.75rem;
   font: inherit;
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   color: var(--cs-text);
   background: transparent;
   border: 1.5px solid color-mix(in srgb, var(--cs-text) 15%, var(--cs-background));
@@ -119,7 +119,7 @@ $_radius-lg: 16px;
   min-height: 3rem;
   padding: 0.65rem 1.5rem;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   font-weight: 600;
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -148,7 +148,7 @@ $_radius-lg: 16px;
 // ─── Summary ──────────────────────────────────────────────
 
 .msrch__summary {
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   color: var(--cs-text-secondary);
   letter-spacing: 0.01em;
   margin: 0 0 $space-lg;
@@ -199,14 +199,14 @@ $_radius-lg: 16px;
 
 .msrch__empty-text {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   line-height: 1.55;
   color: var(--cs-text-secondary);
   max-width: 28rem;
 }
 
 .msrch__empty-link {
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   font-weight: 500;
   color: var(--cs-accent, var(--cs-heading));
   text-decoration: underline;
@@ -250,7 +250,7 @@ $_radius-lg: 16px;
   min-width: 2.25rem;
   min-height: 2.25rem;
   padding: 0 0.375rem;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   font-weight: 500;
   color: var(--cs-text-secondary);
   text-decoration: none;

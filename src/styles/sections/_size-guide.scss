@@ -24,7 +24,7 @@
   width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
 }
 
 .size-guide .theme-modal__body th,

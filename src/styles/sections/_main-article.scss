@@ -149,7 +149,7 @@ $_r-pill: 999px;
 .marticle__sidebar-heading {
   margin: 0 0 0.85rem;
   padding-left: 0;
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: none;
@@ -159,7 +159,7 @@ $_r-pill: 999px;
 
 .marticle__sidebar-category {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   line-height: 1.45;
 }
 
@@ -213,7 +213,7 @@ $_r-pill: 999px;
 
 .marticle__taxonomy-blog-label {
   flex-shrink: 0;
-  font-size: 0.625rem;
+  font-size: var(--font-size-xs, 0.625rem);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -224,7 +224,7 @@ $_r-pill: 999px;
 .marticle__taxonomy-blog-title {
   min-width: 0;
   margin: 0;
-  font-size: 0.9rem;
+  font-size: var(--font-size-base, 0.9rem);
   font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.012em;
@@ -264,7 +264,7 @@ $_r-pill: 999px;
 
 .marticle__taxonomy-tags-label {
   margin: 0 0 0.55rem;
-  font-size: 0.625rem;
+  font-size: var(--font-size-xs, 0.625rem);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -309,14 +309,14 @@ $_r-pill: 999px;
 }
 
 .marticle__related-title {
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.01em;
 }
 
 .marticle__related-date {
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   color: $_muted;
   transition: color 0.15s ease;
 }
@@ -358,7 +358,7 @@ $_r-pill: 999px;
   height: 2.75rem;
   border-radius: 50%;
   font-family: var(--cs-font-heading, inherit);
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   font-weight: 650;
   letter-spacing: 0.05em;
   line-height: 1;
@@ -382,7 +382,7 @@ $_r-pill: 999px;
 
 .marticle__intro-eyebrow {
   margin: 0.1rem 0 0;
-  font-size: 0.6875rem;
+  font-size: var(--font-size-xs, 0.6875rem);
   font-weight: 600;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -393,7 +393,7 @@ $_r-pill: 999px;
   margin: 0.28rem 0 0;
   padding: 0;
   font-family: var(--cs-font-heading, inherit);
-  font-size: 1rem;
+  font-size: var(--font-size-base, 1rem);
   font-weight: 600;
   line-height: 1.32;
   letter-spacing: -0.018em;
@@ -403,7 +403,7 @@ $_r-pill: 999px;
 .marticle__byline--sidebar .marticle__byline-text {
   margin: 0;
   padding: 0.55rem 0 0;
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   line-height: 1.6;
   letter-spacing: 0.006em;
   color: color-mix(in srgb, var(--cs-text) 72%, var(--cs-background));
@@ -446,7 +446,7 @@ $_r-pill: 999px;
 
 .marticle__intro-stat-value {
   font-family: var(--cs-font-heading, inherit);
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   font-weight: 650;
   font-variant-numeric: proportional-nums;
   letter-spacing: -0.02em;
@@ -455,7 +455,7 @@ $_r-pill: 999px;
 }
 
 .marticle__intro-stat-label {
-  font-size: 0.625rem;
+  font-size: var(--font-size-xs, 0.625rem);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -500,7 +500,7 @@ $_r-pill: 999px;
   .marticle__tag {
     flex-shrink: 0;
     padding: 5px 13px;
-    font-size: 0.8125rem;
+    font-size: var(--font-size-sm, 0.8125rem);
     font-weight: 500;
     line-height: 1.35;
     letter-spacing: normal;
@@ -539,7 +539,7 @@ $_r-pill: 999px;
   gap: 8px;
   row-gap: 0.35rem;
   margin-bottom: clamp(1.35rem, 2.5vw, 2rem);
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   letter-spacing: 0.01em;
   color: $_muted;
 
@@ -607,14 +607,14 @@ $_r-pill: 999px;
 .marticle__title {
   margin: 0;
   font-family: var(--cs-font-heading, inherit);
-  font-size: clamp(1.9375rem, 3vw + 0.85rem, 2.35rem);
+  font-size: var(--font-size-3xl, 2.35rem);
   font-weight: 680;
   line-height: 1.11;
   letter-spacing: -0.035em;
   color: var(--cs-heading, var(--cs-text));
 
   @include mq-up('lg') {
-    font-size: 42px;
+    font-size: var(--font-size-3xl, 2.625rem);
   }
 }
 
@@ -630,7 +630,7 @@ $_r-pill: 999px;
   display: inline-flex;
   align-items: center;
   padding: 0.35rem 0.85rem;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   font-weight: 500;
   letter-spacing: 0.01em;
   color: $_prose-sub;
@@ -688,7 +688,7 @@ $_r-pill: 999px;
   margin: 0;
   flex: 1;
   min-width: 0;
-  font-size: 0.6875rem;
+  font-size: var(--font-size-xs, 0.6875rem);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -773,7 +773,7 @@ $_r-pill: 999px;
 
 .marticle__toc-link {
   display: block;
-  font-size: clamp(0.8125rem, 0.2vw + 0.78rem, 0.875rem);
+  font-size: var(--font-size-sm, 0.875rem);
   line-height: 1.45;
   color: color-mix(in srgb, var(--cs-text) 78%, var(--cs-background));
   text-decoration: none;
@@ -812,14 +812,14 @@ $_r-pill: 999px;
 .marticle__body {
   max-width: $_prose-max;
   margin-inline: 0;
-  font-size: 1.0625rem;
+  font-size: var(--font-size-lg, 1.0625rem);
   line-height: 1.72;
   letter-spacing: 0.01em;
   color: $_prose-sub;
   font-variant-numeric: proportional-nums;
 
   @include mq-up('md') {
-    font-size: 1.09375rem;
+    font-size: var(--font-size-lg, 1.09375rem);
     line-height: 1.75;
   }
 
@@ -854,7 +854,7 @@ $_r-pill: 999px;
     margin-top: 2.65em;
     margin-bottom: 0.65em;
     padding-bottom: 0.55em;
-    font-size: clamp(1.3125rem, 1.2vw + 0.95rem, 1.5625rem);
+    font-size: var(--font-size-xl, 1.5625rem);
     font-weight: 650;
     line-height: 1.28;
     border-bottom: 1px solid color-mix(in srgb, var(--cs-text) 11%, var(--cs-background));
@@ -867,7 +867,7 @@ $_r-pill: 999px;
   h3 {
     margin-top: 2.15em;
     margin-bottom: 0.45em;
-    font-size: clamp(1.125rem, 0.85vw + 0.85rem, 1.3125rem);
+    font-size: var(--font-size-xl, 1.3125rem);
     font-weight: 600;
     line-height: 1.35;
   }
@@ -981,7 +981,7 @@ $_r-pill: 999px;
 
   figcaption {
     margin-top: 0.75em;
-    font-size: 0.8125rem;
+    font-size: var(--font-size-sm, 0.8125rem);
     line-height: 1.5;
     color: color-mix(in srgb, var(--cs-text) 50%, var(--cs-background));
   }
@@ -1099,7 +1099,7 @@ $_r-pill: 999px;
       top: 0.65rem;
       right: 1rem;
       font-family: var(--cs-font-body, system-ui, sans-serif);
-      font-size: 0.625rem;
+      font-size: var(--font-size-xs, 0.625rem);
       font-weight: 650;
       letter-spacing: 0.06em;
       text-transform: uppercase;
@@ -1203,7 +1203,7 @@ $_r-pill: 999px;
     min-width: 100%;
     max-width: none;
     border-collapse: collapse;
-    font-size: clamp(0.8125rem, 0.22vw + 0.76rem, 0.9375rem);
+    font-size: var(--font-size-sm, 0.9375rem);
     line-height: 1.45;
     margin: 0;
     border-spacing: 0;
@@ -1212,7 +1212,7 @@ $_r-pill: 999px;
       padding: 0.5rem 0.65rem;
       caption-side: top;
       text-align: left;
-      font-size: 0.8125rem;
+      font-size: var(--font-size-sm, 0.8125rem);
       font-weight: 600;
       color: color-mix(in srgb, var(--cs-text) 58%, var(--cs-background));
     }
@@ -1245,7 +1245,7 @@ $_r-pill: 999px;
 
     th {
       font-weight: 600;
-      font-size: clamp(0.6875rem, 0.18vw + 0.64rem, 0.8125rem);
+      font-size: var(--font-size-sm, 0.8125rem);
       letter-spacing: 0.04em;
       text-transform: uppercase;
       color: color-mix(in srgb, var(--cs-text) 52%, var(--cs-background));
@@ -1468,7 +1468,7 @@ $_r-pill: 999px;
 }
 
 .marticle__nav-kicker {
-  font-size: 0.625rem;
+  font-size: var(--font-size-xs, 0.625rem);
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1476,7 +1476,7 @@ $_r-pill: 999px;
 }
 
 .marticle__nav-title {
-  font-size: clamp(0.9375rem, 0.28vw + 0.88rem, 1.015625rem);
+  font-size: var(--font-size-base, 1.015625rem);
   font-weight: 600;
   line-height: 1.4;
   letter-spacing: -0.021em;
@@ -1557,7 +1557,7 @@ $_r-pill: 999px;
   margin: 0;
   font-family: var(--cs-font-heading, inherit);
   font-weight: 700;
-  font-size: 1.0625rem;
+  font-size: var(--font-size-lg, 1.0625rem);
   letter-spacing: -0.02em;
   line-height: 1.25;
   color: var(--cs-heading, var(--cs-text));
@@ -1565,7 +1565,7 @@ $_r-pill: 999px;
 }
 
 .marticle__discuss-sub {
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   color: $_muted;
   line-height: 1.45;
 }
@@ -1578,7 +1578,7 @@ $_r-pill: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   font-weight: 700;
   border-radius: $_r-pill;
   background: var(--cs-accent, #007aff);
@@ -1601,7 +1601,7 @@ $_r-pill: 999px;
 .marticle__comments-heading {
   margin: 0 0 0.35rem;
   font-family: var(--cs-font-heading, inherit);
-  font-size: 1.0625rem;
+  font-size: var(--font-size-lg, 1.0625rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.3;
@@ -1610,7 +1610,7 @@ $_r-pill: 999px;
 
 .marticle__comments-meta {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   font-weight: 400;
   line-height: 1.45;
   color: $_muted;
@@ -1659,7 +1659,7 @@ $_r-pill: 999px;
   height: 2.75rem;
   border-radius: 50%;
   font-family: var(--cs-font-heading, inherit);
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   font-weight: 650;
   letter-spacing: 0.05em;
   line-height: 1;
@@ -1683,7 +1683,7 @@ $_r-pill: 999px;
 
 .marticle__comment-author {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   font-weight: 600;
   font-style: normal;
   letter-spacing: -0.01em;
@@ -1691,13 +1691,13 @@ $_r-pill: 999px;
 }
 
 .marticle__comment-date {
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   font-weight: 400;
   color: $_muted;
 }
 
 .marticle__comment-content {
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   line-height: 1.65;
   letter-spacing: 0.01em;
   color: $_prose-sub;
@@ -1732,7 +1732,7 @@ $_r-pill: 999px;
 .marticle__comments-pagination {
   margin-bottom: clamp(1.75rem, 3.5vw, 2.35rem);
   text-align: center;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
 
   a,
   span {
@@ -1785,7 +1785,7 @@ $_r-pill: 999px;
 .marticle__comment-form-title {
   margin: 0 0 0.35rem;
   font-family: var(--cs-font-heading, inherit);
-  font-size: 1.0625rem;
+  font-size: var(--font-size-lg, 1.0625rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.3;
@@ -1795,7 +1795,7 @@ $_r-pill: 999px;
 .marticle__comment-form-note {
   margin: 0;
   max-width: 42ch;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   line-height: 1.45;
   font-weight: 400;
   color: $_muted;
@@ -1812,7 +1812,7 @@ $_r-pill: 999px;
   ul {
     margin: 0;
     padding-left: 1.1rem;
-    font-size: 0.8125rem;
+    font-size: var(--font-size-sm, 0.8125rem);
     line-height: 1.45;
     color: color-mix(in srgb, #c53030 50%, var(--cs-text));
   }
@@ -1854,7 +1854,7 @@ $_r-pill: 999px;
 }
 
 .marticle__form-label {
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: none;
@@ -1865,7 +1865,7 @@ $_r-pill: 999px;
 .marticle__textarea {
   width: 100%;
   padding: 0.65rem 0.85rem;
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base, 0.9375rem);
   font-family: inherit;
   line-height: 1.45;
   color: var(--cs-text);
@@ -1910,7 +1910,7 @@ $_r-pill: 999px;
   justify-content: center;
   min-height: 2.5rem;
   padding: 0.55rem 1.45rem;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm, 0.875rem);
   font-weight: 700;
   font-family: inherit;
   letter-spacing: 0.01em;
