@@ -11,6 +11,104 @@
   overflow: hidden;
 }
 
+/* Loading veil until window `load` (and until Swiper mounts when multiple slides). See inline script in section-home-slider.liquid. */
+html.js .section-home-slider .home-slider__viewport::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  background-color: color-mix(in srgb, var(--cs-background) 72%, var(--cs-text) 28%);
+  background-image: linear-gradient(
+    100deg,
+    transparent 0%,
+    color-mix(in srgb, var(--cs-background) 40%, transparent) 42%,
+    color-mix(in srgb, var(--cs-heading) 14%, transparent) 50%,
+    color-mix(in srgb, var(--cs-background) 40%, transparent) 58%,
+    transparent 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 220% 100%;
+  background-position: 100% 0;
+  opacity: 1;
+  visibility: visible;
+  animation: home-slider-load-shimmer 1.35s ease-in-out infinite;
+  transition:
+    opacity 0.45s ease,
+    visibility 0.45s ease;
+}
+
+html.js .section-home-slider.section-home-slider--page-loaded .home-slider__viewport::after {
+  opacity: 0;
+  visibility: hidden;
+  animation: none;
+}
+
+html.js
+  .section-home-slider.section-home-slider--page-loaded.section-home-slider--await-swiper:not(
+    .section-home-slider--swiper-mounted
+  )
+  .home-slider__viewport::after {
+  opacity: 1;
+  visibility: visible;
+  animation: home-slider-load-shimmer 1.35s ease-in-out infinite;
+}
+
+html:not(.js) .section-home-slider .home-slider__viewport::after {
+  content: none;
+}
+
+@keyframes home-slider-load-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .section-home-slider .home-slider__viewport::after {
+    animation: none;
+    background-image: none;
+    background-color: color-mix(in srgb, var(--cs-background) 88%, var(--cs-text) 12%);
+    opacity: 0.45;
+  }
+
+  html.js .section-home-slider.section-home-slider--page-loaded.section-home-slider--single .home-slider__viewport::after,
+  html.js .section-home-slider.section-home-slider--page-loaded.section-home-slider--swiper-mounted .home-slider__viewport::after {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  html.js
+    .section-home-slider.section-home-slider--page-loaded.section-home-slider--await-swiper:not(
+      .section-home-slider--swiper-mounted
+    )
+    .home-slider__viewport::after {
+    animation: none;
+    opacity: 0.45;
+    visibility: visible;
+  }
+}
+
+/* Slide reveal after window `load`; hide rules live in section `{% style %}` for earlier application. */
+html.js .section-home-slider.section-home-slider--page-loaded .home-slider__slide-frame {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.45s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .section-home-slider.section-home-slider--page-loaded .home-slider__slide-frame {
+    transition: none;
+  }
+}
+
+/* Multi-slide pre-init layout: high-specificity rules in section `{% style %}` (after theme.css) so they override Swiper. */
+
 .home-slider__swiper.swiper {
   --swiper-theme-color: color-mix(in srgb, var(--cs-heading) 55%, var(--cs-text) 45%);
   --swiper-pagination-bullet-inactive-color: color-mix(in srgb, var(--cs-text) 28%, transparent);
@@ -44,6 +142,10 @@
   min-height: var(--home-slider-min-height, 420px);
   box-sizing: border-box;
   align-content: stretch;
+  overflow: hidden;
+  border-radius:
+    var(--home-slide-radius-tl, 0px) var(--home-slide-radius-tr, 0px) var(--home-slide-radius-br, 0px)
+    var(--home-slide-radius-bl, 0px);
 }
 
 .home-slider__copy {
@@ -53,10 +155,10 @@
   justify-self: start;
   text-align: start;
 
-  position: relative;
+  position: relative;  
   z-index: 2;
   padding-block: max(1rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-bottom));
-  padding-inline: max(1.25rem, env(safe-area-inset-left)) max(1.25rem, env(safe-area-inset-right));
+  padding-inline: max(3rem, env(safe-area-inset-left)) max(3rem, env(safe-area-inset-right));
   width: min(100%, 40rem);
   max-width: 40rem;
   box-sizing: border-box;

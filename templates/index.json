@@ -36,7 +36,11 @@
             "cta_secondary_label": "Learn more",
             "cta_secondary_link": "shopify://pages/about",
             "content_position": "left",
-            "overlay_enable": false
+            "overlay_enable": false,
+            "slide_border_radius_top_left": 16,
+            "slide_border_radius_top_right": 16,
+            "slide_border_radius_bottom_right": 16, 
+            "slide_border_radius_bottom_left": 16 
           }
         },
         "home_slide_2": {
@@ -51,7 +55,11 @@
             "cta_secondary_label": "Member Exclusives",
             "cta_secondary_link": "shopify://pages/member-offers",
             "content_position": "left",
-            "overlay_enable": false
+            "overlay_enable": false,
+            "slide_border_radius_top_left": 16,
+            "slide_border_radius_top_right": 16,
+            "slide_border_radius_bottom_right": 16, 
+            "slide_border_radius_bottom_left": 16
           }
      
         },
@@ -67,7 +75,11 @@
             "cta_secondary_label": "Learn more",
             "cta_secondary_link": "shopify://pages/about",
             "content_position": "left",
-            "overlay_enable": false
+            "overlay_enable": false,
+            "slide_border_radius_top_left": 16,
+            "slide_border_radius_top_right": 16,
+            "slide_border_radius_bottom_right": 16, 
+            "slide_border_radius_bottom_left": 16
           }
         }
       },

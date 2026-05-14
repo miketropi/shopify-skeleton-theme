@@ -80,7 +80,7 @@ $header-submenu-shadow: none; // 0 4px 6px color-mix(in srgb, var(--cs-text) 6%,
   width: 100%;
   background-color: var(--cs-background);
   color: var(--cs-text);
-  border-bottom: 1px solid var(--cs-border);
+  // border-bottom: 1px solid var(--cs-border);
   transition:
     background-color 0.25s ease,
     color 0.2s ease,

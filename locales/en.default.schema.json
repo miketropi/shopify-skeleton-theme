@@ -643,7 +643,8 @@
           "copy_color_btn_text": "Primary button — text",
           "copy_color_btn_border": "Primary button — border",
           "copy_color_btn_bg": "Primary button — background",
-          "copy_color_btn_bg_info": "Use transparent or semi-transparent for an outline style; solid for a filled button."
+          "copy_color_btn_bg_info": "Use transparent or semi-transparent for an outline style; solid for a filled button.",
+          "slide_radius_info": "Rounds this slide’s image and overlay. Separate from the section frame settings."
         }
       }
     },

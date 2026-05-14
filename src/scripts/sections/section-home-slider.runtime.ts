@@ -101,12 +101,14 @@ export function init(container: HTMLElement): void {
   const teardown = (): void => {
     introTween?.kill()
     introTween = null
+    container.classList.remove('section-home-slider--swiper-mounted')
     swiper?.destroy(true, true)
     swiper = undefined
     killCopyTweens(container)
   }
 
   if (slideEls.length <= 1) {
+    container.classList.add('section-home-slider--swiper-mounted')
     requestAnimationFrame(() => {
       runIntroForIndex(0)
     })
@@ -177,7 +179,10 @@ export function init(container: HTMLElement): void {
   swiper = new Swiper(swiperEl, swiperParams)
 
   requestAnimationFrame(() => {
-    runIntroForIndex(swiper?.activeIndex ?? initialSlide)
+    requestAnimationFrame(() => {
+      container.classList.add('section-home-slider--swiper-mounted')
+      runIntroForIndex(swiper?.activeIndex ?? initialSlide)
+    })
   })
 
   root.__homeSliderTeardown = teardown

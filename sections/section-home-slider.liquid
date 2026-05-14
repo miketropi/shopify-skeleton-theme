@@ -31,8 +31,10 @@
   {%- render 'color-scheme-vars', scheme: picked_scheme, inline_only: true -%}
 {%- endcapture -%}
 
+{%- render 'section-styles', section: section -%}
+
 <section
-  class="section-{{ section.id }} section-home-slider{% if slide_count < 2 %} section-home-slider--single{% endif %}{% if section.settings.show_arrows == false %} section-home-slider--no-arrows{% endif %}{% if section.settings.show_pagination == false %} section-home-slider--no-pagination{% endif %}{% if section.settings.full_width %} full-width{% else %} section-home-slider--contained{% endif %}{% if section.settings.slide_centered_auto %} section-home-slider--centered-slides{% endif %}"
+  class="section-{{ section.id }} section-home-slider shopify-section-wrapper{% if slide_count < 2 %} section-home-slider--single{% endif %}{% if slide_count > 1 %} section-home-slider--await-swiper{% endif %}{% if section.settings.show_arrows == false %} section-home-slider--no-arrows{% endif %}{% if section.settings.show_pagination == false %} section-home-slider--no-pagination{% endif %}{% if section.settings.full_width %} full-width{% else %} section-home-slider--contained{% endif %}{% if section.settings.slide_centered_auto %} section-home-slider--centered-slides{% endif %}"
   data-section-type="section-home-slider"
   data-section-id="{{ section.id }}"
   data-home-slider-effect="{{ section.settings.slide_effect }}"
@@ -47,6 +49,13 @@
   "
   {{ section.shopify_attributes }}
 >
+  {% style %}
+    html.js #shopify-section-{{ section.id }} .section-home-slider:not(.section-home-slider--page-loaded) .home-slider__slide-frame {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+  {% endstyle %}
   <div
     class="home-slider__viewport"
     role="region"
@@ -134,9 +143,14 @@
                     assign home_copy_ov = home_copy_ov | append: ' --home-copy-btn-bg: ' | append: bbg | append: ';'
                   endif
                 endif
+
+                assign sr_tl = block.settings.slide_border_radius_top_left | default: 0
+                assign sr_tr = block.settings.slide_border_radius_top_right | default: 0
+                assign sr_br = block.settings.slide_border_radius_bottom_right | default: 0
+                assign sr_bl = block.settings.slide_border_radius_bottom_left | default: 0
               -%}
               <div
-                class="swiper-slide home-slider__slide home-slider__slide--entry-{{ slide_entry }}"
+                class="swiper-slide home-slider__slide home-slider__slide--entry-{{ slide_entry }}{% if slide_count > 1 and i == initial_slide_zero %} home-slider__slide--preinit-active{% endif %}"
                 data-home-slide
                 role="group"
                 aria-roledescription="{{ 'home_slider.slide' | t }}"
@@ -144,7 +158,10 @@
                 style="--home-slide-overlay-alpha: {{ ov_op }}; --home-slide-overlay: {{ block.settings.overlay_color }};{{ home_copy_ov }}"
                 {{ block.shopify_attributes }}
               >
-                <div class="home-slider__slide-frame">
+                <div
+                  class="home-slider__slide-frame"
+                  style="--home-slide-radius-tl: {{ sr_tl }}px; --home-slide-radius-tr: {{ sr_tr }}px; --home-slide-radius-br: {{ sr_br }}px; --home-slide-radius-bl: {{ sr_bl }}px;"
+                >
                   <div class="home-slider__media">
                     {%- if block.settings.image != blank -%}
                       {%- if block.settings.image_mobile != blank -%}
@@ -260,12 +277,84 @@
     </div>
   </div>
 </section>
+<script>
+  (function () {
+    var root = document.querySelector(
+      '[data-section-type="section-home-slider"][data-section-id="{{ section.id }}"]',
+    )
+    if (!root) return
+    function markPageLoaded() {
+      root.classList.add('section-home-slider--page-loaded')
+    }
+    if (document.readyState === 'complete') {
+      markPageLoaded()
+    } else {
+      window.addEventListener('load', markPageLoaded, { once: true })
+    }
+  })()
+</script>
+{%- if slide_count > 1 -%}
+  {% style %}
+    /* After theme.css (incl. Swiper): hide non-initial slides until JS sets --swiper-mounted. */
+    #shopify-section-{{ section.id }}
+      .section-home-slider.section-home-slider--await-swiper:not(.section-home-slider--swiper-mounted)
+      .home-slider__swiper
+      .swiper-wrapper {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      overflow: hidden !important;
+    }
+
+    #shopify-section-{{ section.id }}
+      .section-home-slider.section-home-slider--await-swiper:not(.section-home-slider--swiper-mounted)
+      .home-slider__swiper
+      .swiper-slide:not(.home-slider__slide--preinit-active) {
+      display: none !important;
+    }
+
+    #shopify-section-{{ section.id }}
+      .section-home-slider.section-home-slider--await-swiper:not(.section-home-slider--swiper-mounted)
+      .home-slider__swiper
+      .swiper-slide.home-slider__slide--preinit-active {
+      display: flex !important;
+      max-width: 100% !important;
+    }
+
+    {%- if section.settings.slide_centered_auto -%}
+      #shopify-section-{{ section.id }}
+        .section-home-slider.section-home-slider--await-swiper:not(.section-home-slider--swiper-mounted).section-home-slider--centered-slides
+        .swiper-slide.home-slider__slide--preinit-active {
+        flex: 0 0 auto !important;
+        width: min(var(--home-centered-slide-width, var(--content-width, min(calc(100vw - 2 * var(--page-margin, 1rem)), 75rem))), 100%) !important;
+      }
+    {%- else -%}
+      #shopify-section-{{ section.id }}
+        .section-home-slider.section-home-slider--await-swiper:not(.section-home-slider--swiper-mounted)
+        .swiper-slide.home-slider__slide--preinit-active {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+      }
+    {%- endif -%}
+
+    #shopify-section-{{ section.id }}
+      .section-home-slider.section-home-slider--await-swiper:not(.section-home-slider--swiper-mounted)
+      .home-slider__nav-btn,
+    #shopify-section-{{ section.id }}
+      .section-home-slider.section-home-slider--await-swiper:not(.section-home-slider--swiper-mounted)
+      .home-slider__pagination {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+  {% endstyle %}
+{%- endif -%}
 {% style %}
   #shopify-section-{{ section.id }} {
     overflow-x: hidden;
     max-width: 100%;
   }
-{% endstyle %} 
+{% endstyle %}
 
 {% schema %}
 {
@@ -408,6 +497,162 @@
       "info": "t:sections.home_slider.info.autoplay_pause_on_hover",
       "default": true,
       "visible_if": "{{ section.settings.autoplay == true }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.feature_grid.headers.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.feature_grid.labels.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.feature_grid.labels.padding_right",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.feature_grid.labels.padding_bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.feature_grid.labels.padding_left",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.feature_grid.headers.margin"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.feature_grid.labels.margin_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.feature_grid.labels.margin_bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.feature_grid.headers.background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.feature_grid.labels.background_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.feature_grid.labels.background_color_info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.feature_grid.headers.border"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.feature_grid.labels.border_width",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "t:sections.feature_grid.labels.border_style",
+      "options": [
+        { "value": "none", "label": "t:sections.feature_grid.options.border_style.none" },
+        { "value": "solid", "label": "t:sections.feature_grid.options.border_style.solid" },
+        { "value": "dashed", "label": "t:sections.feature_grid.options.border_style.dashed" },
+        { "value": "dotted", "label": "t:sections.feature_grid.options.border_style.dotted" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "t:sections.feature_grid.labels.border_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.feature_grid.labels.border_color_info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.feature_grid.headers.radius"
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.feature_grid.labels.radius_tl",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.feature_grid.labels.radius_tr",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.feature_grid.labels.radius_br",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.feature_grid.labels.radius_bl",
+      "default": 0
     }
   ],
   "blocks": [
@@ -490,6 +735,51 @@
             { "value": "bottom_center", "label": "t:sections.home_slider.options.content_position.bottom_center" }
           ],
           "default": "center"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.feature_grid.headers.radius"
+        },
+        {
+          "type": "range",
+          "id": "slide_border_radius_top_left",
+          "min": 0,
+          "max": 48,
+          "step": 1,
+          "unit": "px",
+          "label": "t:sections.feature_grid.labels.radius_tl",
+          "default": 0,
+          "info": "t:sections.home_slider.blocks.slide.slide_radius_info"
+        },
+        {
+          "type": "range",
+          "id": "slide_border_radius_top_right",
+          "min": 0,
+          "max": 48,
+          "step": 1,
+          "unit": "px",
+          "label": "t:sections.feature_grid.labels.radius_tr",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "slide_border_radius_bottom_right",
+          "min": 0,
+          "max": 48,
+          "step": 1,
+          "unit": "px",
+          "label": "t:sections.feature_grid.labels.radius_br",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "slide_border_radius_bottom_left",
+          "min": 0,
+          "max": 48,
+          "step": 1,
+          "unit": "px",
+          "label": "t:sections.feature_grid.labels.radius_bl",
+          "default": 0
         },
         {
           "type": "text",
