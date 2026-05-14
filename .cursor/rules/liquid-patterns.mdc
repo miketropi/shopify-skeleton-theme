@@ -6,6 +6,21 @@ alwaysApply: false
 
 # Liquid Coding Patterns
 
+## New section (checklist)
+
+1. **Name** — Content-based: `section-<feature>.liquid` or context-based `main-<page>.liquid` (see `docs/SECTION_ARCHITECTURE_DESIGN_PRINCIPLES.md`).
+2. **Liquid** — One outer root with `class`, optional `style="--…"`; add `data-section-type` / `data-section-id` only if JS registers that type.
+3. **Schema** — Full `{% schema %}`; `name` / `label` values use `"t:sections.<ns>.…"` or `general` / `labels` keys; add strings under `locales/en.default.schema.json`.
+4. **Styles** — New partial `src/styles/sections/_….scss` and `@forward` in `sections/index.scss` (or `{% stylesheet %}` if truly section-local only).
+5. **Scripts** — If interactive: `registerSection` in TS, import in `theme.ts` before `bootSections()`, lazy `*.runtime.ts` in `src/scripts/sections/` when the bundle is heavy.
+6. **Verify** — `npm run check` (Liquid); `npm run build` (TS/SCSS).
+
+## New snippet (checklist)
+
+1. **Name** — `kebab-case.liquid`; prefix by domain (`pdp-`, `header-`, `article-`, …) when it groups related partials.
+2. **API** — Pass every dependency via `{% render 'snippet', var: value %}`; no reliance on outer `section.settings` unless passed in.
+3. **Reuse** — Shared markup (cards, scheme wrappers, icons) belongs in snippets, not copy-pasted across sections.
+
 ## Section structure
 
 Every section follows this template:

@@ -52,7 +52,8 @@ const html = data['section-file-name']
 ## Translation keys
 
 - Use `"t:namespace.key"` in schema `name` and `label` fields
-- Locale files in `locales/` (JSON format)
+- Merchant-facing copy: `locales/en.default.json` (and other locales)
+- Schema labels: `locales/en.default.schema.json` (structured `sections.<name>`, `general`, `labels`, …)
 
 ## Common data attributes
 
@@ -75,3 +76,10 @@ const html = data['section-file-name']
 3. Edit TS/SCSS in `src/` — Vite rebuilds `assets/theme.js` + `theme.css`
 4. `npm run check` — validate Liquid with Theme Check
 5. `npm run build && npm run package` — create `.zip` for upload
+
+## Project docs (read before large section work)
+
+- `docs/SECTION_REGISTRY.md` — `registerSection`, `bootSections`, editor lifecycle
+- `docs/SECTION_ARCHITECTURE_DESIGN_PRINCIPLES.md` — naming, `main-*` vs `section-*`, blocks
+- `docs/COLOR_SCHEME_SYSTEM.md` — `color_scheme`, CSS variables, `color-scheme-vars` snippet
+- `.cursor/skills/shopify-skeleton-theme/SKILL.md` — step-by-step new section / snippet workflow

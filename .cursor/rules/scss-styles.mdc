@@ -6,6 +6,12 @@ alwaysApply: false
 
 # SCSS Conventions
 
+## Adding styles for a new section
+
+1. Create `src/styles/sections/_<same-base-as-section-file>.scss` (e.g. `_section-feature-grid.scss` for `section-feature-grid.liquid`).
+2. Add `@forward '<partial-name-without-_and_extension>';` to `src/styles/sections/index.scss` (order only matters for cascade if selectors overlap).
+3. Prefer **section root** CSS custom properties set from Liquid for merchant-controlled values.
+
 ## File organization
 
 ```

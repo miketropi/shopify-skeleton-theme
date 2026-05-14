@@ -13,18 +13,33 @@ A minimalist, Theme-Store-ready Shopify theme with a TypeScript + Vite build pip
 
 ```
 layout/            # theme.liquid (main), password.liquid
-sections/          # Liquid sections with {% schema %} — the core UI units
-snippets/          # Reusable Liquid partials (pdp-*, header-*, product-card, etc.)
-blocks/            # Nestable theme blocks (group.liquid, text.liquid)
-templates/         # JSON templates (index, product, collection, cart, blog, etc.)
+sections/          # Liquid sections with {% schema %} — core UI units
+snippets/          # Reusable Liquid partials
+blocks/            # Nestable theme blocks (group.liquid, text.liquid, …)
+templates/         # JSON templates (index, product, collection, cart, blog, …)
 config/            # settings_schema.json + settings_data.json
-locales/           # Translation JSON
+locales/           # Merchant strings + en.default.schema.json (schema t: keys)
 assets/            # Static files + Vite output (theme.js, theme.css, critical.css)
-src/scripts/       # TypeScript source → compiled to assets/theme.js
-src/styles/        # SCSS source → compiled to assets/theme.css
+src/scripts/       # TS → bundled entry theme.ts → assets/theme.js (+ lazy chunks)
+src/scripts/sections/  # Optional: registerXxx + lazy *.runtime.ts for heavy sections
+src/styles/        # SCSS → assets/theme.css via theme.scss
 src/types/         # TypeScript declarations (shopify.d.ts)
-docs/              # Internal development docs
+docs/              # Internal dev docs (registry, color system, section principles)
 ```
+
+## Naming & file placement
+
+| Kind | Filename pattern | Notes |
+|------|------------------|--------|
+| Reusable marketing / layout section | `section-<feature>.liquid` | e.g. `section-hero-slider`, `section-feature-grid` |
+| Template-bound section (needs `product`, `collection`, …) | `main-<context>.liquid` | e.g. `main-product`, `main-collection` |
+| Global / chrome | `header`, `footer`, `cart-drawer`, section groups | As needed in `layout/` |
+| Snippet | `kebab-case.liquid` | Prefix groups: `pdp-*`, `header-*`, `article-*`, etc. |
+| Section SCSS | `src/styles/sections/_section-<feature>.scss` or `_main-<context>.scss` | `@forward` from `sections/index.scss` |
+| Section TS (simple) | `src/scripts/<name>.ts` | `registerSection` + init/destroy at repo root |
+| Section TS (heavy bundle) | `src/scripts/sections/<name>.ts` + `*.runtime.ts` | Thin register file; dynamic `import()` of runtime (see hero slider) |
+
+Internal references: `docs/SECTION_ARCHITECTURE_DESIGN_PRINCIPLES.md` (one job per section), `docs/SECTION_REGISTRY.md` (data-section-type, boot, editor).
 
 ## Build system
 
@@ -48,13 +63,14 @@ docs/              # Internal development docs
 
 ## Section registration pattern
 
-Every interactive section follows this flow:
-1. Define `registerXxxSection()` in `src/scripts/xxx.ts`
-2. Call `registerSection(SECTION_TYPE, init, destroy)` from section-registry
-3. Import and call `registerXxxSection()` in `theme.ts`
-4. Liquid section uses `data-section-type="xxx"` and `data-section-id="{{ section.id }}"`
-5. `bootSections()` auto-inits on DOMContentLoaded; MutationObserver catches dynamically added sections
-6. Shopify editor events (`shopify:section:load/unload`) handled automatically
+Every **interactive** section follows this flow:
+1. Define `registerXxxSection()` in `src/scripts/xxx.ts` or `src/scripts/sections/xxx.ts`
+2. Call `registerSection(SECTION_TYPE, init, destroy)` from `section-registry.ts`
+3. Import and call `registerXxxSection()` in `theme.ts` **before** `bootSections()`
+4. Liquid root uses `data-section-type` (exact string match) and `data-section-id="{{ section.id }}"`
+5. `bootSections()` runs after registrations; MutationObserver + `shopify:section:load/unload` handled by registry
+
+Sections with **no JS**: omit `data-section-type`; no TS registration; still add schema + styles as needed.
 
 ## Liquid conventions
 

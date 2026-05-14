@@ -6,6 +6,11 @@ alwaysApply: false
 
 # TypeScript Patterns
 
+## File location
+
+- **Default:** `src/scripts/<feature>.ts` next to other feature modules (`header.ts`, `cart-drawer.ts`); import registry as `./section-registry`.
+- **Heavy / code-split:** `src/scripts/sections/<section-name>.ts` that only registers + dynamically imports `./<section-name>.runtime.ts` (see `sections/section-hero-slider.ts`); import registry as `../section-registry`.
+
 ## Section module structure
 
 Every section script follows this pattern:
@@ -38,9 +43,11 @@ export function registerXxxSection(): void {
 }
 ```
 
+**Lazy runtime (optional):** in `init`, `import('./xxx.runtime').then((m) => m.init(container))`; in `destroy`, await then call `m.destroy(container)` so Swiper/GSAP-heavy code stays in a separate chunk.
+
 Then in `theme.ts`:
 ```typescript
-import { registerXxxSection } from './xxx'
+import { registerXxxSection } from './xxx' // or './sections/xxx' if the module lives under sections/
 registerXxxSection()
 ```
 
