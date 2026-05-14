@@ -9,43 +9,69 @@
  */
 {
   "sections": {
-    "hero": {
-      "type": "section-hero-slider",
+    "home_slider": {
+      "type": "section-home-slider",
       "settings": {
-        "min_height": 560,
-        "overlay_softness": 15,
+        "full_width": true,
+        "slide_centered_auto": true,
+        "slide_effect": "slide",
+        "show_arrows": false,
+        "show_pagination": true,
         "autoplay": true,
-        "autoplay_delay": 6
+        "autoplay_delay": 5,
+        "initial_slide_index": 2,
+        "min_height_vh": 60,
+        "min_height_mode": "vh"
       },
       "blocks": {
-        "hero_slide_1": {
+        "home_slide_1": {
           "type": "slide",
           "settings": {
-            "kicker": "New season",
-            "heading": "Thoughtfully made goods for modern living",
-            "heading_size": "display",
+            "kicker": "Limited offer",
+            "heading": "Discover new arrivals and member-only deals.",
+            "heading_size": "h1",
             "body": "<p>Quality you can feel, design that lasts. Explore the collection and find pieces you will reach for every day.</p>",
-            "cta_primary_label": "Shop the collection",
+            "cta_primary_label": "Shop collection",
             "cta_primary_link": "shopify://collections/all",
-            "cta_secondary_label": "Our story",
-            "cta_secondary_link": ""
+            "cta_secondary_label": "Learn more",
+            "cta_secondary_link": "shopify://pages/about",
+            "content_position": "left",
+            "overlay_enable": false
           }
         },
-        "hero_slide_2": {
+        "home_slide_2": {
           "type": "slide",
           "settings": {
-            "kicker": "Materials",
-            "heading": "Built to feel good every day",
-            "heading_size": "h1",
-            "body": "<p>Quality you can feel in every detail.</p>",
-            "cta_primary_label": "Explore",
+            "kicker": "Just Dropped",
+            "heading": "Unveil the latest arrivals — new styles every week",
+            "heading_size": "display",
+            "body": "<p>New styles land every week, so there’s always something exciting waiting for you!</p>",
+            "cta_primary_label": "Shop New Arrivals",
+            "cta_primary_link": "shopify://collections/new-arrivals",
+            "cta_secondary_label": "Member Exclusives",
+            "cta_secondary_link": "shopify://pages/member-offers",
+            "content_position": "left",
+            "overlay_enable": false
+          }
+     
+        },
+        "home_slide_3": {
+          "type": "slide",
+          "settings": {
+            "kicker": "New Arrivals",
+            "heading": "Restocks and new styles each week.",
+            "heading_size": "display",
+            "body": "<p>Restocks and new styles each week.</p>",
+            "cta_primary_label": "Shop the collection",
             "cta_primary_link": "shopify://collections/all",
-            "cta_secondary_label": "",
-            "cta_secondary_link": ""
+            "cta_secondary_label": "Learn more",
+            "cta_secondary_link": "shopify://pages/about",
+            "content_position": "left",
+            "overlay_enable": false
           }
         }
       },
-      "block_order": ["hero_slide_1", "hero_slide_2"]
+      "block_order": ["home_slide_1", "home_slide_2", "home_slide_3"]
     },
     "feature_grid": {
       "type": "section-feature-grid",
@@ -87,5 +113,5 @@
       "block_order": ["feature_1", "feature_2", "feature_3", "feature_4"]
     }
   },
-  "order": ["hero", "feature_grid"]
+  "order": ["home_slider", "feature_grid"]
 }

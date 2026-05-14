@@ -540,6 +540,113 @@
         }
       }
     },
+    "home_slider": {
+      "name": "Home slider",
+      "labels": {
+        "full_width": "Full width (edge-to-edge)",
+        "slide_centered_auto": "Centered slides — peek sides",
+        "slide_item_max_width": "Slide item max width",
+        "slide_item_max_width_px": "Custom slide width",
+        "min_height_mode": "Minimum height",
+        "min_height_px": "Height (pixels)",
+        "min_height_vh": "Height (viewport)",
+        "slide_effect": "Slide transition",
+        "show_arrows": "Show previous / next arrows",
+        "show_pagination": "Show pagination dots",
+        "initial_slide_index": "Default active slide",
+        "autoplay": "Autoplay",
+        "autoplay_delay": "Seconds between slides",
+        "autoplay_pause_on_hover": "Pause autoplay on hover"
+      },
+      "info": {
+        "autoplay_pause_on_hover": "Pauses auto-advance while the mouse is over the slider (touch devices are unchanged).",
+        "min_height_vh": "Height is based on the viewport—handy for tall banners.",
+        "full_width": "Off keeps this section the same width as standard content. On goes edge to edge. With centered slides, “Default” width still follows your Page width setting.",
+        "slide_centered_auto": "Centres the active slide and peeks the neighbours. Uses slide motion (fade is off here). Turns on the slide width options below.",
+        "slide_item_max_width": "Only when centered slides is on. “Default” matches Page width; “Custom” uses a fixed width you set.",
+        "slide_item_max_width_px": "Shown when width is Custom: 300–2300 px, in steps of 20.",
+        "initial_slide_index": "Counts from 1. Too high a number uses the last slide. With JavaScript off, the first slide shows."
+      },
+      "options": {
+        "min_height_mode": {
+          "px": "Fixed pixels",
+          "vh": "Viewport height"
+        },
+        "slide_effect": {
+          "slide": "Slide",
+          "fade": "Fade"
+        },
+        "slide_item_max_width": {
+          "default": "Default (theme page / content width)",
+          "custom": "Custom (fixed width in pixels)"
+        },
+        "content_position": {
+          "left": "Left (centred vertically)",
+          "right": "Right (centred vertically)",
+          "left_bottom": "Bottom left",
+          "right_bottom": "Bottom right",
+          "center": "Center",
+          "bottom_center": "Bottom center"
+        },
+        "heading_size": {
+          "display": "Display",
+          "h1": "Heading 1",
+          "h2": "Heading 2"
+        },
+        "image_position": {
+          "center": "Centre",
+          "top": "Top",
+          "bottom": "Bottom",
+          "left": "Left",
+          "right": "Right"
+        },
+        "overlay_coverage": {
+          "full": "Full slide",
+          "text": "Behind text only"
+        },
+        "button_style": {
+          "primary": "Primary (accent)",
+          "outline": "Outline",
+          "ghost": "Soft glass"
+        }
+      },
+      "blocks": {
+        "slide": {
+          "name": "Slide",
+          "image": "Image",
+          "image_mobile": "Mobile image (optional)",
+          "image_mobile_info": "Shown below 768px. Falls back to the main image when empty.",
+          "image_position": "Image focal position",
+          "overlay_enable": "Tint over image",
+          "overlay_color": "Tint colour",
+          "overlay_opacity": "Tint strength",
+          "overlay_coverage": "Tint area",
+          "overlay_coverage_info": "Full slide tints the whole image. Behind text only adds a bottom gradient for legibility.",
+          "content_position": "Copy position",
+          "content_position_info": "Where this slide’s headline and buttons sit over the image.",
+          "kicker": "Eyebrow",
+          "heading": "Heading",
+          "heading_size": "Heading size",
+          "body": "Body",
+          "primary_button_style": "Primary button style",
+          "cta_primary_label": "Primary button label",
+          "cta_primary_link": "Primary link",
+          "cta_secondary_label": "Secondary text link label",
+          "cta_secondary_link": "Secondary link",
+          "copy_colors_header": "Copy colours",
+          "copy_color_override": "Override copy and button colours",
+          "copy_color_override_info": "Per-slide colours for eyebrow, heading, body, links, and primary button. The section colour scheme still applies elsewhere (e.g. focus rings use the scheme accent). Leave colours as set or clear in the editor to fall back to the scheme.",
+          "copy_color_kicker": "Eyebrow",
+          "copy_color_heading": "Heading",
+          "copy_color_body": "Body",
+          "copy_color_link": "Text link (body links and secondary action)",
+          "copy_color_btn_text": "Primary button — text",
+          "copy_color_btn_border": "Primary button — border",
+          "copy_color_btn_bg": "Primary button — background",
+          "copy_color_btn_bg_info": "Use transparent or semi-transparent for an outline style; solid for a filled button."
+        }
+      }
+    },
     "feature_grid": {
       "name": "Feature grid",
       "headers": {

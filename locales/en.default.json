@@ -416,6 +416,16 @@
     "add_slides": "Add slide blocks",
     "placeholder_heading": "Hero slider"
   },
+  "home_slider": {
+    "carousel": "Carousel",
+    "region_label": "Home promotional slides",
+    "slide": "Slide",
+    "slide_n_of_m": "Slide {{ n }} of {{ m }}",
+    "prev": "Previous slide",
+    "next": "Next slide",
+    "add_slides": "Add slide blocks",
+    "placeholder_heading": "Home slider"
+  },
   "sections": {
     "header_top_bar": {
       "rt_read_more": "Read more",

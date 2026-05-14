@@ -1,71 +1,59 @@
-# Home Slider (planned section)
+# Home Slider
 
-**Status:** not implemented in this repo. There is **no** `sections/*home*slider*` Liquid file yet.
+**Status:** implemented as **`section-home-slider`**. This is **not** the full-bleed split-layout **Hero slider** (`section-hero-slider`).
 
-This document is the **product / build spec** for a future section whose merchant-facing name should be **“Home Slider”**. It is **unrelated** to the existing full-width marketing hero implemented as **`section-hero-slider`** (`sections/section-hero-slider.liquid`, `_section-hero-slider.scss`, `section-hero-slider.runtime.ts`). Do not conflate the two: different files, different `data-section-type`, different schema locale namespace.
-
----
-
-## Why a separate section
-
-| | **Home Slider (this spec)** | **Hero slider (`section-hero-slider`)** |
-| --- | --- | --- |
-| Role | TBD: e.g. homepage promotional strip, secondary carousel, or alternate layout | Full-bleed hero: fade slideshow, video, split copy grid, chrome-mid scheme sync |
-| Implementation | To be added | Already in tree |
-
-Adjust the first row once you lock positioning for merchants and templates.
-
----
-
-## Suggested technical naming (when built)
-
-Follow the skeleton theme section pattern:
-
-| Piece | Suggested path / id |
+| Piece | Location |
 | --- | --- |
 | Liquid | `sections/section-home-slider.liquid` |
-| Styles | `src/styles/sections/_section-home-slider.scss` (import from `src/styles/sections/index.scss`) |
-| Script | `src/scripts/section-home-slider.ts` (or `sections/section-home-slider.runtime.ts` if you split like hero) |
+| Styles | `src/styles/sections/_section-home-slider.scss` |
+| Script | `src/scripts/sections/section-home-slider.ts` + `section-home-slider.runtime.ts` |
 | Section type | `data-section-type="section-home-slider"` |
-| Schema labels | `locales/en.default.schema.json` → e.g. `sections.home_slider` with `t:` keys in schema |
-| Registration | Import/register in `src/scripts/theme.ts`; run `npm run build` after TS/SCSS changes |
+| Schema labels | `locales/en.default.schema.json` → `sections.home_slider` |
+| Storefront strings | `locales/en.default.json` → `home_slider` |
 
 ---
 
-## Draft specification (to refine during implementation)
+## Behaviour
 
-Everything below is **proposed** until the section exists in the codebase.
-
-### Section-level settings (ideas)
-
-- **Height behaviour:** e.g. viewport-based presets (`min-height` in `vh` or fixed `px` ranges) — distinct from hero’s current `min_height` px slider if you want different UX.
-- **Slide transition:** e.g. horizontal slide vs cross-fade (hero today is fade-only; Home Slider can deliberately differ).
-- **Navigation chrome:** toggles for arrows and dots/pagination, if Theme Store accessibility review allows (keyboard + focus must still work).
-- **Autoplay:** on/off, delay, pause on hover / reduced motion (match `prefers-reduced-motion` policy used elsewhere).
-- **Colour system:** prefer **`color_scheme`** + existing `color-scheme-vars` patterns over ad-hoc text colours; see `docs/COLOR_SCHEME_SYSTEM.md`.
-
-### Slide blocks (ideas)
-
-- **Media:** image; optional **alternate mobile image** if art direction differs from desktop.
-- **Overlay / tint:** optional dimmer or gradient over media (coverage and opacity).
-- **Copy:** kicker, heading (`inline_richtext`), subtext; optional **per-field colour pickers** only if you cannot express them via schemes (minimize arbitrary colours for Theme Store maintenance).
-- **CTAs:** one or two links; optional **button style** presets (primary/secondary/outline) aligned with existing button classes.
-- **Limits:** max slides, block order in theme editor.
-
-Tune this list against `docs/SECTION_ARCHITECTURE_DESIGN_PRINCIPLES.md` and Theme Store requirements (schema completeness, accessibility, progressive enhancement).
+- **Promotional strip:** image slides with copy over the image; optional tint (full slide or text-area gradient).
+- **Layout:** **Full width** (edge-to-edge): section spans the viewport; each slide’s **frame** (image + copy) uses **`var(--content-width)`**. With **Centered slides**, the Swiper **slide** width is also **`var(--content-width)`** so neighbours peek at the sides. **Full width off:** section uses the theme’s default content column only (`width: 100%` inside it — no extra viewport `max-width`, so width matches other sections). **Copy position** is set **per slide** in the slide block.
+- **Centered “peek” carousel:** optional mode uses **`slidesPerView: 'auto'`** + **`centeredSlides`** so neighbours show at the sides (**fade** is disabled in JS while this is on). Each slide’s width is **`var(--content-width)`** (same as the global page content column from theme / `critical.css`).
+- **Height:** section setting **Minimum height** — either fixed **px** or **vh** (viewport).
+- **Carousel:** [Swiper](https://swiperjs.com/) with **slide** or **fade** transition; optional **arrows** and **pagination**; **autoplay** with delay; disabled / instant when `prefers-reduced-motion: reduce`.
+- **Slides:** image, optional **mobile image** (`<picture>` below 768px), focal position, overlay, **`content_position`**, kicker / heading / body / primary + secondary CTAs, **primary button style** (accent / outline / ghost).
+- **Colour:** section-level **`color_scheme`** + `color-scheme-vars` (`--cs-*` on the section root).
+- **Progressive enhancement:** without JS, only the **first** slide is shown (see SCSS `html:not(.js)`).
 
 ---
 
-## Implementation checklist (when you start the build)
+## Section settings (implemented)
 
-- [ ] Add Liquid section with full `{% schema %}` and `t:` labels under a **new** locale namespace (not `sections.hero_slider`).
-- [ ] Set `data-section-type` / `data-section-id` on the root; register with `registerSection` and clean up in `destroy()` (AbortController, Swiper/teardown, etc.).
-- [ ] Respect **`prefers-reduced-motion`** for any motion (carousel and copy animation).
-- [ ] After TS/SCSS edits: `npm run build`. After Liquid edits: `npm run check`.
-- [ ] Update this doc’s **Draft specification** to match what shipped so it stays the source of truth for **Home Slider** only.
+| Setting | Notes |
+| --- | --- |
+| `color_scheme` | Theme colour scheme for typography / surfaces. |
+| `full_width` | **On:** spans grid full bleed; slide **frame** uses `var(--content-width)` (unless centered-slides). **Off:** section uses default grid column (same width as other sections); viewport is `width: 100%` only — no second `max-width` so it doesn’t end up narrower than peers. |
+| `slide_centered_auto` | Centred slide with side peek; forces slide effect (not fade). |
+| `min_height_mode` | `px` or `vh`. |
+| `min_height_px` / `min_height_vh` | Visible per mode. |
+| `slide_effect` | `slide` or `fade`. |
+| `show_arrows` / `show_pagination` | Hide chrome when off (swipe / keyboard still work when multi-slide). |
+| `initial_slide_index` | 1–8 (first slide = **1**). Clamped to real slide count. With JS off, first slide still shows. |
+| `autoplay` / `autoplay_delay` | Same pattern as hero (delay in seconds in schema, ms in `data-home-autoplay-delay`). |
 
 ---
 
-## Reference: existing hero (not this section)
+## Slide block
 
-For the **implemented** full-width hero slideshow, read the Liquid/SCSS/runtime under the `section-hero-slider` prefix — there is no separate markdown doc for it in `docs/sections/` unless you add one. This file must **not** be edited to describe that implementation.
+Up to **8** `slide` blocks: media, overlay, **`content_position`** (copy corner), kicker / heading / body / CTAs — see Liquid `{% schema %}` and `sections.home_slider.blocks.slide` in the locale file.
+
+---
+
+## Homepage template
+
+`templates/index.json` includes a **`home_slider`** section instance between **hero** and **feature_grid** (auto-generated file; editor may rewrite).
+
+---
+
+## Maintenance
+
+After TS/SCSS edits: `npm run build`. After Liquid edits: `npm run check`.

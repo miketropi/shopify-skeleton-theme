@@ -508,7 +508,7 @@ $_r-card:  16px;
   background: var(--htbar-bg);
   border: 0.5px solid var(--_sep);
   border-radius: $_r-card;
-  box-shadow: 0 8px 32px color-mix(in srgb, var(--htbar-text) 12%, var(--htbar-bg));
+  // box-shadow: 0 8px 32px color-mix(in srgb, var(--htbar-text) 12%, var(--htbar-bg));
 
   opacity: 0;
   transform: translateY(6px) scale(0.92);
@@ -520,9 +520,9 @@ $_r-card:  16px;
   .htbar__info.is-open & {
     opacity: 1;
     transform: translateY(0) scale(1);
-    box-shadow:
-      0 4px 8px -4px color-mix(in srgb, var(--htbar-text) 10%, transparent),
-      0 14px 44px color-mix(in srgb, var(--htbar-text) 14%, var(--htbar-bg));
+    // box-shadow:
+    //   0 4px 8px -4px color-mix(in srgb, var(--htbar-text) 10%, transparent),
+    //   0 14px 44px color-mix(in srgb, var(--htbar-text) 14%, var(--htbar-bg));
   }
 
   @media (max-width: 35.99em) {

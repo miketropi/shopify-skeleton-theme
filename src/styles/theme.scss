@@ -18,3 +18,7 @@
 html {
   scroll-padding-top: var(--header-height, 0px);
 }
+
+html, body {
+  // overflow-x: hidden;
+}
