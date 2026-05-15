@@ -10,7 +10,6 @@
 {
   "current": {
     "color_mode": "preset",
-    "global_color_scheme": "scheme-6",
     "custom_color_background": "#ffffff",
     "custom_color_background_secondary": "#f4f4f5",
     "custom_color_border": "#e4e4e7",
@@ -25,6 +24,7 @@
     "custom_color_btn_secondary_bg": "#ffffff",
     "custom_color_btn_secondary_text": "#18181b",
     "custom_color_btn_secondary_border": "#d4d4d8",
+    "global_color_scheme": "scheme-6",
     "typography_mode": "preset",
     "font_pairing": "arial",
     "type_font_heading": "inter_n4",
@@ -33,7 +33,22 @@
     "font_size_base": "16",
     "max_page_width": "90rem",
     "min_page_margin": 24,
-
+    "social_instagram": "#",
+    "social_facebook": "#",
+    "social_pinterest": "#",
+    "social_youtube": "#",
+    "social_tiktok": "#",
+    "social_x": "#",
+    "sections": {
+      "cart-drawer": {
+        "type": "cart-drawer",
+        "settings": {
+          "drawer_position": "right",
+          "auto_open_after_add": true
+        }
+      }
+    },
+    "content_for_index": [],
     "color_schemes": {
       "scheme-1": {
         "settings": {
@@ -87,7 +102,7 @@
           "btn_primary_bg": "#fafafa",
           "btn_primary_text": "#18181b",
           "btn_primary_border": "#fafafa",
-          "btn_secondary_bg": "transparent",
+          "btn_secondary_bg": "rgba(0,0,0,0)",
           "btn_secondary_text": "#fafafa",
           "btn_secondary_border": "#a1a1aa"
         }

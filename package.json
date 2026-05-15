@@ -10,7 +10,8 @@
     "check": "shopify theme check",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.{ts,scss}\"",
-    "package": "npm run build && shopify theme package"
+    "package": "npm run build && shopify theme package",
+    "theme:pull": "shopify theme pull --only \"templates/*\" --only \"config/*\" --only \"sections/*.json\""
   },
   "keywords": [],
   "author": "",

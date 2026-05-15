@@ -11,119 +11,190 @@
   "sections": {
     "home_slider": {
       "type": "section-home-slider",
-      "settings": {
-        "full_width": true,
-        "slide_centered_auto": true,
-        "slide_effect": "slide",
-        "show_arrows": false,
-        "show_pagination": true,
-        "autoplay": true,
-        "autoplay_delay": 5,
-        "initial_slide_index": 2,
-        "min_height_vh": 60,
-        "min_height_mode": "vh"
-      },
       "blocks": {
         "home_slide_1": {
           "type": "slide",
           "settings": {
+            "image_position": "center",
+            "overlay_enable": false,
+            "overlay_color": "#000000",
+            "overlay_opacity": 35,
+            "overlay_coverage": "text",
+            "content_position": "left",
+            "slide_border_radius_top_left": 16,
+            "slide_border_radius_top_right": 16,
+            "slide_border_radius_bottom_right": 16,
+            "slide_border_radius_bottom_left": 16,
             "kicker": "Limited offer",
             "heading": "Discover new arrivals and member-only deals.",
             "heading_size": "h1",
             "body": "<p>Quality you can feel, design that lasts. Explore the collection and find pieces you will reach for every day.</p>",
+            "primary_button_style": "outline",
             "cta_primary_label": "Shop collection",
             "cta_primary_link": "shopify://collections/all",
             "cta_secondary_label": "Learn more",
             "cta_secondary_link": "shopify://pages/about",
-            "content_position": "left",
-            "overlay_enable": false,
-            "slide_border_radius_top_left": 16,
-            "slide_border_radius_top_right": 16,
-            "slide_border_radius_bottom_right": 16, 
-            "slide_border_radius_bottom_left": 16 
+            "copy_color_override": false,
+            "copy_color_kicker": "#78716c",
+            "copy_color_heading": "#fafaf9",
+            "copy_color_body": "#e7e5e4",
+            "copy_color_link": "#fafaf9",
+            "copy_color_btn_text": "#fafaf9",
+            "copy_color_btn_border": "#fafaf9",
+            "copy_color_btn_bg": "rgba(0,0,0,0)"
           }
         },
         "home_slide_2": {
           "type": "slide",
           "settings": {
+            "image_position": "center",
+            "overlay_enable": false,
+            "overlay_color": "#000000",
+            "overlay_opacity": 35,
+            "overlay_coverage": "text",
+            "content_position": "left",
+            "slide_border_radius_top_left": 16,
+            "slide_border_radius_top_right": 16,
+            "slide_border_radius_bottom_right": 16,
+            "slide_border_radius_bottom_left": 16,
             "kicker": "Just Dropped",
             "heading": "Unveil the latest arrivals — new styles every week",
             "heading_size": "display",
             "body": "<p>New styles land every week, so there’s always something exciting waiting for you!</p>",
+            "primary_button_style": "outline",
             "cta_primary_label": "Shop New Arrivals",
             "cta_primary_link": "shopify://collections/new-arrivals",
             "cta_secondary_label": "Member Exclusives",
             "cta_secondary_link": "shopify://pages/member-offers",
-            "content_position": "left",
-            "overlay_enable": false,
-            "slide_border_radius_top_left": 16,
-            "slide_border_radius_top_right": 16,
-            "slide_border_radius_bottom_right": 16, 
-            "slide_border_radius_bottom_left": 16
+            "copy_color_override": false,
+            "copy_color_kicker": "#78716c",
+            "copy_color_heading": "#fafaf9",
+            "copy_color_body": "#e7e5e4",
+            "copy_color_link": "#fafaf9",
+            "copy_color_btn_text": "#fafaf9",
+            "copy_color_btn_border": "#fafaf9",
+            "copy_color_btn_bg": "rgba(0,0,0,0)"
           }
-     
         },
         "home_slide_3": {
           "type": "slide",
           "settings": {
+            "image_position": "center",
+            "overlay_enable": false,
+            "overlay_color": "#000000",
+            "overlay_opacity": 35,
+            "overlay_coverage": "text",
+            "content_position": "left",
+            "slide_border_radius_top_left": 16,
+            "slide_border_radius_top_right": 16,
+            "slide_border_radius_bottom_right": 16,
+            "slide_border_radius_bottom_left": 16,
             "kicker": "New Arrivals",
             "heading": "Restocks and new styles each week.",
             "heading_size": "display",
             "body": "<p>Restocks and new styles each week.</p>",
+            "primary_button_style": "outline",
             "cta_primary_label": "Shop the collection",
             "cta_primary_link": "shopify://collections/all",
             "cta_secondary_label": "Learn more",
             "cta_secondary_link": "shopify://pages/about",
-            "content_position": "left",
-            "overlay_enable": false,
-            "slide_border_radius_top_left": 16,
-            "slide_border_radius_top_right": 16,
-            "slide_border_radius_bottom_right": 16, 
-            "slide_border_radius_bottom_left": 16
+            "copy_color_override": false,
+            "copy_color_kicker": "#78716c",
+            "copy_color_heading": "#fafaf9",
+            "copy_color_body": "#e7e5e4",
+            "copy_color_link": "#fafaf9",
+            "copy_color_btn_text": "#fafaf9",
+            "copy_color_btn_border": "#fafaf9",
+            "copy_color_btn_bg": "rgba(0,0,0,0)"
           }
         }
       },
-      "block_order": ["home_slide_1", "home_slide_2", "home_slide_3"]
-    },
-    "feature_grid": {
-      "type": "section-feature-grid",
+      "block_order": [
+        "home_slide_1",
+        "home_slide_2",
+        "home_slide_3"
+      ],
       "settings": {
-        "heading": "Why shop with us",
-        "subheading": "<p>We focus on the details that make shopping simple and products that last.</p>",
-        "columns": "4",
-      },
+        "full_width": true,
+        "slide_centered_auto": true,
+        "slide_item_max_width": "default",
+        "slide_item_max_width_px": 1100,
+        "min_height_mode": "vh",
+        "min_height_px": 520,
+        "min_height_vh": 60,
+        "slide_effect": "slide",
+        "show_arrows": false,
+        "show_pagination": true,
+        "initial_slide_index": 2,
+        "autoplay": true,
+        "autoplay_delay": 5,
+        "autoplay_pause_on_hover": true,
+        "padding_top": 0,
+        "padding_right": 0,
+        "padding_bottom": 0,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
+    },
+    "section_product_slider_dCdyeR": {
+      "type": "section-product-slider",
       "blocks": {
-        "feature_1": {
-          "type": "feature",
+        "collection_MqJQRz": {
+          "type": "collection",
           "settings": {
-            "title": "14 Day Returns Policy",
-            "text": "<p>Rick-free shopping with easy returns.</p>"
-          }
-        },
-        "feature_2": {
-          "type": "feature",
-          "settings": {
-            "title": "Free Shipping",
-            "text": "<p>No extra costs, just the price you see.</p>"
-          }
-        },
-        "feature_3": {
-          "type": "feature",
-          "settings": {
-            "title": "24/7 Support",
-            "text": "<p>We're here to help you every step of the way.</p>"
-          }
-        },
-        "feature_4": {
-          "type": "feature",
-          "settings": {
-            "title": "Member Offers",
-            "text": "<p>Special discounts and perks just for you.</p>"
+            "collection": "",
+            "products_to_show": 8
           }
         }
       },
-      "block_order": ["feature_1", "feature_2", "feature_3", "feature_4"]
+      "block_order": [
+        "collection_MqJQRz"
+      ],
+      "name": "t:sections.product_slider.presets.name",
+      "settings": {
+        "eyebrow_text": "Limit Offer",
+        "heading": "Featured products",
+        "heading_size": "large",
+        "heading_alignment": "left",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_quick_add": true,
+        "enable_carousel": true,
+        "show_navigation_arrows": true,
+        "navigation_position": "heading",
+        "products_per_row": "4",
+        "gap": "medium",
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "full_width": false,
+        "padding_top": 40,
+        "padding_right": 0,
+        "padding_bottom": 40,
+        "padding_left": 0,
+        "margin_top": 40,
+        "margin_bottom": 40,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
     }
   },
-  "order": ["home_slider", "feature_grid"]
+  "order": [
+    "home_slider",
+    "section_product_slider_dCdyeR"
+  ]
 }

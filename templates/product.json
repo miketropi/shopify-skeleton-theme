@@ -11,14 +11,60 @@
   "sections": {
     "main": {
       "type": "main-product",
-      "settings": {},
       "blocks": {
-        "pdp_breadcrumbs": { "type": "pdp_breadcrumbs", "settings": {} },
-        "pdp_gallery": { "type": "gallery", "settings": {} },
-        "pdp_title": { "type": "product_title", "settings": {} },
-        "pdp_variant": { "type": "variant_picker", "settings": {} },
-        "pdp_buy": { "type": "buy_buttons", "settings": {} },
-        "pdp_meta": { "type": "meta", "settings": {} }
+        "pdp_breadcrumbs": {
+          "type": "pdp_breadcrumbs",
+          "settings": {}
+        },
+        "pdp_gallery": {
+          "type": "gallery",
+          "settings": {
+            "gallery_layout": "carousel_thumbs_left"
+          }
+        },
+        "pdp_title": {
+          "type": "product_title",
+          "settings": {}
+        },
+        "pdp_variant": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "pdp_buy": {
+          "type": "buy_buttons",
+          "settings": {}
+        },
+        "pdp_richtext_Q6tyc3": {
+          "type": "pdp_richtext",
+          "settings": {
+            "text": "<p>Pickup currently unavailable at German Warehouse<br/><a href=\"#\" title=\"#\">Check availability at other stores</a></p>"
+          }
+        },
+        "pdp_accordion_CRB4fd": {
+          "type": "pdp_accordion",
+          "settings": {
+            "label": "Key Ingredients",
+            "body": "<p>Our formula is crafted with a blend of nourishing oils, soothing botanical extracts, skin‑supporting vitamins, and ultra‑pure hydrating water. </p><p>Together, these key ingredients help lock in moisture, maintain skin elasticity, strengthen the skin barrier, and deliver lasting comfort and freshness.</p>"
+          }
+        },
+        "pdp_accordion_6YR3Pd": {
+          "type": "pdp_accordion",
+          "settings": {
+            "label": "How to use",
+            "body": "<p>Apply a small amount to clean, dry skin and massage gently until fully absorbed. Use daily, morning and night, or as needed for best results.</p>"
+          }
+        },
+        "pdp_accordion_yzdVTA": {
+          "type": "pdp_accordion",
+          "settings": {
+            "label": "Ingredients",
+            "body": "<p>A thoughtfully balanced blend of active and supportive ingredients, including hydrating agents, nourishing emollients, soothing botanicals, and skin‑loving vitamins. </p><p>Each component is selected to work in harmony, helping to keep skin comfortable, supple, and healthy‑looking with every use.</p>"
+          }
+        },
+        "pdp_meta": {
+          "type": "meta",
+          "settings": {}
+        }
       },
       "block_order": [
         "pdp_breadcrumbs",
@@ -26,28 +72,57 @@
         "pdp_title",
         "pdp_variant",
         "pdp_buy",
+        "pdp_richtext_Q6tyc3",
+        "pdp_accordion_CRB4fd",
+        "pdp_accordion_6YR3Pd",
+        "pdp_accordion_yzdVTA",
         "pdp_meta"
-      ]
+      ],
+      "settings": {
+        "show_breadcrumbs": true,
+        "show_vendor": true,
+        "show_quantity": true,
+        "show_sale_badge": true,
+        "show_sku": true,
+        "show_tags": true,
+        "show_share": true
+      }
     },
     "product_tabs": {
       "type": "product-tabs",
-      "settings": {},
       "blocks": {
         "tabs_description": {
           "type": "tab_description",
-          "settings": { "heading": "" }
+          "settings": {
+            "heading": ""
+          }
         },
         "tabs_size_fit": {
           "type": "tab_rte",
-          "settings": { "heading": "Size & fit", "include_spec_rows": true }
+          "settings": {
+            "heading": "Size & fit",
+            "body": "",
+            "include_spec_rows": true,
+            "empty_message": ""
+          }
         },
         "tabs_care": {
           "type": "tab_rte",
-          "settings": { "heading": "Care", "include_spec_rows": false }
+          "settings": {
+            "heading": "Care",
+            "body": "",
+            "include_spec_rows": false,
+            "empty_message": ""
+          }
         },
         "tabs_shipping": {
           "type": "tab_rte",
-          "settings": { "heading": "Shipping & returns", "include_spec_rows": false }
+          "settings": {
+            "heading": "Shipping & returns",
+            "body": "",
+            "include_spec_rows": false,
+            "empty_message": ""
+          }
         }
       },
       "block_order": [
@@ -55,8 +130,15 @@
         "tabs_size_fit",
         "tabs_care",
         "tabs_shipping"
-      ]
+      ],
+      "settings": {
+        "tabs_layout": "top",
+        "content_max_width": "760"
+      }
     }
   },
-  "order": ["main", "product_tabs"]
+  "order": [
+    "main",
+    "product_tabs"
+  ]
 }

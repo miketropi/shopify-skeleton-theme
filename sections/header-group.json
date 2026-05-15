@@ -14,28 +14,92 @@
     "top-bar": {
       "type": "header-top-bar",
       "blocks": {
-        "announcement": {
-          "type": "announcement"
+        "currency_selector_HchhyT": {
+          "type": "currency_selector",
+          "settings": {
+            "show_currency": true,
+            "show_language": true,
+            "label": "Region / language",
+            "dropdown_position": "left",
+            "trigger_color": "",
+            "icon_color": "",
+            "trigger_icon": "none",
+            "menu_description": "Prices and checkout follow your region and language. Update them below.",
+            "currency_heading": "",
+            "language_heading": ""
+          }
+        },
+        "rotating_text_xayif7": {
+          "type": "rotating_text",
+          "settings": {
+            "text_1": "🚛 Free shipping on orders over $50",
+            "text_2": "⏎ 30-day free returns",
+            "text_3": "New arrivals every week 🎉",
+            "text_4": "",
+            "text_5": "",
+            "text_align": "center",
+            "max_width": 0,
+            "speed": 4
+          }
+        },
+        "store_info_UkkVG9": {
+          "type": "store_info",
+          "settings": {
+            "label": "Folow Us",
+            "trigger_color": "",
+            "icon_color": "",
+            "button_color": "",
+            "dropdown_position": "right",
+            "description": "We're here to help! Reach out anytime.",
+            "show_email": true,
+            "email": "hello@example.com",
+            "show_phone": true,
+            "phone": "+1 (555) 000-0000",
+            "show_social": true,
+            "show_subscribe": true,
+            "subscribe_heading": "Stay in the loop",
+            "subscribe_placeholder": "Your email",
+            "subscribe_button": "Subscribe"
+          }
         }
       },
-      "block_order": ["announcement"],
-      "settings": {}
+      "block_order": [
+        "currency_selector_HchhyT",
+        "rotating_text_xayif7",
+        "store_info_UkkVG9"
+      ],
+      "settings": {
+        "alignment": "space-between",
+        "separator": false,
+        "hide_on_mobile": false,
+        "color_bg": "",
+        "color_text": "",
+        "color_accent": ""
+      }
     },
     "header": {
       "type": "header",
       "blocks": {
-        "drawer_localization": {
-          "type": "drawer_localization",
-          "settings": {}
-        },
-        "drawer_account": {
-          "type": "drawer_account",
-          "settings": {}
-        },
         "drawer_social": {
           "type": "drawer_social",
           "settings": {
             "heading": "Follow us"
+          }
+        },
+        "drawer_localization": {
+          "type": "drawer_localization",
+          "settings": {
+            "show_currency": true,
+            "show_language": true,
+            "currency_heading": "Country",
+            "language_heading": "Language"
+          }
+        },
+        "drawer_account": {
+          "type": "drawer_account",
+          "settings": {
+            "heading": "",
+            "signed_out_button_label": "Log in"
           }
         }
       },
@@ -44,7 +108,17 @@
         "drawer_localization",
         "drawer_account"
       ],
-      "settings": {}
+      "settings": {
+        "color_scheme_source": "global",
+        "color_scheme": "",
+        "color_scheme_transparent": "",
+        "logo_width": 120,
+        "logo_mobile_width": 80,
+        "desktop_header_layout": "logo_nav_actions",
+        "sticky_header": "scroll-up",
+        "menu": "",
+        "customer_account_menu": "customer-account-main-menu"
+      }
     }
   },
   "order": [

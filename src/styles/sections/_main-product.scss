@@ -110,7 +110,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: var(--font-size-xs, 0.71875rem);
+  font-size: var(--font-size-sm, 0.71875rem);
   font-weight: 500;
   letter-spacing: 0.055em;
   line-height: 1.45;
@@ -2095,7 +2095,7 @@ button.main-product__meta-link:focus-visible {
 
   max-width: min(38rem, 100%);
   margin: 0;
-  padding: 0.65rem 0;
+  padding: 0.2rem 0;
   border: 0;
   border-top: 1px solid var(--pdp-border-hairline);
   border-bottom: 1px solid var(--pdp-border-hairline);
