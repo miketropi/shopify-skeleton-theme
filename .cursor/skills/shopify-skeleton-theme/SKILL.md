@@ -52,7 +52,7 @@ Use a **content-based** filename such as `sections/section-promo-grid.liquid` (n
 |------|------|
 | Liquid | `{%- liquid -%}` for assigns; hyphenated `-%}` to trim; JS hooks via `data-*`, not classes. |
 | TS | Prettier: no semicolons, single quotes; scope queries to `container`; prefer `type` for small shapes. |
-| SCSS | Mobile-first + `mq-up()` from `base/breakpoints`; section-scoped class prefixes; Liquid-driven values as CSS variables on section root. |
+| SCSS | Mobile-first + `mq-up()` from `base/breakpoints`; section-scoped class prefixes; Liquid-driven values as CSS variables on section root. **Font sizes:** use `:root` tokens from `snippets/css-variables.liquid` (`--font-size-xs` … `--font-size-4xl`) with fallbacks—see `.cursor/rules/scss-styles.mdc` (*Typography and font size*). |
 | Accessibility | Keyboard, focus return, `aria-*`, `prefers-reduced-motion` for motion. |
 
 ## Verification

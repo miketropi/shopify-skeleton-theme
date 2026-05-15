@@ -57,7 +57,7 @@
 
 // Contextual base sizes (parent wrappers can still set color / weight)
 .price-display--card {
-  font-size: var(--font-size-lg, 1.05rem);
+  font-size: var(--font-size-base, 1.05rem);
 }
 
 .price-display--pdp {

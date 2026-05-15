@@ -87,6 +87,42 @@ $space-xl: 2rem;
 - Prefer CSS custom properties for values controlled by Liquid settings
 - Use Sass variables for static design tokens shared across partials
 
+## Typography and font size (merchant scale)
+
+**Source of truth:** `snippets/css-variables.liquid` outputs `:root` custom properties. The merchant setting **Theme settings → Typography → Base font size** (`settings.font_size_base`, typically 16 / 18 / 20 px) rescales the whole step system and the fluid `clamp()` math for larger steps.
+
+**Use these tokens for `font-size`** (and similar) in `src/styles/**/*.scss`, in `{% stylesheet %}` blocks, and anywhere else the DOM can see `:root`:
+
+| Variable | Typical role |
+|----------|----------------|
+| `--font-size-xs` | Fine print, micro labels |
+| `--font-size-sm` | Secondary UI, captions |
+| `--font-size-base` | Body-scale UI (fluid clamp) |
+| `--font-size-lg` | Emphasis, card titles |
+| `--font-size-xl` | Section subheads |
+| `--font-size-2xl` | Large subheads |
+| `--font-size-3xl` | Display / hero titles |
+| `--font-size-4xl` | Largest display |
+
+**Line-height tokens** (optional, pair with type): `--line-height-tight`, `--line-height-snug`, `--line-height-normal`, `--line-height-relaxed`.
+
+**SCSS pattern:** always include a literal fallback so unstyled or partial loads still render sensibly:
+
+```scss
+.card__title {
+  font-size: var(--font-size-lg, 1.25rem);
+  line-height: var(--line-height-snug, 1.25);
+}
+```
+
+**When to use `em` instead:** keep `font-size` in `em` when the intent is **relative to an ancestor** (e.g. nested rich text, fractional stacked prices, badges inside a parent that already uses a token). Do **not** introduce raw `rem`/`px` for user-facing type that should track the global scale—map to the closest `--font-size-*` step.
+
+**Section- or block-specific multipliers:** if Liquid exposes a scale (e.g. `--pdp-title-scale`), wrap the token: `calc(var(--font-size-3xl, 2.625rem) * var(--pdp-title-scale, 1))`.
+
+**Global heading/body:** `src/styles/base/_fonts.scss` and `assets/critical.css` already tie `body` and heading elements to these variables—new components should stay consistent with that hierarchy.
+
+**Reference:** `docs/Font Size Base — Typographic Scale System.md` for ratios and design rationale.
+
 ## CSS custom properties pattern
 
 Liquid sets properties on the section root:
