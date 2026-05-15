@@ -656,6 +656,96 @@
         }
       }
     },
+    "product_slider": {
+      "name": "Product slider",
+      "presets": {
+        "name": "Product slider"
+      },
+      "headers": {
+        "content": "Content",
+        "cards": "Product cards",
+        "carousel": "Carousel",
+        "colour": "Colour",
+        "layout": "Layout",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "heading_alignment": "Heading alignment",
+        "show_secondary_image": "Show second image on hover",
+        "show_vendor": "Show vendor",
+        "show_quick_add": "Show quick add",
+        "enable_carousel": "Enable carousel",
+        "show_navigation_arrows": "Show navigation arrows",
+        "navigation_position": "Arrow position",
+        "products_per_row": "Products per row (desktop)",
+        "gap": "Card gap",
+        "full_width": "Full width (edge-to-edge background)",
+        "full_width_info": "Section background fills the browser width. Content stays in the page column.",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "background_color_info": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "border_color_info": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "heading_align": {
+          "left": "Left",
+          "center": "Centre"
+        },
+        "gap": {
+          "small": "Small (16px)",
+          "medium": "Medium (24px)",
+          "large": "Large (32px)"
+        },
+        "navigation_position": {
+          "sides": "Beside slides (default)",
+          "heading": "Next to heading (right)"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "color_scheme": "Scheme",
+      "color_scheme_info": "Used when Colour scheme is set to Custom. Otherwise the section uses the theme’s global colour scheme.",
+      "blocks": {
+        "product": {
+          "name": "Product",
+          "settings": {
+            "product": "Product"
+          }
+        }
+      }
+    },
     "feature_grid": {
       "name": "Feature grid",
       "headers": {

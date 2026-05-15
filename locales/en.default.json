@@ -426,6 +426,13 @@
     "add_slides": "Add slide blocks",
     "placeholder_heading": "Home slider"
   },
+  "product_slider": {
+    "carousel": "Carousel",
+    "region_label": "Product carousel",
+    "prev": "Previous products",
+    "next": "Next products",
+    "empty": "Add product blocks to show items in this section."
+  },
   "sections": {
     "header_top_bar": {
       "rt_read_more": "Read more",
