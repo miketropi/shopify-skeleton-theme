@@ -9,8 +9,8 @@ alwaysApply: false
 ## New section (checklist)
 
 1. **Name** — Content-based: `section-<feature>.liquid` or context-based `main-<page>.liquid` (see `docs/SECTION_ARCHITECTURE_DESIGN_PRINCIPLES.md`).
-2. **Liquid** — One outer root with `class`, optional `style="--…"`; add `data-section-type` / `data-section-id` only if JS registers that type.
-3. **Schema** — Full `{% schema %}`; `name` / `label` values use `"t:sections.<ns>.…"` or `general` / `labels` keys; add strings under `locales/en.default.schema.json`.
+2. **Liquid** — One outer root with `class`, optional `style="--…"`; add `data-section-type` / `data-section-id` only if JS registers that type. **Section shell:** for typical page bands (hero, grids, featured content), wire `section-styles` + `shopify-section-wrapper` per **Section shell** below; **skip** when the section is overlay/drawer/modal, header/footer chrome, or full-bleed / structural cases where padding-margin-background UX would fight the design (agent decides per section purpose).
+3. **Schema** — Full `{% schema %}`; `name` / `label` values use `"t:sections.<ns>.…"` or `general` / `labels` keys; add strings under `locales/en.default.schema.json`. When using `section-styles`, merge the JSON settings block from the bottom of `snippets/section-styles.liquid` (padding, margin, background, border, radii) and add matching `t:` labels in schema locales.
 4. **Styles** — New partial `src/styles/sections/_….scss` and `@forward` in `sections/index.scss` (or `{% stylesheet %}` if truly section-local only).
 5. **Scripts** — If interactive: `registerSection` in TS, import in `theme.ts` before `bootSections()`, lazy `*.runtime.ts` in `src/scripts/sections/` when the bundle is heavy.
 6. **Verify** — `npm run check` (Liquid); `npm run build` (TS/SCSS).
@@ -49,11 +49,36 @@ Every section follows this template:
 {% endschema %}
 ```
 
+*With `section-styles`:* call `{%- render 'section-styles', section: section -%}` **before** the outer root and include `shopify-section-wrapper` in the root’s `class` (see **Section shell** below). The outer element may be `<div>` or `<section>` depending on semantics.
+
+## Section shell (`snippets/section-styles.liquid`)
+
+**Purpose:** shared merchant controls for **padding** (four sides), **margin** (top/bottom), **background**, **border** (width/style/color), and **per-corner radius**. The snippet outputs a `<style>` block that sets `--section-*` variables on `#shopify-section-{{ section.id }}`. **`src/styles/base/_section-wrapper.scss`** applies those via class **`shopify-section-wrapper`** on the section’s visible root (same element that carries color-scheme `--cs-*` inline styles when used).
+
+**Include when:** the section reads as a normal **page section** (marketing blocks, `main-*` content bands, sliders, grids) where merchants expect spacing/background like other theme sections. Examples in repo: `section-feature-grid`, `section-home-slider`, `annotated`.
+
+**Omit when (agent judgment):** global **chrome** (header group, footer group), **cart drawer** / **search modal** / other **overlays**, sections that are **purely structural** or **must not** receive outer padding/background (e.g. some full-bleed technical layouts). If omitted, do **not** paste the snippet’s schema block.
+
+**Liquid pattern** (before the outer root; root includes `shopify-section-wrapper` in `class` when using shell):
+
+```liquid
+{%- render 'section-styles', section: section -%}
+
+<div
+  class="section-{{ section.id }} section-your-name … shopify-section-wrapper"
+  …
+>
+```
+
+**Schema:** copy the commented JSON array from `snippets/section-styles.liquid` into the section’s `"settings"` (ids must match what the snippet reads: `padding_*`, `margin_*`, `background_color`, `border_*`, `border_radius_*`, `border_color`). Localize labels via `t:` keys in `locales/en.default.schema.json`.
+
+**SCSS:** no extra import — `.shopify-section-wrapper` is global. Section-specific SCSS should not re-declare the same shell padding unless overriding intentionally.
+
 ## Key patterns
 
 - Use `{%- liquid ... -%}` tag for multi-line variable assignments (whitespace-trimmed)
 - Use `{%- if -%}` / `{%- endif -%}` (hyphenated) to control whitespace
-- CSS variables on the section root element for dynamic settings
+- CSS variables on the section root element for dynamic settings; sections using `section-styles` also get `--section-*` on `#shopify-section-{{ id }}` while `.shopify-section-wrapper` consumes them
 - `data-section-type` must exactly match the `SECTION_TYPE` constant in the paired TypeScript file
 - `data-section-id="{{ section.id }}"` required for editor events
 - Use `data-*` attributes for JS hooks, never classes

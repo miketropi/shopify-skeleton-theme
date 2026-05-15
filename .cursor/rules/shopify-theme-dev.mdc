@@ -13,6 +13,7 @@ This theme targets the Shopify Theme Store. All sections must:
 - Be accessible (ARIA attributes, keyboard navigation, focus management)
 - Respect `prefers-reduced-motion` for animations
 - Work without JavaScript (progressive enhancement)
+- **Page sections:** prefer the shared section shell (`snippets/section-styles.liquid` + `shopify-section-wrapper`; see `.cursor/rules/liquid-patterns.mdc`) unless the section is overlay/drawer/chrome or layout dictates otherwise
 
 ## Section rendering API
 

@@ -11,6 +11,7 @@ alwaysApply: false
 1. Create `src/styles/sections/_<same-base-as-section-file>.scss` (e.g. `_section-feature-grid.scss` for `section-feature-grid.liquid`).
 2. Add `@forward '<partial-name-without-_and_extension>';` to `src/styles/sections/index.scss` (order only matters for cascade if selectors overlap).
 3. Prefer **section root** CSS custom properties set from Liquid for merchant-controlled values.
+4. **Section shell:** when the Liquid file uses `{% render 'section-styles', section: section %}`, put **`shopify-section-wrapper`** on the outer content root (see `src/styles/base/_section-wrapper.scss`). Do not duplicate default section padding/margin/background in SCSS unless intentionally overriding the shared shell.
 
 ## File organization
 

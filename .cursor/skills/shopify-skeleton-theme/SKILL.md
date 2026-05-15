@@ -22,7 +22,7 @@ Use a **content-based** filename such as `sections/section-promo-grid.liquid` (n
 
 | Step | Action |
 |------|--------|
-| 1 | Add Liquid: outer root, `class`, optional `style="--…: {{ … }}"` for merchant settings. |
+| 1 | Add Liquid: outer root, `class`, optional `style="--…: {{ … }}"` for merchant settings. For typical page sections (not overlays/drawers/header chrome), add `{%- render 'section-styles', section: section -%}` before the root, class `shopify-section-wrapper` on the root, and the schema settings from `snippets/section-styles.liquid` — see `.cursor/rules/liquid-patterns.mdc` (*Section shell*); omit when inappropriate. |
 | 2 | Set `data-section-type="<kebab-string>"` and `data-section-id="{{ section.id }}"` on that root (must match TS). |
 | 3 | Add `{% schema %}` with `t:` keys; add new keys under `locales/en.default.schema.json` (e.g. `sections.promo_grid`). |
 | 4 | Add `src/styles/sections/_section-promo-grid.scss` and `@forward 'section-promo-grid';` in `src/styles/sections/index.scss`. |
@@ -37,7 +37,7 @@ Use a **content-based** filename such as `sections/section-promo-grid.liquid` (n
 
 ## New section without JavaScript
 
-- Same Liquid, schema, locales, SCSS steps.
+- Same Liquid (including optional **`section-styles` + `shopify-section-wrapper`** when appropriate — see *Section shell* in `.cursor/rules/liquid-patterns.mdc`), schema, locales, SCSS steps.
 - Omit `data-section-type` and do not call `registerSection`.
 
 ## New snippet

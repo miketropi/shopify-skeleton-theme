@@ -75,6 +75,7 @@ Sections with **no JS**: omit `data-section-type`; no TS registration; still add
 ## Liquid conventions
 
 - Sections expose settings via `{% schema %}` JSON
+- **Section shell:** page-style sections should use `{% render 'section-styles', section: section %}` + class `shopify-section-wrapper` on the root when merchants need shared padding, margin, background, and border controls (see `snippets/section-styles.liquid`, `_section-wrapper.scss`). Skip for overlays, drawer/modal sections, or layout that conflicts (agent decides). Details: `.cursor/rules/liquid-patterns.mdc` → *Section shell*.
 - **Typography scale:** merchant-controlled type sizes are Global CSS variables from `snippets/css-variables.liquid` (`--font-size-xs` … `--font-size-4xl`, line-height tokens). Use `var(--font-size-*, <fallback>)` in SCSS and `{% stylesheet %}` so **Base font size** in theme settings applies. Details: `.cursor/rules/scss-styles.mdc` → *Typography and font size*.
 - CSS variables on section root for dynamic settings: `style="--gap: {{ block.settings.gap }}px"`
 - Prefer `{% stylesheet %}` / `{% javascript %}` for co-located section CSS/JS
