@@ -13,6 +13,7 @@ This theme targets the Shopify Theme Store. All sections must:
 - Be accessible (ARIA attributes, keyboard navigation, focus management)
 - Respect `prefers-reduced-motion` for animations
 - Work without JavaScript (progressive enhancement)
+- **JS-primary UI (sliders, carousels, etc.):** use a **loading state** until the browser/section is ready, then a **soft reveal** (GSAP); offer a default **On/Off** schema option for **scroll-into-view / entrance** behavior where it fits. See `.cursor/rules/liquid-patterns.mdc` → *JS-driven UI: loading, reveal, and scroll effects*.
 - **Page sections:** prefer the shared section shell (`snippets/section-styles.liquid` + `shopify-section-wrapper`; see `.cursor/rules/liquid-patterns.mdc`) unless the section is overlay/drawer/chrome or layout dictates otherwise
 
 ## Section rendering API

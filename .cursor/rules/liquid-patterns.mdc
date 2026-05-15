@@ -10,10 +10,11 @@ alwaysApply: false
 
 1. **Name** — Content-based: `section-<feature>.liquid` or context-based `main-<page>.liquid` (see `docs/SECTION_ARCHITECTURE_DESIGN_PRINCIPLES.md`).
 2. **Liquid** — One outer root with `class`, optional `style="--…"`; add `data-section-type` / `data-section-id` only if JS registers that type. **Section shell:** for typical page bands (hero, grids, featured content), wire `section-styles` + `shopify-section-wrapper` per **Section shell** below; **skip** when the section is overlay/drawer/modal, header/footer chrome, or full-bleed / structural cases where padding-margin-background UX would fight the design (agent decides per section purpose).
-3. **Schema** — Full `{% schema %}`; `name` / `label` values use `"t:sections.<ns>.…"` or `general` / `labels` keys; add strings under `locales/en.default.schema.json`. When using `section-styles`, merge the JSON settings block from the bottom of `snippets/section-styles.liquid` (padding, margin, background, border, radii) and add matching `t:` labels in schema locales.
+3. **Schema** — Full `{% schema %}`; `name` / `label` values use `"t:sections.<ns>.…"` or `general` / `labels` keys; add strings under `locales/en.default.schema.json`. When using `section-styles`, merge the JSON settings block from the bottom of `snippets/section-styles.liquid` (padding, margin, background, border, radii) and add matching `t:` labels in schema locales. For **JS-primary UI** (carousel, slider, etc.), add a merchant **checkbox** for **scroll-into-view / entrance animation** (On by default is typical); wire it to a `data-*` attribute on the section root for the runtime.
 4. **Styles** — New partial `src/styles/sections/_….scss` and `@forward` in `sections/index.scss` (or `{% stylesheet %}` if truly section-local only).
 5. **Scripts** — If interactive: `registerSection` in TS, import in `theme.ts` before `bootSections()`, lazy `*.runtime.ts` in `src/scripts/sections/` when the bundle is heavy.
 6. **Verify** — `npm run check` (Liquid); `npm run build` (TS/SCSS).
+7. **JS-driven UI** — If the section needs JS to present the main UI (carousel, slider, etc.): add **loading until ready**, **smooth reveal** after load/measure, optional **scroll-into-view** behavior behind a schema toggle — see **JS-driven UI** in `.cursor/rules/liquid-patterns.mdc`.
 
 ## New snippet (checklist)
 
@@ -73,6 +74,26 @@ Every section follows this template:
 **Schema:** copy the commented JSON array from `snippets/section-styles.liquid` into the section’s `"settings"` (ids must match what the snippet reads: `padding_*`, `margin_*`, `background_color`, `border_*`, `border_radius_*`, `border_color`). Localize labels via `t:` keys in `locales/en.default.schema.json`.
 
 **SCSS:** no extra import — `.shopify-section-wrapper` is global. Section-specific SCSS should not re-declare the same shell padding unless overriding intentionally.
+
+## JS-driven UI: loading, reveal, and scroll effects
+
+Use this pattern when the **visible layout depends on JavaScript** (Swiper/carousels, sliders, client-side tabs that swap layout, etc.) — not for light progressive enhancement where CSS-only is enough.
+
+**Loading until ready**
+
+- Show a **loading affordance** (overlay, skeleton, subtle pulse) over the JS-driven area until assets and init are safe: e.g. after **`window` `load`**, **images** in the section, one or two **`requestAnimationFrame`** ticks, and any library **`init`** (Swiper, etc.).
+- Keep main content **non-flashing**: scoped `{% style %}` on `#shopify-section-{{ id }}` or a `--revealed` / BEM class so slides/cards stay hidden (`opacity: 0` / `autoAlpha`) until the runtime reveals them.
+- Remove or hide the loader when the **soft reveal** runs (fade + slight motion is fine; prefer **GSAP** in `*.runtime.ts` for consistency with other sections).
+- **`prefers-reduced-motion: reduce`:** skip loaders’ decorative motion and use **instant** or minimal reveal; respect the same in CSS `@media (prefers-reduced-motion: reduce)`.
+- **`Shopify.designMode`:** avoid blocking the editor on scroll-only gates; shorten waits so merchants see content quickly in the preview.
+
+**Scroll / on-view effects (merchant toggle)**
+
+- By default, offer a schema **checkbox** (or similar) to **enable scroll-into-view behavior** (e.g. *“Animate when scrolling into view”*, *“Play entrance animation on scroll”*). **On:** run reveal when the section **intersects the viewport** (`IntersectionObserver`), after readiness. **Off:** reveal when ready **without** waiting for scroll (section already in view or immediate after load, per implementation).
+- Animation timing/easing can differ per section (stagger on cards vs single hero), but the **UX contract** is consistent: optional enhancement, non-blocking fallback timeout so content never stays hidden forever.
+- **Teardown:** `destroy()` must disconnect observers, **kill GSAP** tweens/timelines, `AbortController` for async work, and destroy third-party instances.
+
+**Reference implementation:** [`sections/section-product-slider.liquid`](sections/section-product-slider.liquid) + [`src/scripts/sections/section-product-slider.runtime.ts`](src/scripts/sections/section-product-slider.runtime.ts).
 
 ## Key patterns
 

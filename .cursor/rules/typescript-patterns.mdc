@@ -60,6 +60,7 @@ registerXxxSection()
 - Use `data-*` attributes for DOM hooks, never CSS classes
 - `prefersReducedMotion()` helper check before GSAP animations
 - GSAP for all animations: `gsap.to()`, `gsap.set()`, `gsap.timeline()`; call `gsap.killTweensOf()` in cleanup
+- **Carousel / slider / JS-primary UI:** coordinate **readiness** (`load`, images in section, rAF), optional **`IntersectionObserver`** when the merchant enables “animate on scroll”, **GSAP timelines** for loader fade-out + staggered reveal; **`destroy()`**: disconnect observer, `timeline.kill()`, clear timeouts. Match Liquid/schema toggle via `dataset` or parsed settings.
 
 ## Animation patterns
 

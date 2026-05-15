@@ -35,6 +35,8 @@ Use a **content-based** filename such as `sections/section-promo-grid.liquid` (n
 
 **Teardown:** use `AbortController` `{ signal }` on listeners; kill GSAP tweens; destroy third-party instances in `destroy()`.
 
+**JS-driven UI (sliders, carousels):** loader until ready, soft GSAP reveal, merchant **On/Off** for scroll-into-view where appropriate — see `.cursor/rules/liquid-patterns.mdc` → *JS-driven UI: loading, reveal, and scroll effects*.
+
 ## New section without JavaScript
 
 - Same Liquid (including optional **`section-styles` + `shopify-section-wrapper`** when appropriate — see *Section shell* in `.cursor/rules/liquid-patterns.mdc`), schema, locales, SCSS steps.

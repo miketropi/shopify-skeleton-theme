@@ -59,6 +59,13 @@
 
 {%- render 'section-styles', section: section -%}
 
+{% style %}
+  html.js #shopify-section-{{ section.id }} .product-slider:not(.product-slider--revealed) .product-slider__slide,
+  html.js #shopify-section-{{ section.id }} .product-slider:not(.product-slider--revealed) .product-slider__grid-item {
+    opacity: 0;
+  }
+{% endstyle %}
+
 <div
   class="section-{{ section.id }} product-slider shopify-section-wrapper product-slider--nav-{{ nav_position }}{% if section.settings.enable_carousel %} product-slider--carousel{% else %} product-slider--grid{% endif %} product-slider--heading-{{ section.settings.heading_size }}{% if section.settings.full_width %} full-width product-slider--full-width{% endif %}"
   data-section-type="section-product-slider"
@@ -91,7 +98,8 @@
               data-product-slider-prev
               aria-label="{{ 'product_slider.prev' | t }}"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+              {% comment %} <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg> {% endcomment %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
             </button>
             <button
               type="button"
@@ -99,7 +107,8 @@
               data-product-slider-next
               aria-label="{{ 'product_slider.next' | t }}"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              {% comment %} <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg> {% endcomment %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right-icon lucide-arrow-right"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </button>
           </div>
         {%- endif -%}
@@ -116,6 +125,13 @@
         aria-label="{{ 'product_slider.region_label' | t }}"
         tabindex="-1"
       >
+        <div class="product-slider__loading" data-product-slider-loading aria-hidden="true">
+          <span class="product-slider__loading-inner">
+            <span class="product-slider__loading-dot"></span>
+            <span class="product-slider__loading-dot"></span>
+            <span class="product-slider__loading-dot"></span>
+          </span>
+        </div>
         <div
           class="product-slider__swiper swiper"
           data-product-slider-swiper
@@ -161,27 +177,36 @@
         </div>
       </div>
     {%- else -%}
-      <ul
-        class="product-slider__grid product-slider__grid--per-row-{{ per_row }}"
-        style="--ps-gap: {{ gap_px }}px;"
-        role="list"
-      >
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'product' and block.settings.product != blank -%}
-            <li
-              class="product-slider__grid-item"
-              {{ block.shopify_attributes }}
-            >
-              {%- render 'tcard-product',
-                product: block.settings.product,
-                show_secondary_image: section.settings.show_secondary_image,
-                show_vendor: section.settings.show_vendor,
-                show_quick_add: section.settings.show_quick_add
-              -%}
-            </li>
-          {%- endif -%}
-        {%- endfor -%}
-      </ul>
+      <div class="product-slider__grid-wrap">
+        <div class="product-slider__loading" data-product-slider-loading aria-hidden="true">
+          <span class="product-slider__loading-inner">
+            <span class="product-slider__loading-dot"></span>
+            <span class="product-slider__loading-dot"></span>
+            <span class="product-slider__loading-dot"></span>
+          </span>
+        </div>
+        <ul
+          class="product-slider__grid product-slider__grid--per-row-{{ per_row }}"
+          style="--ps-gap: {{ gap_px }}px;"
+          role="list"
+        >
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'product' and block.settings.product != blank -%}
+              <li
+                class="product-slider__grid-item"
+                {{ block.shopify_attributes }}
+              >
+                {%- render 'tcard-product',
+                  product: block.settings.product,
+                  show_secondary_image: section.settings.show_secondary_image,
+                  show_vendor: section.settings.show_vendor,
+                  show_quick_add: section.settings.show_quick_add
+                -%}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
     {%- endif -%}
   {%- else -%}
     <div class="product-slider__empty">

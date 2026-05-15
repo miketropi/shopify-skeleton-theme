@@ -89,4 +89,5 @@ Sections with **no JS**: omit `data-section-type`; no TS registration; still add
 - Run `npm run check` (Theme Check) after Liquid changes
 - Run `npm run build` after TypeScript/SCSS changes to verify compilation
 - Respect `prefers-reduced-motion` in all JS animations
+- **JS-driven sections:** carousels/sliders and similar should use **loading → reveal** after load/init and an optional merchant **toggle** for **scroll-into-view** animation. See `.cursor/rules/liquid-patterns.mdc` → *JS-driven UI* and `src/scripts/**/*.ts` runtime patterns.
 - Use AbortController for section cleanup in `destroy()` functions
