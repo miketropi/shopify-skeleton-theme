@@ -112,6 +112,15 @@ $_r-card:  16px;
   max-width: var(--rt-max-w, 100%);
 }
 
+// Hide multi-item rotator until header-top-bar TS runs (avoids flash of all stacked lines).
+html.js .htbar__rotator--await-js:not(.htbar__rotator--ready) .htbar__rotator-item {
+  opacity: 0 !important;
+}
+
+html:not(.js) .htbar__rotator--await-js .htbar__rotator-item {
+  opacity: 1;
+}
+
 .htbar__rotator-item {
   grid-area: 1 / 1;
   text-align: var(--rt-align, center);

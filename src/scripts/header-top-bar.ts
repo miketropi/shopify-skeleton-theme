@@ -49,6 +49,8 @@ function startRotator(el: HTMLElement): void {
     if (i !== 0) item.setAttribute('aria-hidden', 'true')
   })
 
+  el.classList.add('htbar__rotator--ready')
+
   const modalRoot = el.parentElement?.querySelector<HTMLElement>('[data-htbar-rt-modal]')
   let modal: ThemeModal | null = null
   if (modalRoot) {
@@ -178,6 +180,7 @@ function stopRotator(el: HTMLElement): void {
   gsap.killTweensOf(state.items)
   state.modal?.destroy()
   rotatorStates.delete(el)
+  el.classList.remove('htbar__rotator--ready')
 }
 
 // ─── Top bar menus (store info + localization — click to open) ──

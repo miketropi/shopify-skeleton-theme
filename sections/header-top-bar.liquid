@@ -54,7 +54,7 @@
             {%- assign rt_items = rt_texts | split: '|||' -%}
             {%- if rt_items.size > 0 -%}
               <div
-                class="htbar__rotator"
+                class="htbar__rotator{% if rt_items.size > 1 %} htbar__rotator--await-js{% endif %}"
                 data-htbar-rotator
                 data-speed="{{ rt_speed }}"
                 style="--rt-align: {{ rt_align }};{% if rt_max_width > 0 %}--rt-max-w: {{ rt_max_width }}px;{% endif %}"
