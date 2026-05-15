@@ -18,10 +18,39 @@
     endif
   endif
 
-  assign product_block_count = 0
+  assign slider_item_count = 0
   for block in section.blocks
-    if block.type == 'product'
-      assign product_block_count = product_block_count | plus: 1
+    if block.type == 'product' and block.settings.product != blank
+      assign slider_item_count = slider_item_count | plus: 1
+    elsif block.type == 'collection'
+      assign source_coll = block.settings.collection
+      if source_coll == blank
+        if collections['all'] != blank and collections['all'].products_count > 0
+          assign source_coll = collections['all']
+        endif
+      endif
+      if source_coll == blank
+        for c in collections
+          if c.products_count > 0
+            assign source_coll = c
+            break
+          endif
+        endfor
+      endif
+      if source_coll != blank and source_coll.products_count > 0
+        assign coll_limit = block.settings.products_to_show | default: 8
+        if coll_limit < 1
+          assign coll_limit = 1
+        endif
+        if coll_limit > 50
+          assign coll_limit = 50
+        endif
+        if source_coll.products_count < coll_limit
+          assign slider_item_count = slider_item_count | plus: source_coll.products_count
+        else
+          assign slider_item_count = slider_item_count | plus: coll_limit
+        endif
+      endif
     endif
   endfor
 
@@ -37,7 +66,7 @@
 
   assign nav_position = section.settings.navigation_position | default: 'sides'
   assign show_carousel_nav = false
-  if section.settings.enable_carousel and section.settings.show_navigation_arrows and product_block_count > 1
+  if section.settings.enable_carousel and section.settings.show_navigation_arrows and slider_item_count > 1
     assign show_carousel_nav = true
   endif
   assign nav_in_heading = false
@@ -116,7 +145,7 @@
     </div>
   {%- endif -%}
 
-  {%- if product_block_count > 0 -%}
+  {%- if slider_item_count > 0 -%}
     {%- if section.settings.enable_carousel -%}
       <div
         class="product-slider__viewport"
@@ -140,23 +169,34 @@
         >
           <ul class="swiper-wrapper product-slider__track" role="list">
             {%- for block in section.blocks -%}
-              {%- if block.type == 'product' and block.settings.product != blank -%}
-                <li
-                  class="swiper-slide product-slider__slide"
-                  {{ block.shopify_attributes }}
-                >
-                  {%- render 'tcard-product',
-                    product: block.settings.product,
+              {%- case block.type -%}
+                {%- when 'product' -%}
+                  {%- if block.settings.product != blank -%}
+                    <li
+                      class="swiper-slide product-slider__slide"
+                      {{ block.shopify_attributes }}
+                    >
+                      {%- render 'tcard-product',
+                        product: block.settings.product,
+                        show_secondary_image: section.settings.show_secondary_image,
+                        show_vendor: section.settings.show_vendor,
+                        show_quick_add: section.settings.show_quick_add
+                      -%}
+                    </li>
+                  {%- endif -%}
+                {%- when 'collection' -%}
+                  {%- render 'product-slider-collection-rows',
+                    block: block,
+                    item_class: 'swiper-slide product-slider__slide',
                     show_secondary_image: section.settings.show_secondary_image,
                     show_vendor: section.settings.show_vendor,
                     show_quick_add: section.settings.show_quick_add
                   -%}
-                </li>
-              {%- endif -%}
+              {%- endcase -%}
             {%- endfor -%}
           </ul>
 
-          {%- if show_carousel_nav and nav_in_heading == false -%}
+          {%- if show_carousel_nav and nav_in_heading == false and slider_item_count > 1 -%}
             <button
               type="button"
               class="swiper-button-prev product-slider__nav-btn product-slider__nav-btn--prev product-slider__nav-btn--sides"
@@ -191,19 +231,30 @@
           role="list"
         >
           {%- for block in section.blocks -%}
-            {%- if block.type == 'product' and block.settings.product != blank -%}
-              <li
-                class="product-slider__grid-item"
-                {{ block.shopify_attributes }}
-              >
-                {%- render 'tcard-product',
-                  product: block.settings.product,
+            {%- case block.type -%}
+              {%- when 'product' -%}
+                {%- if block.settings.product != blank -%}
+                  <li
+                    class="product-slider__grid-item"
+                    {{ block.shopify_attributes }}
+                  >
+                    {%- render 'tcard-product',
+                      product: block.settings.product,
+                      show_secondary_image: section.settings.show_secondary_image,
+                      show_vendor: section.settings.show_vendor,
+                      show_quick_add: section.settings.show_quick_add
+                    -%}
+                  </li>
+                {%- endif -%}
+              {%- when 'collection' -%}
+                {%- render 'product-slider-collection-rows',
+                  block: block,
+                  item_class: 'product-slider__grid-item',
                   show_secondary_image: section.settings.show_secondary_image,
                   show_vendor: section.settings.show_vendor,
                   show_quick_add: section.settings.show_quick_add
                 -%}
-              </li>
-            {%- endif -%}
+            {%- endcase -%}
           {%- endfor -%}
         </ul>
       </div>
@@ -532,6 +583,27 @@
           "type": "product",
           "id": "product",
           "label": "t:sections.product_slider.blocks.product.settings.product"
+        }
+      ]
+    },
+    {
+      "type": "collection",
+      "name": "t:sections.product_slider.blocks.collection.name",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.product_slider.blocks.collection.settings.collection",
+          "info": "t:sections.product_slider.blocks.collection.settings.collection_info"
+        },
+        {
+          "type": "range",
+          "id": "products_to_show",
+          "min": 1,
+          "max": 50,
+          "step": 1,
+          "default": 8,
+          "label": "t:sections.product_slider.blocks.collection.settings.products_to_show"
         }
       ]
     }

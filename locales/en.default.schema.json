@@ -743,6 +743,14 @@
           "settings": {
             "product": "Product"
           }
+        },
+        "collection": {
+          "name": "Collection",
+          "settings": {
+            "collection": "Collection",
+            "collection_info": "Leave empty to use the store’s **All products** catalogue if available, otherwise the first collection that has products.",
+            "products_to_show": "Maximum products to show"
+          }
         }
       }
     },

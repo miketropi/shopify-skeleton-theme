@@ -1,0 +1,49 @@
+{%- comment -%}
+  Product slider — collection block rows.
+
+  @param block {Block} — section block (type collection)
+  @param item_class {String} — e.g. "swiper-slide product-slider__slide" or "product-slider__grid-item"
+  @param show_secondary_image {Boolean}
+  @param show_vendor {Boolean}
+  @param show_quick_add {Boolean}
+
+  Resolves collection: block picker → else `all` catalog → else first store collection with products.
+{%- endcomment -%}
+{%- liquid
+  assign source_coll = block.settings.collection
+  if source_coll == blank
+    if collections['all'] != blank and collections['all'].products_count > 0
+      assign source_coll = collections['all']
+    endif
+  endif
+  if source_coll == blank
+    for c in collections
+      if c.products_count > 0
+        assign source_coll = c
+        break
+      endif
+    endfor
+  endif
+-%}
+{%- if source_coll != blank and source_coll.products_count > 0 -%}
+  {%- assign coll_limit = block.settings.products_to_show | default: 8 -%}
+  {%- if coll_limit < 1 -%}
+    {%- assign coll_limit = 1 -%}
+  {%- endif -%}
+  {%- if coll_limit > 50 -%}
+    {%- assign coll_limit = 50 -%}
+  {%- endif -%}
+  {%- for product in source_coll.products limit: coll_limit -%}
+    <li
+      class="{{ item_class }}"
+      {% if forloop.first %}{{ block.shopify_attributes }}{% endif %}
+    >
+      {%- render 'tcard-product',
+        product: product,
+        show_secondary_image: show_secondary_image,
+        show_vendor: show_vendor,
+        show_quick_add: show_quick_add
+      -%}
+    </li>
+  {%- endfor -%}
+{%- endif -%}
