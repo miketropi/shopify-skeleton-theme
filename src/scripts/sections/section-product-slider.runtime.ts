@@ -30,24 +30,6 @@ function whenWindowLoaded(): Promise<void> {
   })
 }
 
-function whenImagesLoaded(scope: ParentNode): Promise<void> {
-  const imgs = scope.querySelectorAll<HTMLImageElement>(
-    '.product-slider__slide img, .product-slider__grid-item img',
-  )
-  const tasks = [...imgs].map(
-    (img) =>
-      new Promise<void>((resolve) => {
-        if (img.complete && img.naturalWidth > 0) {
-          resolve()
-          return
-        }
-        img.addEventListener('load', () => resolve(), { once: true })
-        img.addEventListener('error', () => resolve(), { once: true })
-      }),
-  )
-  return Promise.all(tasks).then(() => {})
-}
-
 async function waitSlideReady(container: HTMLElement, designMode: boolean): Promise<void> {
   const maxMs = designMode ? 450 : 6000
   const deadline = new Promise<void>((resolve) => {
@@ -56,7 +38,6 @@ async function waitSlideReady(container: HTMLElement, designMode: boolean): Prom
 
   const work = async (): Promise<void> => {
     if (!designMode) await whenWindowLoaded()
-    await whenImagesLoaded(container)
     await new Promise<void>((r) => {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => r())
