@@ -191,10 +191,90 @@
         "border_radius_bottom_right": 0,
         "border_radius_bottom_left": 0
       }
+    },
+    "section_collection_list_LWFp7W": {
+      "type": "section-collection-list",
+      "blocks": {
+        "collection_entry_7pgqPL": {
+          "type": "collection_entry",
+          "settings": {
+            "collection": "automated-collection",
+            "custom_title": "",
+            "custom_product_count": "",
+            "custom_url": "",
+            "open_new_tab": false
+          }
+        },
+        "collection_entry_V3kLgx": {
+          "type": "collection_entry",
+          "settings": {
+            "collection": "frontpage",
+            "custom_title": "",
+            "custom_product_count": "",
+            "custom_image": "shopify://shop_images/07a9711afdfeb98029dd3b2580c41647.jpg",
+            "custom_url": "",
+            "open_new_tab": false
+          }
+        },
+        "collection_entry_A9fVbX": {
+          "type": "collection_entry",
+          "settings": {
+            "collection": "hydrogen",
+            "custom_title": "",
+            "custom_product_count": "",
+            "custom_image": "shopify://shop_images/412ce1b16f601936596ad3ea7934edd4.jpg",
+            "custom_url": "",
+            "open_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "collection_entry_7pgqPL",
+        "collection_entry_V3kLgx",
+        "collection_entry_A9fVbX"
+      ],
+      "name": "t:sections.collection_list.presets.name",
+      "settings": {
+        "eyebrow_text": "Key Ingredients",
+        "heading": "Essential collections",
+        "heading_size": "large",
+        "description": "These are intentionally neutral and product-agnostic so they'll work across skincare, serum, moisturizer, or similar beauty product demos.",
+        "default_active_index": 1,
+        "full_width": true,
+        "image_column_width": "50",
+        "image_ratio": "square",
+        "image_border_radius": "medium",
+        "show_product_count": true,
+        "show_arrow_icon": true,
+        "entry_divider": true,
+        "entry_title_use_scheme_colors": true,
+        "active_title_color": "#1a1a1a",
+        "inactive_title_color": "#999999",
+        "title_size": "large",
+        "hover_transition_speed": "300",
+        "entrance_animate_on_scroll": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "scheme-6",
+        "padding_top": 80,
+        "padding_right": 0,
+        "padding_bottom": 80,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
     }
   },
   "order": [
     "home_slider",
-    "section_product_slider_dCdyeR"
+    "section_product_slider_dCdyeR",
+    "section_collection_list_LWFp7W"
   ]
 }
