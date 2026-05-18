@@ -12,6 +12,7 @@ alwaysApply: false
 2. Add `@forward '<partial-name-without-_and_extension>';` to `src/styles/sections/index.scss` (order only matters for cascade if selectors overlap).
 3. Prefer **section root** CSS custom properties set from Liquid for merchant-controlled values.
 4. **Section shell:** when the Liquid file uses `{% render 'section-styles', section: section %}`, put **`shopify-section-wrapper`** on the outer content root (see `src/styles/base/_section-wrapper.scss`). Do not duplicate default section padding/margin/background in SCSS unless intentionally overriding the shared shell.
+5. **Product-slider-aligned intro:** sections that share the marketing intro pattern (eyebrow + heading like product slider) should use **`.product-slider__eyebrow`** / **`.product-slider__heading`** / **`.product-slider__intro-copy`** and **`product-slider--heading-*`** on the section root; extend heading-size rules in `_section-product-slider.scss` only — do not duplicate the font-size ladder in another partial. See `.cursor/rules/liquid-patterns.mdc` → *Product-slider family*.
 
 ## File organization
 

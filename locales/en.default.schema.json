@@ -115,7 +115,7 @@
     "colors_custom": "These colours apply site-wide. The preset scheme editor further down is ignored while Custom is selected.",
     "typography_intro": "Curated mode loads Google Fonts (preconnect + display=swap) into --cs-font-heading, --cs-font-body, and --cs-font-mono. Custom mode uses Shopify’s font_picker and @font-face (Shop fonts and Google in the library). Global colours are under Colors, not here.",
     "typography_custom": "Heading, body, and code use these fonts. They map to --cs-font-heading, --cs-font-body, and --cs-font-mono.",
-    "typography_preset_research": "Presets: Arial (system stack, no Google Fonts), Neutral (versatile sans), Vision (Fraunces + Manrope; Fira Code mono), Technology (mono-led + Inter). To add or change a slug, update config/settings_schema.json, snippets/font-pairing-link.liquid, font-pairing-loader.liquid, snippets/css-variables.liquid, and src/styles/base/_fonts.scss. Non-Arial hrefs stay on fonts.googleapis.com.",
+    "typography_preset_research": "Presets: Arial (system, no web fonts); Neutral, Vision, Technology (original trio); plus Bodoni Moda + Outfit, Bricolage Grotesque + Lexend, Grandstander + Nunito, Host Grotesk (heading + body) + JetBrains Mono, Josefin Sans + Karla, Sour Gummy + Nunito, Tilt Warp + DM Sans. To add or change a slug, update config/settings_schema.json, locales (options.font_pairing.*), snippets/font-pairing-link.liquid, snippets/css-variables.liquid, and src/styles/base/_fonts.scss. The font loader lives in layout/theme.liquid (document head). Non-Arial hrefs stay on fonts.googleapis.com.",
     "search_scope": "Product-only search uses Shopify’s type=product parameter. Articles and pages are excluded.",
     "header_menu_nested": "Add nested links in Online Store → Navigation (up to two levels under a top-level item). On large screens they appear as dropdowns and flyouts; in the mobile drawer they expand in place.",
     "sticky_header": "Controls whether the header stays visible when scrolling.",
@@ -185,7 +185,14 @@
       "arial": "Arial — system sans (heading + body; no web fonts)",
       "neutral": "Neutral — Plus Jakarta Sans + DM Sans (global)",
       "vision": "Vision — Fraunces + Manrope (business, artistic)",
-      "technology": "Technology — JetBrains Mono + Inter (mono-led)"
+      "technology": "Technology — JetBrains Mono + Inter (mono-led)",
+      "bodoni_moda": "Bodoni Moda — editorial serif + Outfit + JetBrains Mono",
+      "bricolage_grotesque": "Bricolage Grotesque — Lexend + IBM Plex Mono",
+      "grandstander": "Grandstander — Nunito + Fira Code",
+      "host_grotesk": "Host Grotesk — Host Grotesk body + JetBrains Mono",
+      "josefin_sans": "Josefin Sans — Karla + Ubuntu Mono",
+      "sour_gummy": "Sour Gummy — Nunito + Fira Code",
+      "tilt_warp": "Tilt Warp — DM Sans + Space Mono"
     },
     "desktop_header_layout": {
       "logo_nav_actions": "Logo left — menu and cart/icons on the right",
@@ -750,6 +757,125 @@
             "collection": "Collection",
             "collection_info": "Leave empty to use the store’s **All products** catalogue if available, otherwise the first collection that has products.",
             "products_to_show": "Maximum products to show"
+          }
+        }
+      }
+    },
+    "collection_list": {
+      "name": "Collection list",
+      "presets": {
+        "name": "Collection list"
+      },
+      "headers": {
+        "content": "Content",
+        "layout": "Layout",
+        "entry_style": "Entry list style",
+        "animation": "Animation",
+        "colour": "Colour",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "description": "Description",
+        "default_active_index": "Default active entry",
+        "full_width": "Full width (edge-to-edge background)",
+        "image_column_width": "Image column width (large screens)",
+        "image_ratio": "Image ratio",
+        "image_border_radius": "Image corner radius",
+        "show_product_count": "Show product count",
+        "show_arrow_icon": "Show arrow icon",
+        "entry_divider": "Show entry dividers",
+        "entry_title_use_scheme_colors": "Entry titles use colour scheme",
+        "active_title_color": "Custom active title colour",
+        "inactive_title_color": "Custom inactive title colour",
+        "title_size": "Entry title size",
+        "hover_transition_speed": "Image crossfade speed",
+        "entrance_animate_on_scroll": "Animate when scrolling into view",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "info": {
+        "full_width": "Background spans the browser width; content stays in the page column.",
+        "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "entrance_animate_on_scroll": "When off, the entrance animation runs after the page loads without waiting for scroll (still respects reduced motion).",
+        "entry_title_use_scheme_colors": "Uses the section’s heading and secondary text colours for active and inactive rows. Turn off to set fixed colours below."
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "image_ratio": {
+          "square": "Square (1:1)",
+          "landscape": "Landscape (4:3)",
+          "portrait": "Portrait (3:4)"
+        },
+        "radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "title_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large"
+        },
+        "transition": {
+          "fast": "Fast (150ms)",
+          "normal": "Normal (300ms)",
+          "slow": "Slow (500ms)"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "color_scheme": "Scheme",
+      "color_scheme_info": "Used when Colour scheme is set to Custom. Otherwise the section uses the theme’s global colour scheme.",
+      "blocks": {
+        "overrides_header": "Overrides",
+        "collection_entry": {
+          "name": "Collection entry",
+          "labels": {
+            "collection": "Collection",
+            "custom_title": "Custom title",
+            "custom_product_count": "Custom product count label",
+            "custom_image": "Custom featured image",
+            "custom_url": "Custom link",
+            "open_new_tab": "Open in new tab"
+          },
+          "info": {
+            "custom_title": "Overrides the collection name if set.",
+            "custom_product_count": "e.g. “25 products”. Overrides the real count if set.",
+            "custom_image": "Shown on the left when this entry is active.",
+            "custom_url": "Overrides the collection URL if set."
           }
         }
       }

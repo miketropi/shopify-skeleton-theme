@@ -9,7 +9,7 @@ alwaysApply: false
 ## New section (checklist)
 
 1. **Name** — Content-based: `section-<feature>.liquid` or context-based `main-<page>.liquid` (see `docs/SECTION_ARCHITECTURE_DESIGN_PRINCIPLES.md`).
-2. **Liquid** — One outer root with `class`, optional `style="--…"`; add `data-section-type` / `data-section-id` only if JS registers that type. **Section shell:** for typical page bands (hero, grids, featured content), wire `section-styles` + `shopify-section-wrapper` per **Section shell** below; **skip** when the section is overlay/drawer/modal, header/footer chrome, or full-bleed / structural cases where padding-margin-background UX would fight the design (agent decides per section purpose).
+2. **Liquid** — One outer root with `class`, optional `style="--…"`; add `data-section-type` / `data-section-id` only if JS registers that type. **Section shell:** for typical page bands (hero, grids, featured content), wire `section-styles` + `shopify-section-wrapper` per **Section shell** below; **skip** when the section is overlay/drawer/modal, header/footer chrome, or full-bleed / structural cases where padding-margin-background UX would fight the design (agent decides per section purpose). **Intro like product slider:** if eyebrow + heading match that UX, use **Product-slider family** classes and schema parity (below).
 3. **Schema** — Full `{% schema %}`; `name` / `label` values use `"t:sections.<ns>.…"` or `general` / `labels` keys; add strings under `locales/en.default.schema.json`. When using `section-styles`, merge the JSON settings block from the bottom of `snippets/section-styles.liquid` (padding, margin, background, border, radii) and add matching `t:` labels in schema locales. For **JS-primary UI** (carousel, slider, etc.), add a merchant **checkbox** for **scroll-into-view / entrance animation** (On by default is typical); wire it to a `data-*` attribute on the section root for the runtime.
 4. **Styles** — New partial `src/styles/sections/_….scss` and `@forward` in `sections/index.scss` (or `{% stylesheet %}` if truly section-local only).
 5. **Scripts** — If interactive: `registerSection` in TS, import in `theme.ts` before `bootSections()`, lazy `*.runtime.ts` in `src/scripts/sections/` when the bundle is heavy.
@@ -74,6 +74,47 @@ Every section follows this template:
 **Schema:** copy the commented JSON array from `snippets/section-styles.liquid` into the section’s `"settings"` (ids must match what the snippet reads: `padding_*`, `margin_*`, `background_color`, `border_*`, `border_radius_*`, `border_color`). Localize labels via `t:` keys in `locales/en.default.schema.json`.
 
 **SCSS:** no extra import — `.shopify-section-wrapper` is global. Section-specific SCSS should not re-declare the same shell padding unless overriding intentionally.
+
+## Product-slider family: consistent intro, heading scale, and merchant options
+
+Use this when a new **page section** has a **similar top-of-section UX** to [`sections/section-product-slider.liquid`](sections/section-product-slider.liquid): eyebrow + heading, optional supporting copy, colour scheme, full-bleed background, and shared shell spacing. **Example in repo:** [`sections/section-collection-list.liquid`](sections/section-collection-list.liquid).
+
+**Liquid — colour scheme**  
+Reuse the same assignment pattern as the product slider: default `settings.global_color_scheme` with fallback `settings.color_schemes['scheme-6']`, `section_color_scheme_mode` (`default` | `custom`), optional `color_scheme` picker with `visible_if` on custom, then `{% capture %} … {% render 'color-scheme-vars', scheme: …, inline_only: true %} {% endcapture %}` on the section root `style`.
+
+**Liquid — shell & width**  
+Call `{% render 'section-styles', section: section %}`, put **`shopify-section-wrapper`** on the outer root, and mirror the **full-width** contract: root gets `full-width` (and a section-specific modifier if needed) when the merchant enables it; **inner** content wrapper gets **`section-content-width`** only when full-width is on (critical.css pattern). Match setting id **`full_width`** and the same semantics as product slider when behaviour should align.
+
+**Liquid / HTML — intro typography (shared classes)**  
+For **eyebrow** and **section heading**, use the same classes as the product slider:
+
+- `<p class="product-slider__eyebrow">…</p>`
+- `<h2 class="product-slider__heading">…</h2>` (or correct heading level for page outline)
+
+Wrap intro copy in **`product-slider__intro-copy`** when it is a text column (same flex/min-width behaviour as the slider intro row). **Do not** invent parallel `section-foo__eyebrow` / `section-foo__heading` for the same visual role unless there is a deliberate design divergence.
+
+**Liquid — heading size modifier on root**  
+Add **`product-slider--heading-{{ section.settings.heading_size }}`** to the **section root** alongside the section’s own BEM root (e.g. `coll-list`). That ties the heading to the shared step scale defined in [`src/styles/sections/_section-product-slider.scss`](src/styles/sections/_section-product-slider.scss).
+
+**SCSS — heading steps (single source)**  
+Heading size rules must **not** be re-copied into the new section partial. Extend the existing grouped selectors in `_section-product-slider.scss`:
+
+```scss
+.product-slider--heading-small .product-slider__heading,
+.your-root.product-slider--heading-small .product-slider__heading { … }
+```
+
+**Eyebrow** styles are already global on `.product-slider__eyebrow`; no extra rules in the new partial unless the layout context truly needs a tweak (prefer spacing on a local wrapper).
+
+**Schema & locales — option parity**  
+When merchants should get the **same knobs** as the product slider:
+
+- Reuse setting **ids** where possible: `eyebrow_text`, `heading`, `heading_size`, `section_color_scheme_mode`, `color_scheme`, `full_width`, plus the **section-styles** field ids from `section-styles.liquid`.
+- Keep **`heading_size`** values **`small` | `medium` | `large` | `xlarge`** only.
+- Prefer **reusing** `t:sections.product_slider.labels.*` / `options.heading_size.*` (and parallel shell keys) for identical labels so the editor stays consistent; **or** add a dedicated `sections.<your_section>` block that mirrors the same structure and copy.
+
+**When not to use this**  
+Hero strips with bespoke display type, legal/disclosure blocks, or overlays should keep their own typography; don’t attach `product-slider--heading-*` if the design system intentionally differs.
 
 ## JS-driven UI: loading, reveal, and scroll effects
 

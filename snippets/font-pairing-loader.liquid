@@ -5,12 +5,12 @@
   • This snippet MUST be rendered only once, inside <head> in layout/theme.liquid.
     It is the single permitted entry point for loading curated (Google Fonts) pairings.
 
-  • snippets/font-pairing-link.liquid MUST be called only from this file, in the loop
-    below. Never render font-pairing-link from a section, another snippet, or the body:
+  • snippets/font-pairing-link.liquid MUST be called only from this file (once per
+    selected pairing). Never render font-pairing-link from a section, another snippet, or the body:
     stylesheet <link> in <body> is invalid HTML and causes FOUC.
 
-  • Order matters: output the two preconnect <link>s first, then the stylesheet links.
-    Preconnect after a stylesheet request has no effect.
+  • Order matters: output the two preconnect <link>s first, then the stylesheet <link>
+    for the **active** font_pairing only. Preconnect after a stylesheet request has no effect.
 
   • fonts.googleapis.com / fonts.gstatic.com are on Shopify’s theme CSP allowlist for
     Google Fonts — no extra layout/content_security_policy.liquid needed while URLs
@@ -18,15 +18,10 @@
     add the host to layout/content_security_policy.liquid per Shopify docs; a <link>
     alone is not sufficient.
 
-  Preset mode: Arial uses system fonts only; neutral / vision / technology load Google Fonts bundles. Custom: Shopify font_face in css-variables.liquid.
+  Preset mode: Arial uses system fonts only; otherwise one Google Fonts stylesheet for the selected pairing. Custom: Shopify font_face in css-variables.liquid.
 {%- endcomment -%}
 {%- if settings.typography_mode != 'custom' and settings.font_pairing != 'arial' -%}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  {%- liquid
-    assign all_pairings = 'neutral|vision|technology' | split: '|'
-    for pairing in all_pairings
-      render 'font-pairing-link', pairing: pairing
-    endfor
-  -%}
+  {%- render 'font-pairing-link', pairing: settings.font_pairing -%}
 {%- endif -%}

@@ -30,7 +30,7 @@ No section ever references a raw hex value or a font family string directly. Sec
 
 **Colour source** (`settings.color_mode`): **`preset`** uses `color_scheme_group` to define named schemes and **`global_color_scheme`** (theme setting) to choose which named scheme applies store-wide. **`custom`** uses theme-wide `custom_color_*` settings. `color-scheme-vars` and `:root` read those values; **sections do not have a `color_scheme` setting**. Shopify Theme Check does not allow `visible_if` on `color_scheme_group`, so the preset scheme editor stays visible in the admin when Custom is on but is **ignored** on the storefront.
 
-Theme Check only allows `header`, `color`, and `color_background` inside `color_scheme_group.definition`, so a `select` such as `font_pairing` **cannot** live in the scheme object. In **preset** colour mode, **one scheme applies to the whole store** (`global_color_scheme`); **typography is theme-wide** under **Typography**: `settings.typography_mode` is **`preset`** (curated Google Font pairings via `settings.font_pairing` + `font-pairing-loader.liquid`) or **`custom`** (three `font_picker` settings — heading, body, mono — with `@font-face` from Shopify’s font system in `css-variables.liquid`). `snippets/css-variables.liquid` sets `--cs-font-*` on `:root` for either mode. `snippets/color-scheme-vars.liquid` outputs colour tokens only. In preset mode, `font-pairing-loader.liquid` loads all six pairing stylesheets because layout Liquid cannot list JSON template sections to dedupe URLs. The doc’s “Modern — Satoshi” pairing uses **Plus Jakarta Sans** in Google Fonts URLs (Satoshi is not on Google Fonts); stacks in Liquid must match `font-pairing-link.liquid`.
+Theme Check only allows `header`, `color`, and `color_background` inside `color_scheme_group.definition`, so a `select` such as `font_pairing` **cannot** live in the scheme object. In **preset** colour mode, **one scheme applies to the whole store** (`global_color_scheme`); **typography is theme-wide** under **Typography**: `settings.typography_mode` is **`preset`** (curated Google Font pairings via `settings.font_pairing` + `font-pairing-loader.liquid`) or **`custom`** (three `font_picker` settings — heading, body, mono — with `@font-face` from Shopify’s font system in `css-variables.liquid`). `snippets/css-variables.liquid` sets `--cs-font-*` on `:root` for either mode. `snippets/color-scheme-vars.liquid` outputs colour tokens only. In preset mode (non-Arial), `font-pairing-loader.liquid` loads **one** Google Fonts stylesheet for the selected `font_pairing` (preconnect first). The doc’s “Modern — Satoshi” pairing uses **Plus Jakarta Sans** in Google Fonts URLs (Satoshi is not on Google Fonts); stacks in Liquid must match `font-pairing-link.liquid`.
 
 ---
 
@@ -198,13 +198,13 @@ Shopify seeds three default schemes (`scheme-1`, `scheme-2`, `scheme-3`) when th
 
 The registry lives in two snippets plus SCSS comments. Rules:
 
-- **`snippets/font-pairing-loader.liquid`** is the **only** permitted render of the font-link pipeline. Call it **once**, inside **`<head>`** in **`layout/theme.liquid`**, **before** other stylesheets. It outputs two **`preconnect`** `<link>`s first (`fonts.googleapis.com`, `fonts.gstatic.com`), then loops and renders **`font-pairing-link`** so preconnect always precedes stylesheet requests.
+- **`snippets/font-pairing-loader.liquid`** is the **only** permitted render of the font-link pipeline. Call it **once**, inside **`<head>`** in **`layout/theme.liquid`**, **before** other stylesheets. It outputs two **`preconnect`** `<link>`s first (`fonts.googleapis.com`, `fonts.gstatic.com`), then renders **`font-pairing-link`** once for the active `settings.font_pairing` so preconnect always precedes the stylesheet request.
 - **`snippets/font-pairing-link.liquid`** must **never** be rendered from a section, another snippet, or outside `<head>`. Stylesheet `<link>` in `<body>` is invalid HTML and causes FOUC. Only the loader may call it.
 - **`fonts.googleapis.com` / `fonts.gstatic.com`** are on Shopify’s theme CSP allowlist for Google Fonts — no `content_security_policy` changes needed while URLs stay there. If the font source moves (Adobe Fonts, Bunny Fonts, self-hosted, etc.), add the new host via **`layout/content_security_policy.liquid`** per [Shopify CSP for themes](https://shopify.dev/docs/storefronts/themes/architecture/layouts/content-security-policy); adding a `<link>` alone is not enough.
 
-In this theme, preset mode loads **all** pairing stylesheets from the loader (layout Liquid cannot dedupe by “pairings in use”). Custom typography uses Shopify `font_face` in `snippets/css-variables.liquid` instead.
+In this theme, preset mode loads **one** pairing stylesheet from the loader (the merchant’s selected `font_pairing`). Custom typography uses Shopify `font_face` in `snippets/css-variables.liquid` instead.
 
-When adding a pairing slug, update **`font-pairing-link.liquid`**, the preset **`font_pairing`** options in **`config/settings_schema.json`**, the pairing `case` in **`snippets/css-variables.liquid`**, and the registry comment in **`src/styles/base/_fonts.scss`**.
+When adding a pairing slug, update **`font-pairing-link.liquid`**, the **`font_pairing`** options and labels in **`config/settings_schema.json`** and **`locales/*.schema.json`**, the pairing `case` in **`snippets/css-variables.liquid`**, and the registry comment in **`src/styles/base/_fonts.scss`**.
 
 ### Font stacks in SCSS
 
@@ -413,7 +413,7 @@ Header and footer use the same snippet on their root element; they follow **`glo
 - **Section-level overrides** (the panel pattern) are allowed for legitimate layout reasons. They are not a workaround for a missing token — if a token is missing, add it to the scheme definition.
 - **Do not create per-section color settings** that duplicate scheme tokens (e.g. `"id": "hero_bg_color"` that just sets a background). Use the scheme system. Only add per-section colour settings for genuinely local needs (a second panel, an illustration fill, a decorative shape).
 - **Never reference a font family string directly** in SCSS or Liquid. All font decisions use `var(--cs-font-heading)`, `var(--cs-font-body)`, or `var(--cs-font-mono)`.
-- **When adding a new font pairing**, keep in sync: `color_scheme_group` select options, `font-pairing-link.liquid`, the preset `case` in `css-variables.liquid`, and `_fonts.scss` registry comment. Never call `font-pairing-link` except from `font-pairing-loader` in `<head>`.
+- **When adding a new font pairing**, keep in sync: Typography **`font_pairing`** in `settings_schema.json`, **`options.font_pairing.*`** in locale schema files, `font-pairing-link.liquid`, the preset `case` in `css-variables.liquid`, and `_fonts.scss` registry comment. Never call `font-pairing-link` except from `font-pairing-loader` in `<head>`.
 
 ---
 
@@ -425,4 +425,4 @@ Header and footer use the same snippet on their root element; they follow **`glo
 - [ ] Verified in theme editor: changing the scheme on this section updates all colours correctly
 - [ ] Verified in theme editor: changing the font pairing updates `--cs-font-heading`, `--cs-font-body`, `--cs-font-mono` correctly
 - [ ] `font-pairing-loader` snippet is present in `layout/theme.liquid` inside `<head>`
-- [ ] New pairing slug (if added) exists in `font-pairing-link.liquid`, `css-variables.liquid` preset case, `_fonts.scss` registry comment, and `color_scheme_group` select options
+- [ ] New pairing slug (if added) exists in `font-pairing-link.liquid`, `css-variables.liquid` preset case, `_fonts.scss` registry comment, `settings_schema.json` Typography `font_pairing` options, and locale `options.font_pairing.*` labels

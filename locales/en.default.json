@@ -448,6 +448,9 @@
       "aria_region": "Promotional announcements",
       "empty_aria": "Scrolling promotion (no blocks yet)",
       "empty": "Add Text or Logo blocks. Content scrolls horizontally on the storefront."
+    },
+    "collection_list": {
+      "empty": "Add collection entries (pick a collection or a custom link) to show this section."
     }
   }
 }

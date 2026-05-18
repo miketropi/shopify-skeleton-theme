@@ -22,7 +22,7 @@ Use a **content-based** filename such as `sections/section-promo-grid.liquid` (n
 
 | Step | Action |
 |------|--------|
-| 1 | Add Liquid: outer root, `class`, optional `style="--…: {{ … }}"` for merchant settings. For typical page sections (not overlays/drawers/header chrome), add `{%- render 'section-styles', section: section -%}` before the root, class `shopify-section-wrapper` on the root, and the schema settings from `snippets/section-styles.liquid` — see `.cursor/rules/liquid-patterns.mdc` (*Section shell*); omit when inappropriate. |
+| 1 | Add Liquid: outer root, `class`, optional `style="--…: {{ … }}"` for merchant settings. For typical page sections (not overlays/drawers/header chrome), add `{%- render 'section-styles', section: section -%}` before the root, class `shopify-section-wrapper` on the root, and the schema settings from `snippets/section-styles.liquid` — see `.cursor/rules/liquid-patterns.mdc` (*Section shell*); omit when inappropriate. **If the section matches the product-slider intro pattern** (eyebrow + heading, shared merchant options), follow *Product-slider family* in the same file for shared classes and heading scale. |
 | 2 | Set `data-section-type="<kebab-string>"` and `data-section-id="{{ section.id }}"` on that root (must match TS). |
 | 3 | Add `{% schema %}` with `t:` keys; add new keys under `locales/en.default.schema.json` (e.g. `sections.promo_grid`). |
 | 4 | Add `src/styles/sections/_section-promo-grid.scss` and `@forward 'section-promo-grid';` in `src/styles/sections/index.scss`. |
@@ -54,7 +54,7 @@ Use a **content-based** filename such as `sections/section-promo-grid.liquid` (n
 |------|------|
 | Liquid | `{%- liquid -%}` for assigns; hyphenated `-%}` to trim; JS hooks via `data-*`, not classes. |
 | TS | Prettier: no semicolons, single quotes; scope queries to `container`; prefer `type` for small shapes. |
-| SCSS | Mobile-first + `mq-up()` from `base/breakpoints`; section-scoped class prefixes; Liquid-driven values as CSS variables on section root. **Font sizes:** use `:root` tokens from `snippets/css-variables.liquid` (`--font-size-xs` … `--font-size-4xl`) with fallbacks—see `.cursor/rules/scss-styles.mdc` (*Typography and font size*). |
+| SCSS | Mobile-first + `mq-up()` from `base/breakpoints`; section-scoped class prefixes; Liquid-driven values as CSS variables on section root. **Font sizes:** use `:root` tokens from `snippets/css-variables.liquid` (`--font-size-xs` … `--font-size-4xl`) with fallbacks—see `.cursor/rules/scss-styles.mdc` (*Typography and font size*). **Intro aligned with product slider:** extend `_section-product-slider.scss` heading selectors; do not fork `.product-slider__heading` sizes in a new partial—see `.cursor/rules/liquid-patterns.mdc` (*Product-slider family*). |
 | Accessibility | Keyboard, focus return, `aria-*`, `prefers-reduced-motion` for motion. |
 
 ## Verification

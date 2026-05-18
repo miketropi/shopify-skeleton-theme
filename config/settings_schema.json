@@ -361,6 +361,34 @@
           {
             "value": "technology",
             "label": "t:options.font_pairing.technology"
+          },
+          {
+            "value": "bodoni_moda",
+            "label": "t:options.font_pairing.bodoni_moda"
+          },
+          {
+            "value": "bricolage_grotesque",
+            "label": "t:options.font_pairing.bricolage_grotesque"
+          },
+          {
+            "value": "grandstander",
+            "label": "t:options.font_pairing.grandstander"
+          },
+          {
+            "value": "host_grotesk",
+            "label": "t:options.font_pairing.host_grotesk"
+          },
+          {
+            "value": "josefin_sans",
+            "label": "t:options.font_pairing.josefin_sans"
+          },
+          {
+            "value": "sour_gummy",
+            "label": "t:options.font_pairing.sour_gummy"
+          },
+          {
+            "value": "tilt_warp",
+            "label": "t:options.font_pairing.tilt_warp"
           }
         ],
         "default": "arial",

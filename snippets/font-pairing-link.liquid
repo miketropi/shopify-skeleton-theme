@@ -2,14 +2,14 @@
   =============================================================================
   FONT PAIRING LINK — private to font-pairing-loader.liquid
   =============================================================================
-  @param {String} pairing - Curated slug: neutral | vision | technology (called only when not Arial; see font-pairing-loader)
+  @param {String} pairing - Curated slug from settings.font_pairing (called only when not Arial; unknown slugs fall back to neutral)
 
   DO NOT render this snippet from sections, blocks, or any file other than
   snippets/font-pairing-loader.liquid. The loader is only included from <head> in
   layout/theme.liquid. Stylesheet <link> in <body> is invalid HTML and causes FOUC.
 
   Outputs exactly one Google Fonts stylesheet <link> (no preconnect — those live in
-  the loader, before this loop). Stacks in snippets/css-variables.liquid must match
+  the loader, before this stylesheet). Stacks in snippets/css-variables.liquid must match
   the families requested here. CSP: keep href on fonts.googleapis.com.
 {%- endcomment -%}
 
@@ -29,6 +29,54 @@
   {%- when 'technology' -%}
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    >
+
+  {%- when 'bodoni_moda' -%}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    >
+
+  {%- when 'bricolage_grotesque' -%}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Lexend:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    >
+
+  {%- when 'grandstander' -%}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Grandstander:wght@400;600;700&family=Nunito:ital,wght@0,400;0,500;0,600;1,400&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    >
+
+  {%- when 'host_grotesk' -%}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    >
+
+  {%- when 'josefin_sans' -%}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Karla:ital,wght@0,400;0,500;0,600;1,400&family=Ubuntu+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    >
+
+  {%- when 'sour_gummy' -%}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sour+Gummy:wght@400;600;700&family=Nunito:ital,wght@0,400;0,500;0,600;1,400&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    >
+
+  {%- when 'tilt_warp' -%}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    >
+
+  {%- else -%}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400&display=swap"
       rel="stylesheet"
     >
 {%- endcase -%}

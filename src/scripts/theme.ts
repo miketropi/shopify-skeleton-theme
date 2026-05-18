@@ -14,6 +14,7 @@ import { registerHeaderSection } from './header'
 import { registerSectionHeroSlider } from './sections/section-hero-slider'
 import { registerSectionHomeSlider } from './sections/section-home-slider'
 import { registerSectionProductSlider } from './sections/section-product-slider'
+import { registerSectionCollectionList } from './sections/section-collection-list'
 import { registerCollectionGridSection } from './collection-grid'
 import './size-guide'
 import { initSearchModal } from './search-modal'
@@ -51,6 +52,7 @@ registerHeaderSection()
 registerSectionHeroSlider()
 registerSectionHomeSlider()
 registerSectionProductSlider()
+registerSectionCollectionList()
 registerCollectionGridSection()
 registerHeaderTopBarSection()
 registerMainBlogSection()

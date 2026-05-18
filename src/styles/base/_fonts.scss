@@ -2,11 +2,18 @@
 // Runtime --cs-font-* values come from snippets/css-variables.liquid; Google URLs from
 // snippets/font-pairing-link.liquid (skipped for arial). Keep in sync when adding a pairing.
 //
-// Preset count: 4. Slug → (heading, body, mono)
-// arial      Arial / Helvetica stack (system) for heading + body; ui-monospace stack for code
-// neutral    Plus Jakarta Sans   / DM Sans          / DM Mono          (global, neutral)
-// vision     Fraunces (soft serif) / Manrope        / Fira Code       (business / editorial, artistic; variable opsz)
-// technology JetBrains Mono      / Inter            / JetBrains Mono  (tech: mono for headings + code; GF v2)
+// Eleven Typography presets (1 system + 10 Google bundles). Slug → (heading, body, mono)
+// arial                Arial / Helvetica (system) heading + body; ui-monospace for code
+// neutral              Plus Jakarta Sans / DM Sans / DM Mono
+// vision               Fraunces / Manrope / Fira Code
+// technology           JetBrains Mono / Inter / JetBrains Mono
+// bodoni_moda          Bodoni Moda / Outfit / JetBrains Mono
+// bricolage_grotesque  Bricolage Grotesque / Lexend / IBM Plex Mono
+// grandstander         Grandstander / Nunito / Fira Code
+// host_grotesk         Host Grotesk / Host Grotesk / JetBrains Mono
+// josefin_sans         Josefin Sans / Karla / Ubuntu Mono
+// sour_gummy           Sour Gummy / Nunito / Fira Code
+// tilt_warp            Tilt Warp / DM Sans / Space Mono
 
 body {
   font-family: var(--cs-font-body);
