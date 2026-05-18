@@ -19,5 +19,5 @@ export function registerSectionProductSlider(): void {
       m.destroy(container)
       pending.delete(container)
     },
-  )
+  ) 
 }
