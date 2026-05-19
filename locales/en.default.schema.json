@@ -761,6 +761,258 @@
         }
       }
     },
+    "product_images_story": {
+      "name": "Product images story",
+      "presets": {
+        "name": "Product images story"
+      },
+      "headers": {
+        "content": "Content",
+        "layout": "Layout",
+        "product": "Product column",
+        "slideshow": "Image slideshow",
+        "animation": "Animation",
+        "colour": "Colour",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "column_layout": "Column width (large screens)",
+        "image_border_radius": "Image corner rounding",
+        "full_width": "Full width (edge-to-edge background)",
+        "product": "Product",
+        "product_info": "If empty, the first product from the All products collection is shown (when the catalog has products).",
+        "show_secondary_image": "Show second image on hover",
+        "show_vendor": "Show vendor",
+        "show_quick_add": "Show quick add",
+        "slideshow_autoplay": "Autoplay slideshow",
+        "slideshow_speed": "Time per slide",
+        "show_pagination_dots": "Show pagination dots",
+        "slide_transition": "Slide transition",
+        "slideshow_image_ratio": "Slideshow frame ratio",
+        "slideshow_object_fit": "Slide image fit",
+        "entrance_animate_on_scroll": "Animate when scrolling into view",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "background_color_info": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "border_color_info": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "column_layout": {
+          "40_60": "40% product / 60% slideshow",
+          "50_50": "50% / 50%",
+          "60_40": "60% product / 40% slideshow"
+        },
+        "image_border_radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "slide_transition": {
+          "cards": "Cards (stacked)",
+          "fade": "Fade",
+          "slide": "Slide"
+        },
+        "slideshow_image_ratio": {
+          "fill": "Fill column (flexible height)",
+          "landscape": "Landscape (4:3)",
+          "square": "Square (1:1)",
+          "portrait": "Portrait (3:4)",
+          "wide": "Wide (16:9)"
+        },
+        "slideshow_object_fit": {
+          "cover": "Cover (fill frame, may crop)",
+          "contain": "Contain (full image, may letterbox)"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        },
+        "image_position": {
+          "center_center": "Centre centre",
+          "top_center": "Top centre",
+          "bottom_center": "Bottom centre",
+          "left_center": "Left centre",
+          "right_center": "Right centre"
+        }
+      },
+      "info": {
+        "full_width": "Section background fills the browser width. Content stays in the page column.",
+        "entrance_animate_on_scroll": "When off, the section appears immediately after load (still respects reduced motion).",
+        "slideshow_image_ratio": "Fill matches the product column height on two-column layouts. Fixed ratios set the slideshow frame shape; the column no longer stretches to the full product height.",
+        "slideshow_object_fit": "Cover crops to fill the frame. Contain shows the full image with possible empty bands (uses the slide background tone)."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "color_scheme": "Scheme",
+      "color_scheme_info": "Used when Colour scheme is set to Custom. Otherwise the section uses the theme’s global colour scheme.",
+      "blocks": {
+        "slide": {
+          "name": "Image slide",
+          "settings": {
+            "image": "Image",
+            "image_info": "If empty, a theme placeholder image is shown in the slideshow.",
+            "image_position": "Image focal point",
+            "description": "Description"
+          }
+        }
+      }
+    },
+    "collection_slide": {
+      "name": "Collection slide",
+      "presets": {
+        "name": "Collection slide"
+      },
+      "headers": {
+        "intro": "Intro column",
+        "carousel": "Carousel",
+        "card_labels": "Card labels",
+        "animation": "Animation",
+        "colour": "Colour",
+        "layout": "Layout",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "description": "Description",
+        "button_label": "Button label",
+        "button_link": "Button link",
+        "button_style": "Button style",
+        "show_navigation_arrows": "Show navigation arrows",
+        "cards_visible": "Cards visible (large screens)",
+        "card_gap": "Card spacing",
+        "image_ratio": "Image ratio",
+        "image_border_radius": "Image corner radius",
+        "collection_title_size": "Collection title size",
+        "show_view_collection_link": "Show “view collection” link",
+        "view_collection_label": "View collection link label",
+        "entrance_animate_on_scroll": "Animate when scrolling into view",
+        "full_width": "Full width (edge-to-edge background)",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "cards_visible": {
+          "2": "2",
+          "2_5": "2.5 (peek)",
+          "3": "3"
+        },
+        "card_gap": {
+          "small": "Small (16px)",
+          "medium": "Medium (24px)",
+          "large": "Large (32px)"
+        },
+        "image_ratio": {
+          "square": "Square (1:1)",
+          "portrait": "Portrait (3:4)"
+        },
+        "radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "title_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large"
+        },
+        "image_position": {
+          "center_center": "Center center",
+          "top_center": "Top center",
+          "bottom_center": "Bottom center",
+          "left_center": "Left center",
+          "right_center": "Right center"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "info": {
+        "entrance_animate_on_scroll": "When off, the entrance animation runs after the page loads without waiting for scroll (still respects reduced motion).",
+        "full_width": "Background spans the browser width; content stays in the page column.",
+        "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "color_scheme": "Scheme",
+      "color_scheme_info": "Used when Colour scheme is set to Custom. Otherwise the section uses the theme’s global colour scheme.",
+      "blocks": {
+        "overrides_header": "Overrides",
+        "collection_card": {
+          "name": "Collection card",
+          "labels": {
+            "collection": "Collection",
+            "custom_title": "Custom title",
+            "custom_image": "Custom image",
+            "image_position": "Image focal point",
+            "custom_url": "Custom link"
+          },
+          "info": {
+            "custom_title": "Overrides the collection name if set.",
+            "custom_image": "Shown on the card when this entry is active.",
+            "custom_url": "Overrides the collection URL if set."
+          }
+        }
+      }
+    },
     "collection_list": {
       "name": "Collection list",
       "presets": {
@@ -817,7 +1069,8 @@
         "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
         "border_color": "Clear uses the colour scheme border. Used when width is greater than 0.",
         "entrance_animate_on_scroll": "When off, the entrance animation runs after the page loads without waiting for scroll (still respects reduced motion).",
-        "entry_title_use_scheme_colors": "Uses the section’s heading and secondary text colours for active and inactive rows. Turn off to set fixed colours below."
+        "entry_title_use_scheme_colors": "Uses the section’s heading and secondary text colours for active and inactive rows. Turn off to set fixed colours below.",
+        "default_active_index": "1-based index into the full entry list (manual collection entries plus each row expanded from an “All collections” block)."
       },
       "options": {
         "heading_size": {
@@ -876,6 +1129,18 @@
             "custom_product_count": "e.g. “25 products”. Overrides the real count if set.",
             "custom_image": "Shown on the left when this entry is active.",
             "custom_url": "Overrides the collection URL if set."
+          }
+        },
+        "all_collections": {
+          "name": "All collections",
+          "labels": {
+            "max_collections": "Maximum collections to list",
+            "exclude_all_collection": "Exclude “All products” collection",
+            "exclude_frontpage": "Exclude Front page collection",
+            "hide_empty": "Skip collections with no products"
+          },
+          "info": {
+            "hide_empty": "Uses each collection’s published product count."
           }
         }
       }

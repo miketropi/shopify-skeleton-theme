@@ -1,0 +1,623 @@
+@use '../base/variables' as *;
+@use '../base/breakpoints' as *;
+
+// Product Images Story — product column + Swiper gallery (see section-product-images-story.liquid)
+
+// ---------------------------------------------------------------------------
+// Slideshow — flat slide stack (no frame border/box; matches tcard column — radius 0)
+// Pagination aligned with home slider dots.
+// ---------------------------------------------------------------------------
+
+.pis {
+  --swiper-pagination-bullet-inactive-color: color-mix(in srgb, var(--cs-text) 28%, transparent);
+  --swiper-pagination-bullet-inactive-opacity: 0.5;
+  --swiper-pagination-color: color-mix(in srgb, var(--cs-heading) 72%, var(--cs-text) 28%);
+
+  box-sizing: border-box;
+}
+
+.pis__inner {
+  box-sizing: border-box;
+}
+
+.pis__grid {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(#{$space-lg}, 4vw, 2rem);
+}
+
+.pis__col--product {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  min-width: 0;
+  align-items: center;
+}
+
+.pis__intro.product-slider__intro-copy {
+  flex: none;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  margin: 0;
+  text-align: center;
+  align-items: center;
+}
+
+.pis__intro .product-slider__eyebrow,
+.pis__intro .product-slider__heading {
+  width: 100%;
+  text-align: center;
+}
+
+.pis__card {
+  width: 280px;
+  max-width: 100%;
+}
+
+.pis__card .tcard {
+  border-radius: 0;
+}
+
+.pis__card .tcard__body {
+  // align-items: center;
+  // text-align: center;
+}
+
+.pis__card .tcard__prices {
+  // justify-content: center;
+}
+
+.pis__product-placeholder {
+  margin: 0;
+  padding: clamp(#{$space-lg}, 4vw, 2.5rem);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--cs-text) 6%, var(--cs-background));
+  text-align: center;
+}
+
+.pis__product-placeholder-text {
+  margin: 0;
+  font-size: var(--font-size-base, 0.9375rem);
+  color: var(--cs-text-secondary);
+}
+
+.pis__col--slideshow {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 14rem;
+  align-items: stretch;
+}
+
+.pis__viewport {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.pis__swiper-clip {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.pis__swiper.swiper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+.pis__swiper .swiper-wrapper {
+  flex: 1;
+  min-height: 0;
+}
+
+.pis__swiper .swiper-slide {
+  height: auto;
+  box-sizing: border-box;
+}
+
+.pis__slide-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 12rem;
+  padding: 0;
+  gap: 0;
+  box-sizing: border-box;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  opacity: 1;
+  transition: opacity 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.pis.pis--await-swiper .swiper-slide:not(.swiper-slide-active) .pis__slide-frame {
+  opacity: 0.88;
+}
+
+.pis.pis--await-swiper .swiper-slide-active .pis__slide-frame,
+.pis__slide--solo .pis__slide-frame {
+  opacity: 1;
+}
+
+.pis__slide-media {
+  position: relative;
+  flex: 1 1 0;
+  width: 100%;
+  min-height: 0;
+  border-radius: var(--pis-radius, 16px);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--cs-text) 4%, var(--cs-background));
+
+  &:not(:has(.pis__slide-img)) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.pis__slide-zoomable {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  // border-radius: var(--pis-radius, 16px);
+  overflow: hidden;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cs-focus-ring, var(--cs-accent, var(--cs-heading)));
+    outline-offset: 2px;
+    border-radius: 0;
+  }
+}
+
+.pis__slide-img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: var(--pis-slide-object-fit, cover);
+}
+
+// Caption under image (active: .swiper-slide-active / solo) — same rhythm as intro copy
+.pis__slide-desc {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: clamp(0.75rem, 2.5vw, 1rem) 0 0;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(0.2rem);
+  transition:
+    opacity 0.38s cubic-bezier(0.33, 1, 0.68, 1),
+    transform 0.38s cubic-bezier(0.33, 1, 0.68, 1);
+  background: transparent;
+  border: 0;
+}
+
+.pis__slide-desc__body {
+  margin: 0 auto;
+  max-width: 38rem;
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--cs-text-secondary, color-mix(in srgb, var(--cs-text) 72%, var(--cs-background)));
+  font-synthesis: none;
+  text-wrap: pretty;
+
+  &:empty {
+    display: none;
+  }
+
+  p {
+    margin: 0 0 0.4em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    color: var(--cs-accent, var(--cs-heading));
+    font-weight: 400;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+    text-decoration-color: color-mix(in srgb, var(--cs-accent, var(--cs-heading)) 35%, transparent);
+    border-bottom: 0;
+    transition: text-decoration-color 0.2s ease;
+
+    &:hover {
+      text-decoration-color: color-mix(in srgb, var(--cs-accent, var(--cs-heading)) 60%, transparent);
+    }
+  }
+}
+
+.swiper-slide-active .pis__slide-desc,
+.pis__slide--solo .pis__slide-desc {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.pis__placeholder-svg {
+  display: block;
+  width: 80%;
+  max-width: 80%;
+  height: auto;
+  margin: auto;
+  opacity: 0.35;
+}
+
+.pis__loading {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  background: color-mix(in srgb, var(--cs-background, #ffffff) 88%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: opacity 0.32s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.pis__loading-inner {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.pis__loading-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--cs-text-secondary, rgba(0, 0, 0, 0.38));
+  animation: pis-dot-pulse 1s ease-in-out infinite both;
+
+  &:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 0.24s;
+  }
+}
+
+@keyframes pis-dot-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.88);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.pis--revealed .pis__loading {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.pis .pis__nav {
+  position: absolute;
+  top: max(0.65rem, env(safe-area-inset-top));
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0.35rem 0.75rem;
+  width: max-content;
+  max-width: min(22rem, calc(100% - 1.25rem));
+  z-index: 5;
+  box-sizing: border-box;
+  pointer-events: auto;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cs-background) 52%, transparent);
+  backdrop-filter: blur(0.5rem);
+  -webkit-backdrop-filter: blur(0.5rem);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--cs-text) 10%, transparent);
+}
+
+.pis .pis__slide-fraction {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: color-mix(in srgb, var(--cs-text) 88%, transparent);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.pis .pis__slide-fraction-sep {
+  margin: 0 0.12em;
+  opacity: 0.55;
+  font-weight: 400;
+}
+
+.pis .pis__pagination.swiper-pagination-bullets {
+  position: static;
+  left: auto;
+  right: auto;
+  top: auto;
+  bottom: auto;
+  transform: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  max-width: none;
+  z-index: auto;
+  line-height: 0;
+  box-sizing: border-box;
+  pointer-events: auto;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+
+.pis.pis--no-pagination .pis__nav {
+  display: none;
+}
+
+.pis .pis__pagination .swiper-pagination-bullet {
+  width: 0.375rem;
+  height: 0.375rem;
+  margin: 0 !important;
+  opacity: 1;
+  border-radius: 999px;
+  background: var(--swiper-pagination-bullet-inactive-color);
+  vertical-align: middle;
+  transition:
+    width 0.28s ease,
+    background 0.22s ease,
+    opacity 0.22s ease;
+}
+
+.pis .pis__pagination .swiper-pagination-bullet-active {
+  width: 1.125rem;
+  background: var(--swiper-pagination-color);
+  opacity: 0.95;
+}
+
+.pis--slideshow-aspect .pis__col--slideshow {
+  // align-self: center;
+  min-height: 0;
+}
+
+.pis--slideshow-aspect .pis__swiper-clip {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: var(--pis-slideshow-aspect);
+}
+
+.pis--slideshow-aspect .pis__swiper.swiper {
+  position: absolute;
+  inset: 0;
+  flex: none;
+  height: 100%;
+  min-height: 0;
+}
+
+.pis--slideshow-aspect .pis__viewport {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 100%;
+}
+
+.pis--slideshow-aspect .pis__swiper .swiper-wrapper {
+  height: 100%;
+}
+
+.pis--slideshow-aspect .pis__swiper .swiper-slide {
+  height: 100%;
+}
+
+.pis--slideshow-aspect .pis__slide-frame {
+  height: 100%;
+  min-height: 0;
+}
+
+.pis--slideshow-aspect .pis__slide-img {
+  min-height: 0;
+}
+
+// Below md: Swiper’s default slide height (100%) plus absolute img/figure often yields zero
+// paint height when the track has no resolved height. Use in-flow images so aspect ratio comes
+// from the file, then restore absolute fill only for fixed-aspect (ratio box) mode.
+@media (max-width: 767.98px) {
+  .pis .pis__swiper .pis__slide-zoomable {
+    position: relative;
+    inset: auto;
+    display: block;
+    border-radius: var(--pis-radius, 16px);
+    overflow: hidden;
+  }
+
+  .pis .pis__swiper .pis__slide-img {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    object-fit: var(--pis-slide-object-fit, cover);
+    display: block;
+  }
+
+  .pis.pis--slideshow-aspect .pis__swiper .pis__slide-zoomable {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--pis-radius, 16px);
+    overflow: hidden;
+  }
+
+  .pis.pis--slideshow-aspect .pis__swiper .pis__slide-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: var(--pis-slide-object-fit, cover);
+  }
+
+  .pis:not(.pis--slideshow-aspect) .pis__swiper-clip {
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+
+  .pis:not(.pis--slideshow-aspect) .pis__swiper.swiper {
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+
+  .pis:not(.pis--slideshow-aspect) .pis__swiper .swiper-wrapper {
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+
+  .pis:not(.pis--slideshow-aspect) .pis__swiper .swiper-slide {
+    height: auto;
+  }
+
+  .pis:not(.pis--slideshow-aspect) .pis__slide-frame {
+    height: auto;
+    min-height: 0;
+  }
+
+  .pis:not(.pis--slideshow-aspect) .pis__slide-media {
+    flex: 0 0 auto;
+    min-height: 0;
+  }
+}
+
+// Cards effect — Swiper uses 3D transforms; allow stacked slides to extend past the track.
+.pis--effect-cards .pis__grid,
+.pis--effect-cards .pis__col--slideshow,
+.pis--effect-cards .pis__viewport {
+  overflow: visible;
+}
+
+.pis--effect-cards .pis__swiper.swiper {
+  overflow: visible;
+}
+
+.pis--effect-cards .pis__viewport {
+  padding-inline: clamp(0.45rem, 2.2vw, 1rem);
+}
+
+@include mq-up('md') {
+  .pis__grid {
+    flex-direction: row;
+    align-items: stretch;
+    gap: clamp(#{$space-lg}, 3vw, 2.5rem);
+  }
+
+  .pis__col--product {
+    width: 50%;
+    flex-shrink: 0;
+    justify-content: center;
+  }
+
+  .pis__col--slideshow {
+    flex: 1;
+    min-height: 0;
+    justify-content: center;
+  }
+
+  .pis__swiper .swiper-slide {
+    height: 100%;
+  }
+
+  .pis__slide-frame {
+    min-height: 0;
+  }
+
+  .pis__slide-img {
+    min-height: 0;
+  }
+}
+
+@include mq-up('lg') {
+  .pis__col--product {
+    width: var(--pis-product-col-lg, 50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pis__slide-desc {
+    transition-duration: 0.12s;
+  }
+
+  .pis__slide-frame {
+    transition-duration: 0.12s;
+  }
+
+  .pis .pis__pagination .swiper-pagination-bullet {
+    transition: none;
+  }
+
+  .pis__loading {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .pis .pis__nav {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .pis__loading-dot {
+    animation: none;
+    opacity: 0.6;
+  }
+}

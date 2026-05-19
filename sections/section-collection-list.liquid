@@ -26,6 +26,30 @@
       if bx != blank or bu != blank
         assign valid_count = valid_count | plus: 1
       endif
+    elsif block.type == 'all_collections'
+      assign ac_max = block.settings.max_collections | default: 24 | times: 1
+      if ac_max < 1
+        assign ac_max = 1
+      elsif ac_max > 50
+        assign ac_max = 50
+      endif
+      assign ac_emitted = 0
+      for collection in collections
+        if block.settings.exclude_all_collection and collection.handle == 'all'
+          continue
+        endif
+        if block.settings.exclude_frontpage and collection.handle == 'frontpage'
+          continue
+        endif
+        if block.settings.hide_empty and collection.products_count == 0
+          continue
+        endif
+        if ac_emitted >= ac_max
+          break
+        endif
+        assign ac_emitted = ac_emitted | plus: 1
+        assign valid_count = valid_count | plus: 1
+      endfor
     endif
   endfor
 
@@ -83,7 +107,7 @@
 {%- render 'section-styles', section: section -%}
 
 {% style %}
-  html.js #shopify-section-{{ section.id }} .coll-list:not(.coll-list--revealed) .coll-list__media,
+  html.js #shopify-section-{{ section.id }} .coll-list:not(.coll-list--revealed) .coll-list__media-motion,
   html.js #shopify-section-{{ section.id }} .coll-list:not(.coll-list--revealed) .coll-list__item {
     opacity: 0;
   }
@@ -111,7 +135,8 @@
     {%- if valid_count > 0 -%}
       <div class="coll-list__body">
         <div class="coll-list__media">
-          <div class="coll-list__media-stack">
+          <div class="coll-list__media-motion">
+            <div class="coll-list__media-stack">
             {%- assign media_i = -1 -%}
             {%- for block in section.blocks -%}
               {%- if block.type == 'collection_entry' -%}
@@ -152,8 +177,73 @@
                     {%- endif -%}
                   </div>
                 {%- endif -%}
+              {%- elsif block.type == 'all_collections' -%}
+                {%- liquid
+                  assign ac_max = block.settings.max_collections | default: 24 | times: 1
+                  if ac_max < 1
+                    assign ac_max = 1
+                  elsif ac_max > 50
+                    assign ac_max = 50
+                  endif
+                -%}
+                {%- assign ac_media_first = true -%}
+                {%- assign ac_emitted = 0 -%}
+                {%- for collection in collections -%}
+                  {%- if block.settings.exclude_all_collection and collection.handle == 'all' -%}
+                    {%- continue -%}
+                  {%- endif -%}
+                  {%- if block.settings.exclude_frontpage and collection.handle == 'frontpage' -%}
+                    {%- continue -%}
+                  {%- endif -%}
+                  {%- if block.settings.hide_empty and collection.products_count == 0 -%}
+                    {%- continue -%}
+                  {%- endif -%}
+                  {%- if ac_emitted >= ac_max -%}
+                    {%- break -%}
+                  {%- endif -%}
+                  {%- assign ac_emitted = ac_emitted | plus: 1 -%}
+                  {%- assign media_i = media_i | plus: 1 -%}
+                  {%- assign img = collection.featured_image -%}
+                  {%- assign is_active_media = false -%}
+                  {%- if media_i == default_zero -%}
+                    {%- assign is_active_media = true -%}
+                  {%- endif -%}
+                  {%- assign ac_img_alt_e = collection.title | escape -%}
+                  <div
+                    class="coll-list__media-item{% if is_active_media %} is-active{% endif %}"
+                    data-coll-list-media
+                    data-coll-list-index="{{ media_i }}"
+                    aria-hidden="{% if is_active_media %}false{% else %}true{% endif %}"
+                    {% if ac_media_first -%}
+                      {{ block.shopify_attributes }}
+                      {%- assign ac_media_first = false -%}
+                    {%- endif %}
+                  >
+                    {%- if img != blank -%} 
+                      {%- assign img_loading = 'lazy' -%}
+                      {%- if is_active_media -%}
+                        {%- assign img_loading = 'eager' -%} 
+                      {%- endif -%}
+                      {{
+                        img
+                        | image_url: width: 1600
+                        | image_tag:
+                          loading: img_loading,
+                          class: 'coll-list__media-img',
+                          widths: '400,600,800,1200,1600',
+                          sizes: '(min-width: 62em) min(55vw, 720px), (min-width: 48em) 40vw, 100vw',
+                          alt: ac_img_alt_e
+                      }}
+                    {%- else -%}
+                      <div class="coll-list__media-placeholder" aria-hidden="true">
+                        {{ 'image' | placeholder_svg_tag: 'coll-list__media-placeholder-svg' }}
+                      </div>
+                    {%- endif -%}
+                  </div>
+                {%- endfor -%}
               {%- endif -%}
             {%- endfor -%}
+            </div>
           </div>
         </div>
 
@@ -227,6 +317,76 @@
                   </a>
                 </li>
               {%- endif -%}
+            {%- elsif block.type == 'all_collections' -%}
+              {%- liquid
+                assign ac_max = block.settings.max_collections | default: 24 | times: 1
+                if ac_max < 1
+                  assign ac_max = 1
+                elsif ac_max > 50
+                  assign ac_max = 50
+                endif
+              -%}
+              {%- assign ac_entry_first = true -%}
+              {%- assign ac_emitted = 0 -%}
+              {%- for collection in collections -%}
+                {%- if block.settings.exclude_all_collection and collection.handle == 'all' -%}
+                  {%- continue -%}
+                {%- endif -%}
+                {%- if block.settings.exclude_frontpage and collection.handle == 'frontpage' -%}
+                  {%- continue -%}
+                {%- endif -%}
+                {%- if block.settings.hide_empty and collection.products_count == 0 -%}
+                  {%- continue -%}
+                {%- endif -%}
+                {%- if ac_emitted >= ac_max -%}
+                  {%- break -%}
+                {%- endif -%}
+                {%- assign ac_emitted = ac_emitted | plus: 1 -%}
+                {%- assign entry_i = entry_i | plus: 1 -%}
+                {%- assign href = collection.url -%}
+                {%- assign title = collection.title | default: href -%}
+                {%- assign open_tab = block.settings.open_new_tab -%}
+                {%- assign is_active_row = false -%}
+                {%- if entry_i == default_zero -%}
+                  {%- assign is_active_row = true -%}
+                {%- endif -%}
+                <li
+                  class="coll-list__item{% if is_active_row %} is-active{% endif %}"
+                  data-coll-list-item
+                  data-coll-list-index="{{ entry_i }}"
+                  {% if ac_entry_first -%}
+                    {{ block.shopify_attributes }}
+                    {%- assign ac_entry_first = false -%}
+                  {%- endif %}
+                >
+                  <a
+                    class="coll-list__entry"
+                    href="{{ href }}"
+                    data-coll-list-entry
+                    data-coll-list-index="{{ entry_i }}"
+                    {% if open_tab %}
+                      target="_blank" rel="noopener noreferrer"
+                    {% endif %}
+                  >
+                    <span class="coll-list__entry-main">
+                      <span class="coll-list__entry-title">{{ title | escape }}</span>
+                      {%- if section.settings.show_product_count -%}
+                        <span class="coll-list__entry-count">
+                          {{ 'collections.general.product_count' | t: count: collection.products_count }}
+                        </span>
+                      {%- endif -%}
+                    </span>
+                    {%- if section.settings.show_arrow_icon -%}
+                      <span class="coll-list__arrow" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M5 12h14"/>
+                          <path d="m12 5 7 7-7 7"/>
+                        </svg>
+                      </span>
+                    {%- endif -%}
+                  </a>
+                </li>
+              {%- endfor -%}
             {%- endif -%}
           {%- endfor -%}
         </ul>
@@ -299,8 +459,9 @@
       "type": "range",
       "id": "default_active_index",
       "label": "t:sections.collection_list.labels.default_active_index",
+      "info": "t:sections.collection_list.info.default_active_index",
       "min": 1,
-      "max": 8,
+      "max": 50,
       "step": 1,
       "default": 1
     },
@@ -606,6 +767,46 @@
   ],
   "blocks": [
     {
+      "type": "all_collections",
+      "name": "t:sections.collection_list.blocks.all_collections.name",
+      "settings": [
+        {
+          "type": "range",
+          "id": "max_collections",
+          "min": 4,
+          "max": 50,
+          "step": 1,
+          "label": "t:sections.collection_list.blocks.all_collections.labels.max_collections",
+          "default": 24
+        },
+        {
+          "type": "checkbox",
+          "id": "exclude_all_collection",
+          "label": "t:sections.collection_list.blocks.all_collections.labels.exclude_all_collection",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "exclude_frontpage",
+          "label": "t:sections.collection_list.blocks.all_collections.labels.exclude_frontpage",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_empty",
+          "label": "t:sections.collection_list.blocks.all_collections.labels.hide_empty",
+          "info": "t:sections.collection_list.blocks.all_collections.info.hide_empty",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "open_new_tab",
+          "label": "t:sections.collection_list.blocks.collection_entry.labels.open_new_tab",
+          "default": false
+        }
+      ]
+    },
+    {
       "type": "collection_entry",
       "name": "t:sections.collection_list.blocks.collection_entry.name",
       "settings": [
@@ -655,7 +856,11 @@
   "presets": [
     {
       "name": "t:sections.collection_list.presets.name",
-      "blocks": []
+      "blocks": [
+        {
+          "type": "all_collections"
+        }
+      ]
     }
   ]
 }

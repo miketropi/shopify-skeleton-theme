@@ -451,6 +451,22 @@
     },
     "collection_list": {
       "empty": "Add collection entries (pick a collection or a custom link) to show this section."
+    },
+    "collection_slide": {
+      "carousel": "Carousel",
+      "region_label": "Collection carousel",
+      "prev": "Previous collections",
+      "next": "Next collections",
+      "empty": "Add collection card blocks (pick a collection or a custom link) to show this section."
+    },
+    "product_images_story": {
+      "select_product": "Pick a product in the section settings to show the card here.",
+      "carousel": "Image carousel",
+      "region_label": "Product story images",
+      "slide": "Slide",
+      "slide_n_of_m": "Slide {{ n }} of {{ m }}",
+      "slide_fraction_aria": "Slide __CURRENT__ of __TOTAL__",
+      "lightbox_dialog": "Story images"
     }
   }
 }

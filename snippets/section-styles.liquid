@@ -2,7 +2,9 @@
   snippets/section-styles.liquid
   ────────────────────────────────────────────────────────────────────────────
   Section shell: padding (4 sides), margin (top/bottom), background, border,
-  and per-corner radius (--section-radius-tl/tr/br/bl).
+  and per-corner radius (--section-radius-tl/tr/br/bl). Padding/margin use
+  clamp(min, fluid, setting) so tablet/mobile taper while the setting stays
+  the ceiling on wide screens.
 
   Usage:
     {%- render 'section-styles', section: section -%}
@@ -29,16 +31,41 @@
   assign r_br = section.settings.border_radius_bottom_right | default: 0
   assign r_bl = section.settings.border_radius_bottom_left | default: 0
   assign border_c = section.settings.border_color
+
+  assign pt_min = 0
+  if pt > 0
+    assign pt_min = pt | times: 0.38 | round
+  endif
+  assign pb_min = 0
+  if pb > 0
+    assign pb_min = pb | times: 0.38 | round
+  endif
+  assign pr_min = 0
+  if pr > 0
+    assign pr_min = pr | times: 0.38 | round
+  endif
+  assign pl_min = 0
+  if pl > 0
+    assign pl_min = pl | times: 0.38 | round
+  endif
+  assign mt_min = 0
+  if mt > 0
+    assign mt_min = mt | times: 0.4 | round
+  endif
+  assign mb_min = 0
+  if mb > 0
+    assign mb_min = mb | times: 0.4 | round
+  endif
 -%}
 
 <style>
   #shopify-section-{{ section.id }} {
-    --section-padding-top: {{ pt }}px;
-    --section-padding-right: {{ pr }}px;
-    --section-padding-bottom: {{ pb }}px;
-    --section-padding-left: {{ pl }}px;
-    --section-margin-top: {{ mt }}px;
-    --section-margin-bottom: {{ mb }}px;
+    --section-padding-top: clamp({{ pt_min }}px, calc({{ pt }}px * 0.55 + 2.25vw), {{ pt }}px);
+    --section-padding-right: clamp({{ pr_min }}px, calc({{ pr }}px * 0.55 + 1.15vw), {{ pr }}px);
+    --section-padding-bottom: clamp({{ pb_min }}px, calc({{ pb }}px * 0.55 + 2.25vw), {{ pb }}px);
+    --section-padding-left: clamp({{ pl_min }}px, calc({{ pl }}px * 0.55 + 1.15vw), {{ pl }}px);
+    --section-margin-top: clamp({{ mt_min }}px, calc({{ mt }}px * 0.52 + 1.35vw), {{ mt }}px);
+    --section-margin-bottom: clamp({{ mb_min }}px, calc({{ mb }}px * 0.52 + 1.35vw), {{ mb }}px);
     --section-border-width: {{ border_w }}px;
     --section-border-style: {{ border_style }};
     --section-radius-tl: {{ r_tl }}px;

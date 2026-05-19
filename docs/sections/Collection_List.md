@@ -15,12 +15,13 @@
 
 ## Behaviour
 
-- **Blocks:** Up to 8 **`collection_entry`** blocks. A row is shown if the block has a **collection** and/or **custom URL**.
+- **Blocks:** Up to 8 blocks total. Each **`collection_entry`** row is shown if the block has a **collection** and/or **custom URL**. An **`all_collections`** block expands **in block order** into one row per qualifying storefront collection (see that block’s settings for cap and filters). You can mix manual entries and “all collections” (e.g. featured row, then auto list).
 - **Left column:** All entry images are stacked absolutely; **opacity crossfade** swaps the visible image (**CSS** `transition`, honouring **`prefers-reduced-motion`**).
 - **Right column:** Linked rows (title, optional count, optional arrow); **active** row matches the visible image.
 - **Interaction:** With **fine pointer + hover**, **mouseenter** on a row updates the active image. **Pointer down** and **focus** also activate (mobile tap / keyboard).
-- **Default row:** **`default_active_index`** (1-based, clamped to the number of valid blocks).
+- **Default row:** **`default_active_index`** (1-based, clamped to the number of visible rows; editor range **1–50**).
 - **Responsive:** Stacked **image above list** below **`md` (48em)**; **md–lg** uses a **40%** image column; **`lg` (62em)+** uses the **image column width** setting (40% / 50% / 60%).
+- **Sticky shorter column (md+):** If the two columns differ in height, JS adds **`coll-list__col--sticky`** to the shorter column so it uses **`position: sticky`** with **`--header-height`** offset (same pattern as PDP / article sidebar). Recalculates on **`ResizeObserver`** and **`matchMedia`** for the two-column breakpoint; **no sticky class** when the layout is single column.
 - **Extras vs original spec:** **`full_width`** + full **`section-styles`** shell (padding, margin, background, border, radius) aligned with other sections; vertical padding defaults **80px** top/bottom with **0–160px** step **8** on those controls.
 
 ---
@@ -37,7 +38,7 @@ Global settings for the entire section.
 | `heading` | text | *(empty)* | Section main heading. Example: *"Essential Collections"*. |
 | `heading_size` | select | `Large` | Heading size: Small, Medium, Large, Extra large. |
 | `description` | textarea | *(empty)* | Short paragraph below the heading. Example: *"Explore curated categories designed to cleanse, and protect your skin…"* |
-| `default_active_index` | number | `1` | Which collection entry is highlighted as active on page load (before any hover). 1-based index. |
+| `default_active_index` | number | `1` | Which row is active on load (**1-based**), counting every visible row—including each row from an **All collections** block. Editor max **50**. |
 
 ---
 
@@ -67,6 +68,20 @@ Controls the appearance of the collection entry rows in the right column.
 | `inactive_title_color` | color | `#999999` | Shown only when scheme colours are off. Inactive entry title. |
 | `title_size` | select | `Large` | Font size of the collection title in each entry: Small, Medium, Large. |
 | `hover_transition_speed` | select | `Normal (300ms)` | Speed of the image crossfade on hover: Fast (150ms), Normal (300ms), Slow (500ms). |
+
+---
+
+## All collections block
+
+One block can add **many** rows: it walks Liquid **`collections`** (Shopify’s storefront collection list) and outputs a media + list row for each collection that passes the block’s filters. Order follows Shopify’s iteration order for `collections`. **`{{ block.shopify_attributes }}`** is applied to the **first** row from this block only (theme editor targeting).
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `max_collections` | range | `24` | Maximum rows from this block (**4–50**). |
+| `exclude_all_collection` | checkbox | `true` | Skip handle **`all`**. |
+| `exclude_frontpage` | checkbox | `true` | Skip handle **`frontpage`**. |
+| `hide_empty` | checkbox | `false` | Skip collections with **`products_count`** 0. |
+| `open_new_tab` | checkbox | `false` | Open links in a new tab. |
 
 ---
 

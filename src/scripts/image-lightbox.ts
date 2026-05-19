@@ -460,3 +460,25 @@ export function lightboxItemsFromGalleryImgs(galleryRoot: HTMLElement): ImageLig
     }
   })
 }
+
+/** Map Product Images Story slides (`data-pis-lightbox-img`; optional `data-pis-lightbox-src` for full-res). */
+export function lightboxItemsFromPisSlides(root: HTMLElement): ImageLightboxItem[] {
+  const imgs = root.querySelectorAll<HTMLImageElement>('[data-pis-lightbox-img]')
+  return Array.from(imgs).map((el) => {
+    const caption = (el.dataset.lightboxCaption || '').trim()
+    const hasCaption = el.dataset.lightboxHasCaption === 'true'
+    const w = parseInt(el.getAttribute('width') || '', 10)
+    const h = parseInt(el.getAttribute('height') || '', 10)
+    const hires = (el.dataset.pisLightboxSrc || '').trim()
+    return {
+      src: hires || el.currentSrc || el.src,
+      srcset: hires ? undefined : el.getAttribute('srcset') || undefined,
+      sizes: hires ? undefined : el.getAttribute('sizes') || undefined,
+      alt: el.alt || '',
+      width: Number.isFinite(w) ? w : undefined,
+      height: Number.isFinite(h) ? h : undefined,
+      caption: hasCaption ? caption : '',
+      hasCaption,
+    }
+  })
+}

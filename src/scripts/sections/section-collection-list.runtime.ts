@@ -101,6 +101,74 @@ function setActive(container: HTMLElement, index: number): void {
   })
 }
 
+/** Matches `mq-up('md')` in _section-collection-list.scss (two-column layout). */
+const COLL_LIST_TWO_COL_MQ = '(min-width: 48em)'
+const COLL_LIST_STICKY_HEIGHT_EPS = 2
+
+/**
+ * Sticks the shorter of the two columns on md+; clears classes below the breakpoint.
+ * Recalculates on resize / column content size changes.
+ */
+function setupCollListStickyColumn(
+  media: HTMLElement,
+  entries: HTMLElement,
+  signal: AbortSignal,
+): void {
+  const mq = window.matchMedia(COLL_LIST_TWO_COL_MQ)
+  let rafId = 0
+
+  const clearSticky = (): void => {
+    media.classList.remove('coll-list__col--sticky')
+    entries.classList.remove('coll-list__col--sticky')
+  }
+
+  const update = (): void => {
+    if (signal.aborted) return
+    clearSticky()
+    if (!mq.matches) return
+
+    const hMedia = media.offsetHeight
+    const hEntries = entries.offsetHeight
+
+    if (hMedia + COLL_LIST_STICKY_HEIGHT_EPS < hEntries) {
+      media.classList.add('coll-list__col--sticky')
+    } else if (hEntries + COLL_LIST_STICKY_HEIGHT_EPS < hMedia) {
+      entries.classList.add('coll-list__col--sticky')
+    }
+  }
+
+  const scheduleUpdate = (): void => {
+    cancelAnimationFrame(rafId)
+    rafId = requestAnimationFrame(() => {
+      rafId = 0
+      update()
+    })
+  }
+
+  const onMqChange = (): void => {
+    scheduleUpdate()
+  }
+
+  mq.addEventListener('change', onMqChange)
+
+  const ro = new ResizeObserver(scheduleUpdate)
+  ro.observe(media)
+  ro.observe(entries)
+
+  scheduleUpdate()
+
+  signal.addEventListener(
+    'abort',
+    () => {
+      mq.removeEventListener('change', onMqChange)
+      ro.disconnect()
+      cancelAnimationFrame(rafId)
+      clearSticky()
+    },
+    { once: true },
+  )
+}
+
 function bindListInteraction(container: HTMLElement, signal: AbortSignal): void {
   const entries = container.querySelectorAll<HTMLElement>('[data-coll-list-entry]')
   if (entries.length === 0) return
@@ -189,12 +257,14 @@ export function init(container: HTMLElement): void {
   let revealTimeline: gsap.core.Timeline | null = null
 
   const mediaEl = container.querySelector<HTMLElement>('.coll-list__media')
+  const mediaMotionEl = mediaEl?.querySelector<HTMLElement>('.coll-list__media-motion') ?? null
+  const mediaAnimateTarget = mediaMotionEl ?? mediaEl
   const listItems = Array.from(container.querySelectorAll<HTMLElement>('.coll-list__item'))
 
   const teardown = (): void => {
     revealTimeline?.kill()
     revealTimeline = null
-    const targets = [...listItems, ...(mediaEl ? [mediaEl] : [])]
+    const targets = [...listItems, ...(mediaAnimateTarget ? [mediaAnimateTarget] : [])]
     gsap.killTweensOf(targets)
     container.classList.remove('coll-list--revealed')
     abort.abort()
@@ -202,6 +272,11 @@ export function init(container: HTMLElement): void {
   root.__collListTeardown = teardown
 
   bindListInteraction(container, signal)
+
+  const entriesCol = container.querySelector<HTMLElement>('.coll-list__entries')
+  if (mediaEl && entriesCol) {
+    setupCollListStickyColumn(mediaEl, entriesCol, signal)
+  }
 
   if (listItems.length === 0 && !mediaEl) {
     container.classList.add('coll-list--revealed')
@@ -213,11 +288,11 @@ export function init(container: HTMLElement): void {
   const animateOnScroll = container.dataset.collListEntranceScroll !== 'false'
 
   if (reduced) {
-    revealTimeline = revealSection(container, mediaEl, listItems, true)
+    revealTimeline = revealSection(container, mediaAnimateTarget, listItems, true)
     return
   }
 
-  if (mediaEl) gsap.set(mediaEl, { autoAlpha: 0, x: -28 })
+  if (mediaAnimateTarget) gsap.set(mediaAnimateTarget, { autoAlpha: 0, x: -28 })
   if (listItems.length > 0) gsap.set(listItems, { autoAlpha: 0, y: 22 })
 
   const waitScroll = animateOnScroll && !designMode
@@ -228,7 +303,7 @@ export function init(container: HTMLElement): void {
     .catch(() => {})
     .then(() => {
       if (signal.aborted) return
-      revealTimeline = revealSection(container, mediaEl, listItems, false)
+      revealTimeline = revealSection(container, mediaAnimateTarget, listItems, false)
     })
 }
 
