@@ -330,7 +330,7 @@ html:not(.js) .htbar__rotator--await-js .htbar__rotator-item {
   max-width: 100%;
 }
 
-.htbar__info--localization .cselect__btn {
+.htbar__card--localization .cselect__btn {
   position: relative;
   min-height: 1.875rem;
   padding: 5px 28px 5px 10px;
@@ -341,7 +341,7 @@ html:not(.js) .htbar__rotator--await-js .htbar__rotator-item {
     0 -0.5px 0 color-mix(in srgb, var(--htbar-text) 5%, transparent) inset;
 }
 
-.htbar__info--localization .cselect__icon {
+.htbar__card--localization .cselect__icon {
   position: absolute;
   right: 9px;
   top: 50%;
