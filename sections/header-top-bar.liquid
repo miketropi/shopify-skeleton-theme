@@ -169,7 +169,15 @@
 
               <div class="htbar__overlay" data-htbar-overlay></div>
 
-              <div class="htbar__dropdown htbar__dropdown--{{ loc_position }}" id="{{ loc_panel_id }}" role="region" aria-labelledby="{{ loc_trigger_id }}" aria-hidden="true">
+              <div
+                class="htbar__dropdown htbar__dropdown--{{ loc_position }}"
+                id="{{ loc_panel_id }}"
+                role="region"
+                aria-labelledby="{{ loc_trigger_id }}"
+                aria-hidden="true"
+                data-htbar-dropdown
+                data-htbar-dropdown-align="{{ loc_position }}"
+              >
                 <div class="htbar__card htbar__card--localization">
                   {%- assign loc_menu_desc_plain = block.settings.menu_description | strip_html | strip -%}
                   {%- if loc_menu_desc_plain != blank -%}
@@ -304,7 +312,15 @@
 
             <div class="htbar__overlay" data-htbar-overlay></div>
 
-            <div class="htbar__dropdown htbar__dropdown--{{ si_position }}" id="{{ si_panel_id }}" role="region" aria-labelledby="{{ si_trigger_id }}" aria-hidden="true">
+            <div
+              class="htbar__dropdown htbar__dropdown--{{ si_position }}"
+              id="{{ si_panel_id }}"
+              role="region"
+              aria-labelledby="{{ si_trigger_id }}"
+              aria-hidden="true"
+              data-htbar-dropdown
+              data-htbar-dropdown-align="{{ si_position }}"
+            >
               <div class="htbar__card">
 
                 {%- if has_social -%}

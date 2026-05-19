@@ -418,27 +418,10 @@ html:not(.js) .htbar__rotator--await-js .htbar__rotator-item {
   }
 }
 
-// ── Overlay (mobile backdrop) ───────────────────────────
+// ── Overlay (legacy slot; menus use body portal + outside click only) ──
 
 .htbar__overlay {
   display: none;
-
-  @media (max-width: 35.99em) {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 399;
-    background: color-mix(in srgb, var(--htbar-text, #000) 36%, transparent);
-    visibility: hidden;
-    opacity: 0;
-    pointer-events: none;
-
-    @supports (backdrop-filter: blur(8px)) {
-      background: color-mix(in srgb, var(--htbar-text, #000) 22%, transparent);
-      backdrop-filter: blur(10px) saturate(1.1);
-      -webkit-backdrop-filter: blur(10px) saturate(1.1);
-    }
-  }
 }
 
 // ── Dropdown ─────────────────────────────────────────────
@@ -450,50 +433,27 @@ html:not(.js) .htbar__rotator--await-js .htbar__rotator-item {
   padding-top: 8px;
   pointer-events: none;
 
-  @media (min-width: 36em) {
-    .htbar__info:not(.is-open) & {
-      visibility: hidden;
-    }
+  &:not(.is-open):not(.htbar__dropdown--portaled) {
+    visibility: hidden;
   }
 
-  @media (max-width: 35.99em) {
-    position: fixed;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
+  // Portaled to <body> (all viewports) — position from header-top-bar.ts
+  &.htbar__dropdown--portaled {
+    position: fixed !important;
+    top: 0;
+    right: auto;
+    bottom: auto;
     padding-top: 0;
-    padding-bottom: env(safe-area-inset-bottom);
-    transform: none;
-
-    .htbar__info:not(.is-open) & {
-      visibility: hidden;
-    }
-  }
-
-  @media (min-width: 36em) and (max-width: 47.99em) {
-    max-width: calc(100vw - 2rem);
-
-    &.htbar__dropdown--left {
-      left: auto;
-      right: auto;
-    }
-
-    &.htbar__dropdown--right {
-      left: auto;
-      right: auto;
-    }
+    padding-bottom: 0;
+    z-index: 5000;
+    max-width: min(100vw - 1.25rem, 100%);
+    transform: none !important;
   }
 }
 
 .htbar__dropdown--center {
   left: 50%;
   transform: translateX(-50%);
-
-  @media (max-width: 35.99em) {
-    left: 0;
-    transform: none;
-  }
 }
 
 .htbar__dropdown--left {
@@ -504,7 +464,7 @@ html:not(.js) .htbar__rotator--await-js .htbar__rotator-item {
   right: 0;
 }
 
-.htbar__info.is-open .htbar__dropdown {
+.htbar__dropdown.is-open {
   pointer-events: auto;
   visibility: visible;
 }
@@ -526,32 +486,28 @@ html:not(.js) .htbar__rotator--await-js .htbar__rotator-item {
     opacity 0.2s $_ease,
     transform 0.35s $_spring;
 
-  .htbar__info.is-open & {
+  .htbar__dropdown.is-open & {
     opacity: 1;
     transform: translateY(0) scale(1);
     // box-shadow:
     //   0 4px 8px -4px color-mix(in srgb, var(--htbar-text) 10%, transparent),
     //   0 14px 44px color-mix(in srgb, var(--htbar-text) 14%, var(--htbar-bg));
   }
+}
 
-  @media (max-width: 35.99em) {
-    width: 100%;
-    border-radius: $_r-card $_r-card 0 0;
-    opacity: 1;
-    transform: translateY(100%);
-    transform-origin: bottom center;
-    transition: none;
-  }
+// Portaled popovers (mobile + desktop): keep tall panels scrollable in the viewport
+.htbar__dropdown.htbar__dropdown--portaled .htbar__card {
+  max-height: min(75dvh, 32rem);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 // Slightly wider card for stacked country + language selectors
 .htbar__card.htbar__card--localization {
   width: min(100vw - 2rem, 17.5rem);
   padding: 10px 8px 8px;
-
-  @media (max-width: 35.99em) {
-    width: 100%;
-  }
 }
 
 // ── Section spacing ─────────────────────────────────────

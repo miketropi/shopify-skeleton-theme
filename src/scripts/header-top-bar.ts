@@ -185,22 +185,88 @@ function stopRotator(el: HTMLElement): void {
 
 // ─── Top bar menus (store info + localization — click to open) ──
 
+type HtbarDropdownAlign = 'left' | 'center' | 'right'
+
+const HTBAR_VIEW_MARGIN = 10
+const HTBAR_TRIGGER_GAP = 8
+const HTBAR_PORTAL_Z = 5000
+
+/** Custom props defined on `.htbar` / `.htbar__info` — copied onto portaled dropdown so it keeps appearance off the bar root. */
+const HTBAR_PORTAL_COPY_KEYS = [
+  '--htbar-bg',
+  '--htbar-text',
+  '--htbar-heading',
+  '--htbar-accent',
+  '--htbar-align',
+  '--_sep',
+  '--_tint',
+  '--cs-background',
+  '--cs-background-secondary',
+  '--cs-border',
+  '--cs-text',
+  '--cs-text-secondary',
+  '--cs-heading',
+  '--cs-accent',
+  '--cs-accent-text',
+  '--cs-btn-primary-bg',
+  '--cs-btn-primary-text',
+  '--cs-btn-primary-border',
+  '--cs-btn-secondary-bg',
+  '--cs-btn-secondary-text',
+  '--cs-btn-secondary-border',
+  '--theme-color-text',
+  '--theme-color-bg',
+  '--theme-color-accent',
+  '--htbar-trigger-color',
+  '--htbar-icon-color',
+  '--htbar-btn-color',
+] as const
+
+function applyHtbarPortalTheme(
+  panel: HTMLElement,
+  bar: HTMLElement,
+  info: HTMLElement,
+): void {
+  for (const source of [bar, info]) {
+    const cs = getComputedStyle(source)
+    for (const key of HTBAR_PORTAL_COPY_KEYS) {
+      const v = cs.getPropertyValue(key).trim()
+      if (v) panel.style.setProperty(key, v)
+    }
+  }
+}
+
+function removeHtbarPortalTheme(panel: HTMLElement): void {
+  for (const key of HTBAR_PORTAL_COPY_KEYS) {
+    panel.style.removeProperty(key)
+  }
+}
+
 interface StoreInfoState {
   wrap: HTMLElement
   trigger: HTMLElement
+  panel: HTMLElement | null
   card: HTMLElement | null
-  overlay: HTMLElement | null
   open: boolean
-  tween: gsap.core.Timeline | null
+  align: HtbarDropdownAlign
+  panelPortaled: boolean
+  panelParent: HTMLElement | null
+  panelAnchor: Comment | null
+  repositionCleanup: (() => void) | null
   boundOutsideClick: (e: MouseEvent) => void
   boundEscape: (e: KeyboardEvent) => void
 }
 
-const mobileMq = window.matchMedia('(max-width: 35.99em)')
 const infoStates = new WeakMap<HTMLElement, StoreInfoState>()
 
 function htbarPanel(wrap: HTMLElement): HTMLElement | null {
-  return wrap.querySelector<HTMLElement>('.htbar__dropdown')
+  return wrap.querySelector<HTMLElement>('[data-htbar-dropdown]')
+}
+
+function parseHtbarAlign(panel: HTMLElement | null): HtbarDropdownAlign {
+  const raw = (panel?.dataset.htbarDropdownAlign || '').toLowerCase()
+  if (raw === 'left' || raw === 'right') return raw
+  return 'center'
 }
 
 function setHtbarPanelHidden(wrap: HTMLElement, hidden: boolean): void {
@@ -208,6 +274,95 @@ function setHtbarPanelHidden(wrap: HTMLElement, hidden: boolean): void {
   if (panel) {
     panel.setAttribute('aria-hidden', hidden ? 'true' : 'false')
   }
+}
+
+function clearHtbarPortalInlineStyles(panel: HTMLElement): void {
+  panel.style.top = ''
+  panel.style.left = ''
+  panel.style.right = ''
+  panel.style.bottom = ''
+  panel.style.position = ''
+  panel.style.transform = ''
+  panel.style.paddingTop = ''
+  panel.style.zIndex = ''
+}
+
+function positionHtbarPortalPanel(
+  trigger: HTMLElement,
+  panel: HTMLElement,
+  align: HtbarDropdownAlign,
+): void {
+  const triggerRect = trigger.getBoundingClientRect()
+  const vw = window.innerWidth
+  const vh = window.innerHeight
+
+  panel.style.position = 'fixed'
+  panel.style.zIndex = `${HTBAR_PORTAL_Z}`
+  panel.style.paddingTop = '0'
+  panel.style.right = 'auto'
+  panel.style.bottom = 'auto'
+  panel.style.transform = 'none'
+
+  const pw = panel.offsetWidth
+  const ph = panel.offsetHeight
+
+  let left =
+    align === 'left'
+      ? triggerRect.left
+      : align === 'right'
+        ? triggerRect.right - pw
+        : triggerRect.left + (triggerRect.width - pw) / 2
+
+  left = Math.min(
+    Math.max(HTBAR_VIEW_MARGIN, left),
+    vw - HTBAR_VIEW_MARGIN - pw,
+  )
+
+  let top = triggerRect.bottom + HTBAR_TRIGGER_GAP
+  if (top + ph > vh - HTBAR_VIEW_MARGIN) {
+    const above = triggerRect.top - HTBAR_TRIGGER_GAP - ph
+    if (above >= HTBAR_VIEW_MARGIN) top = above
+  }
+
+  top = Math.min(top, vh - HTBAR_VIEW_MARGIN - ph)
+  top = Math.max(HTBAR_VIEW_MARGIN, top)
+
+  panel.style.top = `${Math.round(top)}px`
+  panel.style.left = `${Math.round(left)}px`
+}
+
+function bindHtbarPortalReposition(state: StoreInfoState): () => void {
+  const reposition = (): void => {
+    if (!state.open || !state.panelPortaled || !state.panel) return
+    positionHtbarPortalPanel(state.trigger, state.panel, state.align)
+  }
+
+  window.addEventListener('scroll', reposition, true)
+  window.addEventListener('resize', reposition)
+  window.visualViewport?.addEventListener('resize', reposition)
+  window.visualViewport?.addEventListener('scroll', reposition)
+
+  return () => {
+    window.removeEventListener('scroll', reposition, true)
+    window.removeEventListener('resize', reposition)
+    window.visualViewport?.removeEventListener('resize', reposition)
+    window.visualViewport?.removeEventListener('scroll', reposition)
+  }
+}
+
+function restoreHtbarPortalToWrap(state: StoreInfoState): void {
+  const { panel, panelParent, panelAnchor } = state
+  if (!panel || !panelParent || !panelAnchor?.parentNode) return
+  if (panel.parentNode !== document.body) return
+
+  removeHtbarPortalTheme(panel)
+  panel.classList.remove('htbar__dropdown--portaled')
+  clearHtbarPortalInlineStyles(panel)
+  panelParent.insertBefore(panel, panelAnchor)
+  panelParent.removeChild(panelAnchor)
+  state.panelAnchor = null
+  state.panelParent = null
+  state.panelPortaled = false
 }
 
 function firstFocusableIn(container: HTMLElement): HTMLElement | null {
@@ -237,11 +392,14 @@ function setupStoreInfo(wrap: HTMLElement): void {
   const trigger = wrap.querySelector<HTMLElement>('[data-htbar-trigger]')
   if (!trigger) return
 
-  const overlay = wrap.querySelector<HTMLElement>('[data-htbar-overlay]')
+  const panel = htbarPanel(wrap)
   const card = wrap.querySelector<HTMLElement>('.htbar__card')
 
   const boundOutsideClick = (e: MouseEvent): void => {
-    if (!wrap.contains(e.target as Node)) closeStoreInfo(wrap)
+    const t = e.target as Node
+    if (wrap.contains(t)) return
+    if (panel?.contains(t)) return
+    closeStoreInfo(wrap)
   }
 
   const boundEscape = (e: KeyboardEvent): void => {
@@ -254,10 +412,14 @@ function setupStoreInfo(wrap: HTMLElement): void {
   const state: StoreInfoState = {
     wrap,
     trigger,
+    panel,
     card,
-    overlay,
     open: false,
-    tween: null,
+    align: parseHtbarAlign(panel),
+    panelPortaled: false,
+    panelParent: null,
+    panelAnchor: null,
+    repositionCleanup: null,
     boundOutsideClick,
     boundEscape,
   }
@@ -274,24 +436,46 @@ function setupStoreInfo(wrap: HTMLElement): void {
       openStoreInfo(wrap)
     }
   })
-
-  if (overlay) {
-    overlay.addEventListener('click', () => closeStoreInfo(wrap))
-  }
 }
 
 function openStoreInfo(wrap: HTMLElement): void {
   const state = infoStates.get(wrap)
   if (!state || state.open) return
   state.open = true
-  state.tween?.kill()
+
+  const { panel } = state
+  const bar = wrap.closest('.htbar') as HTMLElement | null
+  const parent = panel?.parentElement ?? null
+  const usePortal = Boolean(panel && parent && bar)
+
+  if (usePortal && panel && parent && bar) {
+    state.panelPortaled = true
+    state.panelParent = parent
+    const anchor = document.createComment('htbar-dropdown-anchor')
+    state.panelAnchor = anchor
+    state.panelParent.insertBefore(anchor, panel)
+    document.body.appendChild(panel)
+    panel.classList.add('htbar__dropdown--portaled')
+    applyHtbarPortalTheme(panel, bar, wrap)
+  }
 
   wrap.classList.add('is-open')
+  panel?.classList.add('is-open')
   setHtbarPanelHidden(wrap, false)
   state.trigger.setAttribute('aria-expanded', 'true')
 
   document.addEventListener('click', state.boundOutsideClick, true)
   document.addEventListener('keydown', state.boundEscape, true)
+
+  if (state.panelPortaled && panel) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!state.open || !state.panelPortaled || !state.panel) return
+        positionHtbarPortalPanel(state.trigger, state.panel, state.align)
+      })
+    })
+    state.repositionCleanup = bindHtbarPortalReposition(state)
+  }
 
   if (state.card) {
     requestAnimationFrame(() => {
@@ -299,90 +483,101 @@ function openStoreInfo(wrap: HTMLElement): void {
       el?.focus()
     })
   }
-
-  if (mobileMq.matches && state.card && state.overlay) {
-    document.documentElement.style.overflow = 'hidden'
-
-    const tl = gsap.timeline()
-
-    tl.fromTo(
-      state.overlay,
-      { visibility: 'visible', opacity: 0, pointerEvents: 'none' },
-      { opacity: 1, pointerEvents: 'auto', duration: 0.3, ease: 'power2.out' },
-      0,
-    )
-
-    tl.fromTo(
-      state.card,
-      { y: '100%' },
-      { y: '0%', duration: 0.45, ease: 'power3.out' },
-      0.05,
-    )
-
-    state.tween = tl
-  }
 }
 
 function closeStoreInfo(wrap: HTMLElement): void {
   const state = infoStates.get(wrap)
   if (!state || !state.open) return
   state.open = false
-  state.tween?.kill()
 
-  setHtbarPanelHidden(wrap, true)
-  state.trigger.setAttribute('aria-expanded', 'false')
+  state.repositionCleanup?.()
+  state.repositionCleanup = null
 
   document.removeEventListener('click', state.boundOutsideClick, true)
   document.removeEventListener('keydown', state.boundEscape, true)
+
+  setHtbarPanelHidden(wrap, true)
+  state.trigger.setAttribute('aria-expanded', 'false')
 
   const returnFocus = (): void => {
     state.trigger.focus()
   }
 
-  if (mobileMq.matches && state.card && state.overlay) {
-    const tl = gsap.timeline({
-      onComplete() {
-        wrap.classList.remove('is-open')
-        document.documentElement.style.overflow = ''
-        gsap.set(state.overlay!, { visibility: 'hidden', opacity: 0, pointerEvents: 'none' })
-        returnFocus()
-      },
-    })
+  const { panel } = state
 
-    tl.to(state.card, {
-      y: '100%',
-      duration: 0.32,
-      ease: 'power2.in',
-    }, 0)
-
-    tl.to(state.overlay, {
-      opacity: 0,
-      pointerEvents: 'none',
-      duration: 0.25,
-      ease: 'power2.in',
-    }, 0.06)
-
-    state.tween = tl
-  } else {
+  const finishPortalClose = (): void => {
+    if (state.panelPortaled) restoreHtbarPortalToWrap(state)
+    panel?.classList.remove('is-open')
     wrap.classList.remove('is-open')
     document.documentElement.style.overflow = ''
     returnFocus()
   }
+
+  if (state.panelPortaled && panel) {
+    panel.classList.remove('is-open')
+    wrap.classList.remove('is-open')
+
+    const card = panel.querySelector<HTMLElement>('.htbar__card')
+    const reduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (card && !reduced) {
+      let done = false
+      const onEnd = (ev: TransitionEvent): void => {
+        if (ev.target !== card) return
+        if (done) return
+        done = true
+        card.removeEventListener('transitionend', onEnd)
+        finishPortalClose()
+      }
+      card.addEventListener('transitionend', onEnd)
+      window.setTimeout(() => {
+        if (done) return
+        done = true
+        card.removeEventListener('transitionend', onEnd)
+        finishPortalClose()
+      }, 400)
+    } else {
+      finishPortalClose()
+    }
+    return
+  }
+
+  panel?.classList.remove('is-open')
+  wrap.classList.remove('is-open')
+  document.documentElement.style.overflow = ''
+  returnFocus()
 }
 
 function teardownStoreInfo(wrap: HTMLElement): void {
   const state = infoStates.get(wrap)
   if (!state) return
 
-  state.tween?.kill()
+  state.repositionCleanup?.()
+  state.repositionCleanup = null
+
   if (state.open) {
     state.open = false
+    const { panel } = state
+    panel?.classList.remove('is-open')
     wrap.classList.remove('is-open')
     setHtbarPanelHidden(wrap, true)
     state.trigger.setAttribute('aria-expanded', 'false')
     document.documentElement.style.overflow = ''
     document.removeEventListener('click', state.boundOutsideClick, true)
     document.removeEventListener('keydown', state.boundEscape, true)
+
+    if (state.panelPortaled && panel && state.panelAnchor?.parentNode && state.panelParent) {
+      removeHtbarPortalTheme(panel)
+      panel.classList.remove('htbar__dropdown--portaled', 'is-open')
+      clearHtbarPortalInlineStyles(panel)
+      state.panelParent.insertBefore(panel, state.panelAnchor)
+      state.panelParent.removeChild(state.panelAnchor)
+      state.panelAnchor = null
+      state.panelParent = null
+      state.panelPortaled = false
+    }
   }
   infoStates.delete(wrap)
 }
