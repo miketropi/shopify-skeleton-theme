@@ -163,7 +163,7 @@
       "settings": {
         "eyebrow_text": "Limit Offer",
         "heading": "Featured products",
-        "heading_size": "large",
+        "heading_size": "xlarge",
         "heading_alignment": "left",
         "show_secondary_image": true,
         "show_vendor": false,
@@ -176,12 +176,12 @@
         "section_color_scheme_mode": "default",
         "color_scheme": "",
         "full_width": false,
-        "padding_top": 40,
+        "padding_top": 60,
         "padding_right": 0,
-        "padding_bottom": 40,
+        "padding_bottom": 60,
         "padding_left": 0,
-        "margin_top": 40,
-        "margin_bottom": 40,
+        "margin_top": 0,
+        "margin_bottom": 0,
         "background_color": "rgba(0,0,0,0)",
         "border_width": 0,
         "border_style": "solid",
@@ -195,49 +195,25 @@
     "section_collection_list_LWFp7W": {
       "type": "section-collection-list",
       "blocks": {
-        "collection_entry_7pgqPL": {
-          "type": "collection_entry",
+        "all_collections_NmRewt": {
+          "type": "all_collections",
           "settings": {
-            "collection": "automated-collection",
-            "custom_title": "",
-            "custom_product_count": "",
-            "custom_url": "",
-            "open_new_tab": false
-          }
-        },
-        "collection_entry_V3kLgx": {
-          "type": "collection_entry",
-          "settings": {
-            "collection": "frontpage",
-            "custom_title": "",
-            "custom_product_count": "",
-            "custom_image": "shopify://shop_images/07a9711afdfeb98029dd3b2580c41647.jpg",
-            "custom_url": "",
-            "open_new_tab": false
-          }
-        },
-        "collection_entry_A9fVbX": {
-          "type": "collection_entry",
-          "settings": {
-            "collection": "hydrogen",
-            "custom_title": "",
-            "custom_product_count": "",
-            "custom_image": "shopify://shop_images/412ce1b16f601936596ad3ea7934edd4.jpg",
-            "custom_url": "",
+            "max_collections": 5,
+            "exclude_all_collection": true,
+            "exclude_frontpage": true,
+            "hide_empty": false,
             "open_new_tab": false
           }
         }
       },
       "block_order": [
-        "collection_entry_7pgqPL",
-        "collection_entry_V3kLgx",
-        "collection_entry_A9fVbX"
+        "all_collections_NmRewt"
       ],
       "name": "t:sections.collection_list.presets.name",
       "settings": {
         "eyebrow_text": "Key Ingredients",
         "heading": "Essential collections",
-        "heading_size": "large",
+        "heading_size": "xlarge",
         "description": "These are intentionally neutral and product-agnostic so they'll work across skincare, serum, moisturizer, or similar beauty product demos.",
         "default_active_index": 1,
         "full_width": true,
@@ -261,7 +237,147 @@
         "padding_left": 0,
         "margin_top": 0,
         "margin_bottom": 0,
+        "background_color": "#f4f4f5",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
+    },
+    "section_product_images_story_nEnFnM": {
+      "type": "section-product-images-story",
+      "blocks": {
+        "slide_kmbPm3": {
+          "type": "slide",
+          "settings": {
+            "image_position": "center center",
+            "description": "<p>1. Cleanse your <strong>skin</strong> and <strong>gently</strong> pat it dry</p>"
+          }
+        },
+        "slide_WiEUd3": {
+          "type": "slide",
+          "settings": {
+            "image_position": "center center",
+            "description": "<p>2. Apply a small amount of product evenly to the desired area.</p>"
+          }
+        },
+        "slide_akK6hk": {
+          "type": "slide",
+          "settings": {
+            "image_position": "center center",
+            "description": "<p>3. Allow it to absorb fully, then follow with your usual <strong>skincare</strong> routine.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "slide_kmbPm3",
+        "slide_WiEUd3",
+        "slide_akK6hk"
+      ],
+      "name": "t:sections.product_images_story.presets.name",
+      "settings": {
+        "eyebrow_text": "Story",
+        "heading": "Daily Glow Serum",
+        "heading_size": "xlarge",
+        "column_layout": "50",
+        "image_border_radius": "medium",
+        "full_width": false,
+        "product": "",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_quick_add": true,
+        "slideshow_autoplay": true,
+        "slideshow_speed": 4,
+        "show_pagination_dots": true,
+        "slide_transition": "slide",
+        "slideshow_image_ratio": "square",
+        "slideshow_object_fit": "cover",
+        "entrance_animate_on_scroll": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "padding_top": 60,
+        "padding_right": 0,
+        "padding_bottom": 60,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
         "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
+    },
+    "section_collection_slide_XNQfNV": {
+      "type": "section-collection-slide",
+      "blocks": {
+        "collection_card_xMYeMW": {
+          "type": "collection_card",
+          "settings": {
+            "collection": "automated-collection",
+            "custom_title": "",
+            "image_position": "center center",
+            "custom_url": ""
+          }
+        },
+        "collection_card_akxHgT": {
+          "type": "collection_card",
+          "settings": {
+            "collection": "hydrogen",
+            "custom_title": "",
+            "image_position": "center center",
+            "custom_url": ""
+          }
+        },
+        "collection_card_aAjapa": {
+          "type": "collection_card",
+          "settings": {
+            "collection": "frontpage",
+            "custom_title": "",
+            "image_position": "center center",
+            "custom_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_card_xMYeMW",
+        "collection_card_akxHgT",
+        "collection_card_aAjapa"
+      ],
+      "name": "t:sections.collection_slide.presets.name",
+      "settings": {
+        "eyebrow_text": "Explore Our Categories",
+        "heading": "Botanical Skincare Types",
+        "heading_size": "xlarge",
+        "description": "Discover gentle, plant-powered formulas tailored to different skin needs, from daily care to targeted treatments.",
+        "button_label": "View All Categories",
+        "button_link": "shopify://collections",
+        "button_style": "outline",
+        "show_navigation_arrows": true,
+        "cards_visible": "2.5",
+        "card_gap": "medium",
+        "image_ratio": "square",
+        "image_border_radius": "medium",
+        "collection_title_size": "large",
+        "show_view_collection_link": true,
+        "view_collection_label": "View Collection",
+        "entrance_animate_on_scroll": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "scheme-6",
+        "full_width": true,
+        "padding_top": 80,
+        "padding_right": 0,
+        "padding_bottom": 80,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "#f4f4f5",
         "border_width": 0,
         "border_style": "solid",
         "border_color": "rgba(0,0,0,0)",
@@ -275,6 +391,8 @@
   "order": [
     "home_slider",
     "section_product_slider_dCdyeR",
-    "section_collection_list_LWFp7W"
+    "section_collection_list_LWFp7W",
+    "section_product_images_story_nEnFnM",
+    "section_collection_slide_XNQfNV"
   ]
 }
