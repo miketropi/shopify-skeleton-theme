@@ -23,7 +23,7 @@
   min-width: 0;
 }
 
-.coll-slide__intro.product-slider__intro-copy {
+.coll-slide__intro.section-intro__copy {
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -33,8 +33,8 @@
   max-width: 38rem;
 }
 
-.coll-slide__intro .product-slider__eyebrow,
-.coll-slide__intro .product-slider__heading {
+.coll-slide__intro .section-intro__eyebrow,
+.coll-slide__intro .section-intro__heading {
   text-align: left;
   width: 100%;
 }

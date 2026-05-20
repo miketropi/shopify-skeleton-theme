@@ -460,6 +460,11 @@
       "empty_state": "Add promo card blocks to show this section.",
       "card_link_fallback": "View promo card"
     },
+    "routine_guide": {
+      "select_product": "Pick a product in the section settings to show the card here.",
+      "empty_steps": "Add step blocks to build your routine guide.",
+      "steps_label": "Routine steps"
+    },
     "before_after": {
       "slider_aria": "Compare before and after images",
       "empty_media": "Add before and after images in the section settings."

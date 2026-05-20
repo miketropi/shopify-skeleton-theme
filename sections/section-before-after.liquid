@@ -97,7 +97,7 @@
 {%- render 'section-styles', section: section -%}
 
 <div
-  class="section-{{ section.id }} before-after shopify-section-wrapper product-slider--heading-{{ section.settings.heading_size | default: 'large' }} before-after--interaction-{{ handle_interaction }}{% if section.settings.full_width %} full-width before-after--full-width{% endif %}"
+  class="section-{{ section.id }} before-after shopify-section-wrapper section-intro--heading-{{ section.settings.heading_size | default: 'large' }} before-after--interaction-{{ handle_interaction }}{% if section.settings.full_width %} full-width before-after--full-width{% endif %}"
   data-section-type="section-before-after"
   data-section-id="{{ section.id }}"
   data-before-after-initial="{{ initial_pos }}"
@@ -117,12 +117,12 @@
     <div class="before-after__grid">
       {%- if has_intro or show_cta -%}
         <div class="before-after__intro-col" data-before-after-reveal>
-          <div class="before-after__intro product-slider__intro-copy">
+          <div class="before-after__intro section-intro__copy">
             {%- if section.settings.eyebrow_text != blank -%}
-              <p class="product-slider__eyebrow">{{ section.settings.eyebrow_text | escape }}</p>
+              <p class="section-intro__eyebrow">{{ section.settings.eyebrow_text | escape }}</p>
             {%- endif -%}
             {%- if section.settings.heading != blank -%}
-              <h2 class="product-slider__heading">{{ section.settings.heading | escape }}</h2>
+              <h2 class="section-intro__heading">{{ section.settings.heading | escape }}</h2>
             {%- endif -%}
             {%- if section.settings.description != blank -%}
               <div class="before-after__description rte">{{ section.settings.description }}</div>

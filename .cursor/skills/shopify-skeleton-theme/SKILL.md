@@ -54,7 +54,7 @@ Use a **content-based** filename such as `sections/section-promo-grid.liquid` (n
 |------|------|
 | Liquid | `{%- liquid -%}` for assigns; hyphenated `-%}` to trim; JS hooks via `data-*`, not classes. |
 | TS | Prettier: no semicolons, single quotes; scope queries to `container`; prefer `type` for small shapes. |
-| SCSS | Mobile-first + `mq-up()` from `base/breakpoints`; section-scoped class prefixes; Liquid-driven values as CSS variables on section root. **Font sizes:** use `:root` tokens from `snippets/css-variables.liquid` (`--font-size-xs` … `--font-size-4xl`) with fallbacks—see `.cursor/rules/scss-styles.mdc` (*Typography and font size*). **Intro aligned with product slider:** extend `_section-product-slider.scss` heading selectors; do not fork `.product-slider__heading` sizes in a new partial—see `.cursor/rules/liquid-patterns.mdc` (*Product-slider family*). |
+| SCSS | Mobile-first + `mq-up()` from `base/breakpoints`; section-scoped class prefixes; Liquid-driven values as CSS variables on section root. **Font sizes:** use `:root` tokens from `snippets/css-variables.liquid` (`--font-size-xs` … `--font-size-4xl`) with fallbacks—see `.cursor/rules/scss-styles.mdc` (*Typography and font size*). **Shared intro typography:** use `section-intro__*` classes from `src/styles/components/_section-intro.scss` — see `.cursor/rules/liquid-patterns.mdc` (*Product-slider family*). |
 | Accessibility | Keyboard, focus return, `aria-*`, `prefers-reduced-motion` for motion. |
 
 ## Verification

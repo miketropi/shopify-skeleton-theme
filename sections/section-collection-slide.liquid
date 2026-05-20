@@ -99,7 +99,7 @@
 {% endstyle %}
 
 <div
-  class="section-{{ section.id }} coll-slide shopify-section-wrapper product-slider--heading-{{ section.settings.heading_size | default: 'large' }} coll-slide--title-{{ title_size }}{% if section.settings.full_width %} full-width coll-slide--full-width{% endif %}"
+  class="section-{{ section.id }} coll-slide shopify-section-wrapper section-intro--heading-{{ section.settings.heading_size | default: 'large' }} coll-slide--title-{{ title_size }}{% if section.settings.full_width %} full-width coll-slide--full-width{% endif %}"
   data-section-type="section-collection-slide"
   data-section-id="{{ section.id }}"
   data-coll-slide-gap="{{ gap_px }}"
@@ -118,12 +118,12 @@
     <div class="coll-slide__grid">
       <div class="coll-slide__intro-col">
         {%- if has_intro or show_cta -%}
-          <div class="coll-slide__intro product-slider__intro-copy">
+          <div class="coll-slide__intro section-intro__copy">
             {%- if section.settings.eyebrow_text != blank -%}
-              <p class="product-slider__eyebrow">{{ section.settings.eyebrow_text | escape }}</p>
+              <p class="section-intro__eyebrow">{{ section.settings.eyebrow_text | escape }}</p>
             {%- endif -%}
             {%- if section.settings.heading != blank -%}
-              <h2 class="product-slider__heading">{{ section.settings.heading | escape }}</h2>
+              <h2 class="section-intro__heading">{{ section.settings.heading | escape }}</h2>
             {%- endif -%}
             {%- if section.settings.description != blank -%}
               <div class="coll-slide__description rte">{{ section.settings.description }}</div>

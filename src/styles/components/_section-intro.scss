@@ -1,0 +1,56 @@
+// Shared marketing intro typography (eyebrow + heading) used across page sections.
+
+.section-intro__copy {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.section-intro__eyebrow {
+  margin: 0 0 0.35em;
+  font-size: var(--font-size-xs, 0.6875rem);
+  line-height: var(--line-height-snug, 1.25);
+  color: var(--cs-text-secondary, var(--cs-text, inherit));
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: bold;
+}
+
+.section-intro__heading {
+  margin: 0;
+  font-weight: 600;
+  line-height: var(--line-height-tight, 1.12);
+  color: var(--cs-heading, var(--cs-text, inherit));
+}
+
+.section-intro--heading-small .section-intro__heading {
+  font-size: var(--font-size-lg, 1.25rem);
+}
+
+.section-intro--heading-medium .section-intro__heading {
+  font-size: var(--font-size-xl, 1.5625rem);
+}
+
+.section-intro--heading-large .section-intro__heading {
+  font-size: var(--font-size-2xl, 1.953125rem);
+}
+
+.section-intro--heading-xlarge .section-intro__heading {
+  font-size: var(--font-size-3xl, 2.44140625rem);
+}
+
+// Promo card block-level heading size overrides
+.promo-cards .section-intro__heading.promo-cards__heading--small {
+  font-size: var(--font-size-lg, 1.25rem);
+}
+
+.promo-cards .section-intro__heading.promo-cards__heading--medium {
+  font-size: var(--font-size-xl, 1.5625rem);
+}
+
+.promo-cards .section-intro__heading.promo-cards__heading--large {
+  font-size: var(--font-size-2xl, 1.953125rem);
+}
+
+.promo-cards .section-intro__heading.promo-cards__heading--xlarge {
+  font-size: var(--font-size-3xl, 2.44140625rem);
+}

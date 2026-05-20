@@ -32,12 +32,7 @@
   justify-content: flex-end;
 }
 
-.product-slider__intro-copy {
-  flex: 1 1 12rem;
-  min-width: 0;
-}
-
-.product-slider__intro--with-heading-nav.product-slider__intro--center .product-slider__intro-copy {
+.product-slider__intro--with-heading-nav.product-slider__intro--center .section-intro__copy {
   text-align: center;
 }
 
@@ -46,63 +41,6 @@
   flex-shrink: 0;
   align-items: center;
   gap: 1rem;
-}
-
-.product-slider__eyebrow {
-  margin: 0 0 0.35em;
-  font-size: var(--font-size-xs, 0.6875rem);
-  line-height: var(--line-height-snug, 1.25);
-  color: var(--cs-text-secondary, var(--cs-text, inherit));
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: bold;
-}
-
-.product-slider__heading {
-  margin: 0;
-  font-weight: 600;
-  line-height: var(--line-height-tight, 1.12);
-  color: var(--cs-heading, var(--cs-text, inherit));
-}
-
-.product-slider--heading-small .product-slider__heading,
-.coll-list.product-slider--heading-small .product-slider__heading,
-.promo-cards.product-slider--heading-small .product-slider__heading {
-  font-size: var(--font-size-lg, 1.25rem);
-}
-
-.product-slider--heading-medium .product-slider__heading,
-.coll-list.product-slider--heading-medium .product-slider__heading,
-.promo-cards.product-slider--heading-medium .product-slider__heading {
-  font-size: var(--font-size-xl, 1.5625rem);
-}
-
-.product-slider--heading-large .product-slider__heading,
-.coll-list.product-slider--heading-large .product-slider__heading,
-.promo-cards.product-slider--heading-large .product-slider__heading {
-  font-size: var(--font-size-2xl, 1.953125rem);
-}
-
-.product-slider--heading-xlarge .product-slider__heading,
-.coll-list.product-slider--heading-xlarge .product-slider__heading,
-.promo-cards.product-slider--heading-xlarge .product-slider__heading {
-  font-size: var(--font-size-3xl, 2.44140625rem);
-}
-
-.promo-cards .product-slider__heading.promo-cards__heading--small {
-  font-size: var(--font-size-lg, 1.25rem);
-}
-
-.promo-cards .product-slider__heading.promo-cards__heading--medium {
-  font-size: var(--font-size-xl, 1.5625rem);
-}
-
-.promo-cards .product-slider__heading.promo-cards__heading--large {
-  font-size: var(--font-size-2xl, 1.953125rem);
-}
-
-.promo-cards .product-slider__heading.promo-cards__heading--xlarge {
-  font-size: var(--font-size-3xl, 2.44140625rem);
 }
 
 .product-slider__viewport {

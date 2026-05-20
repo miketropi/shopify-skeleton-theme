@@ -1,0 +1,70 @@
+{%- comment -%}
+  Routine Guide — interactive step list.
+  Expects: section, default_zero, step_count
+{%- endcomment -%}
+{%- if step_count > 0 -%}
+  <div class="routine-guide__steps-panel" data-routine-guide-reveal-steps>
+    <ol class="routine-guide__steps" role="list">
+      {%- assign step_i = -1 -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'step' -%}
+          {%- assign step_i = step_i | plus: 1 -%}
+          {%- assign is_active = false -%}
+          {%- if step_i == default_zero -%}
+            {%- assign is_active = true -%}
+          {%- endif -%}
+          {%- liquid
+            assign step_display = step_i | plus: 1
+            if step_display < 10
+              assign step_index = step_display | prepend: '0'
+            else
+              assign step_index = step_display
+            endif
+            assign is_last = false
+            if step_display == step_count
+              assign is_last = true
+            endif
+          -%}
+          <li
+            class="routine-guide__step-item{% if is_active %} is-active{% endif %}{% if is_last %} routine-guide__step-item--last{% endif %}"
+            data-routine-guide-item
+            data-routine-guide-index="{{ step_i }}"
+            {{ block.shopify_attributes }}
+          >
+            <button
+              type="button"
+              class="routine-guide__step"
+              data-routine-guide-step
+              data-routine-guide-index="{{ step_i }}"
+              {% if is_active %}aria-current="step"{% endif %}
+            >
+              <span class="routine-guide__step-rail" aria-hidden="true">
+                <span class="routine-guide__step-index">{{ step_index }}</span>
+                {%- unless is_last -%}
+                  <span class="routine-guide__step-line"></span>
+                {%- endunless -%}
+              </span>
+              <span class="routine-guide__step-content">
+                {%- if block.settings.step_number != blank -%}
+                  <span class="routine-guide__step-label section-intro__eyebrow">
+                    {{ block.settings.step_number | escape }}
+                  </span>
+                {%- endif -%}
+                {%- if block.settings.heading != blank -%}
+                  <span class="routine-guide__step-heading">{{ block.settings.heading | escape }}</span>
+                {%- endif -%}
+                {%- if block.settings.description != blank -%}
+                  <span class="routine-guide__step-description-wrap">
+                    <span class="routine-guide__step-description">{{ block.settings.description | escape }}</span>
+                  </span>
+                {%- endif -%}
+              </span>
+            </button>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ol>
+  </div>
+{%- else -%}
+  <p class="routine-guide__empty">{{ 'sections.routine_guide.empty_steps' | t }}</p>
+{%- endif -%}

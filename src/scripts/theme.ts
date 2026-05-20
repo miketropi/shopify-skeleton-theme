@@ -18,6 +18,7 @@ import { registerSectionCollectionList } from './sections/section-collection-lis
 import { registerSectionCollectionSlide } from './sections/section-collection-slide'
 import { registerSectionPromoCards } from './sections/section-promo-cards'
 import { registerSectionBeforeAfter } from './sections/section-before-after'
+import { registerSectionRoutineGuide } from './sections/section-routine-guide'
 import { registerSectionProductImagesStory } from './sections/section-product-images-story'
 import { registerCollectionGridSection } from './collection-grid'
 import './size-guide'
@@ -60,6 +61,7 @@ registerSectionCollectionList()
 registerSectionCollectionSlide()
 registerSectionPromoCards()
 registerSectionBeforeAfter()
+registerSectionRoutineGuide()
 registerSectionProductImagesStory()
 registerCollectionGridSection()
 registerHeaderTopBarSection()

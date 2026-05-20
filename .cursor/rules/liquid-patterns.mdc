@@ -86,25 +86,20 @@ Reuse the same assignment pattern as the product slider: default `settings.globa
 Call `{% render 'section-styles', section: section %}`, put **`shopify-section-wrapper`** on the outer root, and mirror the **full-width** contract: root gets `full-width` (and a section-specific modifier if needed) when the merchant enables it; **inner** content wrapper gets **`section-content-width`** only when full-width is on (critical.css pattern). Match setting id **`full_width`** and the same semantics as product slider when behaviour should align.
 
 **Liquid / HTML — intro typography (shared classes)**  
-For **eyebrow** and **section heading**, use the same classes as the product slider:
+For **eyebrow** and **section heading**, use the shared **`section-intro`** classes from [`src/styles/components/_section-intro.scss`](src/styles/components/_section-intro.scss):
 
-- `<p class="product-slider__eyebrow">…</p>`
-- `<h2 class="product-slider__heading">…</h2>` (or correct heading level for page outline)
+- `<p class="section-intro__eyebrow">…</p>`
+- `<h2 class="section-intro__heading">…</h2>` (or correct heading level for page outline)
 
-Wrap intro copy in **`product-slider__intro-copy`** when it is a text column (same flex/min-width behaviour as the slider intro row). **Do not** invent parallel `section-foo__eyebrow` / `section-foo__heading` for the same visual role unless there is a deliberate design divergence.
+Wrap intro copy in **`section-intro__copy`** when it is a text column (same flex/min-width behaviour as the slider intro row). **Do not** invent parallel `section-foo__eyebrow` / `section-foo__heading` for the same visual role unless there is a deliberate design divergence.
 
 **Liquid — heading size modifier on root**  
-Add **`product-slider--heading-{{ section.settings.heading_size }}`** to the **section root** alongside the section’s own BEM root (e.g. `coll-list`). That ties the heading to the shared step scale defined in [`src/styles/sections/_section-product-slider.scss`](src/styles/sections/_section-product-slider.scss).
+Add **`section-intro--heading-{{ section.settings.heading_size }}`** to the **section root** alongside the section’s own BEM root (e.g. `coll-list`). That ties the heading to the shared step scale in `_section-intro.scss`.
 
 **SCSS — heading steps (single source)**  
-Heading size rules must **not** be re-copied into the new section partial. Extend the existing grouped selectors in `_section-product-slider.scss`:
+Heading size rules must **not** be re-copied into section partials. Add section-specific layout tweaks only (e.g. max-width, alignment). Per-block overrides (promo cards) extend `_section-intro.scss`.
 
-```scss
-.product-slider--heading-small .product-slider__heading,
-.your-root.product-slider--heading-small .product-slider__heading { … }
-```
-
-**Eyebrow** styles are already global on `.product-slider__eyebrow`; no extra rules in the new partial unless the layout context truly needs a tweak (prefer spacing on a local wrapper).
+**Eyebrow** and **heading** base styles live on `.section-intro__eyebrow` / `.section-intro__heading`; no extra rules in section partials unless layout context needs a tweak (prefer spacing on a local wrapper).
 
 **Schema & locales — option parity**  
 When merchants should get the **same knobs** as the product slider:

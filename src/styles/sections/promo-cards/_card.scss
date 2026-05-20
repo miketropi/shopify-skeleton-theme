@@ -67,13 +67,13 @@
   min-width: 0;
 }
 
-.promo-cards__card .product-slider__eyebrow,
-.promo-cards__card .product-slider__heading {
+.promo-cards__card .section-intro__eyebrow,
+.promo-cards__card .section-intro__heading {
   color: var(--promo-card-text, var(--cs-heading, #1a1a1a));
   margin-bottom: 0.5em;
 }
 
-.promo-cards__card .product-slider__eyebrow {
+.promo-cards__card .section-intro__eyebrow {
   margin: 0;
 }
 
@@ -86,7 +86,7 @@
   opacity: 0.88;
 }
 
-.promo-cards__card .product-slider__heading {
+.promo-cards__card .section-intro__heading {
   font-family: var(--cs-font-heading, inherit);
   letter-spacing: -0.015em;
   text-wrap: balance;

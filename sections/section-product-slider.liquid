@@ -96,7 +96,7 @@
 {% endstyle %}
 
 <div
-  class="section-{{ section.id }} product-slider shopify-section-wrapper product-slider--nav-{{ nav_position }}{% if section.settings.enable_carousel %} product-slider--carousel{% else %} product-slider--grid{% endif %} product-slider--heading-{{ section.settings.heading_size }}{% if section.settings.full_width %} full-width product-slider--full-width{% endif %}"
+  class="section-{{ section.id }} product-slider shopify-section-wrapper product-slider--nav-{{ nav_position }}{% if section.settings.enable_carousel %} product-slider--carousel{% else %} product-slider--grid{% endif %} section-intro--heading-{{ section.settings.heading_size }}{% if section.settings.full_width %} full-width product-slider--full-width{% endif %}"
   data-section-type="section-product-slider"
   data-section-id="{{ section.id }}"
   data-product-slider-carousel="{% if section.settings.enable_carousel %}true{% else %}false{% endif %}"
@@ -111,12 +111,12 @@
   {%- if show_intro_row -%}
     <div class="product-slider__intro{% if nav_in_heading %} product-slider__intro--with-heading-nav{% endif %}{% if section.settings.heading_alignment == 'center' %} product-slider__intro--center{% endif %}">
       <div class="product-slider__intro-row{% if has_intro_text == false %} product-slider__intro-row--nav-only{% endif %}">
-        <div class="product-slider__intro-copy">
+        <div class="section-intro__copy">
           {%- if section.settings.eyebrow_text != blank -%}
-            <p class="product-slider__eyebrow">{{ section.settings.eyebrow_text | escape }}</p>
+            <p class="section-intro__eyebrow">{{ section.settings.eyebrow_text | escape }}</p>
           {%- endif -%}
           {%- if section.settings.heading != blank -%}
-            <h2 class="product-slider__heading">{{ section.settings.heading | escape }}</h2>
+            <h2 class="section-intro__heading">{{ section.settings.heading | escape }}</h2>
           {%- endif -%}
         </div>
         {%- if nav_in_heading -%}

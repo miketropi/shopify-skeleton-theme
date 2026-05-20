@@ -1,6 +1,6 @@
 # Routine Guide
 
-> **Status:** Specification only — **not in the repository yet.** When implemented, use `sections/section-routine-guide.liquid` and the checklist below. Compare **step ↔ feature image** interaction with `sections/section-collection-list.liquid` (`coll-list` crossfade + active row); product column with `{% render 'tcard-product' %}` (see Product slider / Product images story).
+> **Status:** **Implemented** — `sections/section-routine-guide.liquid`, snippets, SCSS, and TypeScript registered in `theme.ts`.
 
 > Two-column editorial section: a **featured product card** on the left and an interactive **step guide** on the right (internally split into a **feature image panel** and a **step list**). The center feature image crossfades to match the active step (hover on desktop, tap/focus on touch).
 

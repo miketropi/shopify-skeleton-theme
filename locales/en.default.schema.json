@@ -1048,6 +1048,147 @@
         }
       }
     },
+    "routine_guide": {
+      "name": "Routine Guide",
+      "presets": {
+        "name": "Routine Guide"
+      },
+      "headers": {
+        "header": "Header",
+        "layout": "Layout",
+        "step_list": "Step list",
+        "product": "Product column",
+        "animation": "Animation",
+        "colour": "Colour",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "default_active_index": "Default active step",
+        "column_ratio": "Product / guide column ratio",
+        "feature_image_ratio": "Feature image / step list ratio",
+        "card_border_radius": "Panel corner radius",
+        "hover_transition_speed": "Feature image transition",
+        "feature_media_size": "Feature image file size",
+        "step_divider": "Divider between steps",
+        "steps_background_color": "Step list background",
+        "step_active_background_color": "Active step background",
+        "full_width": "Full width (edge-to-edge background)",
+        "product": "Featured product",
+        "card_background_color": "Product panel background",
+        "show_secondary_image": "Show secondary image on hover",
+        "show_vendor": "Show vendor",
+        "show_quick_add": "Show quick add",
+        "entrance_animate_on_scroll": "Animate when scrolling into view",
+        "color_scheme": "Scheme",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "column_ratio": {
+          "25": "25 / 75",
+          "33": "33 / 67",
+          "40": "40 / 60"
+        },
+        "feature_image_ratio": {
+          "40": "40 / 60",
+          "50": "50 / 50",
+          "60": "60 / 40"
+        },
+        "radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "hover_transition_speed": {
+          "150": "Fast (150ms)",
+          "300": "Medium (300ms)",
+          "500": "Slow (500ms)"
+        },
+        "feature_media_size": {
+          "small": "Small (600px)",
+          "medium": "Medium (1200px)",
+          "large": "Large (1600px)",
+          "xlarge": "Extra large (2400px)"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "info": {
+        "default_active_index": "Which step is active when the page loads (1 = first step).",
+        "feature_media_size": "Maximum width loaded for feature images and video posters.",
+        "steps_background_color": "Background behind the full step list panel.",
+        "step_active_background_color": "Background fill for the currently active step row.",
+        "full_width": "Background spans the browser width; content stays in the page column.",
+        "entrance_animate_on_scroll": "When off, the entrance animation runs after load without waiting for scroll (still respects reduced motion).",
+        "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "blocks": {
+        "step": {
+          "name": "Step",
+          "headers": {
+            "media": "Feature media"
+          },
+          "labels": {
+            "step_number": "Step label",
+            "heading": "Heading",
+            "description": "Description",
+            "media_type": "Media type",
+            "feature_image": "Image",
+            "video": "Video",
+            "feature_image_position": "Media focal point"
+          },
+          "options": {
+            "media_type": {
+              "image": "Image",
+              "video": "Video"
+            },
+            "feature_image_position": {
+              "center": "Center",
+              "top": "Top",
+              "bottom": "Bottom"
+            }
+          },
+          "info": {
+            "feature_image": "Shown when this step is active. Also used as the video poster when media type is Video.",
+            "video": "Muted looping video. Upload MP4 via Shopify Files or use a Shopify-hosted video."
+          }
+        }
+      }
+    },
     "before_after": {
       "name": "Before & After",
       "presets": {

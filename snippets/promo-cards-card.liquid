@@ -89,7 +89,7 @@
     {%- if show_eyebrow_row -%}
       <div class="promo-cards__eyebrow-row">
         {%- if block.settings.eyebrow_label != blank -%}
-          <p class="product-slider__eyebrow promo-cards__eyebrow">{{ block.settings.eyebrow_label | escape }}</p>
+          <p class="section-intro__eyebrow promo-cards__eyebrow">{{ block.settings.eyebrow_label | escape }}</p>
         {%- else -%}
           <span class="promo-cards__eyebrow-spacer" aria-hidden="true"></span>
         {%- endif -%}
@@ -98,7 +98,7 @@
     {%- endif -%}
 
     {%- if block.settings.heading != blank -%}
-      <h3 class="product-slider__heading{{ heading_extra_class }}">{{ block.settings.heading | escape }}</h3>
+      <h3 class="section-intro__heading{{ heading_extra_class }}">{{ block.settings.heading | escape }}</h3>
     {%- endif -%}
 
     <div class="promo-cards__media">
