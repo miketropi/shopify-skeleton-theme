@@ -460,6 +460,10 @@
       "empty_state": "Add promo card blocks to show this section.",
       "card_link_fallback": "View promo card"
     },
+    "before_after": {
+      "slider_aria": "Compare before and after images",
+      "empty_media": "Add before and after images in the section settings."
+    },
     "collection_slide": {
       "carousel": "Carousel",
       "region_label": "Collection carousel",

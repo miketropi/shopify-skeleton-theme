@@ -1048,6 +1048,110 @@
         }
       }
     },
+    "before_after": {
+      "name": "Before & After",
+      "presets": {
+        "name": "Before & After"
+      },
+      "headers": {
+        "intro": "Intro column",
+        "layout": "Layout",
+        "slider": "Before / after slider",
+        "animation": "Animation",
+        "colour": "Colour",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "description": "Description",
+        "button_label": "Button label",
+        "button_link": "Button link",
+        "button_style": "Button style",
+        "column_layout": "Column layout",
+        "image_border_radius": "Slider corner radius",
+        "full_width": "Full width (edge-to-edge background)",
+        "media_size": "Image file size",
+        "before_image": "Before image",
+        "after_image": "After image",
+        "initial_position": "Initial divider position",
+        "show_labels": "Show Before / After labels",
+        "before_label": "Before label",
+        "after_label": "After label",
+        "divider_color": "Divider colour",
+        "handle_interaction": "Handle interaction",
+        "entrance_animate_on_scroll": "Animate when scrolling into view",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "column_layout": {
+          "30": "30 / 70",
+          "40": "40 / 60",
+          "50": "50 / 50"
+        },
+        "radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "media_size": {
+          "small": "Small (600px)",
+          "medium": "Medium (1200px)",
+          "large": "Large (1600px)",
+          "xlarge": "Extra large (2400px)"
+        },
+        "handle_interaction": {
+          "drag": "Click & drag",
+          "follow_cursor": "Follow cursor"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "info": {
+        "full_width": "Background spans the browser width; content stays in the page column.",
+        "media_size": "Maximum width loaded for before and after images. Larger sizes look sharper but use more bandwidth.",
+        "before_image": "Recommended at least 1200px wide. If empty, the lifestyle-1 theme placeholder is shown.",
+        "after_image": "Use the same aspect ratio as the before image when both are set. If empty, the lifestyle-2 theme placeholder is shown.",
+        "handle_interaction": "Click & drag requires press-and-hold. Follow cursor moves the divider as the pointer moves over the image (falls back to click & drag when reduced motion is preferred).",
+        "entrance_animate_on_scroll": "When off, the entrance animation runs after images load without waiting for scroll (still respects reduced motion).",
+        "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "color_scheme": "Scheme",
+      "color_scheme_info": "Used when Colour scheme is set to Custom. Otherwise the section uses the theme’s global colour scheme."
+    },
     "collection_slide": {
       "name": "Collection slide",
       "presets": {

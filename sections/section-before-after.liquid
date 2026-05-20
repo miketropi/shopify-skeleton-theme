@@ -1,0 +1,525 @@
+{%- liquid
+  assign ba_scheme = settings.global_color_scheme
+  if ba_scheme == blank or ba_scheme.settings == blank
+    assign ba_scheme = settings.color_schemes['scheme-6']
+  endif
+
+  assign basm = section.settings.section_color_scheme_mode
+  if basm == 'custom'
+    assign picked_ba = section.settings.color_scheme
+    if picked_ba != blank and picked_ba.settings != blank
+      assign ba_scheme = picked_ba
+    endif
+  elsif basm == 'default'
+  else
+    assign picked_ba = section.settings.color_scheme
+    if picked_ba != blank and picked_ba.settings != blank
+      assign ba_scheme = picked_ba
+    endif
+  endif
+
+  assign col_key = section.settings.column_layout | default: '40'
+  assign intro_fr = '4fr'
+  assign slider_fr = '6fr'
+  case col_key
+    when '30'
+      assign intro_fr = '3fr'
+      assign slider_fr = '7fr'
+    when '50'
+      assign intro_fr = '5fr'
+      assign slider_fr = '5fr'
+  endcase
+
+  assign rad_key = section.settings.image_border_radius | default: 'medium'
+  case rad_key
+    when 'none'
+      assign rad_px = 0
+    when 'small'
+      assign rad_px = 8
+    when 'large'
+      assign rad_px = 24
+    else
+      assign rad_px = 16
+  endcase
+
+  assign media_size_key = section.settings.media_size | default: 'medium'
+  assign media_img_width = 1200
+  assign media_img_widths = '400,600,800,1200,1600'
+  case media_size_key
+    when 'small'
+      assign media_img_width = 600
+      assign media_img_widths = '300,450,600'
+    when 'large'
+      assign media_img_width = 1600
+      assign media_img_widths = '400,600,800,1200,1600'
+    when 'xlarge'
+      assign media_img_width = 2400
+      assign media_img_widths = '600,800,1200,1600,2400'
+  endcase
+
+  assign initial_pos = section.settings.initial_position | default: 50
+  assign divider_c = section.settings.divider_color | default: '#FFFFFF'
+
+  assign handle_interaction = section.settings.handle_interaction | default: 'drag'
+  if handle_interaction != 'follow_cursor'
+    assign handle_interaction = 'drag'
+  endif
+
+  assign aspect_value = '4 / 3'
+  if section.settings.before_image != blank and section.settings.before_image.aspect_ratio
+    assign aspect_value = section.settings.before_image.aspect_ratio
+  endif
+
+  assign has_intro = false
+  if section.settings.eyebrow_text != blank or section.settings.heading != blank or section.settings.description != blank
+    assign has_intro = true
+  endif
+
+  assign show_cta = false
+  if section.settings.button_label != blank and section.settings.button_link != blank
+    assign show_cta = true
+  endif
+
+  assign intro_btn_style = section.settings.button_style | default: 'primary'
+  if intro_btn_style == 'filled'
+    assign intro_btn_style = 'primary'
+  elsif intro_btn_style == 'outlined'
+    assign intro_btn_style = 'outline'
+  endif
+  if intro_btn_style != 'primary' and intro_btn_style != 'outline' and intro_btn_style != 'ghost'
+    assign intro_btn_style = 'primary'
+  endif
+-%}
+{%- capture ba_scheme_vars -%}
+  {%- render 'color-scheme-vars', scheme: ba_scheme, inline_only: true -%}
+{%- endcapture -%}
+
+{%- render 'section-styles', section: section -%}
+
+<div
+  class="section-{{ section.id }} before-after shopify-section-wrapper product-slider--heading-{{ section.settings.heading_size | default: 'large' }} before-after--interaction-{{ handle_interaction }}{% if section.settings.full_width %} full-width before-after--full-width{% endif %}"
+  data-section-type="section-before-after"
+  data-section-id="{{ section.id }}"
+  data-before-after-initial="{{ initial_pos }}"
+  data-before-after-interaction="{{ handle_interaction }}"
+  data-before-after-entrance-scroll="{% if section.settings.entrance_animate_on_scroll == false %}false{% else %}true{% endif %}"
+  style="
+    {{ ba_scheme_vars }}
+    --before-after-intro-fr: {{ intro_fr }};
+    --before-after-slider-fr: {{ slider_fr }};
+    --before-after-img-radius: {{ rad_px }}px;
+    --before-after-divider: {{ divider_c }};
+    --before-after-aspect: {{ aspect_value }};
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="before-after__inner{% if section.settings.full_width %} section-content-width{% endif %}">
+    <div class="before-after__grid">
+      {%- if has_intro or show_cta -%}
+        <div class="before-after__intro-col" data-before-after-reveal>
+          <div class="before-after__intro product-slider__intro-copy">
+            {%- if section.settings.eyebrow_text != blank -%}
+              <p class="product-slider__eyebrow">{{ section.settings.eyebrow_text | escape }}</p>
+            {%- endif -%}
+            {%- if section.settings.heading != blank -%}
+              <h2 class="product-slider__heading">{{ section.settings.heading | escape }}</h2>
+            {%- endif -%}
+            {%- if section.settings.description != blank -%}
+              <div class="before-after__description rte">{{ section.settings.description }}</div>
+            {%- endif -%}
+            {%- if show_cta -%}
+              <div class="home-slider__actions">
+                <a
+                  class="before-after__btn before-after__btn--{{ intro_btn_style }}"
+                  href="{{ section.settings.button_link }}"
+                >
+                  {{ section.settings.button_label | escape }}
+                </a>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- render 'before-after-slider',
+        section: section,
+        initial_position: initial_pos,
+        img_radius_px: rad_px,
+        divider_color: divider_c,
+        media_img_width: media_img_width,
+        media_img_widths: media_img_widths
+      -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.before_after.name",
+  "tag": "section",
+  "class": "section-before-after",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.before_after.headers.intro"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "t:sections.before_after.labels.eyebrow_text",
+      "default": "Real Results. Visible Change"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.before_after.labels.heading",
+      "default": "Before & After Skin Results"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.before_after.labels.heading_size",
+      "default": "large",
+      "options": [
+        { "value": "small", "label": "t:sections.before_after.options.heading_size.small" },
+        { "value": "medium", "label": "t:sections.before_after.options.heading_size.medium" },
+        { "value": "large", "label": "t:sections.before_after.options.heading_size.large" },
+        { "value": "xlarge", "label": "t:sections.before_after.options.heading_size.xlarge" }
+      ]
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:sections.before_after.labels.description",
+      "default": "See the difference with skincare designed to improve texture and enhance radiance."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.before_after.labels.button_label",
+      "default": "Explore Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.before_after.labels.button_link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:sections.before_after.labels.button_style",
+      "default": "primary",
+      "options": [
+        { "value": "primary", "label": "t:sections.home_slider.options.button_style.primary" },
+        { "value": "outline", "label": "t:sections.home_slider.options.button_style.outline" },
+        { "value": "ghost", "label": "t:sections.home_slider.options.button_style.ghost" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.before_after.headers.layout"
+    },
+    {
+      "type": "select",
+      "id": "column_layout",
+      "label": "t:sections.before_after.labels.column_layout",
+      "default": "40",
+      "options": [
+        { "value": "30", "label": "t:sections.before_after.options.column_layout.30" },
+        { "value": "40", "label": "t:sections.before_after.options.column_layout.40" },
+        { "value": "50", "label": "t:sections.before_after.options.column_layout.50" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_border_radius",
+      "label": "t:sections.before_after.labels.image_border_radius",
+      "default": "medium",
+      "options": [
+        { "value": "none", "label": "t:sections.before_after.options.radius.none" },
+        { "value": "small", "label": "t:sections.before_after.options.radius.small" },
+        { "value": "medium", "label": "t:sections.before_after.options.radius.medium" },
+        { "value": "large", "label": "t:sections.before_after.options.radius.large" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.before_after.labels.full_width",
+      "info": "t:sections.before_after.info.full_width",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.before_after.headers.slider"
+    },
+    {
+      "type": "select",
+      "id": "media_size",
+      "label": "t:sections.before_after.labels.media_size",
+      "info": "t:sections.before_after.info.media_size",
+      "default": "medium",
+      "options": [
+        { "value": "small", "label": "t:sections.before_after.options.media_size.small" },
+        { "value": "medium", "label": "t:sections.before_after.options.media_size.medium" },
+        { "value": "large", "label": "t:sections.before_after.options.media_size.large" },
+        { "value": "xlarge", "label": "t:sections.before_after.options.media_size.xlarge" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "before_image",
+      "label": "t:sections.before_after.labels.before_image",
+      "info": "t:sections.before_after.info.before_image"
+    },
+    {
+      "type": "image_picker",
+      "id": "after_image",
+      "label": "t:sections.before_after.labels.after_image",
+      "info": "t:sections.before_after.info.after_image"
+    },
+    {
+      "type": "range",
+      "id": "initial_position",
+      "label": "t:sections.before_after.labels.initial_position",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "checkbox",
+      "id": "show_labels",
+      "label": "t:sections.before_after.labels.show_labels",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "before_label",
+      "label": "t:sections.before_after.labels.before_label",
+      "default": "Before"
+    },
+    {
+      "type": "text",
+      "id": "after_label",
+      "label": "t:sections.before_after.labels.after_label",
+      "default": "After"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "t:sections.before_after.labels.divider_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "select",
+      "id": "handle_interaction",
+      "label": "t:sections.before_after.labels.handle_interaction",
+      "info": "t:sections.before_after.info.handle_interaction",
+      "default": "drag",
+      "options": [
+        { "value": "drag", "label": "t:sections.before_after.options.handle_interaction.drag" },
+        { "value": "follow_cursor", "label": "t:sections.before_after.options.handle_interaction.follow_cursor" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.before_after.headers.animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "entrance_animate_on_scroll",
+      "label": "t:sections.before_after.labels.entrance_animate_on_scroll",
+      "info": "t:sections.before_after.info.entrance_animate_on_scroll",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.before_after.headers.colour"
+    },
+    {
+      "type": "select",
+      "id": "section_color_scheme_mode",
+      "label": "t:sections.before_after.section_color_scheme_mode",
+      "options": [
+        { "value": "default", "label": "t:sections.before_after.section_color_scheme_mode_default" },
+        { "value": "custom", "label": "t:sections.before_after.section_color_scheme_mode_custom" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.before_after.color_scheme",
+      "info": "t:sections.before_after.color_scheme_info",
+      "default": "scheme-6",
+      "visible_if": "{{ section.settings.section_color_scheme_mode == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.before_after.headers.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.before_after.labels.padding_top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.before_after.labels.padding_right",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.before_after.labels.padding_bottom",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.before_after.labels.padding_left",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.before_after.headers.margin"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.before_after.labels.margin_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.before_after.labels.margin_bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.before_after.headers.background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.before_after.labels.background_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.before_after.info.background_color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.before_after.headers.border"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.before_after.labels.border_width",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "t:sections.before_after.labels.border_style",
+      "options": [
+        { "value": "none", "label": "t:sections.before_after.options.border_style.none" },
+        { "value": "solid", "label": "t:sections.before_after.options.border_style.solid" },
+        { "value": "dashed", "label": "t:sections.before_after.options.border_style.dashed" },
+        { "value": "dotted", "label": "t:sections.before_after.options.border_style.dotted" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "t:sections.before_after.labels.border_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.before_after.info.border_color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.before_after.headers.radius"
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.before_after.labels.radius_tl",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.before_after.labels.radius_tr",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.before_after.labels.radius_br",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.before_after.labels.radius_bl",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.before_after.presets.name"
+    }
+  ]
+}
+{% endschema %}

@@ -386,6 +386,136 @@
         "border_radius_bottom_right": 0,
         "border_radius_bottom_left": 0
       }
+    },
+    "section_promo_cards_rYp8aL": {
+      "type": "section-promo-cards",
+      "blocks": {
+        "promo_card_RqkajD": {
+          "type": "promo_card",
+          "settings": {
+            "card_background_color": "rgba(0,0,0,0)",
+            "card_text_color": "#1a1a1a",
+            "eyebrow_label": "Limit Offer",
+            "eyebrow_icon": "star",
+            "heading": "Elevate Your Everyday Style",
+            "heading_size": "small",
+            "media_type": "image",
+            "image_position": "center center",
+            "image_border_radius": "small",
+            "cta_label": "Shop the Collection",
+            "cta_link": "shopify://collections/all",
+            "open_new_tab": false
+          }
+        },
+        "promo_card_afzqNR": {
+          "type": "promo_card",
+          "settings": {
+            "card_background_color": "rgba(0,0,0,0)",
+            "card_text_color": "#1a1a1a",
+            "eyebrow_label": "SaleOff",
+            "eyebrow_icon": "arrow",
+            "heading": "Spring Refresh, Up to 40% Off",
+            "heading_size": "small",
+            "media_type": "image",
+            "image_position": "center center",
+            "image_border_radius": "small",
+            "cta_label": "Explore Deals",
+            "cta_link": "shopify://collections/all",
+            "open_new_tab": false
+          }
+        },
+        "promo_card_RGUAPB": {
+          "type": "promo_card",
+          "settings": {
+            "card_background_color": "rgba(0,0,0,0)",
+            "card_text_color": "#1a1a1a",
+            "eyebrow_label": "Member First",
+            "eyebrow_icon": "heart",
+            "heading": "Members Get First Dibs",
+            "heading_size": "small",
+            "media_type": "image",
+            "image_position": "center center",
+            "image_border_radius": "small",
+            "cta_label": "Join Now",
+            "cta_link": "shopify://collections/all",
+            "open_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "promo_card_RqkajD",
+        "promo_card_afzqNR",
+        "promo_card_RGUAPB"
+      ],
+      "name": "t:sections.promo_cards.presets.name",
+      "settings": {
+        "layout": "carousel",
+        "columns": "3",
+        "card_gap": "large",
+        "card_border_radius": "medium",
+        "media_aspect_ratio": "landscape",
+        "media_size": "medium",
+        "card_heading_size": "medium",
+        "show_navigation_arrows": true,
+        "entrance_animate_on_scroll": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "scheme-6",
+        "full_width": true,
+        "padding_top": 60,
+        "padding_right": 0,
+        "padding_bottom": 60,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
+    },
+    "section_before_after_LhTBRL": {
+      "type": "section-before-after",
+      "name": "t:sections.before_after.presets.name",
+      "settings": {
+        "eyebrow_text": "Real Results. Visible Change",
+        "heading": "Before & After Skin Results",
+        "heading_size": "xlarge",
+        "description": "See the difference with skincare designed to improve texture and enhance radiance.",
+        "button_label": "Explore Now",
+        "button_link": "shopify://collections/all",
+        "button_style": "outline",
+        "column_layout": "30",
+        "image_border_radius": "medium",
+        "full_width": true,
+        "media_size": "small",
+        "initial_position": 50,
+        "show_labels": true,
+        "before_label": "Before",
+        "after_label": "After",
+        "divider_color": "#ffffff",
+        "handle_interaction": "follow_cursor",
+        "entrance_animate_on_scroll": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "scheme-6",
+        "padding_top": 60,
+        "padding_right": 0,
+        "padding_bottom": 60,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "#f4f4f5",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
     }
   },
   "order": [
@@ -393,6 +523,8 @@
     "section_product_slider_dCdyeR",
     "section_collection_list_LWFp7W",
     "section_product_images_story_nEnFnM",
-    "section_collection_slide_XNQfNV"
+    "section_collection_slide_XNQfNV",
+    "section_promo_cards_rYp8aL",
+    "section_before_after_LhTBRL"
   ]
 }
