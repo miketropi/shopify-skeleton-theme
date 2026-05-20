@@ -1,6 +1,6 @@
 # Before & After
 
-> **Status:** Specification only — **not in the repository yet.** When implemented, use `sections/section-before-after.liquid` and the checklist below. Compare intro-column patterns with `sections/section-collection-slide.liquid` (product-slider family intro + CTA).
+> **Status:** **Implemented.** `sections/section-before-after.liquid`, snippet `before-after-slider`; styles `src/styles/sections/_section-before-after.scss`; JS `section-before-after` + `section-before-after.runtime.ts`.
 
 > Two-column layout: **intro panel** (eyebrow, heading, description, CTA) beside an interactive **before/after image comparison** with a draggable divider. Stacks to a single column below `lg`. Touch-friendly on mobile.
 
@@ -72,14 +72,15 @@
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `before_image` | image_picker | — | “Before” image. Recommend ≥ 1200×900px; **same aspect ratio** as after image. |
-| `after_image` | image_picker | — | “After” image; must match before dimensions/aspect. |
+| `media_size` | select | `medium` | Max render width: `small` (600px), `medium` (1200px), `large` (1600px), `xlarge` (2400px). |
+| `before_image` | image_picker | — | “Before” image. If empty, theme placeholder **lifestyle-1** is shown. |
+| `after_image` | image_picker | — | “After” image. If empty, theme placeholder **lifestyle-2** is shown. |
 | `initial_position` | range | `50` | Divider start position (% from left). Min 20, max 80, step 5. |
 | `before_label` | text | `Before` | Bottom-left pill label; translatable via locale. |
 | `after_label` | text | `After` | Bottom-right pill label. |
 | `show_labels` | checkbox | `true` | Show before/after pills on the slider. |
-| `divider_color` | color | `#FFFFFF` | Divider line and handle accent. |
-| `drag_icon_style` | select | `lines` | Handle icon: `lines`, `arrows`, `dots` — inline SVG, no external assets. |
+| `divider_color` | color | `#FFFFFF` | Divider line and handle fill. |
+| `handle_interaction` | select | `drag` | `drag` — click & drag (press and hold). `follow_cursor` — divider follows pointer over the image. |
 
 **Out of scope unless spec changes:** multiple comparison pairs per section (use a second section instance), video compare, blocks, per-image colour schemes, standalone `section_padding_top` / `section_padding_bottom` only.
 
@@ -105,10 +106,10 @@ Mobile-first SCSS.
 | --- | --- |
 | **Slider role** | Divider handle: `role="slider"`, `aria-valuemin="20"`, `aria-valuemax="80"`, `aria-valuenow` synced to position, `aria-label` from locale (e.g. “Compare before and after”). |
 | **Keyboard** | Handle focusable; **Arrow Left/Right** (and optionally Home/End) move position in 5% steps; respect min/max from `initial_position` range. |
-| **Pointer** | `pointerdown` / `pointermove` / `pointerup` with capture; touch-friendly hit target on handle. |
+| **Pointer** | Drag mode: press-and-hold on compare. Follow mode: `pointermove` over compare updates position. Touch supported in both modes. |
 | **Labels** | Pills are decorative text; not focusable. |
 | **Images** | Meaningful `alt` from settings or fallback to `before_label` / `after_label`; after image can use `alt=""` if purely comparative and described in intro — document choice in Liquid. |
-| **Reduced motion** | Skip or shorten GSAP entrance; optional static divider at `initial_position` without animating reveal. |
+| **Reduced motion** | Skip or shorten GSAP entrance; **follow cursor** falls back to click & drag. |
 | **No-JS** | Show before image only (or a static 50/50 split via CSS) so content is not hidden; enhance when JS loads. |
 
 ---
@@ -173,8 +174,7 @@ Production schema must use **`t:sections.before_after.*`**, merge **section-styl
     { "type": "checkbox", "id": "show_labels", "default": true },
     { "type": "text", "id": "before_label", "default": "Before" },
     { "type": "text", "id": "after_label", "default": "After" },
-    { "type": "color", "id": "divider_color", "default": "#FFFFFF" },
-    { "type": "select", "id": "drag_icon_style", "default": "lines" }
+    { "type": "color", "id": "divider_color", "default": "#FFFFFF" }
   ],
   "presets": [{ "name": "t:sections.before_after.presets.name" }]
 }
@@ -203,5 +203,5 @@ Production schema must use **`t:sections.before_after.*`**, merge **section-styl
 - **Clip strategy** — fixed aspect box (e.g. from before image intrinsic ratio or a section-level ratio setting in a future revision); after image absolutely positioned and clipped.
 - **Loading** — root class e.g. `before-after--loading` until both images `decode` / `load`; then `before-after--revealed` for GSAP.
 - **Editor** — respect `window.Shopify.designMode`; shorten entrance delays per *JS-driven UI* rules.
-- **Divider** — `divider_color` on line + handle; icon variant via `drag_icon_style` modifier class.
+- **Divider** — `divider_color` on 1px line and circular handle; grip lines via CSS.
 - **Progressive enhancement** — comparison interaction requires JS; non-JS fallback shows usable static content.

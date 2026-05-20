@@ -1,0 +1,105 @@
+{%- comment -%}
+  Before/after image comparison slider.
+  @param section {section}
+  @param initial_position {number}
+  @param img_radius_px {number}
+  @param divider_color {string}
+  @param media_img_width {number}
+  @param media_img_widths {string}
+{%- endcomment -%}
+{%- liquid
+  assign img_w = media_img_width | default: 1200
+  assign img_widths = media_img_widths | default: '400,600,800,1200,1600'
+
+  assign before_img = section.settings.before_image
+  assign after_img = section.settings.after_image
+  assign pos_pct = initial_position | default: 50
+  assign show_labels = section.settings.show_labels
+
+  assign before_alt = before_img.alt | default: section.settings.before_label | default: section.settings.heading | default: 'Before' | escape
+  assign after_alt = after_img.alt | default: section.settings.after_label | default: 'After' | escape
+-%}
+<div
+  class="before-after__slider-col"
+  data-before-after-reveal
+>
+  <div
+    class="before-after__compare"
+    data-before-after-compare
+    style="--before-after-position: {{ pos_pct }}%;"
+  >
+    <div class="before-after__loading" data-before-after-loading aria-hidden="true">
+      <span class="before-after__loading-inner">
+        <span class="before-after__loading-dot"></span>
+        <span class="before-after__loading-dot"></span>
+        <span class="before-after__loading-dot"></span>
+      </span>
+    </div>
+
+    <div class="before-after__frame">
+      {%- if before_img != blank -%}
+        {{
+          before_img
+          | image_url: width: img_w
+          | image_tag:
+            loading: 'lazy',
+            class: 'before-after__img before-after__img--before',
+            widths: img_widths,
+            sizes: '(min-width: 62em) 58vw, 100vw',
+            alt: before_alt
+        }}
+      {%- else -%}
+        <span class="before-after__placeholder before-after__img before-after__img--before" role="img" aria-label="{{ before_alt }}">
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'before-after__placeholder-svg' }}
+        </span>
+      {%- endif -%}
+
+      <div class="before-after__after-wrap">
+        {%- if after_img != blank -%}
+          {{
+            after_img
+            | image_url: width: img_w
+            | image_tag:
+              loading: 'lazy',
+              class: 'before-after__img before-after__img--after',
+              widths: img_widths,
+              sizes: '(min-width: 62em) 58vw, 100vw',
+              alt: after_alt
+          }}
+        {%- else -%}
+          <span class="before-after__placeholder before-after__img before-after__img--after" role="img" aria-label="{{ after_alt }}">
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'before-after__placeholder-svg' }}
+          </span>
+        {%- endif -%}
+      </div>
+
+      <div
+        class="before-after__divider"
+        data-before-after-divider
+        style="left: var(--before-after-position);" 
+        aria-hidden="true"
+      ></div>
+
+      <button
+        type="button"
+        class="before-after__handle"
+        data-before-after-handle
+        role="slider"
+        aria-valuemin="20"
+        aria-valuemax="80"
+        aria-valuenow="{{ pos_pct }}"
+        aria-label="{{ 'sections.before_after.slider_aria' | t }}"
+        style="left: var(--before-after-position);"
+      >
+        <span class="before-after__handle-grip" aria-hidden="true"></span>
+      </button>
+
+      {%- if show_labels -%}
+        <div class="before-after__labels" aria-hidden="true">
+          <span class="before-after__label before-after__label--before">{{ section.settings.before_label | escape }}</span>
+          <span class="before-after__label before-after__label--after">{{ section.settings.after_label | escape }}</span>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
