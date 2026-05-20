@@ -452,6 +452,14 @@
     "collection_list": {
       "empty": "Add collection entries (pick a collection or a custom link) to show this section."
     },
+    "promo_cards": {
+      "carousel": "Carousel",
+      "region_label": "Promo cards",
+      "prev": "Previous promo cards",
+      "next": "Next promo cards",
+      "empty_state": "Add promo card blocks to show this section.",
+      "card_link_fallback": "View promo card"
+    },
     "collection_slide": {
       "carousel": "Carousel",
       "region_label": "Collection carousel",

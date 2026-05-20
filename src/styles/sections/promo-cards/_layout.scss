@@ -1,0 +1,207 @@
+@use '../../base/breakpoints' as *;
+@use 'tokens' as *;
+
+.promo-cards {
+  box-sizing: border-box;
+  color: var(--cs-text, inherit);
+}
+
+.promo-cards__inner {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.promo-cards__empty {
+  margin: 0;
+  padding: 2.5rem 1.25rem;
+  border: 1px dashed color-mix(in srgb, var(--cs-border, #e0ddd8) 55%, transparent);
+  border-radius: var(--promo-card-radius, 12px);
+  background: color-mix(in srgb, var(--cs-background, #fff) 97%, var(--cs-border, #e8e6e1) 3%);
+  font-family: var(--cs-font-body, inherit);
+  font-size: var(--font-size-sm, 0.875rem);
+  line-height: var(--line-height-normal, 1.55);
+  text-align: center;
+  color: var(--cs-text-secondary, var(--cs-text));
+}
+
+.promo-cards__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--promo-cols-mobile, 1), minmax(0, 1fr));
+  gap: var(--promo-cards-gap-mobile, 12px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include mq-up('md') {
+    grid-template-columns: repeat(var(--promo-cols-tablet, 2), minmax(0, 1fr));
+    gap: var(--promo-cards-gap, 20px);
+    align-items: stretch;
+  }
+
+  @include mq-up('lg') {
+    grid-template-columns: repeat(var(--promo-cols-desktop, 3), minmax(0, 1fr));
+  }
+}
+
+.promo-cards__cell {
+  display: flex;
+  min-width: 0;
+
+  > .promo-cards__card {
+    flex: 1;
+    width: 100%;
+  }
+}
+
+.promo-cards--layout-grid:not(.promo-cards--revealed) .promo-cards__grid {
+  min-height: $min-skel-h;
+}
+
+.promo-cards__viewport {
+  position: relative;
+  width: 100%;
+  padding-block: 0.25rem;
+}
+
+.promo-cards:not(.promo-cards--revealed) .promo-cards__viewport {
+  min-height: $min-skel-h;
+}
+
+.promo-cards__loading {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  border-radius: var(--promo-card-radius, 12px);
+  background: color-mix(in srgb, var(--cs-background, #fff) 78%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: opacity 0.45s $ease-soft;
+}
+
+.promo-cards--revealed .promo-cards__loading {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.promo-cards__loading-inner {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.promo-cards__loading-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--cs-text-secondary, rgba(0, 0, 0, 0.35));
+  animation: promo-cards-dot-pulse 1.15s ease-in-out infinite both;
+
+  &:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+}
+
+@keyframes promo-cards-dot-pulse {
+  0%,
+  100% {
+    opacity: 0.28;
+    transform: scale(0.92);
+  }
+
+  50% {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+}
+
+.promo-cards__swiper-clip {
+  overflow: hidden;
+  margin-inline: -0.125rem;
+  padding-inline: 0.125rem;
+}
+
+.promo-cards__swiper.swiper {
+  overflow: visible;
+}
+
+.promo-cards__track.swiper-wrapper {
+  align-items: stretch;
+  padding: 0;
+}
+
+.promo-cards__slide-target.swiper-slide {
+  height: auto;
+  box-sizing: border-box;
+  display: flex;
+
+  > .promo-cards__card {
+    flex: 1;
+    width: 100%;
+  }
+}
+
+.promo-cards__nav-btn {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  width: $nav-btn-size;
+  height: $nav-btn-size;
+  margin: 0;
+  padding: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--cs-border, #e0ddd8) 48%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cs-background, #fff) 88%, transparent);
+  color: var(--cs-heading, var(--cs-text));
+  cursor: pointer;
+  box-shadow:
+    0 1px 3px color-mix(in srgb, var(--cs-text, #000) 5%, transparent),
+    0 10px 28px color-mix(in srgb, var(--cs-text, #000) 6%, transparent);
+  transform: translateY(-50%);
+  transition:
+    background 0.35s $ease-soft,
+    border-color 0.35s $ease-soft,
+    box-shadow 0.35s $ease-soft,
+    opacity 0.3s $ease-soft;
+
+  &:hover {
+    background: color-mix(in srgb, var(--cs-background, #fff) 98%, transparent);
+    border-color: color-mix(in srgb, var(--cs-border, #e0ddd8) 32%, var(--cs-heading) 10%);
+  }
+
+  &:disabled,
+  &.swiper-button-disabled {
+    opacity: 0.32;
+    cursor: default;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    @include promo-focus-ring;
+  }
+
+  @include mq-up('md') {
+    display: flex;
+  }
+}
+
+.promo-cards__nav-btn--prev {
+  left: max(0px, env(safe-area-inset-left, 0));
+}
+
+.promo-cards__nav-btn--next {
+  right: max(0px, env(safe-area-inset-right, 0));
+}

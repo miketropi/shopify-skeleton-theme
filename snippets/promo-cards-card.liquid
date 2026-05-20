@@ -1,0 +1,165 @@
+{%- comment -%}
+  Editorial promo card: eyebrow + heading + inset image/video + CTA row.
+  Params: block, eager_image, card_radius_px, media_img_width, media_img_widths, media_video_image_size
+{%- endcomment -%}
+{%- liquid
+  assign href = block.settings.cta_link
+  assign has_link = false
+  if href != blank
+    assign has_link = true
+  endif
+
+  assign heading_size_opt = block.settings.heading_size | default: 'section'
+  assign heading_extra_class = ''
+  if heading_size_opt != 'section'
+    assign heading_extra_class = ' promo-cards__heading--' | append: heading_size_opt
+  endif
+
+  assign img_rad_key = block.settings.image_border_radius | default: 'small'
+  assign img_rad_px = 8
+  case img_rad_key
+    when 'none'
+      assign img_rad_px = 0
+    when 'medium'
+      assign img_rad_px = 12
+  endcase
+
+  assign pos = block.settings.image_position | default: 'center center'
+  assign media_style = 'object-position: ' | append: pos | append: ';'
+
+  assign img_loading = 'lazy'
+  if eager_image
+    assign img_loading = 'eager'
+  endif
+
+  assign bg = block.settings.card_background_color | default: '#F4F4F4'
+  assign text_color = block.settings.card_text_color | default: '#1A1A1A'
+
+  assign card_style = '--promo-card-bg: ' | append: bg | append: '; --promo-card-text: ' | append: text_color | append: '; --promo-card-radius: ' | append: card_radius_px | append: 'px; --promo-img-radius: ' | append: img_rad_px | append: 'px;'
+
+  assign eyebrow_icon_key = block.settings.eyebrow_icon | default: 'none'
+  assign show_eyebrow_row = false
+  if block.settings.eyebrow_label != blank or eyebrow_icon_key != 'none'
+    assign show_eyebrow_row = true
+  endif
+
+  assign show_cta = false
+  if block.settings.cta_label != blank and has_link
+    assign show_cta = true
+  endif
+
+  assign link_aria = block.settings.heading | default: block.settings.cta_label
+  if link_aria != blank
+    assign link_aria = link_aria | strip
+  endif
+  if link_aria == blank
+    assign link_aria = 'sections.promo_cards.card_link_fallback' | t
+  endif
+
+  assign media_type = block.settings.media_type | default: 'image'
+  assign use_video = false
+  if media_type == 'video' and block.settings.video != blank
+    assign use_video = true
+  endif
+
+  assign img_w = media_img_width | default: 1200
+  assign img_widths = media_img_widths | default: '300,450,600,800,1200'
+  assign video_image_size = media_video_image_size | default: '1200x'
+
+  assign video_poster_url = ''
+  if use_video and block.settings.image != blank
+    assign video_poster_url = block.settings.image | image_url: width: img_w
+  endif
+
+  assign media_alt = block.settings.image.alt | default: block.settings.heading | default: '' | escape
+-%}
+<article class="promo-cards__card" style="{{ card_style }}" data-promo-card {{ block.shopify_attributes }}>
+  {%- if has_link -%}
+    <a
+      class="promo-cards__card-link"
+      href="{{ href }}"
+      {% if block.settings.open_new_tab %}
+        target="_blank"
+        rel="noopener noreferrer"
+      {% endif %}
+      aria-label="{{ link_aria | escape }}"
+    >
+  {%- endif -%}
+  <div class="promo-cards__card-inner">
+    {%- if show_eyebrow_row -%}
+      <div class="promo-cards__eyebrow-row">
+        {%- if block.settings.eyebrow_label != blank -%}
+          <p class="product-slider__eyebrow promo-cards__eyebrow">{{ block.settings.eyebrow_label | escape }}</p>
+        {%- else -%}
+          <span class="promo-cards__eyebrow-spacer" aria-hidden="true"></span>
+        {%- endif -%}
+        {%- render 'promo-cards-icon', icon: block.settings.eyebrow_icon -%}
+      </div>
+    {%- endif -%}
+
+    {%- if block.settings.heading != blank -%}
+      <h3 class="product-slider__heading{{ heading_extra_class }}">{{ block.settings.heading | escape }}</h3>
+    {%- endif -%}
+
+    <div class="promo-cards__media">
+      {%- if use_video -%}
+        {%- if video_poster_url != blank -%}
+          {{
+            block.settings.video
+            | video_tag:
+              autoplay: true,
+              loop: true,
+              muted: true,
+              controls: false,
+              playsinline: true,
+              class: 'promo-cards__video',
+              style: media_style,
+              image_size: video_image_size,
+              poster: video_poster_url
+          }}
+        {%- else -%}
+          {{
+            block.settings.video
+            | video_tag:
+              autoplay: true,
+              loop: true,
+              muted: true,
+              controls: false,
+              playsinline: true,
+              class: 'promo-cards__video',
+              style: media_style,
+              image_size: video_image_size
+          }}
+        {%- endif -%}
+      {%- elsif block.settings.image != blank -%}
+        {{
+          block.settings.image
+          | image_url: width: img_w
+          | image_tag:
+            loading: img_loading,
+            class: 'promo-cards__img',
+            widths: img_widths,
+            sizes: '(min-width: 62em) min(360px, 28vw), (min-width: 48em) min(320px, 42vw), 88vw',
+            alt: media_alt,
+            style: media_style
+        }}
+      {%- else -%}
+        <div class="promo-cards__media-placeholder" aria-hidden="true">
+          {{ 'collection-4' | placeholder_svg_tag: 'promo-cards__placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if show_cta -%}
+      <div class="promo-cards__cta-row">
+        <span class="promo-cards__cta-label">{{ block.settings.cta_label | escape }}</span>
+        <span class="promo-cards__cta-go" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </div>
+    {%- endif -%}
+  </div>
+  {%- if has_link -%}
+    </a>
+  {%- endif -%}
+</article>

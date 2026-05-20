@@ -16,11 +16,12 @@ import { registerSectionHomeSlider } from './sections/section-home-slider'
 import { registerSectionProductSlider } from './sections/section-product-slider'
 import { registerSectionCollectionList } from './sections/section-collection-list'
 import { registerSectionCollectionSlide } from './sections/section-collection-slide'
+import { registerSectionPromoCards } from './sections/section-promo-cards'
 import { registerSectionProductImagesStory } from './sections/section-product-images-story'
 import { registerCollectionGridSection } from './collection-grid'
 import './size-guide'
 import { initSearchModal } from './search-modal'
-import { registerHeaderTopBarSection } from './header-top-bar'
+import { registerHeaderTopBarSection } from './header-top-bar' 
 import { registerMainBlogSection } from './main-blog'
 import { registerMainArticleSection } from './main-article'
 import { bindTcardHoverVideos } from './tcard-hover-video'
@@ -56,6 +57,7 @@ registerSectionHomeSlider()
 registerSectionProductSlider()
 registerSectionCollectionList()
 registerSectionCollectionSlide()
+registerSectionPromoCards()
 registerSectionProductImagesStory()
 registerCollectionGridSection()
 registerHeaderTopBarSection()

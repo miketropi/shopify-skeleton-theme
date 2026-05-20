@@ -886,6 +886,168 @@
         }
       }
     },
+    "promo_cards": {
+      "name": "Promo cards",
+      "presets": {
+        "name": "Promo cards"
+      },
+      "headers": {
+        "layout": "Layout",
+        "media": "Media",
+        "typography": "Typography",
+        "animation": "Animation",
+        "colour": "Colour",
+        "layout_width": "Layout width",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "layout": "Layout",
+        "columns": "Columns (large screens)",
+        "card_gap": "Card spacing",
+        "card_border_radius": "Card corner radius",
+        "media_aspect_ratio": "Media frame ratio",
+        "media_size": "Media file size",
+        "card_heading_size": "Default card heading size",
+        "show_navigation_arrows": "Show navigation arrows",
+        "entrance_animate_on_scroll": "Animate when scrolling into view",
+        "full_width": "Full width (edge-to-edge background)",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "layout": {
+          "grid": "Grid",
+          "carousel": "Carousel"
+        },
+        "card_gap": {
+          "none": "None",
+          "small": "Small (12px)",
+          "medium": "Medium (20px)",
+          "large": "Large (32px)"
+        },
+        "radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "image_position": {
+          "center_center": "Center center",
+          "top_center": "Top center",
+          "bottom_center": "Bottom center",
+          "left_center": "Left center",
+          "right_center": "Right center"
+        },
+        "media_aspect_ratio": {
+          "auto": "Natural height",
+          "square": "Square (1:1)",
+          "portrait": "Portrait (3:4)",
+          "landscape": "Landscape (4:3)",
+          "wide": "Wide (16:9)"
+        },
+        "media_size": {
+          "small": "Small (600px)",
+          "medium": "Medium (1200px)",
+          "large": "Large (1600px)",
+          "xlarge": "Extra large (2400px)"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "info": {
+        "media_aspect_ratio": "Sets the inset media frame shape for every card. Natural height grows with the image or video.",
+        "media_size": "Maximum width loaded for images and video poster frames. Larger sizes look sharper but use more bandwidth.",
+        "card_heading_size": "Used when a card’s Heading size is “Match section default”. Same step scale as Product slider headings.",
+        "show_navigation_arrows": "Shown in carousel layout when there is more than one card. Hidden on small screens so shoppers can swipe.",
+        "entrance_animate_on_scroll": "When off, the entrance animation runs after the page loads without waiting for scroll (still respects reduced motion).",
+        "full_width": "Background spans the browser width; content stays in the page column.",
+        "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "color_scheme": "Scheme",
+      "color_scheme_info": "Used when Colour scheme is set to Custom. Applies to the section band, not individual card fills.",
+      "blocks": {
+        "promo_card": {
+          "name": "Promo card",
+          "headers": {
+            "background": "Background",
+            "eyebrow": "Eyebrow",
+            "heading": "Heading",
+            "media": "Media",
+            "cta": "Call to action"
+          },
+          "labels": {
+            "card_background_color": "Card background colour",
+            "card_text_color": "Card text colour",
+            "eyebrow_label": "Eyebrow",
+            "eyebrow_icon": "Icon (top right)",
+            "heading": "Heading",
+            "heading_size": "Heading size",
+            "media_type": "Media type",
+            "image": "Image",
+            "video": "Video",
+            "media_position": "Media focal point",
+            "image_border_radius": "Media corner radius",
+            "cta_label": "CTA label",
+            "cta_link": "CTA link",
+            "open_new_tab": "Open link in new tab"
+          },
+          "options": {
+            "eyebrow_icon": {
+              "none": "None",
+              "star": "Star",
+              "spark": "Spark",
+              "arrow": "Arrow",
+              "heart": "Heart",
+              "leaf": "Leaf"
+            },
+            "heading_size": {
+              "section": "Match section default"
+            },
+            "media_type": {
+              "image": "Image",
+              "video": "Video"
+            },
+            "image_radius": {
+              "medium": "Medium (12px)"
+            }
+          },
+          "info": {
+            "image": "Used for image cards. When using video, optional poster image shown before playback and when reduced motion is preferred.",
+            "video": "Muted looping video. Upload MP4 via Shopify Files or use a Shopify-hosted video."
+          }
+        }
+      }
+    },
     "collection_slide": {
       "name": "Collection slide",
       "presets": {

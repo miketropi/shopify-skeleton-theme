@@ -1,0 +1,20 @@
+$ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+$min-skel-h: 12rem;
+$nav-btn-size: 2.375rem;
+
+@mixin promo-focus-ring($offset: 2px) {
+  outline: 2px solid var(--cs-focus-ring, var(--cs-accent, var(--cs-heading)));
+  outline-offset: $offset;
+}
+
+@mixin card-shadow-rest {
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--cs-text, #1a1a1a) 4%, transparent),
+    0 12px 40px color-mix(in srgb, var(--cs-text, #1a1a1a) 5%, transparent);
+}
+
+@mixin card-shadow-hover {
+  box-shadow:
+    0 2px 8px color-mix(in srgb, var(--cs-text, #1a1a1a) 5%, transparent),
+    0 20px 56px color-mix(in srgb, var(--cs-text, #1a1a1a) 7%, transparent);
+}

@@ -1,0 +1,37 @@
+{%- comment -%}
+  @param section {section}
+  @param card_radius_px {number}
+  @param media_img_width {number}
+  @param media_img_widths {string}
+  @param media_video_image_size {string}
+  @param item_tag {string} li | div
+  @param item_class {string}
+  @param item_role {string} optional
+{%- endcomment -%}
+{%- liquid
+  assign card_i = 0
+-%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'promo_card' -%}
+    {%- assign card_i = card_i | plus: 1 -%}
+    {%- assign eager_card = false -%}
+    {%- if card_i <= 2 -%}
+      {%- assign eager_card = true -%}
+    {%- endif -%}
+    <{{ item_tag }}
+      class="{{ item_class }}"
+      {% if item_role != blank %}
+        role="{{ item_role }}"
+      {% endif %}
+    >
+      {%- render 'promo-cards-card',
+        block: block,
+        eager_image: eager_card,
+        card_radius_px: card_radius_px,
+        media_img_width: media_img_width,
+        media_img_widths: media_img_widths,
+        media_video_image_size: media_video_image_size
+      -%}
+    </{{ item_tag }}>
+  {%- endif -%}
+{%- endfor -%}
