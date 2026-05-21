@@ -1,0 +1,530 @@
+{%- liquid
+  assign cs_scheme = settings.global_color_scheme
+  if cs_scheme == blank or cs_scheme.settings == blank
+    assign cs_scheme = settings.color_schemes['scheme-6']
+  endif
+
+  assign cssm = section.settings.section_color_scheme_mode
+  if cssm == 'custom'
+    assign picked_cs = section.settings.color_scheme
+    if picked_cs != blank and picked_cs.settings != blank
+      assign cs_scheme = picked_cs
+    endif
+  elsif cssm == 'default'
+  else
+    assign picked_cs = section.settings.color_scheme
+    if picked_cs != blank and picked_cs.settings != blank
+      assign cs_scheme = picked_cs
+    endif
+  endif
+
+  assign layout = section.settings.layout | default: 'grid'
+  assign is_carousel = false
+  if layout == 'carousel'
+    assign is_carousel = true
+  endif
+
+  assign text_alignment = section.settings.text_alignment | default: 'center'
+  assign show_dividers = section.settings.show_dividers
+
+  assign item_heading_size = section.settings.item_heading_size | default: 'small'
+  assign item_description_size = section.settings.item_description_size | default: 'small'
+
+  assign heading_color = section.settings.heading_color
+  assign description_color = section.settings.description_color
+  assign icon_color = section.settings.icon_color
+
+  assign icon_size_key = section.settings.icon_size | default: 'theme'
+
+  assign item_count = 0
+  for block in section.blocks
+    if block.type == 'trust_item'
+      assign item_count = item_count | plus: 1
+    endif
+  endfor
+-%}
+{%- capture cs_scheme_vars -%}
+  {%- render 'color-scheme-vars', scheme: cs_scheme, inline_only: true -%}
+{%- endcapture -%}
+
+{%- render 'section-styles', section: section -%}
+
+{% style %}
+  html.js #shopify-section-{{ section.id }} .trust-bar:not(.trust-bar--revealed) .trust-bar__slide-target {
+    opacity: 0;
+  }
+{% endstyle %}
+
+<div
+  class="section-{{ section.id }} trust-bar shopify-section-wrapper trust-bar--layout-{{ layout }} trust-bar--align-{{ text_alignment }} trust-bar--heading-{{ item_heading_size }} trust-bar--description-{{ item_description_size }}{% if icon_size_key != 'theme' %} trust-bar--icon-{{ icon_size_key }}{% endif %}{% if show_dividers %} trust-bar--dividers{% endif %}{% if section.settings.full_width %} full-width trust-bar--full-width{% endif %}"
+  data-section-type="section-trust-bar"
+  data-section-id="{{ section.id }}"
+  data-trust-bar-layout="{{ layout }}"
+  data-trust-bar-count="{{ item_count }}"
+  data-trust-bar-entrance-scroll="{% if section.settings.entrance_animate_on_scroll == false %}false{% else %}true{% endif %}"
+  style="
+    {{ cs_scheme_vars }}
+    --trust-bar-count: {{ item_count }};
+    {%- if heading_color != blank and heading_color != 'rgba(0,0,0,0)' -%}
+      --trust-bar-heading-color: {{ heading_color }};
+    {%- endif -%}
+    {%- if description_color != blank and description_color != 'rgba(0,0,0,0)' -%}
+      --trust-bar-description-color: {{ description_color }};
+    {%- endif -%}
+    {%- if icon_color != blank and icon_color != 'rgba(0,0,0,0)' -%}
+      --trust-bar-icon-color: {{ icon_color }};
+    {%- endif -%}
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="trust-bar__inner{% if section.settings.full_width %} section-content-width{% endif %}">
+    {%- if item_count == 0 -%}
+      <p class="trust-bar__empty">{{ 'sections.trust_bar.empty_state' | t }}</p>
+    {%- else -%}
+      {%- unless is_carousel -%}
+        <ul class="trust-bar__grid" role="list">
+          {%- render 'trust-bar-items',
+            section: section,
+            item_tag: 'li',
+            item_class: 'trust-bar__grid-item trust-bar__slide-target',
+            item_role: ''
+          -%}
+        </ul>
+      {%- endunless -%}
+
+      <div
+        class="trust-bar__viewport{% unless is_carousel %} trust-bar__viewport--mobile{% endunless %}"
+        role="region"
+        aria-roledescription="{{ 'sections.trust_bar.carousel' | t }}"
+        aria-label="{{ 'sections.trust_bar.region_label' | t }}"
+        tabindex="-1"
+      >
+        <div class="trust-bar__loading" data-trust-bar-loading aria-hidden="true">
+          <span class="trust-bar__loading-inner">
+            <span class="trust-bar__loading-dot"></span>
+            <span class="trust-bar__loading-dot"></span>
+            <span class="trust-bar__loading-dot"></span>
+          </span>
+        </div>
+
+        <div class="trust-bar__swiper-clip">
+          <div
+            class="trust-bar__swiper swiper"
+            data-trust-bar-swiper
+            tabindex="0"
+            aria-live="polite"
+          >
+            <ul class="swiper-wrapper trust-bar__track" role="list">
+              {%- render 'trust-bar-items',
+                section: section,
+                item_tag: 'li',
+                item_class: 'swiper-slide trust-bar__slide-target',
+                item_role: ''
+              -%}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.trust_bar.name",
+  "tag": "section",
+  "class": "section-trust-bar",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.trust_bar.headers.layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.trust_bar.labels.layout",
+      "default": "grid",
+      "options": [
+        { "value": "grid", "label": "t:sections.trust_bar.options.layout.grid" },
+        { "value": "carousel", "label": "t:sections.trust_bar.options.layout.carousel" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dividers",
+      "label": "t:sections.trust_bar.labels.show_dividers",
+      "info": "t:sections.trust_bar.info.show_dividers",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:sections.trust_bar.labels.text_alignment",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "t:sections.trust_bar.options.text_alignment.left" },
+        { "value": "center", "label": "t:sections.trust_bar.options.text_alignment.center" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.trust_bar.headers.typography"
+    },
+    {
+      "type": "select",
+      "id": "item_heading_size",
+      "label": "t:sections.trust_bar.labels.item_heading_size",
+      "info": "t:sections.trust_bar.info.item_heading_size",
+      "default": "small",
+      "options": [
+        { "value": "small", "label": "t:sections.trust_bar.options.item_heading_size.small" },
+        { "value": "medium", "label": "t:sections.trust_bar.options.item_heading_size.medium" },
+        { "value": "large", "label": "t:sections.trust_bar.options.item_heading_size.large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "item_description_size",
+      "label": "t:sections.trust_bar.labels.item_description_size",
+      "info": "t:sections.trust_bar.info.item_description_size",
+      "default": "small",
+      "options": [
+        { "value": "small", "label": "t:sections.trust_bar.options.item_description_size.small" },
+        { "value": "medium", "label": "t:sections.trust_bar.options.item_description_size.medium" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "icon_size",
+      "label": "t:sections.trust_bar.labels.icon_size",
+      "info": "t:sections.trust_bar.info.icon_size",
+      "default": "theme",
+      "options": [
+        { "value": "theme", "label": "t:sections.trust_bar.options.icon_size.theme" },
+        { "value": "small", "label": "t:sections.trust_bar.options.icon_size.small" },
+        { "value": "medium", "label": "t:sections.trust_bar.options.icon_size.medium" },
+        { "value": "large", "label": "t:sections.trust_bar.options.icon_size.large" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "t:sections.trust_bar.labels.heading_color",
+      "info": "t:sections.trust_bar.info.heading_color",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "t:sections.trust_bar.labels.description_color",
+      "info": "t:sections.trust_bar.info.description_color",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "t:sections.trust_bar.labels.icon_color",
+      "info": "t:sections.trust_bar.info.icon_color",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.trust_bar.labels.full_width",
+      "info": "t:sections.trust_bar.info.full_width",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.trust_bar.headers.animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "entrance_animate_on_scroll",
+      "label": "t:sections.trust_bar.labels.entrance_animate_on_scroll",
+      "info": "t:sections.trust_bar.info.entrance_animate_on_scroll",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.trust_bar.headers.colour"
+    },
+    {
+      "type": "select",
+      "id": "section_color_scheme_mode",
+      "label": "t:sections.trust_bar.section_color_scheme_mode",
+      "options": [
+        { "value": "default", "label": "t:sections.trust_bar.section_color_scheme_mode_default" },
+        { "value": "custom", "label": "t:sections.trust_bar.section_color_scheme_mode_custom" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.trust_bar.labels.color_scheme",
+      "default": "scheme-6",
+      "visible_if": "{{ section.settings.section_color_scheme_mode == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.trust_bar.headers.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.trust_bar.labels.padding_top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.trust_bar.labels.padding_right",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.trust_bar.labels.padding_bottom",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.trust_bar.labels.padding_left",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "t:sections.trust_bar.headers.margin"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.trust_bar.labels.margin_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.trust_bar.labels.margin_bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.trust_bar.headers.background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.trust_bar.labels.background_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.trust_bar.info.background_color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.trust_bar.headers.border"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.trust_bar.labels.border_width",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "t:sections.trust_bar.labels.border_style",
+      "options": [
+        { "value": "none", "label": "t:sections.trust_bar.options.border_style.none" },
+        { "value": "solid", "label": "t:sections.trust_bar.options.border_style.solid" },
+        { "value": "dashed", "label": "t:sections.trust_bar.options.border_style.dashed" },
+        { "value": "dotted", "label": "t:sections.trust_bar.options.border_style.dotted" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "t:sections.trust_bar.labels.border_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.trust_bar.info.border_color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.trust_bar.headers.radius"
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.trust_bar.labels.radius_tl",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.trust_bar.labels.radius_tr",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.trust_bar.labels.radius_br",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.trust_bar.labels.radius_bl",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_item",
+      "name": "t:sections.trust_bar.blocks.trust_item.name",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "t:sections.trust_bar.blocks.trust_item.labels.icon",
+          "default": "shipping",
+          "options": [
+            { "value": "none", "label": "t:sections.trust_bar.blocks.trust_item.options.icon.none" },
+            { "value": "return", "label": "t:sections.trust_bar.blocks.trust_item.options.icon.return" },
+            { "value": "shipping", "label": "t:sections.trust_bar.blocks.trust_item.options.icon.shipping" },
+            { "value": "support", "label": "t:sections.trust_bar.blocks.trust_item.options.icon.support" },
+            { "value": "member", "label": "t:sections.trust_bar.blocks.trust_item.options.icon.member" },
+            { "value": "leaf", "label": "t:sections.trust_bar.blocks.trust_item.options.icon.leaf" },
+            { "value": "shield", "label": "t:sections.trust_bar.blocks.trust_item.options.icon.shield" },
+            { "value": "heart", "label": "t:sections.trust_bar.blocks.trust_item.options.icon.heart" },
+            { "value": "gift", "label": "t:sections.trust_bar.blocks.trust_item.options.icon.gift" },
+            { "value": "lock", "label": "t:sections.trust_bar.blocks.trust_item.options.icon.lock" },
+            { "value": "star", "label": "t:sections.trust_bar.blocks.trust_item.options.icon.star" }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "t:sections.trust_bar.blocks.trust_item.labels.custom_icon",
+          "info": "t:sections.trust_bar.blocks.trust_item.info.custom_icon"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.trust_bar.blocks.trust_item.labels.heading",
+          "default": "Free Shipping"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "t:sections.trust_bar.blocks.trust_item.labels.description",
+          "default": "On orders over $50."
+        },
+        {
+          "type": "header",
+          "content": "t:sections.trust_bar.blocks.trust_item.headers.link"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.trust_bar.blocks.trust_item.labels.link"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_in_new_tab",
+          "label": "t:sections.trust_bar.blocks.trust_item.labels.open_in_new_tab",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.trust_bar.presets.name",
+      "blocks": [
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "return",
+            "heading": "14-Day Returns",
+            "description": "Risk-free shopping with easy returns."
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shipping",
+            "heading": "Free Shipping",
+            "description": "Complimentary delivery on qualifying orders."
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "support",
+            "heading": "Expert Support",
+            "description": "We're here to help you choose the right routine."
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shield",
+            "heading": "Secure Checkout",
+            "description": "Your payment information is always protected."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

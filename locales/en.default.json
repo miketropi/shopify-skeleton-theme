@@ -465,6 +465,11 @@
       "empty_steps": "Add step blocks to build your routine guide.",
       "steps_label": "Routine steps"
     },
+    "trust_bar": {
+      "carousel": "Carousel",
+      "region_label": "Trust highlights",
+      "empty_state": "Add trust item blocks to show this section."
+    },
     "before_after": {
       "slider_aria": "Compare before and after images",
       "empty_media": "Add before and after images in the section settings."

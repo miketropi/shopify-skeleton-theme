@@ -1,0 +1,73 @@
+{%- comment -%}
+  Single trust bar item (icon + heading + description + optional link arrow).
+  @param block {object} trust_item block
+  @param lazy_icon {boolean} lazy-load custom icon image
+{%- endcomment -%}
+{%- liquid
+  assign heading = block.settings.heading
+  assign description = block.settings.description
+  assign icon_key = block.settings.icon | default: 'none'
+  assign custom_icon = block.settings.custom_icon
+  assign item_link = block.settings.link
+  assign show_icon = false
+  if custom_icon != blank or icon_key != 'none'
+    assign show_icon = true
+  endif
+
+  assign icon_loading = 'lazy'
+  unless lazy_icon
+    assign icon_loading = 'eager'
+  endunless
+
+  assign item_tag = 'div'
+  if item_link != blank
+    assign item_tag = 'a'
+  endif
+-%}
+<{{ item_tag }}
+  class="trust-bar__item{% if item_link != blank %} trust-bar__item--linked{% endif %}"
+  {% if item_link != blank %}
+    href="{{ item_link }}"
+    {% if block.settings.open_in_new_tab %}
+      target="_blank" rel="noopener noreferrer"
+    {% endif %}
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  {%- if show_icon -%}
+    <div class="trust-bar__icon">
+      {%- if custom_icon != blank -%}
+        {{
+          custom_icon
+          | image_url: width: 80
+          | image_tag:
+            class: 'trust-bar__icon-img',
+            widths: '40,80',
+            sizes: '40px',
+            width: 40,
+            height: 40,
+            loading: icon_loading,
+            alt: ''
+        }}
+      {%- else -%}
+        {%- render 'trust-bar-icon', icon: icon_key -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- if heading != blank -%}
+    <h3 class="trust-bar__item-heading">{{ heading | escape }}</h3>
+  {%- endif -%}
+
+  {%- if description != blank -%}
+    <p class="trust-bar__item-description">{{ description | escape }}</p>
+  {%- endif -%}
+
+  {%- if item_link != blank -%}
+    <span class="trust-bar__link-arrow" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+      </svg>
+    </span>
+  {%- endif -%}
+</{{ item_tag }}>

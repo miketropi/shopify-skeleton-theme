@@ -1,0 +1,1 @@
+import{i as e,r as t}from"./theme-swiper.js";function n(n,r,i,a){return n.params.createElements&&Object.keys(a).forEach(o=>{if(!i[o]&&i.auto===!0){let s=e(n.el,`.${a[o]}`)[0];s||(s=t(`div`,a[o]),s.className=a[o],n.el.append(s)),i[o]=s,r[o]=s}}),i}export{n as t};
