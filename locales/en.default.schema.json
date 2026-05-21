@@ -1148,6 +1148,7 @@
         "feature_media_size": "Maximum width loaded for feature images and video posters.",
         "steps_background_color": "Background behind the full step list panel.",
         "step_active_background_color": "Background fill for the currently active step row.",
+        "product": "If empty, the first product from the All products collection is shown (when the catalog has products).",
         "full_width": "Background spans the browser width; content stays in the page column.",
         "entrance_animate_on_scroll": "When off, the entrance animation runs after load without waiting for scroll (still respects reduced motion).",
         "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",

@@ -100,6 +100,12 @@
   endcase
 
   assign rg_product = section.settings.product
+  if rg_product == blank
+    assign rg_all = collections.all
+    if rg_all != blank and rg_all.products.size > 0
+      assign rg_product = rg_all.products.first
+    endif
+  endif
   assign product_bg = section.settings.card_background_color | default: '#F9F3EE'
   assign steps_bg = section.settings.steps_background_color | default: '#F7F5F2'
   assign step_active_bg = section.settings.step_active_background_color | default: '#FFFFFF'
@@ -347,7 +353,8 @@
     {
       "type": "product",
       "id": "product",
-      "label": "t:sections.routine_guide.labels.product"
+      "label": "t:sections.routine_guide.labels.product",
+      "info": "t:sections.routine_guide.info.product"
     },
     {
       "type": "color",
