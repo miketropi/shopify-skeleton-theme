@@ -13,7 +13,7 @@
 
 import gsap from 'gsap'
 
-const roots = new Map<HTMLElement, () => void>()
+const roots = new Map<HTMLElement, () => void>()  
 
 const PANEL_Z = 10050
 const BACKDROP_Z = 10049

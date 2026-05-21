@@ -22,7 +22,7 @@ export default defineConfig({
       output: {
         format: 'es',
         entryFileNames: '[name].js',
-        chunkFileNames: 'theme-[name]-[hash].js',
+        chunkFileNames: 'theme-[name].js',
         assetFileNames: (info) => {
           if (info.type === 'asset' && info.names.some((n) => n.endsWith('.css'))) {
             return 'theme.css'
