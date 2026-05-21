@@ -524,10 +524,9 @@
           "type": "step",
           "settings": {
             "step_number": "Step 1",
-            "heading": "Start with a Fresh Canvas",
+            "heading": "Start with a Fresh Canvas ★",
             "description": "Gently remove dirt, oil, and impurities to refresh your skin.",
-            "media_type": "video",
-            "video": "shopify://files/videos/From KlickPin CF Try Smart family dinner ideas for a polished look people will notice using ideas that balance beauty and everyday function - Pin-348043877472992431.mp4",
+            "media_type": "image",
             "feature_image_position": "center center"
           }
         },
@@ -538,7 +537,6 @@
             "heading": "Target Your Skin Concerns",
             "description": "Apply serums or treatments that target your skin concerns.",
             "media_type": "image",
-            "feature_image": "shopify://shop_images/3665a8c036e4059d2310b2b8cea0dca2.jpg",
             "feature_image_position": "center center"
           }
         },
@@ -549,7 +547,6 @@
             "heading": "Boost Results with Active Care",
             "description": "Apply serums or treatments that target your specific skin concerns.",
             "media_type": "image",
-            "feature_image": "shopify://shop_images/fb6966772a582282e1f7c8a27895e771.jpg",
             "feature_image_position": "center center"
           }
         },
@@ -560,7 +557,6 @@
             "heading": "Deep Hydration & Barrier Support",
             "description": "Lock in hydration and protect your skin barrier.",
             "media_type": "video",
-            "video": "shopify://files/videos/From KlickPin CF From beginner to obsessed Pin these dreamy tiny apartment ideas that help you get the look without the stress with practical inspiration you can - Pin-778982066824770339.mp4",
             "feature_image_position": "center center"
           }
         },
@@ -571,7 +567,6 @@
             "heading": "Daily Defense with SPF",
             "description": "Finish with SPF in the daytime to shield skin from UV damage.",
             "media_type": "image",
-            "feature_image": "shopify://shop_images/2811c56b09dfc3ed7e43e1186d083192.jpg",
             "feature_image_position": "center center"
           }
         }
@@ -586,7 +581,7 @@
       "name": "t:sections.routine_guide.presets.name",
       "settings": {
         "eyebrow_text": "Daily Skincare Steps",
-        "heading": "3-Step Routine Guide",
+        "heading": "5 – Steps Routine Guide",
         "heading_size": "large",
         "default_active_index": 1,
         "column_ratio": "33",
@@ -598,7 +593,7 @@
         "step_active_background_color": "#f4f4f5",
         "step_divider": true,
         "full_width": true,
-        "product": "the-collection-snowboard-liquid",
+        "product": "",
         "card_background_color": "rgba(0,0,0,0)",
         "show_secondary_image": true,
         "show_vendor": false,
