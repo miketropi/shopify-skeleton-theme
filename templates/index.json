@@ -25,12 +25,12 @@
             "slide_border_radius_top_right": 16,
             "slide_border_radius_bottom_right": 16,
             "slide_border_radius_bottom_left": 16,
-            "kicker": "Limited offer",
-            "heading": "Discover new arrivals and member-only deals.",
+            "kicker": "Daily Glow Routine ✨",
+            "heading": "Healthy, Radiant Skin Starts Here",
             "heading_size": "h1",
-            "body": "<p>Quality you can feel, design that lasts. Explore the collection and find pieces you will reach for every day.</p>",
+            "body": "<p>Gentle, results‑driven formulas that cleanse, treat, and hydrate while supporting a healthy, glowing skin barrier.</p>",
             "primary_button_style": "outline",
-            "cta_primary_label": "Shop collection",
+            "cta_primary_label": "Shop Skincare Rituals",
             "cta_primary_link": "shopify://collections/all",
             "cta_secondary_label": "Learn more",
             "cta_secondary_link": "shopify://pages/about",
@@ -57,12 +57,12 @@
             "slide_border_radius_top_right": 16,
             "slide_border_radius_bottom_right": 16,
             "slide_border_radius_bottom_left": 16,
-            "kicker": "Just Dropped",
-            "heading": "Unveil the latest arrivals — new styles every week",
+            "kicker": "Skin-First Care 🌿",
+            "heading": "Support Your Skin Barrier — See Real Results",
             "heading_size": "display",
-            "body": "<p>New styles land every week, so there’s always something exciting waiting for you!</p>",
+            "body": "<p>Build a simple routine that cleanses, treats, and deeply hydrates for a calm, radiant complexion.</p>",
             "primary_button_style": "outline",
-            "cta_primary_label": "Shop New Arrivals",
+            "cta_primary_label": "Explore Essentials",
             "cta_primary_link": "shopify://collections/new-arrivals",
             "cta_secondary_label": "Member Exclusives",
             "cta_secondary_link": "shopify://pages/member-offers",
@@ -89,12 +89,12 @@
             "slide_border_radius_top_right": 16,
             "slide_border_radius_bottom_right": 16,
             "slide_border_radius_bottom_left": 16,
-            "kicker": "New Arrivals",
-            "heading": "Restocks and new styles each week.",
+            "kicker": "5-Step Ritual 💧",
+            "heading": "Simple Skincare, Visible Glow",
             "heading_size": "display",
-            "body": "<p>Restocks and new styles each week.</p>",
+            "body": "<p>Daily essentials that respect your barrier, smooth texture, and leave skin naturally glowing.</p>",
             "primary_button_style": "outline",
-            "cta_primary_label": "Shop the collection",
+            "cta_primary_label": "Build Your Routine",
             "cta_primary_link": "shopify://collections/all",
             "cta_secondary_label": "Learn more",
             "cta_secondary_link": "shopify://pages/about",
@@ -682,9 +682,107 @@
         "entrance_animate_on_scroll": true,
         "section_color_scheme_mode": "default",
         "color_scheme": "scheme-6",
-        "padding_top": 32,
+        "padding_top": 44,
+        "padding_right": 32,
+        "padding_bottom": 44,
+        "padding_left": 32,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
+    },
+    "section_instagram_feed_bXtLQT": {
+      "type": "section-instagram-feed",
+      "blocks": {
+        "feed_item_ACWyeh": {
+          "type": "feed_item",
+          "settings": {
+            "media_type": "image",
+            "description": "Everyday skincare doesn’t have to be complicated ✨\n\nStart with a fresh cleanse, layer in targeted care, then lock it all in with deep hydration and SPF. Think barrier support, smoother texture, and a healthy glow that looks like real skin – not a filter 🌿",
+            "view_more_url": "/",
+            "view_more_label": "View on Instagram"
+          }
+        },
+        "feed_item_tKPeqK": {
+          "type": "feed_item",
+          "settings": {
+            "media_type": "image",
+            "description": "Glow is a routine, not a miracle 🌙☀️\n\nGentle cleansing, active serums, comforting moisture, and daily sun protection work together to keep your skin calm, even, and radiant. Small, consistent steps today mean visible results you can actually feel tomorrow ✨",
+            "view_more_url": "#",
+            "view_more_label": "View on Instagram"
+          }
+        },
+        "feed_item_HAUk6z": {
+          "type": "feed_item",
+          "settings": {
+            "media_type": "image",
+            "description": "Skincare is your daily reset 🔁\n\nWash away the day, treat what your skin needs most, and replenish moisture so your barrier stays strong. Our formulas are made to slip into your routine and quietly do the work in the background 💧",
+            "view_more_url": "#",
+            "view_more_label": "View on Instagram"
+          }
+        },
+        "feed_item_CVfQgt": {
+          "type": "feed_item",
+          "settings": {
+            "media_type": "image",
+            "description": "Healthy skin is all about balance ⚖️\n\nCleanse without stripping, treat without irritating, hydrate without feeling heavy. Designed for everyday use, this routine supports your barrier, smooths texture, and lets your natural radiance shine through – morning and night ✨",
+            "view_more_url": "#",
+            "view_more_label": "View on Instagram"
+          }
+        },
+        "feed_item_aPXzHc": {
+          "type": "feed_item",
+          "settings": {
+            "media_type": "image",
+            "description": "From first cleanse to final SPF, every step matters 🧴\n\nThoughtful textures, effective ingredients, and a focus on barrier health help your skin stay soft, resilient, and luminous. Because the best glow is the one you can actually maintain every single day 🌿✨",
+            "view_more_url": "#",
+            "view_more_label": "View on Instagram"
+          }
+        }
+      },
+      "block_order": [
+        "feed_item_ACWyeh",
+        "feed_item_tKPeqK",
+        "feed_item_HAUk6z",
+        "feed_item_CVfQgt",
+        "feed_item_aPXzHc"
+      ],
+      "name": "t:sections.instagram_feed.presets.name",
+      "settings": {
+        "eyebrow_text": "Follow us on Instagram",
+        "heading": "@yourbrand",
+        "heading_size": "large",
+        "instagram_url": "/",
+        "show_follow_button": true,
+        "follow_button_label": "Follow on Instagram",
+        "display_mode": "carousel",
+        "grid_columns": "4",
+        "grid_gap": "small",
+        "grid_max_rows": 1,
+        "show_load_more": true,
+        "load_more_label": "Load more",
+        "carousel_columns": "5",
+        "carousel_gap": "small",
+        "show_navigation_arrows": true,
+        "autoplay": false,
+        "autoplay_speed": 4,
+        "image_ratio": "square",
+        "card_border_radius": "medium",
+        "show_instagram_icon": true,
+        "full_width": false,
+        "entrance_animate_on_scroll": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "padding_top": 48,
         "padding_right": 24,
-        "padding_bottom": 32,
+        "padding_bottom": 48,
         "padding_left": 24,
         "margin_top": 0,
         "margin_bottom": 0,
@@ -708,6 +806,7 @@
     "section_promo_cards_rYp8aL",
     "section_before_after_LhTBRL",
     "section_routine_guide_K6Jm3W",
-    "section_trust_bar_LgJghJ"
+    "section_trust_bar_LgJghJ",
+    "section_instagram_feed_bXtLQT"
   ]
 }
