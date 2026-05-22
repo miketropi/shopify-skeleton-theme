@@ -26,6 +26,7 @@
     >
       {%- render 'promo-cards-card',
         block: block,
+        card_index: card_i | minus: 1,
         eager_image: eager_card,
         card_radius_px: card_radius_px,
         media_img_width: media_img_width,

@@ -188,7 +188,7 @@
                 >
                   <div class="pis__slide-frame">
                     <div class="pis__slide-media">
-                      {{ 'image' | placeholder_svg_tag: 'pis__placeholder-svg' }}
+                      {{ 'collection-1' | placeholder_svg_tag: 'pis__placeholder-svg' }}
                     </div>
                   </div>
                 </div>
@@ -264,6 +264,10 @@
                         </div>
                       </div>
                     {%- else -%}
+                      {%- liquid
+                        assign placeholder_index = slide_i | minus: 1 | modulo: 6 | plus: 1
+                        assign placeholder_name = 'collection-' | append: placeholder_index
+                      -%}
                       <div
                         class="swiper-slide pis__slide{% if story_slide_count == 1 %} pis__slide--solo{% endif %}"
                         role="group"
@@ -273,7 +277,7 @@
                       >
                         <div class="pis__slide-frame">
                           <div class="pis__slide-media">
-                            {{ 'image' | placeholder_svg_tag: 'pis__placeholder-svg' }}
+                            {{ placeholder_name | placeholder_svg_tag: 'pis__placeholder-svg' }}
                           </div>
                           {%- if block.settings.description != blank -%}
                             <div class="pis__slide-desc" data-pis-slide-desc>

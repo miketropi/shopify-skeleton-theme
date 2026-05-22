@@ -80,7 +80,7 @@ html.js .theme-modal {
   flex-direction: column;
   background: var(--cs-background, #fff);
   color: var(--cs-text, #1a1a1a);
-  border: 1px solid var(--theme-modal-border);
+  // border: 1px solid var(--theme-modal-border);
   border-radius: var(--theme-modal-radius);
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--cs-text) 3.5%, transparent),
@@ -309,8 +309,8 @@ html.js .theme-modal {
   }
 
   .theme-modal__aligner {
-    justify-content: flex-end;
-    align-items: stretch;
+    justify-content: center;
+    align-items: center;
     padding-top: max(0.65rem, env(safe-area-inset-top));
     padding-inline: 0;
     padding-bottom: 0;

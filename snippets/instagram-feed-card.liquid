@@ -1,0 +1,149 @@
+{%- comment -%}
+  Single Instagram feed card (opens lightbox).
+  @param block {object} feed_item block
+  @param item_index {number} 0-based index among feed items
+  @param eager_media {boolean}
+  @param show_instagram_icon {boolean}
+  @param is_hidden {boolean} grid load-more truncation
+  @param img_width {number}
+  @param img_widths {string}
+  @param video_image_size {string}
+  @param item_class {string} extra classes on li e.g. swiper-slide
+{%- endcomment -%}
+{%- liquid
+  assign item_class = item_class | default: ''
+  assign media_type = block.settings.media_type | default: 'image'
+  assign use_video = false
+  if media_type == 'video' and block.settings.video != blank
+    assign use_video = true
+  endif
+
+  assign img_loading = 'lazy'
+  if eager_media
+    assign img_loading = 'eager'
+  endif
+
+  assign img_w = img_width | default: 800
+  assign img_widths_val = img_widths | default: '200,400,600,800,1200'
+  assign video_image_size_val = video_image_size | default: '800x'
+
+  assign video_poster_url = ''
+  if use_video and block.settings.image != blank
+    assign video_poster_url = block.settings.image | image_url: width: img_w
+  endif
+
+  assign media_alt = block.settings.image.alt | default: block.settings.heading | default: section.settings.heading | default: 'Instagram post' | escape
+
+  assign card_label = block.settings.description | strip | truncate: 80
+  if card_label == blank
+    assign card_label = 'sections.instagram_feed.open_post' | t
+  endif
+
+  assign view_url = block.settings.view_more_url
+  assign view_label = block.settings.view_more_label | default: 'View on Instagram'
+
+  assign modal_image_src = ''
+  if block.settings.image != blank
+    assign modal_image_src = block.settings.image | image_url: width: 1600
+  endif
+
+  assign mp4_url = ''
+  if use_video
+    for source in block.settings.video.sources
+      if source.format == 'mp4' or source.mime_type contains 'mp4'
+        assign mp4_url = source.url
+        break
+      endif
+    endfor
+    if mp4_url == blank and block.settings.video.sources.size > 0
+      assign mp4_url = block.settings.video.sources.first.url
+    endif
+  endif
+
+  assign placeholder_index = item_index | default: 0 | modulo: 6 | plus: 1
+  assign placeholder_name = 'collection-' | append: placeholder_index
+-%}
+<li
+  class="instagram-feed__item instagram-feed__slide-target{{ item_class }}{% if is_hidden %} instagram-feed__item--hidden{% endif %}"
+  data-instagram-feed-item
+  data-item-index="{{ item_index }}"
+  {{ block.shopify_attributes }}
+>
+  <button
+    type="button"
+    class="instagram-feed__card"
+    data-instagram-feed-open
+    aria-label="{{ card_label | escape }}"
+  >
+    <span class="instagram-feed__media">
+      {%- if use_video -%}
+        {%- if video_poster_url != blank -%}
+          {{
+            block.settings.video
+            | video_tag:
+              autoplay: true,
+              loop: true,
+              muted: true,
+              controls: false,
+              playsinline: true,
+              class: 'instagram-feed__card-video',
+              image_size: video_image_size_val,
+              poster: video_poster_url
+          }}
+        {%- else -%}
+          {{
+            block.settings.video
+            | video_tag:
+              autoplay: true,
+              loop: true,
+              muted: true,
+              controls: false,
+              playsinline: true,
+              class: 'instagram-feed__card-video',
+              image_size: video_image_size_val
+          }}
+        {%- endif -%}
+      {%- elsif block.settings.image != blank -%}
+        {{
+          block.settings.image
+          | image_url: width: img_w
+          | image_tag:
+            loading: img_loading,
+            class: 'instagram-feed__card-img',
+            widths: img_widths_val,
+            sizes: '(min-width: 62em) 25vw, (min-width: 48em) 33vw, 50vw',
+            alt: media_alt
+        }}
+      {%- else -%}
+        <span class="instagram-feed__media-placeholder" aria-hidden="true">
+          {{ placeholder_name | placeholder_svg_tag: 'instagram-feed__placeholder-svg' }}
+        </span>
+      {%- endif -%}
+
+      {%- if show_instagram_icon -%}
+        {%- render 'instagram-feed-icon' -%}
+      {%- endif -%}
+    </span>
+  </button>
+
+  <div class="instagram-feed__item-meta" hidden>
+    <span data-instagram-feed-media-type="{{ media_type }}"></span>
+    {%- if modal_image_src != blank -%}
+      <span data-instagram-feed-image-src="{{ modal_image_src | escape }}"></span>
+      <span data-instagram-feed-image-alt="{{ media_alt }}"></span>
+    {%- endif -%}
+    {%- if mp4_url != blank -%}
+      <span data-instagram-feed-video-src="{{ mp4_url | escape }}"></span>
+    {%- endif -%}
+    {%- if video_poster_url != blank -%}
+      <span data-instagram-feed-poster="{{ video_poster_url | escape }}"></span>
+    {%- endif -%}
+    {%- if block.settings.description != blank -%}
+      <span data-instagram-feed-description>{{ block.settings.description | escape }}</span>
+    {%- endif -%}
+    {%- if view_url != blank -%}
+      <span data-instagram-feed-view-url="{{ view_url | escape }}"></span>
+      <span data-instagram-feed-view-label="{{ view_label | escape }}"></span>
+    {%- endif -%}
+  </div>
+</li>

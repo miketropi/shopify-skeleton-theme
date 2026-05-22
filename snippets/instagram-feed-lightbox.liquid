@@ -1,0 +1,69 @@
+{%- comment -%}
+  Instagram feed lightbox shell (ThemeModal-compatible).
+  @param section {object}
+  @param modal_handle {string} section heading for caption panel
+{%- endcomment -%}
+<div
+  id="InstagramFeedModal-{{ section.id }}"
+  class="theme-modal instagram-feed__modal"
+  role="dialog"
+  aria-modal="false"
+  aria-hidden="true"
+  aria-labelledby="InstagramFeedModalTitle-{{ section.id }}"
+>
+  <div class="theme-modal__aligner">
+    <div class="theme-modal__overlay" data-instagram-feed-modal-overlay></div>
+    <div class="theme-modal__panel instagram-feed__modal-panel">
+      <button
+        type="button"
+        class="instagram-feed__modal-close theme-modal__close"
+        data-theme-modal-close
+        data-instagram-feed-modal-close
+        aria-label="{{ 'sections.instagram_feed.modal_close' | t }}"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+
+      <div class="instagram-feed__modal-layout">
+        <div class="instagram-feed__modal-media-wrap">
+          <button
+            type="button"
+            class="instagram-feed__modal-nav instagram-feed__modal-nav--prev"
+            data-instagram-feed-modal-prev
+            aria-label="{{ 'sections.instagram_feed.modal_prev' | t }}"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+
+          <div class="instagram-feed__modal-media" data-instagram-feed-modal-media></div>
+
+          <button
+            type="button"
+            class="instagram-feed__modal-nav instagram-feed__modal-nav--next"
+            data-instagram-feed-modal-next
+            aria-label="{{ 'sections.instagram_feed.modal_next' | t }}"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+
+        <div class="instagram-feed__modal-caption">
+          {%- if modal_handle != blank -%}
+            <p id="InstagramFeedModalTitle-{{ section.id }}" class="instagram-feed__modal-handle">{{ modal_handle | escape }}</p>
+          {%- else -%}
+            <p id="InstagramFeedModalTitle-{{ section.id }}" class="instagram-feed__modal-handle" data-instagram-feed-modal-handle hidden></p>
+          {%- endif -%}
+          <div class="instagram-feed__modal-description rte" data-instagram-feed-modal-description hidden></div>
+          <a
+            class="instagram-feed__modal-link"
+            data-instagram-feed-modal-link
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            hidden
+          ></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+{%- comment -%}
+  Loop feed_item blocks.
+  @param section {object}
+  @param show_instagram_icon {boolean}
+  @param max_visible {number}
+  @param is_carousel {boolean}
+  @param item_class {string} extra classes on li
+  @param img_width {number}
+  @param img_widths {string}
+  @param video_image_size {string}
+{%- endcomment -%}
+{%- liquid
+  assign item_index = 0
+  assign item_class = item_class | default: ''
+-%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'feed_item' -%}
+    {%- liquid
+      assign card_eager = false
+      if item_index < 4
+        assign card_eager = true
+      endif
+
+      assign card_hidden = false
+      unless is_carousel
+        if max_visible > 0 and item_index >= max_visible
+          assign card_hidden = true
+        endif
+      endunless
+
+      assign card_index = item_index
+      assign item_index = item_index | plus: 1
+    -%}
+    {%- render 'instagram-feed-card',
+      block: block,
+      item_index: card_index,
+      eager_media: card_eager,
+      show_instagram_icon: show_instagram_icon,
+      is_hidden: card_hidden,
+      img_width: img_width,
+      img_widths: img_widths,
+      video_image_size: video_image_size,
+      item_class: item_class
+    -%}
+  {%- endif -%}
+{%- endfor -%}

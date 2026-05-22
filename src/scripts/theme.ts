@@ -20,6 +20,7 @@ import { registerSectionPromoCards } from './sections/section-promo-cards'
 import { registerSectionBeforeAfter } from './sections/section-before-after'
 import { registerSectionRoutineGuide } from './sections/section-routine-guide'
 import { registerSectionTrustBar } from './sections/section-trust-bar'
+import { registerSectionInstagramFeed } from './sections/section-instagram-feed'
 import { registerSectionProductImagesStory } from './sections/section-product-images-story'
 import { registerCollectionGridSection } from './collection-grid'
 import './size-guide'
@@ -64,6 +65,7 @@ registerSectionPromoCards()
 registerSectionBeforeAfter()
 registerSectionRoutineGuide()
 registerSectionTrustBar()
+registerSectionInstagramFeed()
 registerSectionProductImagesStory()
 registerCollectionGridSection()
 registerHeaderTopBarSection()

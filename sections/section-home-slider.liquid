@@ -86,7 +86,7 @@
           >
             <div class="home-slider__slide-frame">
               <div class="home-slider__media">
-                {{ 'image' | placeholder_svg_tag: 'home-slider__placeholder-svg' }} 
+                {{ 'collection-1' | placeholder_svg_tag: 'home-slider__placeholder-svg' }}
               </div>
               <div class="home-slider__overlay" aria-hidden="true"></div>
               <div class="home-slider__copy" data-home-copy>
@@ -148,6 +148,9 @@
                 assign sr_tr = block.settings.slide_border_radius_top_right | default: 0
                 assign sr_br = block.settings.slide_border_radius_bottom_right | default: 0
                 assign sr_bl = block.settings.slide_border_radius_bottom_left | default: 0
+
+                assign placeholder_index = i | modulo: 6 | plus: 1
+                assign placeholder_name = 'collection-' | append: placeholder_index
               -%}
               <div
                 class="swiper-slide home-slider__slide home-slider__slide--entry-{{ slide_entry }}{% if slide_count > 1 and i == initial_slide_zero %} home-slider__slide--preinit-active{% endif %}"
@@ -197,7 +200,7 @@
                         }}
                       {%- endif -%}
                     {%- else -%}
-                      {{ 'image' | placeholder_svg_tag: 'home-slider__placeholder-svg' }} 
+                      {{ placeholder_name | placeholder_svg_tag: 'home-slider__placeholder-svg' }}
                     {%- endif -%}
                   </div>
                   {%- if block.settings.overlay_enable -%}

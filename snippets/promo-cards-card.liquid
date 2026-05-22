@@ -1,6 +1,6 @@
 {%- comment -%}
   Editorial promo card: eyebrow + heading + inset image/video + CTA row.
-  Params: block, eager_image, card_radius_px, media_img_width, media_img_widths, media_video_image_size
+  Params: block, card_index, eager_image, card_radius_px, media_img_width, media_img_widths, media_video_image_size
 {%- endcomment -%}
 {%- liquid
   assign href = block.settings.cta_link
@@ -72,6 +72,9 @@
   endif
 
   assign media_alt = block.settings.image.alt | default: block.settings.heading | default: '' | escape
+
+  assign placeholder_index = card_index | default: 0 | modulo: 6 | plus: 1
+  assign placeholder_name = 'collection-' | append: placeholder_index
 -%}
 <article class="promo-cards__card" style="{{ card_style }}" data-promo-card {{ block.shopify_attributes }}>
   {%- if has_link -%}
@@ -145,7 +148,7 @@
         }}
       {%- else -%}
         <div class="promo-cards__media-placeholder" aria-hidden="true">
-          {{ 'collection-4' | placeholder_svg_tag: 'promo-cards__placeholder-svg' }}
+          {{ placeholder_name | placeholder_svg_tag: 'promo-cards__placeholder-svg' }}
         </div>
       {%- endif -%}
     </div>

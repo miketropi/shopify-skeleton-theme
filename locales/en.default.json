@@ -470,6 +470,17 @@
       "region_label": "Trust highlights",
       "empty_state": "Add trust item blocks to show this section."
     },
+    "instagram_feed": {
+      "carousel": "Carousel",
+      "region_label": "Instagram feed",
+      "prev": "Previous posts",
+      "next": "Next posts",
+      "empty_state": "Add feed item blocks with images or videos to show this section.",
+      "open_post": "Open post",
+      "modal_close": "Close post",
+      "modal_prev": "Previous post",
+      "modal_next": "Next post"
+    },
     "before_after": {
       "slider_aria": "Compare before and after images",
       "empty_media": "Add before and after images in the section settings."

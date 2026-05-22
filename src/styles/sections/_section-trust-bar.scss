@@ -271,7 +271,7 @@ $min-skel-h: 7.5rem;
   font-size: var(--trust-bar-heading-size, var(--font-size-sm, 0.875rem));
   font-weight: 600;
   line-height: var(--line-height-snug, 1.35);
-  letter-spacing: 0.01em;
+  // letter-spacing: 0.01em;
   color: var(--trust-bar-heading-color, var(--cs-heading, var(--cs-text)));
 }
 

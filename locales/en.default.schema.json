@@ -1317,6 +1317,132 @@
         }
       }
     },
+    "instagram_feed": {
+      "name": "Instagram feed",
+      "presets": {
+        "name": "Instagram feed"
+      },
+      "headers": {
+        "intro": "Intro",
+        "display": "Display",
+        "card_style": "Card style",
+        "animation": "Animation",
+        "colour": "Colour",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "instagram_url": "Instagram profile URL",
+        "show_follow_button": "Show follow button",
+        "follow_button_label": "Follow button label",
+        "display_mode": "Display mode",
+        "grid_columns": "Grid columns (large screens)",
+        "grid_gap": "Grid spacing",
+        "grid_max_rows": "Maximum rows",
+        "show_load_more": "Show load more button",
+        "load_more_label": "Load more label",
+        "carousel_columns": "Slides visible (large screens)",
+        "carousel_gap": "Carousel spacing",
+        "show_navigation_arrows": "Show navigation arrows",
+        "autoplay": "Autoplay carousel",
+        "autoplay_speed": "Autoplay speed",
+        "image_ratio": "Card aspect ratio",
+        "card_border_radius": "Card corner radius",
+        "show_instagram_icon": "Show Instagram icon on hover",
+        "full_width": "Full width (edge-to-edge background)",
+        "entrance_animate_on_scroll": "Animate when scrolling into view",
+        "color_scheme": "Scheme",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "display_mode": {
+          "grid": "Grid",
+          "carousel": "Carousel"
+        },
+        "gap": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "image_ratio": {
+          "square": "Square (1:1)",
+          "portrait": "Portrait (4:5)",
+          "landscape": "Landscape (4:3)"
+        },
+        "radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "info": {
+        "grid_max_rows": "0 shows all items. When limited, extra items stay hidden until Load more is clicked.",
+        "full_width": "Background spans the browser width; content stays in the page column.",
+        "entrance_animate_on_scroll": "When off, the entrance animation runs after load without waiting for scroll (still respects reduced motion).",
+        "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "blocks": {
+        "feed_item": {
+          "name": "Feed item",
+          "labels": {
+            "media_type": "Media type",
+            "image": "Image",
+            "video": "Video",
+            "description": "Caption",
+            "view_more_url": "View on Instagram URL",
+            "view_more_label": "View more label"
+          },
+          "options": {
+            "media_type": {
+              "image": "Image",
+              "video": "Video"
+            }
+          },
+          "info": {
+            "image": "Used on the card and as the video poster when media type is Video. Recommend at least 800×800px for square ratio.",
+            "video": "Muted looping preview on the card; full controls in the lightbox.",
+            "description": "Shown in the lightbox caption panel."
+          }
+        }
+      }
+    },
     "before_after": {
       "name": "Before & After",
       "presets": {
