@@ -110,7 +110,7 @@
 {% endstyle %}
 
 <div
-  class="section-{{ section.id }} promo-cards shopify-section-wrapper product-slider--heading-{{ section.settings.card_heading_size | default: 'large' }} promo-cards--layout-{{ layout }}{% if section.settings.full_width %} full-width promo-cards--full-width{% endif %}{% if media_aspect_css != blank %} promo-cards--media-aspect{% endif %}"
+  class="section-{{ section.id }} promo-cards shopify-section-wrapper section-intro--heading-{{ section.settings.card_heading_size | default: 'large' }} promo-cards--layout-{{ layout }}{% if section.settings.full_width %} full-width promo-cards--full-width{% endif %}{% if media_aspect_css != blank %} promo-cards--media-aspect{% endif %}"
   data-section-type="section-promo-cards"
   data-section-id="{{ section.id }}"
   data-promo-cards-layout="{{ layout }}"

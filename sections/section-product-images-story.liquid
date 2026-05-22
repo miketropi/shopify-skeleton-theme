@@ -103,7 +103,7 @@
 {% endstyle %}
 
 <div
-  class="section-{{ section.id }} pis shopify-section-wrapper product-slider--heading-{{ section.settings.heading_size | default: 'large' }}{% if section.settings.full_width %} full-width pis--full-width{% endif %}{% if pis_slide_transition == 'cards' %} pis--effect-cards{% endif %}{% if pis_aspect_css != blank %} pis--slideshow-aspect{% endif %}{% if section.settings.show_pagination_dots == false or story_slide_count < 2 %} pis--no-pagination{% endif %}{% if story_slide_count > 1 %} pis--await-swiper{% endif %}"
+  class="section-{{ section.id }} pis shopify-section-wrapper section-intro--heading-{{ section.settings.heading_size | default: 'large' }}{% if section.settings.full_width %} full-width pis--full-width{% endif %}{% if pis_slide_transition == 'cards' %} pis--effect-cards{% endif %}{% if pis_aspect_css != blank %} pis--slideshow-aspect{% endif %}{% if section.settings.show_pagination_dots == false or story_slide_count < 2 %} pis--no-pagination{% endif %}{% if story_slide_count > 1 %} pis--await-swiper{% endif %}"
   data-section-type="section-product-images-story"
   data-section-id="{{ section.id }}"
   data-pis-autoplay="{% if section.settings.slideshow_autoplay %}true{% else %}false{% endif %}"
@@ -129,12 +129,12 @@
     <div class="pis__grid">
       <div class="pis__col pis__col--product" data-pis-reveal-col>
         {%- if has_intro -%}
-          <header class="pis__intro product-slider__intro-copy">
+          <header class="pis__intro section-intro__copy">
             {%- if section.settings.eyebrow_text != blank -%}
-              <p class="product-slider__eyebrow">{{ section.settings.eyebrow_text | escape }}</p>
+              <p class="section-intro__eyebrow">{{ section.settings.eyebrow_text | escape }}</p>
             {%- endif -%}
             {%- if section.settings.heading != blank -%}
-              <h2 class="product-slider__heading">{{ section.settings.heading | escape }}</h2>
+              <h2 class="section-intro__heading">{{ section.settings.heading | escape }}</h2>
             {%- endif -%}
           </header>
         {%- endif -%}
@@ -188,7 +188,7 @@
                 >
                   <div class="pis__slide-frame">
                     <div class="pis__slide-media">
-                      {{ 'image' | placeholder_svg_tag: 'pis__placeholder-svg' }}
+                      {{ 'collection-1' | placeholder_svg_tag: 'pis__placeholder-svg' }}
                     </div>
                   </div>
                 </div>
@@ -264,6 +264,10 @@
                         </div>
                       </div>
                     {%- else -%}
+                      {%- liquid
+                        assign placeholder_index = slide_i | minus: 1 | modulo: 6 | plus: 1
+                        assign placeholder_name = 'collection-' | append: placeholder_index
+                      -%}
                       <div
                         class="swiper-slide pis__slide{% if story_slide_count == 1 %} pis__slide--solo{% endif %}"
                         role="group"
@@ -273,7 +277,7 @@
                       >
                         <div class="pis__slide-frame">
                           <div class="pis__slide-media">
-                            {{ 'image' | placeholder_svg_tag: 'pis__placeholder-svg' }}
+                            {{ placeholder_name | placeholder_svg_tag: 'pis__placeholder-svg' }}
                           </div>
                           {%- if block.settings.description != blank -%}
                             <div class="pis__slide-desc" data-pis-slide-desc>

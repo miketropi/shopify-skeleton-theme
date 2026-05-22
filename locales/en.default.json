@@ -132,11 +132,10 @@
     }
   },
   "footer": {
-    "menu_primary_aria": "Footer menu",
-    "menu_secondary_aria": "Footer secondary menu",
     "policies_aria": "Store policies",
     "payment_aria": "Accepted payment methods",
-    "follow": "Follow us"
+    "follow": "Follow us",
+    "back_to_top": "Back to top"
   },
   "customer": {
     "account": {
@@ -459,6 +458,27 @@
       "next": "Next promo cards",
       "empty_state": "Add promo card blocks to show this section.",
       "card_link_fallback": "View promo card"
+    },
+    "routine_guide": {
+      "select_product": "Pick a product in the section settings to show the card here.",
+      "empty_steps": "Add step blocks to build your routine guide.",
+      "steps_label": "Routine steps"
+    },
+    "trust_bar": {
+      "carousel": "Carousel",
+      "region_label": "Trust highlights",
+      "empty_state": "Add trust item blocks to show this section."
+    },
+    "instagram_feed": {
+      "carousel": "Carousel",
+      "region_label": "Instagram feed",
+      "prev": "Previous posts",
+      "next": "Next posts",
+      "empty_state": "Add feed item blocks with images or videos to show this section.",
+      "open_post": "Open post",
+      "modal_close": "Close post",
+      "modal_prev": "Previous post",
+      "modal_next": "Next post"
     },
     "before_after": {
       "slider_aria": "Compare before and after images",

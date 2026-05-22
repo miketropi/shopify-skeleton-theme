@@ -1,0 +1,668 @@
+{%- liquid
+  assign rg_scheme = settings.global_color_scheme
+  if rg_scheme == blank or rg_scheme.settings == blank
+    assign rg_scheme = settings.color_schemes['scheme-6']
+  endif
+
+  assign rgsm = section.settings.section_color_scheme_mode
+  if rgsm == 'custom'
+    assign picked_rg = section.settings.color_scheme
+    if picked_rg != blank and picked_rg.settings != blank
+      assign rg_scheme = picked_rg
+    endif
+  elsif rgsm == 'default'
+  else
+    assign picked_rg = section.settings.color_scheme
+    if picked_rg != blank and picked_rg.settings != blank
+      assign rg_scheme = picked_rg
+    endif
+  endif
+
+  assign step_count = 0
+  for block in section.blocks
+    if block.type == 'step'
+      assign step_count = step_count | plus: 1
+    endif
+  endfor
+
+  assign dft = section.settings.default_active_index | default: 1
+  if dft < 1
+    assign dft = 1
+  endif
+  if step_count > 0 and dft > step_count
+    assign dft = step_count
+  endif
+  assign default_zero = dft | minus: 1
+
+  assign col_key = section.settings.column_ratio | default: '33'
+  assign product_fr = '3fr'
+  assign guide_fr = '7fr'
+  case col_key
+    when '25'
+      assign product_fr = '1fr'
+      assign guide_fr = '3fr'
+    when '40'
+      assign product_fr = '2fr'
+      assign guide_fr = '3fr'
+  endcase
+
+  assign feat_key = section.settings.feature_image_ratio | default: '50'
+  assign feature_fr = '1fr'
+  assign list_fr = '1fr'
+  case feat_key
+    when '40'
+      assign feature_fr = '2fr'
+      assign list_fr = '3fr'
+    when '60'
+      assign feature_fr = '3fr'
+      assign list_fr = '2fr'
+  endcase
+
+  assign rad_key = section.settings.card_border_radius | default: 'medium'
+  case rad_key
+    when 'none'
+      assign rad_px = 0
+    when 'small'
+      assign rad_px = 8
+    when 'large'
+      assign rad_px = 24
+    else
+      assign rad_px = 16
+  endcase
+
+  assign fade_ms = section.settings.hover_transition_speed | default: '300'
+  case fade_ms
+    when '150'
+      assign fade_s = 0.15
+    when '500'
+      assign fade_s = 0.5
+    else
+      assign fade_s = 0.3
+  endcase
+
+  assign media_size_key = section.settings.feature_media_size | default: 'medium'
+  assign feature_img_width = 1200
+  assign feature_img_widths = '400,600,800,1200,1600'
+  assign feature_video_image_size = '1200x'
+  case media_size_key
+    when 'small'
+      assign feature_img_width = 600
+      assign feature_img_widths = '300,450,600'
+      assign feature_video_image_size = '600x'
+    when 'large'
+      assign feature_img_width = 1600
+      assign feature_img_widths = '400,600,800,1200,1600'
+      assign feature_video_image_size = '1600x'
+    when 'xlarge'
+      assign feature_img_width = 2400
+      assign feature_img_widths = '600,800,1200,1600,2400'
+      assign feature_video_image_size = '2400x'
+  endcase
+
+  assign rg_product = section.settings.product
+  if rg_product == blank
+    assign rg_all = collections.all
+    if rg_all != blank and rg_all.products.size > 0
+      assign rg_product = rg_all.products.first
+    endif
+  endif
+  assign product_bg = section.settings.card_background_color | default: '#F9F3EE'
+  assign steps_bg = section.settings.steps_background_color | default: '#F7F5F2'
+  assign step_active_bg = section.settings.step_active_background_color | default: '#FFFFFF'
+
+  assign has_header = false
+  if section.settings.eyebrow_text != blank or section.settings.heading != blank
+    assign has_header = true
+  endif
+-%}
+{%- capture rg_scheme_vars -%}
+  {%- render 'color-scheme-vars', scheme: rg_scheme, inline_only: true -%}
+{%- endcapture -%}
+
+{%- render 'section-styles', section: section -%}
+
+{% style %}
+  html.js #shopify-section-{{ section.id }} .routine-guide:not(.routine-guide--revealed) [data-routine-guide-reveal-product],
+  html.js #shopify-section-{{ section.id }} .routine-guide:not(.routine-guide--revealed) [data-routine-guide-reveal-feature],
+  html.js #shopify-section-{{ section.id }} .routine-guide:not(.routine-guide--revealed) [data-routine-guide-reveal-steps],
+  html.js #shopify-section-{{ section.id }} .routine-guide:not(.routine-guide--revealed) .routine-guide__step-item {
+    opacity: 0;
+  }
+{% endstyle %}
+
+<div
+  class="section-{{ section.id }} routine-guide shopify-section-wrapper section-intro--heading-{{ section.settings.heading_size | default: 'large' }}{% if section.settings.step_divider %} routine-guide--dividers{% endif %}{% if section.settings.full_width %} full-width routine-guide--full-width{% endif %}"
+  data-section-type="section-routine-guide"
+  data-section-id="{{ section.id }}"
+  data-routine-guide-default="{{ default_zero }}"
+  data-routine-guide-entrance-scroll="{% if section.settings.entrance_animate_on_scroll == false %}false{% else %}true{% endif %}"
+  style="
+    {{ rg_scheme_vars }}
+    --routine-guide-product-fr: {{ product_fr }};
+    --routine-guide-guide-fr: {{ guide_fr }};
+    --routine-guide-feature-fr: {{ feature_fr }};
+    --routine-guide-list-fr: {{ list_fr }};
+    --routine-guide-radius: {{ rad_px }}px;
+    --routine-guide-fade-duration: {{ fade_s }}s;
+    --routine-guide-product-bg: {{ product_bg }};
+    --routine-guide-steps-bg: {{ steps_bg }};
+    --routine-guide-step-active-bg: {{ step_active_bg }};
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="routine-guide__inner{% if section.settings.full_width %} section-content-width{% endif %}">
+    {%- if has_header -%}
+      <header class="routine-guide__header section-intro__copy" data-routine-guide-reveal-header>
+        {%- if section.settings.eyebrow_text != blank -%}
+          <p class="section-intro__eyebrow">{{ section.settings.eyebrow_text | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="section-intro__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    <div class="routine-guide__grid">
+      <div class="routine-guide__product-col">
+        <div class="routine-guide__product-panel" data-routine-guide-reveal-product>
+          {%- if rg_product != blank -%}
+            <div class="routine-guide__product-card">
+              {%- render 'tcard-product',
+                product: rg_product,
+                show_secondary_image: section.settings.show_secondary_image,
+                show_vendor: section.settings.show_vendor,
+                show_quick_add: section.settings.show_quick_add
+              -%}
+            </div>
+          {%- else -%}
+            <div class="routine-guide__product-placeholder">
+              <p class="routine-guide__product-placeholder-text">
+                {{ 'sections.routine_guide.select_product' | t }}
+              </p>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="routine-guide__guide-col">
+        <div class="routine-guide__guide-inner">
+            {%- render 'routine-guide-feature-panel',
+              section: section,
+              default_zero: default_zero,
+              feature_img_width: feature_img_width,
+              feature_img_widths: feature_img_widths,
+              feature_video_image_size: feature_video_image_size,
+              step_count: step_count
+            -%}
+          {%- render 'routine-guide-steps',
+            section: section,
+            default_zero: default_zero,
+            step_count: step_count
+          -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.routine_guide.name",
+  "tag": "section",
+  "class": "section-routine-guide",
+  "max_blocks": 6,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.routine_guide.headers.header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "t:sections.routine_guide.labels.eyebrow_text",
+      "default": "Daily Skincare Steps"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.routine_guide.labels.heading",
+      "default": "3-Step Routine Guide"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.routine_guide.labels.heading_size",
+      "default": "large",
+      "options": [
+        { "value": "small", "label": "t:sections.routine_guide.options.heading_size.small" },
+        { "value": "medium", "label": "t:sections.routine_guide.options.heading_size.medium" },
+        { "value": "large", "label": "t:sections.routine_guide.options.heading_size.large" },
+        { "value": "xlarge", "label": "t:sections.routine_guide.options.heading_size.xlarge" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "default_active_index",
+      "label": "t:sections.routine_guide.labels.default_active_index",
+      "info": "t:sections.routine_guide.info.default_active_index",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "t:sections.routine_guide.headers.layout"
+    },
+    {
+      "type": "select",
+      "id": "column_ratio",
+      "label": "t:sections.routine_guide.labels.column_ratio",
+      "default": "33",
+      "options": [
+        { "value": "25", "label": "t:sections.routine_guide.options.column_ratio.25" },
+        { "value": "33", "label": "t:sections.routine_guide.options.column_ratio.33" },
+        { "value": "40", "label": "t:sections.routine_guide.options.column_ratio.40" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "feature_image_ratio",
+      "label": "t:sections.routine_guide.labels.feature_image_ratio",
+      "default": "50",
+      "options": [
+        { "value": "40", "label": "t:sections.routine_guide.options.feature_image_ratio.40" },
+        { "value": "50", "label": "t:sections.routine_guide.options.feature_image_ratio.50" },
+        { "value": "60", "label": "t:sections.routine_guide.options.feature_image_ratio.60" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "card_border_radius",
+      "label": "t:sections.routine_guide.labels.card_border_radius",
+      "default": "medium",
+      "options": [
+        { "value": "none", "label": "t:sections.routine_guide.options.radius.none" },
+        { "value": "small", "label": "t:sections.routine_guide.options.radius.small" },
+        { "value": "medium", "label": "t:sections.routine_guide.options.radius.medium" },
+        { "value": "large", "label": "t:sections.routine_guide.options.radius.large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "hover_transition_speed",
+      "label": "t:sections.routine_guide.labels.hover_transition_speed",
+      "default": "300",
+      "options": [
+        { "value": "150", "label": "t:sections.routine_guide.options.hover_transition_speed.150" },
+        { "value": "300", "label": "t:sections.routine_guide.options.hover_transition_speed.300" },
+        { "value": "500", "label": "t:sections.routine_guide.options.hover_transition_speed.500" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "feature_media_size",
+      "label": "t:sections.routine_guide.labels.feature_media_size",
+      "info": "t:sections.routine_guide.info.feature_media_size",
+      "default": "medium",
+      "options": [
+        { "value": "small", "label": "t:sections.routine_guide.options.feature_media_size.small" },
+        { "value": "medium", "label": "t:sections.routine_guide.options.feature_media_size.medium" },
+        { "value": "large", "label": "t:sections.routine_guide.options.feature_media_size.large" },
+        { "value": "xlarge", "label": "t:sections.routine_guide.options.feature_media_size.xlarge" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.routine_guide.headers.step_list"
+    },
+    {
+      "type": "color",
+      "id": "steps_background_color",
+      "label": "t:sections.routine_guide.labels.steps_background_color",
+      "info": "t:sections.routine_guide.info.steps_background_color",
+      "default": "#F7F5F2"
+    },
+    {
+      "type": "color",
+      "id": "step_active_background_color",
+      "label": "t:sections.routine_guide.labels.step_active_background_color",
+      "info": "t:sections.routine_guide.info.step_active_background_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "checkbox",
+      "id": "step_divider",
+      "label": "t:sections.routine_guide.labels.step_divider",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.routine_guide.labels.full_width",
+      "info": "t:sections.routine_guide.info.full_width",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.routine_guide.headers.product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:sections.routine_guide.labels.product",
+      "info": "t:sections.routine_guide.info.product"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "t:sections.routine_guide.labels.card_background_color",
+      "default": "#F9F3EE"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "t:sections.routine_guide.labels.show_secondary_image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "t:sections.routine_guide.labels.show_vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_add",
+      "label": "t:sections.routine_guide.labels.show_quick_add",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.routine_guide.headers.animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "entrance_animate_on_scroll",
+      "label": "t:sections.routine_guide.labels.entrance_animate_on_scroll",
+      "info": "t:sections.routine_guide.info.entrance_animate_on_scroll",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.routine_guide.headers.colour"
+    },
+    {
+      "type": "select",
+      "id": "section_color_scheme_mode",
+      "label": "t:sections.routine_guide.section_color_scheme_mode",
+      "options": [
+        { "value": "default", "label": "t:sections.routine_guide.section_color_scheme_mode_default" },
+        { "value": "custom", "label": "t:sections.routine_guide.section_color_scheme_mode_custom" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.routine_guide.labels.color_scheme",
+      "default": "scheme-6",
+      "visible_if": "{{ section.settings.section_color_scheme_mode == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.routine_guide.headers.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.routine_guide.labels.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.routine_guide.labels.padding_right",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.routine_guide.labels.padding_bottom",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.routine_guide.labels.padding_left",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "t:sections.routine_guide.headers.margin"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.routine_guide.labels.margin_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.routine_guide.labels.margin_bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.routine_guide.headers.background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.routine_guide.labels.background_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.routine_guide.info.background_color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.routine_guide.headers.border"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.routine_guide.labels.border_width",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "t:sections.routine_guide.labels.border_style",
+      "options": [
+        { "value": "none", "label": "t:sections.routine_guide.options.border_style.none" },
+        { "value": "solid", "label": "t:sections.routine_guide.options.border_style.solid" },
+        { "value": "dashed", "label": "t:sections.routine_guide.options.border_style.dashed" },
+        { "value": "dotted", "label": "t:sections.routine_guide.options.border_style.dotted" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "t:sections.routine_guide.labels.border_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.routine_guide.info.border_color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.routine_guide.headers.radius"
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.routine_guide.labels.radius_tl",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.routine_guide.labels.radius_tr",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.routine_guide.labels.radius_br",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.routine_guide.labels.radius_bl",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "t:sections.routine_guide.blocks.step.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "step_number",
+          "label": "t:sections.routine_guide.blocks.step.labels.step_number",
+          "default": "Step 1"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.routine_guide.blocks.step.labels.heading",
+          "default": "Cleanse"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "t:sections.routine_guide.blocks.step.labels.description",
+          "default": "Gently remove dirt, oil, and impurities to refresh your skin."
+        },
+        {
+          "type": "header",
+          "content": "t:sections.routine_guide.blocks.step.headers.media"
+        },
+        {
+          "type": "select",
+          "id": "media_type",
+          "label": "t:sections.routine_guide.blocks.step.labels.media_type",
+          "default": "image",
+          "options": [
+            { "value": "image", "label": "t:sections.routine_guide.blocks.step.options.media_type.image" },
+            { "value": "video", "label": "t:sections.routine_guide.blocks.step.options.media_type.video" }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "feature_image",
+          "label": "t:sections.routine_guide.blocks.step.labels.feature_image",
+          "info": "t:sections.routine_guide.blocks.step.info.feature_image"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "t:sections.routine_guide.blocks.step.labels.video",
+          "info": "t:sections.routine_guide.blocks.step.info.video",
+          "visible_if": "{{ block.settings.media_type == 'video' }}"
+        },
+        {
+          "type": "select",
+          "id": "feature_image_position",
+          "label": "t:sections.routine_guide.blocks.step.labels.feature_image_position",
+          "default": "center center",
+          "options": [
+            { "value": "center center", "label": "t:sections.routine_guide.blocks.step.options.feature_image_position.center" },
+            { "value": "top center", "label": "t:sections.routine_guide.blocks.step.options.feature_image_position.top" },
+            { "value": "bottom center", "label": "t:sections.routine_guide.blocks.step.options.feature_image_position.bottom" }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.routine_guide.presets.name",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "step_number": "Step 1",
+            "heading": "Cleanse",
+            "description": "Gently remove dirt, oil, and impurities to refresh your skin."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_number": "Step 2",
+            "heading": "Treat",
+            "description": "Apply serums or treatments that target your skin concerns."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_number": "Step 3",
+            "heading": "Moisturize",
+            "description": "Lock in hydration and protect your skin barrier."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

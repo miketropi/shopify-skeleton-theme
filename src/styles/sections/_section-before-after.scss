@@ -26,7 +26,7 @@
   min-width: 0;
 }
 
-.before-after__intro.product-slider__intro-copy {
+.before-after__intro.section-intro__copy {
   display: flex;
   flex-direction: column;
   gap: $space-sm;
@@ -36,8 +36,8 @@
   text-align: left;
 }
 
-.before-after__intro .product-slider__eyebrow,
-.before-after__intro .product-slider__heading {
+.before-after__intro .section-intro__eyebrow,
+.before-after__intro .section-intro__heading {
   width: 100%;
   text-align: left;
 }

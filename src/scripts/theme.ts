@@ -18,11 +18,15 @@ import { registerSectionCollectionList } from './sections/section-collection-lis
 import { registerSectionCollectionSlide } from './sections/section-collection-slide'
 import { registerSectionPromoCards } from './sections/section-promo-cards'
 import { registerSectionBeforeAfter } from './sections/section-before-after'
+import { registerSectionRoutineGuide } from './sections/section-routine-guide'
+import { registerSectionTrustBar } from './sections/section-trust-bar'
+import { registerSectionInstagramFeed } from './sections/section-instagram-feed'
 import { registerSectionProductImagesStory } from './sections/section-product-images-story'
 import { registerCollectionGridSection } from './collection-grid'
 import './size-guide'
 import { initSearchModal } from './search-modal'
 import { registerHeaderTopBarSection } from './header-top-bar' 
+import { registerFooterSection } from './footer'
 import { registerMainBlogSection } from './main-blog'
 import { registerMainArticleSection } from './main-article'
 import { bindTcardHoverVideos } from './tcard-hover-video'
@@ -60,9 +64,13 @@ registerSectionCollectionList()
 registerSectionCollectionSlide()
 registerSectionPromoCards()
 registerSectionBeforeAfter()
+registerSectionRoutineGuide()
+registerSectionTrustBar()
+registerSectionInstagramFeed()
 registerSectionProductImagesStory()
 registerCollectionGridSection()
 registerHeaderTopBarSection()
+registerFooterSection()
 registerMainBlogSection()
 registerMainArticleSection()
 
