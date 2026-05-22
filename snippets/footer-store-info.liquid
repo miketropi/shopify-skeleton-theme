@@ -1,0 +1,52 @@
+{%- comment -%}
+  Footer store contact column.
+  @param section {object}
+{%- endcomment -%}
+{%- liquid
+  assign has_phone = false
+  assign has_address = false
+  assign has_email = false
+  if section.settings.phone_number != blank
+    assign has_phone = true
+  endif
+  if section.settings.address != blank
+    assign has_address = true
+  endif
+  if section.settings.email_address != blank
+    assign has_email = true
+  endif
+-%}
+{%- if has_phone or has_address or has_email -%}
+  <div class="site-footer__store">
+    <h3 class="site-footer__col-heading">
+      {{ section.settings.store_info_heading | default: 'Our store' | escape }}
+    </h3>
+
+    {%- if has_phone -%}
+      <div class="site-footer__store-line">
+        {%- if section.settings.support_label != blank -%}
+          <span class="site-footer__store-label">{{ section.settings.support_label | escape }}</span>
+        {%- endif -%}
+        {%- assign phone_raw = section.settings.phone_number
+          | replace: ' ', ''
+          | replace: '-', ''
+          | replace: '(', ''
+          | replace: ')', ''
+        -%}
+        <a class="site-footer__store-value" href="tel:{{ phone_raw | escape }}">
+          {{ section.settings.phone_number | escape }}
+        </a>
+      </div>
+    {%- endif -%}
+
+    {%- if has_address -%}
+      <p class="site-footer__store-address">{{ section.settings.address | escape | newline_to_br }}</p>
+    {%- endif -%}
+
+    {%- if has_email -%}
+      <a class="site-footer__store-email" href="mailto:{{ section.settings.email_address | escape }}">
+        {{ section.settings.email_address | escape }}
+      </a>
+    {%- endif -%}
+  </div>
+{%- endif -%}

@@ -1,0 +1,57 @@
+{%- comment -%}
+  Footer link column block (menu-driven nav).
+  @param block {object} link_column block
+  @param section {object}
+{%- endcomment -%}
+{%- liquid
+  assign menu_obj = block.settings.menu
+  assign col_heading = block.settings.column_heading_override
+  if col_heading == blank and menu_obj != blank
+    assign col_heading = menu_obj.title
+  endif
+  assign panel_id = 'FooterNavPanel-' | append: section.id | append: '-' | append: block.id
+-%}
+{%- if menu_obj != blank and menu_obj.links.size > 0 -%}
+    <div class="site-footer__nav-col" data-footer-nav-col {{ block.shopify_attributes }}>
+      <button
+        type="button"
+        class="site-footer__nav-toggle"
+        data-footer-nav-toggle
+        aria-expanded="false"
+        aria-controls="{{ panel_id }}"
+      >
+        <span class="site-footer__nav-toggle-label">{{ col_heading | escape }}</span>
+        <svg
+          class="site-footer__nav-toggle-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="m6 9 6 6 6-6"/>
+        </svg>
+      </button>
+
+      <nav
+        id="{{ panel_id }}"
+        class="site-footer__nav"
+        aria-label="{{ col_heading | escape }}"
+        data-footer-nav-panel
+      >
+        <h3 class="site-footer__col-heading site-footer__col-heading--desktop">{{ col_heading | escape }}</h3>
+        <ul class="site-footer__list" role="list">
+          {%- for link in menu_obj.links -%}
+            <li>
+              <a href="{{ link.url }}">{{ link.title | escape }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    </div>
+{%- endif -%}

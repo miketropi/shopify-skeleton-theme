@@ -61,6 +61,7 @@
     "padding": "Padding",
     "page_margin": "Page margin",
     "page_width": "Page width",
+    "show_back_to_top": "Show back-to-top button",
     "show_payment_icons": "Show payment icons",
     "text_style": "Text style",
     "text": "Text",
@@ -129,6 +130,7 @@
     "desktop_header_layout": "Large screens only. Phone and tablet still use the menu drawer and top bar.",
     "size_guide_default_image": "Shown in the size guide modal when a product has no `custom.size_guide` metafield. Upload a size chart (e.g. PNG or SVG).",
     "social_media": "Add your profile URLs once; they can appear in the footer, header contact panel, and other theme areas that support social links.",
+    "show_back_to_top": "Shows a fixed button after scrolling down the page. Smooth scroll is disabled when the visitor prefers reduced motion.",
     "section_color_scheme_source": "Default follows Theme settings → Color schemes → Store colour scheme. Custom uses the colour scheme(s) you choose below for this section only.",
     "font_size_base": "Sets the body text size. Heading levels and theme CSS variables (e.g. --font-size-lg) scale from this value using a fixed ratio. Individual components may still use their own sizes until they adopt those tokens."
   },
@@ -1979,21 +1981,53 @@
       "name": "Footer",
       "color_scheme": "Colour scheme",
       "color_scheme_custom_intro": "When source is Custom, pick a scheme for this footer.",
+      "headers": {
+        "newsletter": "Newsletter bar",
+        "link_columns": "Link columns",
+        "store_info": "Store info",
+        "brand": "Brand"
+      },
       "heading_brand": "Brand",
-      "show_branding": "Show shop name and tagline",
+      "show_branding": "Show brand column",
+      "logo": "Logo",
+      "logo_width": "Logo width",
       "tagline": "Tagline",
-      "tagline_info": "Optional short line under the shop name.",
-      "heading_menus": "Menus",
-      "primary_menu_heading": "Primary menu heading",
-      "secondary_menu": "Secondary menu",
-      "secondary_menu_heading": "Secondary menu heading",
-      "heading_social": "Social media",
-      "show_social": "Show social icons when URLs are set",
+      "tagline_info": "Optional rich text under the logo or shop name. Supports links and basic formatting.",
+      "show_social_icons": "Show social icons when URLs are set",
       "social_urls_theme_settings": "Profile URLs are set in Theme settings → Social media.",
+      "show_newsletter": "Show newsletter bar",
+      "newsletter_heading": "Newsletter heading",
+      "newsletter_heading_size": "Newsletter heading size",
+      "email_placeholder": "Email placeholder",
+      "subscribe_button_label": "Subscribe button label",
+      "show_newsletter_divider": "Show divider below newsletter",
+      "link_columns_accordion_mobile": "Collapse link columns on mobile",
+      "link_columns_blocks_info": "Add up to 2 Link column blocks below. Each block needs a menu selected from Navigation.",
+      "store_info_info": "The store info column appears when phone, address, or email is filled in.",
+      "store_info_heading": "Store info heading",
+      "support_label": "Support label",
+      "phone_number": "Phone number",
+      "address": "Address",
+      "email_address": "Email address",
       "heading_bottom": "Bottom bar",
       "show_policy_links": "Show policy links",
       "copyright_note": "Extra copyright line",
-      "copyright_note_info": "Short text after the shop name (optional)."
+      "copyright_note_info": "Short text after the shop name (optional).",
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        }
+      },
+      "blocks": {
+        "link_column": {
+          "name": "Link column",
+          "column_heading_override": "Column heading override",
+          "column_heading_override_info": "Falls back to the menu title when empty."
+        }
+      }
     }
   }
 }

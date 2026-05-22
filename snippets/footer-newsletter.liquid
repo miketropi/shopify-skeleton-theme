@@ -1,0 +1,46 @@
+{%- comment -%}
+  Footer newsletter bar (Shopify customer email list).
+  @param section {object}
+{%- endcomment -%}
+{%- liquid
+  assign nl_heading = section.settings.newsletter_heading | default: 'Subscribe to our newsletter'
+  assign nl_size = section.settings.newsletter_heading_size | default: 'large'
+  assign email_ph = section.settings.email_placeholder | default: 'Enter your email'
+  assign btn_label = section.settings.subscribe_button_label | default: 'Subscribe'
+-%}
+<section class="site-footer__newsletter" aria-labelledby="FooterNewsletterHeading-{{ section.id }}">
+  <h2
+    id="FooterNewsletterHeading-{{ section.id }}"
+    class="site-footer__newsletter-heading site-footer__newsletter-heading--{{ nl_size }}"
+  >
+    {{ nl_heading | escape }}
+  </h2>
+
+  <form
+    class="site-footer__newsletter-form"
+    action="{{ routes.root_url }}"
+    method="post"
+  >
+    <input type="hidden" name="form_type" value="customer">
+    <input type="hidden" name="utf8" value="✓">
+    <input type="hidden" name="customer[tags]" value="newsletter">
+
+    <label class="visually-hidden" for="FooterNewsletterEmail-{{ section.id }}">
+      {{ email_ph | escape }}
+    </label>
+    <div class="site-footer__newsletter-row">
+      <input
+        id="FooterNewsletterEmail-{{ section.id }}"
+        type="email"
+        name="customer[email]"
+        class="site-footer__newsletter-input"
+        placeholder="{{ email_ph | escape }}"
+        autocomplete="email"
+        required
+      >
+      <button type="submit" class="site-footer__newsletter-btn">
+        {{ btn_label | escape }}
+      </button>
+    </div>
+  </form>
+</section>

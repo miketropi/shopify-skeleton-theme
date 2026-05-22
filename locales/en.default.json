@@ -132,11 +132,10 @@
     }
   },
   "footer": {
-    "menu_primary_aria": "Footer menu",
-    "menu_secondary_aria": "Footer secondary menu",
     "policies_aria": "Store policies",
     "payment_aria": "Accepted payment methods",
-    "follow": "Follow us"
+    "follow": "Follow us",
+    "back_to_top": "Back to top"
   },
   "customer": {
     "account": {

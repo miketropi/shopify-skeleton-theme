@@ -1,21 +1,34 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "type": "footer",
   "name": "t:general.footer",
   "sections": {
     "footer": {
       "type": "footer",
+      "blocks": {
+        "link_column_shop": {
+          "type": "link_column",
+          "settings": {
+            "column_heading_override": "Shop"
+          }
+        },
+        "link_column_help": {
+          "type": "link_column",
+          "settings": {
+            "column_heading_override": "Help"
+          }
+        }
+      },
+      "block_order": [
+        "link_column_shop",
+        "link_column_help"
+      ],
       "settings": {
-        "menu": "",
-        "show_payment_icons": true
+        "show_newsletter": true,
+        "show_branding": true,
+        "show_social_icons": false,
+        "show_payment_icons": true,
+        "show_policy_links": true,
+        "link_columns_accordion_mobile": true
       }
     }
   },

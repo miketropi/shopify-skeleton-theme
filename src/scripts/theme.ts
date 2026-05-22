@@ -26,6 +26,7 @@ import { registerCollectionGridSection } from './collection-grid'
 import './size-guide'
 import { initSearchModal } from './search-modal'
 import { registerHeaderTopBarSection } from './header-top-bar' 
+import { registerFooterSection } from './footer'
 import { registerMainBlogSection } from './main-blog'
 import { registerMainArticleSection } from './main-article'
 import { bindTcardHoverVideos } from './tcard-hover-video'
@@ -69,6 +70,7 @@ registerSectionInstagramFeed()
 registerSectionProductImagesStory()
 registerCollectionGridSection()
 registerHeaderTopBarSection()
+registerFooterSection()
 registerMainBlogSection()
 registerMainArticleSection()
 
