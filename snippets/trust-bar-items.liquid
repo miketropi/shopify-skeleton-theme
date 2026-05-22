@@ -1,0 +1,29 @@
+{%- comment -%}
+  Loop trust_item blocks into list markup.
+  @param section {object}
+  @param item_tag {string} li | div
+  @param item_class {string} extra classes on each item wrapper
+  @param item_role {string} optional role for div items
+{%- endcomment -%}
+{%- liquid
+  assign item_tag = item_tag | default: 'li'
+  assign item_class = item_class | default: ''
+  assign item_index = 0
+-%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'trust_item' -%}
+    {%- liquid
+      assign lazy_icon = true
+      if item_index == 0
+        assign lazy_icon = false
+      endif
+      assign item_index = item_index | plus: 1
+    -%}
+    <{{ item_tag }}
+      class="trust-bar__item-wrap {{ item_class }}"
+      {% if item_role != blank %}role="{{ item_role }}"{% endif %}
+    >
+      {%- render 'trust-bar-item', block: block, lazy_icon: lazy_icon -%}
+    </{{ item_tag }}>
+  {%- endif -%}
+{%- endfor -%}
