@@ -616,6 +616,87 @@
         "border_radius_bottom_right": 0,
         "border_radius_bottom_left": 0
       }
+    },
+    "section_trust_bar_LgJghJ": {
+      "type": "section-trust-bar",
+      "blocks": {
+        "trust_item_JqknA9": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "return",
+            "heading": "14-Day Returns",
+            "description": "Shop with confidence and enjoy easy 14-day returns.",
+            "link": "/",
+            "open_in_new_tab": false
+          }
+        },
+        "trust_item_B7kH3R": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shipping",
+            "heading": "Free Shipping",
+            "description": "Enjoy free delivery on all qualifying orders every time.",
+            "link": "/",
+            "open_in_new_tab": false
+          }
+        },
+        "trust_item_7YNxmE": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "support",
+            "heading": "Expert Support",
+            "description": "Get personalized help to choose your perfect skincare routine.",
+            "link": "/",
+            "open_in_new_tab": false
+          }
+        },
+        "trust_item_9Ttmq9": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shield",
+            "heading": "Secure Checkout",
+            "description": "Shop securely with encrypted, protected payment information.",
+            "link": "/",
+            "open_in_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "trust_item_JqknA9",
+        "trust_item_B7kH3R",
+        "trust_item_7YNxmE",
+        "trust_item_9Ttmq9"
+      ],
+      "name": "t:sections.trust_bar.presets.name",
+      "settings": {
+        "layout": "grid",
+        "show_dividers": true,
+        "text_alignment": "center",
+        "item_heading_size": "large",
+        "item_description_size": "medium",
+        "icon_size": "theme",
+        "heading_color": "rgba(0,0,0,0)",
+        "description_color": "rgba(0,0,0,0)",
+        "icon_color": "rgba(0,0,0,0)",
+        "full_width": false,
+        "entrance_animate_on_scroll": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "scheme-6",
+        "padding_top": 32,
+        "padding_right": 24,
+        "padding_bottom": 32,
+        "padding_left": 24,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
     }
   },
   "order": [
@@ -626,6 +707,7 @@
     "section_collection_slide_XNQfNV",
     "section_promo_cards_rYp8aL",
     "section_before_after_LhTBRL",
-    "section_routine_guide_K6Jm3W"
+    "section_routine_guide_K6Jm3W",
+    "section_trust_bar_LgJghJ"
   ]
 }
