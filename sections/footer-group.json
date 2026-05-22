@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "footer",
   "name": "t:general.footer",
@@ -8,12 +17,14 @@
         "link_column_shop": {
           "type": "link_column",
           "settings": {
+            "menu": "",
             "column_heading_override": "Shop"
           }
         },
         "link_column_help": {
           "type": "link_column",
           "settings": {
+            "menu": "",
             "column_heading_override": "Help"
           }
         }
@@ -23,12 +34,27 @@
         "link_column_help"
       ],
       "settings": {
+        "color_scheme_source": "global",
+        "color_scheme": "",
         "show_newsletter": true,
+        "newsletter_heading": "Subscribe to our newsletter",
+        "newsletter_heading_size": "large",
+        "email_placeholder": "Enter your email",
+        "subscribe_button_label": "Subscribe",
+        "show_newsletter_divider": true,
         "show_branding": true,
-        "show_social_icons": false,
-        "show_payment_icons": true,
+        "logo_width": 60,
+        "tagline": "<p>\"Your skin works tirelessly every <span style=\"text-decoration:underline\">day—shielding you from the elements</span>, adjusting to changing climates, and quietly reflecting your inner well‑being. ★★\"</p>",
+        "show_social_icons": true,
+        "link_columns_accordion_mobile": true,
+        "store_info_heading": "Our store",
+        "support_label": "24/7 support center:",
+        "phone_number": "(+01) 1234 8888",
+        "address": "101 E 129th St, East Chicago, IN 46312, USA",
+        "email_address": "support.beplus@gmail.com",
         "show_policy_links": true,
-        "link_columns_accordion_mobile": true
+        "show_payment_icons": true,
+        "copyright_note": ""
       }
     }
   },
