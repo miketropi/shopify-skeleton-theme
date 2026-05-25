@@ -137,6 +137,24 @@
     "follow": "Follow us",
     "back_to_top": "Back to top"
   },
+  "page_header": {
+    "breadcrumb": "Breadcrumb",
+    "home": "Home",
+    "search_title": "Search",
+    "collections_title": "Collections"
+  },
+  "contact": {
+    "form": {
+      "title": "Contact form",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone number",
+      "message": "Message",
+      "send": "Send",
+      "post_success": "Thanks for contacting us. We'll get back to you as soon as possible.",
+      "error_heading": "Please adjust the following:"
+    }
+  },
   "customer": {
     "account": {
       "details": "Hello, {{ name }}",

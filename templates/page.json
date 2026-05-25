@@ -9,12 +9,29 @@
  */
 {
   "sections": {
+    "page_header": {
+      "type": "section-page-header",
+      "settings": {
+        "show_breadcrumb": true,
+        "heading_source": "page",
+        "heading_size": "large",
+        "description_source": "page",
+        "background_type": "color",
+        "section_height": "medium",
+        "full_width": true,
+        "entrance_animate_on_scroll": true,
+        "section_color_scheme_mode": "default"
+      }
+    },
     "main": {
       "type": "main-page",
-      "settings": {}
+      "settings": {
+        "show_title": false
+      }
     }
   },
   "order": [
+    "page_header",
     "main"
   ]
 }

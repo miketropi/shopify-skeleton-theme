@@ -1,0 +1,72 @@
+{%- comment -%}
+  Page header breadcrumb trail from template context.
+  @param separator {string}
+{%- endcomment -%}
+{%- liquid
+  assign sep = separator | default: '/'
+  assign pt = request.page_type
+-%}
+<nav class="page-header__breadcrumb" aria-label="{{ 'page_header.breadcrumb' | t }}">
+  <ol class="page-header__breadcrumb-list" role="list">
+    <li class="page-header__breadcrumb-item">
+      <a class="page-header__breadcrumb-link" href="{{ routes.root_url }}">
+        {{- 'page_header.home' | t -}}
+      </a>
+      <span class="page-header__breadcrumb-sep" aria-hidden="true">{{ sep }}</span>
+    </li>
+
+    {%- case pt -%}
+      {%- when 'collection' -%}
+        <li class="page-header__breadcrumb-item page-header__breadcrumb-item--current" aria-current="page">
+          <span class="visually-hidden">{{ 'page_header.breadcrumb' | t }}: </span>
+          {{- collection.title | escape -}}
+        </li>
+
+      {%- when 'blog' -%}
+        <li class="page-header__breadcrumb-item page-header__breadcrumb-item--current" aria-current="page">
+          <span class="visually-hidden">{{ 'page_header.breadcrumb' | t }}: </span>
+          {{- blog.title | escape -}}
+        </li>
+
+      {%- when 'article' -%}
+        <li class="page-header__breadcrumb-item">
+          <a class="page-header__breadcrumb-link" href="{{ blog.url }}">{{ blog.title | escape }}</a>
+          <span class="page-header__breadcrumb-sep" aria-hidden="true">{{ sep }}</span>
+        </li>
+        <li class="page-header__breadcrumb-item page-header__breadcrumb-item--current" aria-current="page">
+          <span class="visually-hidden">{{ 'page_header.breadcrumb' | t }}: </span>
+          {{- article.title | escape -}}
+        </li>
+
+      {%- when 'page' -%}
+        <li class="page-header__breadcrumb-item page-header__breadcrumb-item--current" aria-current="page">
+          <span class="visually-hidden">{{ 'page_header.breadcrumb' | t }}: </span>
+          {{- page.title | escape -}}
+        </li>
+
+      {%- when 'search' -%}
+        <li class="page-header__breadcrumb-item page-header__breadcrumb-item--current" aria-current="page">
+          <span class="visually-hidden">{{ 'page_header.breadcrumb' | t }}: </span>
+          {{- 'page_header.search_title' | t -}}
+        </li>
+
+      {%- when 'cart' -%}
+        <li class="page-header__breadcrumb-item page-header__breadcrumb-item--current" aria-current="page">
+          <span class="visually-hidden">{{ 'page_header.breadcrumb' | t }}: </span>
+          {{- 'cart.title' | t -}}
+        </li>
+
+      {%- when 'list-collections' -%}
+        <li class="page-header__breadcrumb-item page-header__breadcrumb-item--current" aria-current="page">
+          <span class="visually-hidden">{{ 'page_header.breadcrumb' | t }}: </span>
+          {{- 'page_header.collections_title' | t -}}
+        </li>
+
+      {%- else -%}
+        <li class="page-header__breadcrumb-item page-header__breadcrumb-item--current" aria-current="page">
+          <span class="visually-hidden">{{ 'page_header.breadcrumb' | t }}: </span>
+          {{- shop.name | escape -}}
+        </li>
+    {%- endcase -%}
+  </ol>
+</nav>

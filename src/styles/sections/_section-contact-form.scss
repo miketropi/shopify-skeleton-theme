@@ -1,0 +1,170 @@
+@use '../base/variables' as *;
+@use '../base/breakpoints' as *;
+
+$_r: 0.65rem;
+$_r-sm: 0.45rem;
+$_r-pill: 999px;
+$_ease: cubic-bezier(0.22, 1, 0.36, 1);
+$_muted: var(--cs-text-secondary, color-mix(in srgb, var(--cs-text) 62%, var(--cs-background)));
+
+.cform__inner {
+  width: 100%;
+  margin-inline: auto;
+}
+
+.cform--width-narrow .cform__inner {
+  max-width: min(40rem, 100%);
+}
+
+.cform--width-medium .cform__inner {
+  max-width: min(52rem, 100%);
+}
+
+.cform__title {
+  margin: 0 0 clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.cform__form {
+  margin: 0;
+}
+
+.cform__status {
+  margin: 0 0 1.25rem;
+  padding: 0.9rem 1rem;
+  border-radius: $_r;
+
+  &--success {
+    background: color-mix(in srgb, var(--cs-accent, #007aff) 8%, var(--cs-background));
+    border: 1px solid color-mix(in srgb, var(--cs-accent, #007aff) 24%, var(--cs-background));
+  }
+
+  &--error {
+    background: color-mix(in srgb, #c53030 6%, var(--cs-background));
+    border: 1px solid color-mix(in srgb, #c53030 28%, var(--cs-background));
+  }
+}
+
+.cform__status-text,
+.cform__status-heading {
+  margin: 0;
+  font-size: var(--font-size-sm, 0.875rem);
+  line-height: 1.45;
+  font-weight: 600;
+  color: var(--cs-text);
+}
+
+.cform__status-list {
+  margin: 0.45rem 0 0;
+  padding-left: 1.1rem;
+  font-size: var(--font-size-sm, 0.8125rem);
+  line-height: 1.45;
+  color: color-mix(in srgb, #c53030 50%, var(--cs-text));
+
+  li + li {
+    margin-top: 0.3em;
+  }
+}
+
+.cform__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.cform__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+
+  @include mq-up('sm') {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.cform__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  &--full {
+    grid-column: 1 / -1;
+  }
+
+  .cform__row & {
+    margin: 0;
+  }
+}
+
+.cform__label {
+  font-size: var(--font-size-sm, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: $_muted;
+}
+
+.cform__required {
+  color: color-mix(in srgb, #c53030 70%, var(--cs-text));
+}
+
+.cform__input,
+.cform__textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  font-size: var(--font-size-base, 0.9375rem);
+  font-family: inherit;
+  line-height: 1.45;
+  color: var(--cs-text);
+  background: var(--cs-background);
+  border: 1px solid color-mix(in srgb, var(--cs-text) 12%, var(--cs-background));
+  border-radius: $_r-sm;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--cs-text) 18%, var(--cs-background));
+  }
+
+  &:focus {
+    border-color: var(--cs-accent, #007aff);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--cs-accent, #007aff) 16%, var(--cs-background));
+  }
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--cs-text) 38%, var(--cs-background));
+  }
+
+  &--error {
+    border-color: color-mix(in srgb, #c53030 55%, var(--cs-background));
+  }
+}
+
+.cform__textarea {
+  resize: vertical;
+  min-height: 8rem;
+}
+
+.cform__field-error {
+  margin: 0;
+  font-size: var(--font-size-xs, 0.75rem);
+  line-height: 1.4;
+  color: color-mix(in srgb, #c53030 70%, var(--cs-text));
+}
+
+.cform__actions {
+  margin-top: 0.35rem;
+}
+
+.cform__submit {
+  min-height: 2.75rem;
+  padding-inline: 1.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cform__input,
+  .cform__textarea,
+  .cform__submit {
+    transition: none;
+  }
+}

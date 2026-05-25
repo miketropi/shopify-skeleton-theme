@@ -1,0 +1,68 @@
+{%- comment -%}
+  Page header background media (image / video + mobile fallback).
+  @param background_type {string}
+  @param background_image {image}
+  @param background_video {video}
+  @param image_position {string}
+  @param enable_parallax {boolean}
+{%- endcomment -%}
+{%- liquid
+  assign bg_type = background_type | default: 'color'
+  assign focal = image_position | default: 'center center'
+  assign media_target_class = 'page-header__media-target'
+  assign img_class = 'page-header__media-image'
+  assign fallback_class = 'page-header__media-fallback'
+  assign video_class = 'page-header__media-video'
+  if enable_parallax
+    assign img_class = img_class | append: ' ' | append: media_target_class
+    assign fallback_class = fallback_class | append: ' ' | append: media_target_class
+    assign video_class = video_class | append: ' ' | append: media_target_class
+  endif
+  assign has_image = false
+  if background_image != blank
+    assign has_image = true
+  endif
+  assign has_video = false
+  if background_video != blank
+    assign has_video = true
+  endif
+-%}
+{%- if bg_type == 'video' and has_video -%}
+  <div class="page-header__media page-header__media--video" aria-hidden="true">
+    {%- if has_image -%}
+      {{
+        background_image
+        | image_url: width: 2000
+        | image_tag:
+          loading: 'eager',
+          class: fallback_class,
+          sizes: '100vw',
+          widths: '600, 900, 1200, 1600, 2000',
+          style: 'object-position: ' | append: focal
+      }}
+    {%- endif -%}
+    {{
+      background_video
+      | video_tag:
+        autoplay: true,
+        loop: true,
+        muted: true,
+        playsinline: true,
+        class: video_class,
+        image_size: '2000x'
+    }}
+  </div>
+{%- elsif bg_type == 'image' and has_image -%}
+  <div class="page-header__media page-header__media--image" aria-hidden="true">
+    {{
+      background_image
+      | image_url: width: 2000
+      | image_tag:
+        loading: 'eager',
+        class: img_class,
+        sizes: '100vw',
+        widths: '600, 900, 1200, 1600, 2000',
+        style: 'object-position: ' | append: focal
+    }}
+  </div>
+{%- endif -%}

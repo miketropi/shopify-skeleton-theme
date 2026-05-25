@@ -6,6 +6,7 @@
 .section-main-404,
 .section-main-password,
 .section-main-page,
+.section-section-contact-form,
 .section-main-blog,
 .section-main-article,
 .section-main-customers-account,
@@ -19,5 +20,32 @@
 
   @include mq-up('md') {
     padding: $space-lg;
+  }
+}
+
+.section-main-page {
+  max-width: min(40rem, 100%);
+  margin-inline: auto;
+}
+
+.main-page__title {
+  margin: 0 0 0.75em;
+  font-size: var(--font-size-3xl, 2.44140625rem);
+  font-weight: 600;
+  line-height: var(--line-height-tight, 1.12);
+  color: var(--cs-heading, var(--cs-text, inherit));
+}
+
+.main-page__content {
+  font-size: var(--font-size-base, 0.9375rem);
+  line-height: 1.65;
+  color: var(--cs-text);
+
+  :where(p) {
+    margin: 0 0 0.85em;
+  }
+
+  :where(p:last-child) {
+    margin-bottom: 0;
   }
 }

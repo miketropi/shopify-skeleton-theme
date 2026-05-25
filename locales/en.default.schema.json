@@ -1977,6 +1977,189 @@
       "accordion_heading": "Heading",
       "accordion_body": "Content"
     },
+    "page_header": {
+      "name": "Page header",
+      "headers": {
+        "content": "Content",
+        "background": "Background",
+        "overlay": "Overlay",
+        "layout": "Layout",
+        "colour": "Colour",
+        "section": "Section",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background_shell": "Section background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "show_breadcrumb": "Show breadcrumb",
+        "breadcrumb_separator": "Breadcrumb separator",
+        "heading_source": "Heading source",
+        "custom_heading": "Custom heading",
+        "heading_size": "Heading size",
+        "description_source": "Description source",
+        "custom_description": "Custom description",
+        "description_max_width": "Description max width",
+        "content_position": "Content position",
+        "background_type": "Background type",
+        "background_color_override": "Background colour",
+        "background_image": "Background image",
+        "background_video": "Background video",
+        "image_position": "Image / video focal point",
+        "enable_parallax": "Enable parallax",
+        "parallax_intensity": "Parallax intensity",
+        "show_overlay": "Show overlay",
+        "overlay_color": "Overlay colour",
+        "overlay_opacity": "Overlay opacity",
+        "section_height": "Section height",
+        "full_width": "Full width",
+        "entrance_animate_on_scroll": "Animate when scrolling into view",
+        "section_color_scheme_mode": "Colour scheme",
+        "color_scheme": "Scheme",
+        "heading_color": "Heading colour",
+        "breadcrumb_color": "Breadcrumb colour",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "background_color_info": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "border_color_info": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "info": {
+        "custom_heading": "Only used when Heading source is Custom.",
+        "custom_description": "Only used when Description source is Custom. Use the dynamic source icon to connect page or shop metafields. Supports basic formatting and links. Leave empty to hide the description.",
+        "background_image": "Used for image backgrounds and as the mobile fallback for video.",
+        "background_color_override": "Optional solid colour for the hero band. Clear uses the colour scheme background (Colour section below).",
+        "background_video": "Muted looping MP4. Upload a poster image above for mobile and while loading.",
+        "enable_parallax": "Image and video only. Disabled on small screens and when reduced motion is on.",
+        "full_width": "Edge-to-edge background; content stays in the page column.",
+        "main_page_title": "When this section is first on a page template, turn off Show page title in the Page section to avoid duplicate headings."
+      },
+      "options": {
+        "heading_source": {
+          "page": "Page title",
+          "custom": "Custom"
+        },
+        "description_source": {
+          "page": "Page description",
+          "custom": "Custom"
+        },
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "content_position": {
+          "top_left": "Top left",
+          "middle_left": "Middle left",
+          "bottom_left": "Bottom left",
+          "middle_center": "Middle centre",
+          "bottom_center": "Bottom centre"
+        },
+        "background_type": {
+          "color": "Colour",
+          "image": "Image",
+          "video": "Video"
+        },
+        "image_position": {
+          "center": "Centre",
+          "top": "Top centre",
+          "bottom": "Bottom centre",
+          "left": "Left centre",
+          "right": "Right centre"
+        },
+        "section_height": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "fullscreen": "Full screen"
+        },
+        "section_color_scheme_mode": {
+          "default": "Default (store scheme)",
+          "custom": "Custom"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "presets": {
+        "name": "Page header"
+      }
+    },
+    "contact_form": {
+      "name": "Contact form",
+      "headers": {
+        "content": "Content",
+        "section": "Section",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "heading": "Form heading",
+        "heading_size": "Heading size",
+        "content_width": "Form width",
+        "show_phone": "Show phone field",
+        "color_scheme": "Colour scheme",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "background_color_info": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "border_color_info": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "info": {
+        "heading": "Leave blank to use the default “Contact form” title."
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "content_width": {
+          "narrow": "Narrow",
+          "medium": "Medium"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "presets": {
+        "name": "Contact form"
+      }
+    },
     "footer": {
       "name": "Footer",
       "color_scheme": "Colour scheme",
