@@ -31,6 +31,11 @@
   if scheme_transparent == blank or scheme_transparent.settings == blank
     assign scheme_transparent = settings.color_schemes['scheme-6']
   endif
+
+  assign header_menu = section.settings.menu
+  if header_menu == blank
+    assign header_menu = linklists['main-menu']
+  endif
 -%}
 {%- capture header_scheme_solid -%}
   {%- render 'color-scheme-vars', scheme: scheme_default, prefix: 'solid', inline_only: true -%}
@@ -74,11 +79,11 @@
         <div class="header__heading">
           {% render 'header-logo', section: section %}
         </div>
-        {% render 'header-site-nav', section: section %}
+        {% render 'header-site-nav', section: section, menu: header_menu %}
         {% render 'header-icons', section: section %}
 
       {%- when 'nav_logo_center_actions' -%}
-        {% render 'header-site-nav', section: section %}
+        {% render 'header-site-nav', section: section, menu: header_menu %}
         <div class="header__heading">
           {% render 'header-logo', section: section %}
         </div>
@@ -88,7 +93,7 @@
         <div class="header__heading">
           {% render 'header-logo', section: section %}
         </div>
-        {% render 'header-site-nav', section: section %}
+        {% render 'header-site-nav', section: section, menu: header_menu %}
         {% render 'header-icons', section: section %}
 
       {%- else -%}
@@ -96,7 +101,7 @@
           {% render 'header-logo', section: section %}
         </div>
         <div class="header__nav-tray">
-          {% render 'header-site-nav', section: section %}
+          {% render 'header-site-nav', section: section, menu: header_menu %}
           {% render 'header-icons', section: section %}
         </div>
     {%- endcase -%}
@@ -235,6 +240,7 @@
       "type": "link_list",
       "id": "menu",
       "label": "t:labels.menu",
+      "default": "main-menu",
       "info": "t:info.header_menu_nested"
     },
     {

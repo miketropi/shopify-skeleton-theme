@@ -1,5 +1,5 @@
 {%- comment -%}
-  Main menu nav (desktop inline + mobile drawer). @param section {Section} Header section
+  Main menu nav (desktop inline + mobile drawer). @param section {Section} Header section @param menu {linklist}
 {%- endcomment -%}
 <nav
   class="header__nav"
@@ -30,7 +30,7 @@
     <div class="header__drawer-pane-nav">
       <div class="header__menu-shell">
       <ul class="header__menu" role="list">
-        {% for link in section.settings.menu.links %}
+        {% for link in menu.links %}
           <li
             class="header__menu-item{% if link.links != blank %} header__menu-item--has-children{% endif %}"
           >
