@@ -80,10 +80,141 @@
         "border_radius_bottom_right": 0,
         "border_radius_bottom_left": 0
       }
+    },
+    "section_map_location_LWidJm": {
+      "type": "section-map-location",
+      "name": "t:sections.map_location.presets.name",
+      "settings": {
+        "map_api_key": "",
+        "map_address": "101 E 129th St, East Chicago, IN 46312, USA",
+        "map_zoom": 14,
+        "map_style": "default",
+        "section_height": "medium",
+        "card_position": "right",
+        "card_heading": "Information",
+        "card_border_radius": "medium",
+        "card_shadow": true,
+        "show_phone": true,
+        "phone_label": "Phone:",
+        "phone_number": "(+01) 1234 8888",
+        "show_email": true,
+        "email_label": "Email:",
+        "email_address": "support.beplus@gmail.com",
+        "show_address": true,
+        "address_label": "Address:",
+        "address": "101 E 129th St, East Chicago, IN 46312, USA",
+        "show_hours": true,
+        "hours_label": "Open Time:",
+        "hours_row_1_days": "Mon - Sat:",
+        "hours_row_1_time": "7:30am - 8:00pm PST",
+        "hours_row_2_days": "Sunday:",
+        "hours_row_2_time": "9:00am - 5:00pm PST",
+        "hours_row_3_days": "",
+        "hours_row_3_time": "",
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_right": 0,
+        "padding_bottom": 40,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
+    },
+    "section_trust_bar_iqK7he": {
+      "type": "section-trust-bar",
+      "blocks": {
+        "trust_item_PRLwMd": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "return",
+            "heading": "14-Day Returns",
+            "description": "Risk-free shopping with easy returns.",
+            "link": "",
+            "open_in_new_tab": false
+          }
+        },
+        "trust_item_qF338M": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shipping",
+            "heading": "Free Shipping",
+            "description": "Complimentary delivery on qualifying orders.",
+            "link": "",
+            "open_in_new_tab": false
+          }
+        },
+        "trust_item_rcWkXG": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "support",
+            "heading": "Expert Support",
+            "description": "We're here to help you choose the right routine.",
+            "link": "",
+            "open_in_new_tab": false
+          }
+        },
+        "trust_item_n87R4L": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shield",
+            "heading": "Secure Checkout",
+            "description": "Your payment information is always protected.",
+            "link": "",
+            "open_in_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "trust_item_PRLwMd",
+        "trust_item_qF338M",
+        "trust_item_rcWkXG",
+        "trust_item_n87R4L"
+      ],
+      "name": "t:sections.trust_bar.presets.name",
+      "settings": {
+        "layout": "grid",
+        "show_dividers": true,
+        "text_alignment": "center",
+        "item_heading_size": "large",
+        "item_description_size": "medium",
+        "icon_size": "theme",
+        "heading_color": "rgba(0,0,0,0)",
+        "description_color": "rgba(0,0,0,0)",
+        "icon_color": "rgba(0,0,0,0)",
+        "full_width": false,
+        "entrance_animate_on_scroll": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "padding_top": 32,
+        "padding_right": 24,
+        "padding_bottom": 32,
+        "padding_left": 24,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
     }
   },
   "order": [
     "page_header",
-    "form"
+    "form",
+    "section_map_location_LWidJm",
+    "section_trust_bar_iqK7he"
   ]
 }
