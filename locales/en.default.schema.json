@@ -2178,6 +2178,58 @@
         "name": "Contact form"
       }
     },
+    "main_page": {
+      "name": "Page",
+      "headers": {
+        "content": "Content",
+        "colour": "Colour",
+        "section": "Section",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "show_title": "Show page title",
+        "content_width": "Content width",
+        "section_color_scheme_mode": "Colour scheme",
+        "color_scheme": "Colour scheme",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "background_color_info": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "border_color_info": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "content_width": {
+          "narrow": "Narrow",
+          "medium": "Medium",
+          "wide": "Wide"
+        },
+        "section_color_scheme_mode": {
+          "default": "Default (global theme)",
+          "custom": "Custom"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      }
+    },
     "map_location": {
       "name": "Map Location",
       "map_label": "Store location map",
