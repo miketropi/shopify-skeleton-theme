@@ -2113,10 +2113,15 @@
         "radius": "Corner radius"
       },
       "labels": {
+        "eyebrow_text": "Eyebrow text",
         "heading": "Form heading",
         "heading_size": "Heading size",
+        "description": "Description",
+        "text_alignment": "Text alignment",
         "content_width": "Form width",
         "show_phone": "Show phone field",
+        "button_label": "Button label",
+        "section_color_scheme_mode": "Colour scheme",
         "color_scheme": "Colour scheme",
         "padding_top": "Top",
         "padding_right": "Right",
@@ -2135,6 +2140,10 @@
         "radius_br": "Bottom right",
         "radius_bl": "Bottom left"
       },
+      "placeholders": {
+        "eyebrow_text": "e.g. Get in touch",
+        "button_label": "e.g. Send Message"
+      },
       "info": {
         "heading": "Leave blank to use the default “Contact form” title."
       },
@@ -2144,6 +2153,15 @@
           "medium": "Medium",
           "large": "Large",
           "xlarge": "Extra large"
+        },
+        "text_alignment": {
+          "left": "Left",
+          "center": "Center",
+          "right": "Right"
+        },
+        "section_color_scheme_mode": {
+          "default": "Default (global theme)",
+          "custom": "Custom"
         },
         "content_width": {
           "narrow": "Narrow",
