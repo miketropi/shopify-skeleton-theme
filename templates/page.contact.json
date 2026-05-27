@@ -67,7 +67,7 @@
         "color_scheme": "scheme-1",
         "padding_top": 0,
         "padding_right": 0,
-        "padding_bottom": 40,
+        "padding_bottom": 0,
         "padding_left": 0,
         "margin_top": 52,
         "margin_bottom": 52,
@@ -137,8 +137,8 @@
           "settings": {
             "icon": "return",
             "heading": "14-Day Returns",
-            "description": "Risk-free shopping with easy returns.",
-            "link": "",
+            "description": "Shop with confidence and enjoy easy 14-day returns.",
+            "link": "#",
             "open_in_new_tab": false
           }
         },
@@ -147,8 +147,8 @@
           "settings": {
             "icon": "shipping",
             "heading": "Free Shipping",
-            "description": "Complimentary delivery on qualifying orders.",
-            "link": "",
+            "description": "Enjoy free delivery on all qualifying orders every time.",
+            "link": "#",
             "open_in_new_tab": false
           }
         },
@@ -157,8 +157,8 @@
           "settings": {
             "icon": "support",
             "heading": "Expert Support",
-            "description": "We're here to help you choose the right routine.",
-            "link": "",
+            "description": "Get personalized help to choose your perfect skincare routine.",
+            "link": "#",
             "open_in_new_tab": false
           }
         },
@@ -167,8 +167,8 @@
           "settings": {
             "icon": "shield",
             "heading": "Secure Checkout",
-            "description": "Your payment information is always protected.",
-            "link": "",
+            "description": "Shop securely with encrypted, protected payment information.",
+            "link": "#",
             "open_in_new_tab": false
           }
         }
@@ -199,7 +199,7 @@
         "padding_bottom": 32,
         "padding_left": 24,
         "margin_top": 0,
-        "margin_bottom": 0,
+        "margin_bottom": 44,
         "background_color": "rgba(0,0,0,0)",
         "border_width": 0,
         "border_style": "solid",
