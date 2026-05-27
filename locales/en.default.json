@@ -509,6 +509,10 @@
       "next": "Next collections",
       "empty": "Add collection card blocks (pick a collection or a custom link) to show this section."
     },
+    "map_location": {
+      "map_label": "Store location map",
+      "no_map": "Enter a Google Maps API key and address to display the map."
+    },
     "product_images_story": {
       "select_product": "Pick a product in the section settings to show the card here.",
       "carousel": "Image carousel",

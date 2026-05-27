@@ -2178,6 +2178,111 @@
         "name": "Contact form"
       }
     },
+    "map_location": {
+      "name": "Map Location",
+      "map_label": "Store location map",
+      "no_map": "Enter a Google Maps API key and address to display the map.",
+      "headers": {
+        "map": "Map",
+        "info_card": "Info Card",
+        "contact_details": "Contact Details",
+        "opening_hours": "Opening Hours",
+        "colour": "Colour",
+        "section": "Section",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "map_api_key": "Google Maps API key",
+        "map_address": "Map address",
+        "map_zoom": "Zoom level",
+        "map_style": "Map style",
+        "section_height": "Section height",
+        "static_map_image": "Static map fallback image",
+        "card_position": "Card position",
+        "card_heading": "Card heading",
+        "card_border_radius": "Card border radius",
+        "card_shadow": "Show card shadow",
+        "show_phone": "Show phone",
+        "phone_label": "Phone label",
+        "phone_number": "Phone number",
+        "show_email": "Show email",
+        "email_label": "Email label",
+        "email_address": "Email address",
+        "show_address": "Show address",
+        "address_label": "Address label",
+        "address": "Address",
+        "show_hours": "Show opening hours",
+        "hours_label": "Hours label",
+        "hours_row_1_days": "Row 1 — Days",
+        "hours_row_1_time": "Row 1 — Hours",
+        "hours_row_2_days": "Row 2 — Days",
+        "hours_row_2_time": "Row 2 — Hours",
+        "hours_row_3_days": "Row 3 — Days (optional)",
+        "hours_row_3_time": "Row 3 — Hours (optional)",
+        "section_color_scheme_mode": "Colour scheme",
+        "color_scheme": "Colour scheme",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "background_color_info": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "border_color_info": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "info": {
+        "map_api_key": "Required for interactive map. Leave empty to use a static fallback image.",
+        "map_address": "Used to place the map pin and center the map.",
+        "static_map_image": "Fallback image when no API key is provided. Recommended size: 1440×600px."
+      },
+      "options": {
+        "map_style": {
+          "default": "Default",
+          "light": "Light (greyscale)",
+          "dark": "Dark"
+        },
+        "section_height": {
+          "small": "Small (320px)",
+          "medium": "Medium (480px)",
+          "large": "Large (600px)"
+        },
+        "card_position": {
+          "left": "Left",
+          "right": "Right"
+        },
+        "card_border_radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (12px)",
+          "large": "Large (20px)"
+        },
+        "section_color_scheme_mode": {
+          "default": "Default (global theme)",
+          "custom": "Custom"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "presets": {
+        "name": "Map Location"
+      }
+    },
     "footer": {
       "name": "Footer",
       "color_scheme": "Colour scheme",

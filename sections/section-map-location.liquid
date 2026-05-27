@@ -1,0 +1,551 @@
+{%- liquid
+  assign cs_mode = section.settings.section_color_scheme_mode | default: 'default'
+  assign cs_scheme = settings.global_color_scheme
+  if cs_scheme == blank or cs_scheme.settings == blank
+    assign cs_scheme = settings.color_schemes['scheme-1']
+  endif
+  if cs_mode == 'custom'
+    assign picked_cs = section.settings.color_scheme
+    if picked_cs != blank and picked_cs.settings != blank
+      assign cs_scheme = picked_cs
+    endif
+  endif
+
+  assign map_zoom = section.settings.map_zoom | default: 14
+  assign map_style = section.settings.map_style | default: 'default'
+  assign section_height = section.settings.section_height | default: 'medium'
+  assign card_position = section.settings.card_position | default: 'right'
+  assign card_heading = section.settings.card_heading
+  assign card_radius = section.settings.card_border_radius | default: 'medium'
+  assign show_card_shadow = section.settings.card_shadow | default: true
+  assign has_api_key = false
+  if section.settings.map_api_key != blank
+    assign has_api_key = true
+  endif
+  assign has_address = false
+  if section.settings.map_address != blank
+    assign has_address = true
+  endif
+  assign hours_rows = 0
+  if section.settings.show_hours
+    assign has_hours = true
+    if section.settings.hours_row_1_days != blank and section.settings.hours_row_1_time != blank
+      assign hours_rows = hours_rows | plus: 1
+    endif
+    if section.settings.hours_row_2_days != blank and section.settings.hours_row_2_time != blank
+      assign hours_rows = hours_rows | plus: 1
+    endif
+    if section.settings.hours_row_3_days != blank and section.settings.hours_row_3_time != blank
+      assign hours_rows = hours_rows | plus: 1
+    endif
+  endif
+-%}
+
+{%- render 'section-styles', section: section -%}
+
+<div
+  class="section-{{ section.id }} maploc shopify-section-wrapper maploc--height-{{ section_height }} maploc--card-{{ card_position }} maploc--card-radius-{{ card_radius }}{% if show_card_shadow %} maploc--card-shadow{% endif %}"
+  data-section-type="section-map-location"
+  data-section-id="{{ section.id }}"
+  data-map-api-key="{{ section.settings.map_api_key | escape }}"
+  data-map-address="{{ section.settings.map_address | escape }}"
+  data-map-zoom="{{ map_zoom }}"
+  data-map-style="{{ map_style }}"
+  style="
+    {% render 'color-scheme-vars', scheme: cs_scheme %}
+    --maploc-height-desktop: {% case section_height %}{% when 'small' %}320{% when 'large' %}600{% else %}480{% endcase %}px;
+    --maploc-card-bg: var(--cs-background, #fff);
+  "
+  {{ section.shopify_attributes }}
+>
+  {%- if has_api_key and has_address -%}
+    <div class="maploc__map-container">
+      <div class="maploc__map" data-maploc-map aria-label="{{ 'sections.map_location.map_label' | t }}"></div>
+      {%- unless has_api_key -%}
+        {%- if section.settings.static_map_image != blank -%}
+          <div class="maploc__static">
+            {{
+              section.settings.static_map_image
+              | image_url: width: 1440
+              | image_tag:
+                loading: 'lazy',
+                alt: section.settings.map_address,
+                class: 'maploc__static-img',
+                widths: '400,800,1200,1440',
+                sizes: '100vw'
+            }}
+          </div>
+        {%- endif -%}
+      {%- endunless -%}
+    </div>
+  {%- else -%}
+    <div class="maploc__map-container">
+      {%- if section.settings.static_map_image != blank -%}
+        <div class="maploc__static">
+          {{
+            section.settings.static_map_image
+            | image_url: width: 1440
+            | image_tag:
+              loading: 'lazy',
+              alt: section.settings.map_address,
+              class: 'maploc__static-img',
+              widths: '400,800,1200,1440',
+              sizes: '100vw'
+          }}
+        </div>
+      {%- else -%}
+        <div class="maploc__static maploc__static--placeholder">
+          <p>{{ 'sections.map_location.no_map' | t }}</p>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="maploc__card">
+    {%- if card_heading != blank -%}
+      <h3 class="maploc__card-heading">{{ card_heading | escape }}</h3>
+    {%- endif -%}
+
+    {%- if section.settings.show_phone and section.settings.phone_number != blank -%}
+      <div class="maploc__detail">
+        <span class="maploc__detail-label">{{ section.settings.phone_label | default: 'Phone:' | escape }}</span>
+        <a href="tel:{{ section.settings.phone_number | escape }}" class="maploc__detail-value maploc__link">
+          {{- section.settings.phone_number | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_email and section.settings.email_address != blank -%}
+      <div class="maploc__detail">
+        <span class="maploc__detail-label">{{ section.settings.email_label | default: 'Email:' | escape }}</span>
+        <a href="mailto:{{ section.settings.email_address | escape }}" class="maploc__detail-value maploc__link">
+          {{- section.settings.email_address | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_address and section.settings.address != blank -%}
+      <div class="maploc__detail">
+        <span class="maploc__detail-label">{{ section.settings.address_label | default: 'Address:' | escape }}</span>
+        <span class="maploc__detail-value">{{ section.settings.address | escape | newline_to_br }}</span>
+      </div>
+    {%- endif -%}
+
+    {%- if has_hours and hours_rows > 0 -%}
+      <div class="maploc__hours">
+        <span class="maploc__hours-label">{{ section.settings.hours_label | default: 'Open Time:' | escape }}</span>
+        {%- for i in (1..3) -%}
+          {%- liquid
+            if i == 1
+              assign days = section.settings.hours_row_1_days
+              assign time = section.settings.hours_row_1_time
+            elsif i == 2
+              assign days = section.settings.hours_row_2_days
+              assign time = section.settings.hours_row_2_time
+            else
+              assign days = section.settings.hours_row_3_days
+              assign time = section.settings.hours_row_3_time
+            endif
+          -%}
+          {%- if days != blank and time != blank -%}
+            <div class="maploc__hours-row">
+              <span class="maploc__hours-days">{{ days | escape }}</span>
+              <span class="maploc__hours-time">{{ time | escape }}</span>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.map_location.name",
+  "tag": "section",
+  "class": "section-map-location",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.map_location.headers.map"
+    },
+    {
+      "type": "text",
+      "id": "map_api_key",
+      "label": "t:sections.map_location.labels.map_api_key",
+      "info": "t:sections.map_location.info.map_api_key"
+    },
+    {
+      "type": "text",
+      "id": "map_address",
+      "label": "t:sections.map_location.labels.map_address",
+      "info": "t:sections.map_location.info.map_address"
+    },
+    {
+      "type": "range",
+      "id": "map_zoom",
+      "label": "t:sections.map_location.labels.map_zoom",
+      "min": 8,
+      "max": 18,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "map_style",
+      "label": "t:sections.map_location.labels.map_style",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "t:sections.map_location.options.map_style.default" },
+        { "value": "light", "label": "t:sections.map_location.options.map_style.light" },
+        { "value": "dark", "label": "t:sections.map_location.options.map_style.dark" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "t:sections.map_location.labels.section_height",
+      "default": "medium",
+      "options": [
+        { "value": "small", "label": "t:sections.map_location.options.section_height.small" },
+        { "value": "medium", "label": "t:sections.map_location.options.section_height.medium" },
+        { "value": "large", "label": "t:sections.map_location.options.section_height.large" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "static_map_image",
+      "label": "t:sections.map_location.labels.static_map_image",
+      "info": "t:sections.map_location.info.static_map_image"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.map_location.headers.info_card"
+    },
+    {
+      "type": "select",
+      "id": "card_position",
+      "label": "t:sections.map_location.labels.card_position",
+      "default": "right",
+      "options": [
+        { "value": "left", "label": "t:sections.map_location.options.card_position.left" },
+        { "value": "right", "label": "t:sections.map_location.options.card_position.right" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "card_heading",
+      "label": "t:sections.map_location.labels.card_heading",
+      "default": "Information"
+    },
+    {
+      "type": "select",
+      "id": "card_border_radius",
+      "label": "t:sections.map_location.labels.card_border_radius",
+      "default": "medium",
+      "options": [
+        { "value": "none", "label": "t:sections.map_location.options.card_border_radius.none" },
+        { "value": "small", "label": "t:sections.map_location.options.card_border_radius.small" },
+        { "value": "medium", "label": "t:sections.map_location.options.card_border_radius.medium" },
+        { "value": "large", "label": "t:sections.map_location.options.card_border_radius.large" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "card_shadow",
+      "label": "t:sections.map_location.labels.card_shadow",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.map_location.headers.contact_details"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "t:sections.map_location.labels.show_phone",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "phone_label",
+      "label": "t:sections.map_location.labels.phone_label",
+      "default": "Phone:"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "t:sections.map_location.labels.phone_number"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_email",
+      "label": "t:sections.map_location.labels.show_email",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "t:sections.map_location.labels.email_label",
+      "default": "Email:"
+    },
+    {
+      "type": "text",
+      "id": "email_address",
+      "label": "t:sections.map_location.labels.email_address"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_address",
+      "label": "t:sections.map_location.labels.show_address",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "address_label",
+      "label": "t:sections.map_location.labels.address_label",
+      "default": "Address:"
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "t:sections.map_location.labels.address"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.map_location.headers.opening_hours"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hours",
+      "label": "t:sections.map_location.labels.show_hours",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "hours_label",
+      "label": "t:sections.map_location.labels.hours_label",
+      "default": "Open Time:"
+    },
+    {
+      "type": "text",
+      "id": "hours_row_1_days",
+      "label": "t:sections.map_location.labels.hours_row_1_days"
+    },
+    {
+      "type": "text",
+      "id": "hours_row_1_time",
+      "label": "t:sections.map_location.labels.hours_row_1_time"
+    },
+    {
+      "type": "text",
+      "id": "hours_row_2_days",
+      "label": "t:sections.map_location.labels.hours_row_2_days"
+    },
+    {
+      "type": "text",
+      "id": "hours_row_2_time",
+      "label": "t:sections.map_location.labels.hours_row_2_time"
+    },
+    {
+      "type": "text",
+      "id": "hours_row_3_days",
+      "label": "t:sections.map_location.labels.hours_row_3_days"
+    },
+    {
+      "type": "text",
+      "id": "hours_row_3_time",
+      "label": "t:sections.map_location.labels.hours_row_3_time"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.map_location.headers.colour"
+    },
+    {
+      "type": "select",
+      "id": "section_color_scheme_mode",
+      "label": "t:sections.map_location.labels.section_color_scheme_mode",
+      "options": [
+        { "value": "default", "label": "t:sections.map_location.options.section_color_scheme_mode.default" },
+        { "value": "custom", "label": "t:sections.map_location.options.section_color_scheme_mode.custom" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.map_location.labels.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ section.settings.section_color_scheme_mode == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.map_location.headers.section"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.map_location.headers.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.map_location.labels.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.map_location.labels.padding_right",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.map_location.labels.padding_bottom",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.map_location.labels.padding_left",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.map_location.headers.margin"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.map_location.labels.margin_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.map_location.labels.margin_bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.map_location.headers.background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.map_location.labels.background_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.map_location.labels.background_color_info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.map_location.headers.border"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.map_location.labels.border_width",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "t:sections.map_location.labels.border_style",
+      "options": [
+        { "value": "none", "label": "t:sections.map_location.options.border_style.none" },
+        { "value": "solid", "label": "t:sections.map_location.options.border_style.solid" },
+        { "value": "dashed", "label": "t:sections.map_location.options.border_style.dashed" },
+        { "value": "dotted", "label": "t:sections.map_location.options.border_style.dotted" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "t:sections.map_location.labels.border_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.map_location.labels.border_color_info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.map_location.headers.radius"
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_left",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.map_location.labels.radius_tl",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_right",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.map_location.labels.radius_tr",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_right",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.map_location.labels.radius_br",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_left",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.map_location.labels.radius_bl",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.map_location.presets.name"
+    }
+  ]
+}
+{% endschema %}
