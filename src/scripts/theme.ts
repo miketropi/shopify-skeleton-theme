@@ -29,6 +29,7 @@ import { registerHeaderTopBarSection } from './header-top-bar'
 import { registerFooterSection } from './footer'
 import { registerSectionPageHeader } from './sections/section-page-header'
 import { registerSectionMapLocation } from './sections/section-map-location'
+import { registerSectionFaq } from './sections/section-faq'
 import { registerMainBlogSection } from './main-blog'
 import { registerMainArticleSection } from './main-article'
 import { bindTcardHoverVideos } from './tcard-hover-video'
@@ -70,6 +71,7 @@ registerSectionRoutineGuide()
 registerSectionTrustBar()
 registerSectionPageHeader()
 registerSectionMapLocation()
+registerSectionFaq()
 registerSectionInstagramFeed()
 registerSectionProductImagesStory()
 registerCollectionGridSection()

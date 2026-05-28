@@ -1,0 +1,548 @@
+@use '../base/breakpoints' as *;
+
+// ────────────────────────────────────────────────────────────
+// FAQ section — Two-column: sticky form + accordion groups
+// ────────────────────────────────────────────────────────────
+
+$_r: 0.5rem;
+$_r-sm: 0.375rem;
+$_ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+.faq {
+  box-sizing: border-box;
+  color: var(--cs-text, inherit);
+
+  // ── CSS vars ──
+  --faq-sticky-offset: 80px;
+  --faq-form-radius: 16px;
+  --faq-form-bg: var(--cs-background, #fff);
+  --faq-answer-color: var(--cs-text-secondary, color-mix(in srgb, var(--cs-text) 65%, var(--cs-background)));
+  --faq-divider-color: var(--cs-border, #e0ddd8);
+}
+
+.faq__inner {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.faq__empty {
+  margin: 0;
+  padding: 2rem 1.25rem;
+  border: 1px dashed color-mix(in srgb, var(--cs-border, #e0ddd8) 55%, transparent);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--cs-background, #fff) 97%, var(--cs-border, #e8e6e1) 3%);
+  font-family: var(--cs-font-body, inherit);
+  font-size: var(--font-size-sm, 0.875rem);
+  line-height: var(--line-height-normal, 1.55);
+  text-align: center;
+  color: var(--cs-text-secondary, var(--cs-text));
+}
+
+// ── Two-column grid ────────────────────────────────────────
+
+.faq__columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+
+  @include mq-up('lg') {
+    gap: 3rem;
+  }
+}
+
+// Layout modifiers at lg+
+@include mq-up('lg') {
+  .faq--layout-30-70 .faq__columns {
+    grid-template-columns: 30% 1fr;
+  }
+
+  .faq--layout-40-60 .faq__columns {
+    grid-template-columns: 40% 1fr;
+  }
+
+  .faq--no-form .faq__columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Form column ────────────────────────────────────────────
+
+.faq__form-col {
+  // Sticky: only at lg+ and when not prefers-reduced-motion
+  @include mq-up('lg') {
+    .faq--form-sticky & {
+      position: sticky;
+      top: var(--faq-sticky-offset, 80px);
+      align-self: flex-start;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__form-col {
+    position: static;
+  }
+}
+
+// ── Form card ───────────────────────────────────────────────
+
+.faq__form-card {
+  padding: 1.75rem;
+  border-radius: var(--faq-form-radius, 16px);
+  background: var(--faq-form-bg, var(--cs-background, #fff));
+  border: 1px solid color-mix(in srgb, var(--cs-border, #e0ddd8) 45%, transparent);
+
+  @include mq-up('md') {
+    padding: 2rem;
+  }
+
+  @include mq-up('lg') {
+    padding: 2.25rem;
+  }
+}
+
+.faq__form-heading {
+  margin: 0 0 0.5rem 0;
+  font-family: var(--cs-font-heading, inherit);
+  font-size: var(--font-size-lg, 1.25rem);
+  font-weight: 600;
+  line-height: var(--line-height-tight, 1.2);
+  color: var(--cs-heading, inherit);
+}
+
+.faq__form-subtext {
+  margin: 0 0 1.25rem 0;
+  font-family: var(--cs-font-body, inherit);
+  font-size: var(--font-size-sm, 0.875rem);
+  line-height: var(--line-height-normal, 1.55);
+  color: var(--cs-text-secondary, color-mix(in srgb, var(--cs-text) 65%, var(--cs-background)));
+}
+
+// ── Form status ─────────────────────────────────────────────
+
+.faq__form-status {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: $_r;
+  font-size: var(--font-size-sm, 0.875rem);
+
+  &--success {
+    background: color-mix(in srgb, var(--cs-accent, #007aff) 6%, var(--cs-background));
+    border: 1px solid color-mix(in srgb, var(--cs-accent, #007aff) 18%, var(--cs-background));
+  }
+
+  &--error {
+    background: color-mix(in srgb, #c53030 5%, var(--cs-background));
+    border: 1px solid color-mix(in srgb, #c53030 22%, var(--cs-background));
+  }
+}
+
+.faq__form-status-text,
+.faq__form-status-heading {
+  margin: 0;
+  font-size: var(--font-size-sm, 0.8125rem);
+  line-height: 1.45;
+  font-weight: 600;
+  color: var(--cs-text);
+}
+
+.faq__form-status-list {
+  margin: 0.35rem 0 0;
+  padding-left: 1rem;
+  font-size: var(--font-size-xs, 0.8125rem);
+  line-height: 1.45;
+  color: color-mix(in srgb, #c53030 50%, var(--cs-text));
+
+  li + li {
+    margin-top: 0.25em;
+  }
+}
+
+// ── Form fields ─────────────────────────────────────────────
+
+.faq__form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.faq__form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.faq__form-label {
+  font-size: var(--font-size-base, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--cs-text-secondary, color-mix(in srgb, var(--cs-text) 55%, var(--cs-background)));
+}
+
+.faq__form-required {
+  color: color-mix(in srgb, #c53030 60%, var(--cs-text));
+  margin-left: 0.15em;
+}
+
+.faq__form-input,
+.faq__form-select,
+.faq__form-textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font-size: var(--font-size-base, 0.9375rem);
+  font-family: inherit;
+  line-height: 1.45;
+  color: var(--cs-text);
+  background: var(--cs-background, #fff);
+  border: 1px solid color-mix(in srgb, var(--cs-text) 10%, var(--cs-background, #fff));
+  border-radius: $_r-sm;
+  outline: none;
+  transition:
+    border-color 0.2s $_ease,
+    box-shadow 0.2s $_ease;
+  -webkit-appearance: none;
+  appearance: none;
+
+  @include mq-up('sm') {
+    padding: 0.7rem 0.85rem;
+  }
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--cs-text) 16%, var(--cs-background, #fff));
+  }
+
+  &:focus {
+    border-color: var(--cs-accent, #007aff);
+    box-shadow: 0 0 0 2.5px color-mix(in srgb, var(--cs-accent, #007aff) 14%, var(--cs-background, #fff));
+  }
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--cs-text) 35%, var(--cs-background, #fff));
+    opacity: 1;
+  }
+
+  &--error {
+    border-color: color-mix(in srgb, #c53030 45%, var(--cs-background, #fff));
+  }
+}
+
+.faq__form-select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23666' d='M6 5.657L1.343 1 .657 1.686 6 7.029l5.343-5.343L10.657 1z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+
+.faq__form-textarea {
+  resize: vertical;
+  min-height: 5rem;
+
+  @include mq-up('sm') {
+    min-height: 6rem;
+  }
+}
+
+.faq__form-field-error {
+  margin: 0;
+  padding-left: 0.15rem;
+  font-size: var(--font-size-xs, 0.75rem);
+  line-height: 1.4;
+  color: color-mix(in srgb, #c53030 65%, var(--cs-text));
+}
+
+// ── Form submit ─────────────────────────────────────────────
+
+.faq__form-actions {
+  margin-top: 0.5rem;
+}
+
+.faq__form-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35em;
+  width: 100%;
+  min-height: 2.75rem;
+  padding-inline: 1.5rem;
+  font-size: var(--font-size-sm, 0.8125rem);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: $_r;
+  transition:
+    background 0.2s $_ease,
+    border-color 0.2s $_ease,
+    opacity 0.2s $_ease;
+
+  @include mq-up('sm') {
+    min-height: 2.85rem;
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+
+  &:hover {
+    opacity: 0.92;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2.5px var(--cs-background, #fff), 0 0 0 4px var(--cs-btn-primary-bg, #1a1a1a);
+  }
+
+  &:active {
+    transform: scale(0.985);
+  }
+
+  &--filled {
+    color: var(--cs-btn-primary-text, #fff);
+    background: var(--cs-btn-primary-bg, #1a1a1a);
+    border: 1px solid var(--cs-btn-primary-border, var(--cs-btn-primary-bg, #1a1a1a));
+  }
+
+  &--outlined {
+    color: var(--cs-btn-secondary-text);
+    background: var(--cs-btn-secondary-bg);
+    border: 1px solid var(--cs-btn-secondary-border);
+  }
+}
+
+// ── Accordion column ───────────────────────────────────────
+
+.faq__accordion-col {
+  min-width: 0;
+}
+
+// ── FAQ group ──────────────────────────────────────────────
+
+.faq__group {
+  + .faq__group {
+    margin-top: 2.5rem;
+  }
+}
+
+.faq__group-heading {
+  margin: 0 0 1rem 0;
+  font-family: var(--cs-font-heading, inherit);
+  font-size: var(--font-size-xl, 1.5rem);
+  font-weight: 600;
+  line-height: var(--line-height-tight, 1.2);
+  color: var(--cs-heading, inherit);
+}
+
+// ── Accordion items ────────────────────────────────────────
+
+.faq__items {
+  margin: 0;
+}
+
+.faq__item {
+  + .faq__item {
+    margin-top: 0;
+
+    .faq--dividers & {
+      border-top: 1px solid var(--faq-divider-color, var(--cs-border, #e0ddd8));
+    }
+  }
+
+  &.faq__item--open {
+    .faq__question {
+      padding-bottom: 0.25rem;
+    }
+
+    .faq__toggle-icon::after {
+      transform: rotate(180deg);
+    }
+
+    .faq--icon-plus & .faq__toggle-icon::after {
+      content: '−';
+      transform: none;
+    }
+  }
+}
+
+// ── Animation wrapper ──────────────────────────────────────
+// Uses CSS grid-template-rows: 0fr → 1fr for smooth
+// expand/collapse. JS toggles `.faq__item--open` to trigger
+// the animation. JS also handles single-open enforcement.
+
+.faq__answer-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+
+  .faq__item--open > & {
+    grid-template-rows: 1fr;
+    padding: 0.25rem 0 1.25rem 0;
+  }
+}
+
+.faq__answer {
+  overflow: hidden;
+  min-height: 0;
+}
+
+// ── Question (button) ──────────────────────────────────────
+
+.faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem 0;
+  cursor: pointer;
+  user-select: none;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+
+  &:hover {
+    .faq__question-text {
+      color: var(--cs-accent, currentColor);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cs-accent, #007aff);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+.faq__question-text {
+  font-family: var(--cs-font-body, inherit);
+  font-weight: 600;
+  line-height: var(--line-height-normal, 1.55);
+  color: var(--cs-heading, inherit);
+  transition: color 0.15s $_ease;
+}
+
+// Question size modifiers
+.faq--question-small .faq__question-text {
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+.faq--question-medium .faq__question-text {
+  font-size: var(--font-size-base, 1rem);
+}
+
+.faq--question-large .faq__question-text {
+  font-size: var(--font-size-lg, 1.25rem);
+}
+
+// ── Toggle icon ────────────────────────────────────────────
+
+.faq__toggle-icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: currentColor;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z'/%3E%3C/svg%3E");
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z'/%3E%3C/svg%3E");
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    color: var(--cs-text-secondary, color-mix(in srgb, var(--cs-text) 50%, var(--cs-background)));
+    transition: transform 0.25s $_ease;
+  }
+}
+
+// Plus/Minus icon style
+.faq--icon-plus .faq__toggle-icon {
+  &::after {
+    content: '+';
+    mask: none;
+    -webkit-mask: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--cs-text-secondary, color-mix(in srgb, var(--cs-text) 50%, var(--cs-background)));
+    transition: color 0.15s $_ease;
+  }
+}
+
+// ── Answer ─────────────────────────────────────────────────
+// Padding is applied by the open parent so that when the grid
+// collapses (grid-template-rows: 0fr) no padding leaks through.
+
+.faq__answer {
+  font-family: var(--cs-font-body, inherit);
+  font-size: var(--font-size-base, 1rem);
+  line-height: var(--line-height-normal, 1.55);
+  color: var(--faq-answer-color, var(--cs-text-secondary, inherit));
+
+  > *:first-child {
+    margin-top: 0;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  a {
+    color: var(--cs-accent, currentColor);
+    text-decoration: underline;
+  }
+
+  ul,
+  ol {
+    padding-inline-start: 1.25rem;
+    margin: 0.5rem 0;
+  }
+}
+
+// ── Full width override ────────────────────────────────────
+
+.faq--full-width {
+  // section-content-width on inner constrains content;
+  // background (via section-styles) spans edge to edge
+}
+
+// ── Reduced motion ─────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__toggle-icon::after {
+    transition: none;
+  }
+
+  .faq__answer-wrapper {
+    transition: none;
+    display: block;
+
+    .faq__item--open > & {
+      height: auto;
+    }
+
+    .faq__item:not(.faq__item--open) > & {
+      height: 0;
+    }
+  }
+
+  .faq__form-input,
+  .faq__form-select,
+  .faq__form-textarea,
+  .faq__form-submit {
+    transition: none;
+  }
+
+  .faq__question-text {
+    transition: none;
+  }
+}

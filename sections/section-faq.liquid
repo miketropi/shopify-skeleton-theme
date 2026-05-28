@@ -1,0 +1,832 @@
+{%- comment -%}
+  sections/section-faq.liquid
+  ────────────────────────────────────────────────────────────────────────────
+  Two-column FAQ section: optional sticky contact form on the left, FAQ
+  accordion groups on the right. Uses native <details>/<summary> for
+  accordion; JS for single-open behavior only. Form uses Shopify's native
+  {% form 'contact' %}.
+  ────────────────────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+{%- liquid
+  assign cs_scheme = settings.global_color_scheme
+  if cs_scheme == blank or cs_scheme.settings == blank
+    assign cs_scheme = settings.color_schemes['scheme-6']
+  endif
+
+  assign cssm = section.settings.section_color_scheme_mode
+  if cssm == 'custom'
+    assign picked_cs = section.settings.color_scheme
+    if picked_cs != blank and picked_cs.settings != blank
+      assign cs_scheme = picked_cs
+    endif
+  elsif cssm == 'default'
+  else
+    assign picked_cs = section.settings.color_scheme
+    if picked_cs != blank and picked_cs.settings != blank
+      assign cs_scheme = picked_cs
+    endif
+  endif
+
+  assign show_form = section.settings.show_form
+  assign column_layout = section.settings.column_layout | default: '30-70'
+  assign form_sticky = section.settings.form_sticky
+  assign sticky_offset = section.settings.form_sticky_offset | default: 80
+
+  assign form_bg = section.settings.form_background_color
+  assign form_card_radius_key = section.settings.form_card_radius | default: 'medium'
+  assign form_card_radius_px = 16
+  case form_card_radius_key
+    when 'none'
+      assign form_card_radius_px = 0
+    when 'small'
+      assign form_card_radius_px = 8
+    when 'large'
+      assign form_card_radius_px = 24
+  endcase
+
+  assign show_name = section.settings.show_name_field
+  assign show_topic = section.settings.show_topic_dropdown
+  assign show_message = section.settings.show_message_field
+
+  assign btn_style = section.settings.submit_button_style | default: 'filled'
+
+  assign accordion_behavior = section.settings.accordion_behavior | default: 'single'
+  assign first_item_open = section.settings.first_item_open
+  assign show_divider = section.settings.show_divider
+  assign icon_style = section.settings.icon_style | default: 'chevron'
+  assign question_size = section.settings.question_size | default: 'medium'
+  assign answer_color = section.settings.answer_color
+
+  assign topic_options = section.settings.topic_options
+  assign topics_array = topic_options | split: ','
+
+  assign form_id = 'FAQForm-' | append: section.id
+  assign block_count = section.blocks.size
+-%}
+
+{%- capture cs_scheme_vars -%}
+  {%- render 'color-scheme-vars', scheme: cs_scheme, inline_only: true -%}
+{%- endcapture -%}
+
+{%- render 'section-styles', section: section -%}
+
+<div
+  class="section-{{ section.id }} faq shopify-section-wrapper faq--layout-{{ column_layout }} faq--question-{{ question_size }}{% if show_divider %} faq--dividers{% endif %}{% if icon_style != 'chevron' %} faq--icon-{{ icon_style }}{% endif %}{% if form_sticky and show_form %} faq--form-sticky{% endif %}{% unless show_form %} faq--no-form{% endunless %}{% if section.settings.full_width %} full-width faq--full-width{% endif %}"
+  data-section-type="section-faq"
+  data-section-id="{{ section.id }}"
+  data-faq-accordion="{{ accordion_behavior }}"
+  style="
+    {{ cs_scheme_vars }}
+    --faq-sticky-offset: {{ sticky_offset }}px;
+    --faq-form-radius: {{ form_card_radius_px }}px;
+    --faq-form-layout: {{ column_layout }};
+    {%- if form_bg != blank and form_bg != 'rgba(0,0,0,0)' and form_bg != 'rgba(0, 0, 0, 0)' -%}
+      --faq-form-bg: {{ form_bg }};
+    {%- endif -%}
+    {%- if answer_color != blank and answer_color != 'rgba(0,0,0,0)' and answer_color != 'rgba(0, 0, 0, 0)' -%}
+      --faq-answer-color: {{ answer_color }};
+    {%- endif -%}
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="faq__inner{% if section.settings.full_width %} section-content-width{% endif %}">
+    {%- if block_count == 0 -%}
+      <p class="faq__empty">{{ 'sections.faq.empty_state' | t }}</p>
+    {%- else -%}
+      <div class="faq__columns">
+        {%- if show_form -%}
+          <div class="faq__form-col">
+            <div class="faq__form-card">
+              {%- if section.settings.form_heading != blank -%}
+                <h2 class="faq__form-heading">{{ section.settings.form_heading | escape }}</h2>
+              {%- endif -%}
+
+              {%- if section.settings.form_subtext != blank -%}
+                <p class="faq__form-subtext">{{ section.settings.form_subtext | escape }}</p>
+              {%- endif -%}
+
+              {%- form 'contact', id: form_id, class: 'faq__form' -%}
+                {%- if form.posted_successfully? -%}
+                  <div
+                    class="faq__form-status faq__form-status--success"
+                    role="status"
+                    aria-live="polite"
+                    tabindex="-1"
+                  >
+                    <p class="faq__form-status-text">
+                      {%- if section.settings.success_message != blank -%}
+                        {{ section.settings.success_message | escape }}
+                      {%- else -%}
+                        {{ 'contact.form.post_success' | t }}
+                      {%- endif -%}
+                    </p>
+                  </div>
+                {%- endif -%}
+
+                {%- if form.errors -%}
+                  <div class="faq__form-status faq__form-status--error" role="alert" tabindex="-1">
+                    <p class="faq__form-status-heading">{{ 'contact.form.error_heading' | t }}</p>
+                    <ul class="faq__form-status-list" role="list">
+                      {%- for field in form.errors -%}
+                        <li>
+                          {%- if field == 'form' -%}
+                            {{ form.errors.messages[field] }}
+                          {%- else -%}
+                            {{ form.errors.translated_fields[field] | capitalize }}
+                            {{ form.errors.messages[field] }}
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                {%- endif -%}
+
+                <div class="faq__form-fields">
+                  {%- if show_name -%}
+                    <div class="faq__form-field">
+                      <label class="faq__form-label" for="{{ form_id }}-name">
+                        {{- section.settings.name_label | default: 'Name' | escape -}}
+                      </label>
+                      <input
+                        type="text"
+                        name="contact[name]"
+                        id="{{ form_id }}-name"
+                        class="faq__form-input"
+                        value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+                        autocomplete="name"
+                        required
+                      >
+                    </div>
+                  {%- endif -%}
+
+                  <div class="faq__form-field">
+                    <label class="faq__form-label" for="{{ form_id }}-email">
+                      {{- 'contact.form.email' | t -}}
+                      <span class="faq__form-required" aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      name="contact[email]"
+                      id="{{ form_id }}-email"
+                      class="faq__form-input{% if form.errors contains 'email' %} faq__form-input--error{% endif %}"
+                      value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+                      autocomplete="email"
+                      spellcheck="false"
+                      autocapitalize="off"
+                      aria-required="true"
+                      {% if form.errors contains 'email' %}
+                        aria-invalid="true"
+                        aria-describedby="{{ form_id }}-email-error"
+                      {% endif %}
+                      required
+                    >
+                    {%- if form.errors contains 'email' -%}
+                      <p class="faq__form-field-error" id="{{ form_id }}-email-error">
+                        {{ form.errors.translated_fields.email | capitalize }}
+                        {{ form.errors.messages.email }}
+                      </p>
+                    {%- endif -%}
+                  </div>
+
+                  {%- if show_topic and topics_array.size > 0 -%}
+                    <div class="faq__form-field">
+                      <label class="faq__form-label" for="{{ form_id }}-topic">
+                        {{- section.settings.topic_label | default: 'How can we help you?' | escape -}}
+                      </label>
+                      <select
+                        name="contact[body]"
+                        id="{{ form_id }}-topic"
+                        class="faq__form-select"
+                      >
+                        <option value="" disabled selected>{{ 'sections.faq.form_select_topic' | t }}</option>
+                        {%- for topic in topics_array -%}
+                          {%- assign trimmed = topic | strip -%}
+                          {%- if trimmed != blank -%}
+                            <option value="[{{ trimmed | escape }}]">{{ trimmed | escape }}</option>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </select>
+                    </div>
+                  {%- endif -%}
+
+                  {%- if show_message -%}
+                    <div class="faq__form-field">
+                      <label class="faq__form-label" for="{{ form_id }}-message">
+                        {{- section.settings.message_label | default: 'Message' | escape -}}
+                      </label>
+                      <textarea
+                        name="contact[body]"
+                        id="{{ form_id }}-message"
+                        class="faq__form-textarea"
+                        rows="5"
+                        placeholder="{{ section.settings.message_placeholder | default: 'Your message...' | escape }}"
+                        required
+                      >{{- form.body -}}</textarea>
+                    </div>
+                  {%- endif -%}
+
+                  <div class="faq__form-actions">
+                    <button type="submit" class="faq__form-submit faq__form-submit--{{ btn_style }}">
+                      {{- section.settings.submit_label | default: 'Send Request' | escape -}}
+                    </button>
+                  </div>
+                </div>
+              {%- endform -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        <div class="faq__accordion-col">
+          {%- assign global_first = first_item_open -%}
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign group_heading = block.settings.group_heading
+            -%}
+
+            <div
+              class="faq__group"
+              {{ block.shopify_attributes }}
+            >
+              {%- if group_heading != blank -%}
+                <h3 class="faq__group-heading">{{ group_heading | escape }}</h3>
+              {%- endif -%}
+
+              <div class="faq__items">
+                {%- for i in (1..8) -%}
+                  {%- capture q_key -%}q{{ i }}{%- endcapture -%}
+                  {%- capture a_key -%}a{{ i }}{%- endcapture -%}
+                  {%- assign q_val = block.settings[q_key] -%}
+                  {%- assign a_val = block.settings[a_key] -%}
+
+                  {%- if q_val != blank and a_val != blank -%}
+                    <div
+                      class="faq__item{% if global_first and forloop.first and forloop.parentloop.first %} faq__item--open{% endif %}"
+                    >
+                      <button
+                        class="faq__question"
+                        type="button"
+                        aria-expanded="{% if global_first and forloop.first and forloop.parentloop.first %}true{% else %}false{% endif %}"
+                      >
+                        <span class="faq__question-text">{{ q_val | escape }}</span>
+                        <span class="faq__toggle-icon" aria-hidden="true"></span>
+                      </button>
+                      <div class="faq__answer-wrapper">
+                        <div class="faq__answer">
+                          {{ a_val }}
+                        </div>
+                      </div>
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.faq.name",
+  "tag": "section",
+  "class": "section-faq",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.faq.headers.layout"
+    },
+    {
+      "type": "select",
+      "id": "column_layout",
+      "label": "t:sections.faq.labels.column_layout",
+      "default": "30-70",
+      "options": [
+        { "value": "30-70", "label": "t:sections.faq.options.column_layout.narrow_form" },
+        { "value": "40-60", "label": "t:sections.faq.options.column_layout.wide_form" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.faq.labels.full_width",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.faq.headers.form_column"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_form",
+      "label": "t:sections.faq.labels.show_form",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "form_sticky",
+      "label": "t:sections.faq.labels.form_sticky",
+      "default": true,
+      "info": "t:sections.faq.info.form_sticky"
+    },
+    {
+      "type": "range",
+      "id": "form_sticky_offset",
+      "label": "t:sections.faq.labels.form_sticky_offset",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "t:sections.faq.labels.form_heading",
+      "default": "Ask Your Question"
+    },
+    {
+      "type": "text",
+      "id": "form_subtext",
+      "label": "t:sections.faq.labels.form_subtext",
+      "default": "Ask Anything. We're Here to Help"
+    },
+    {
+      "type": "color",
+      "id": "form_background_color",
+      "label": "t:sections.faq.labels.form_background_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.faq.info.form_background_color"
+    },
+    {
+      "type": "select",
+      "id": "form_card_radius",
+      "label": "t:sections.faq.labels.form_card_radius",
+      "default": "medium",
+      "options": [
+        { "value": "none", "label": "t:sections.faq.options.radius.none" },
+        { "value": "small", "label": "t:sections.faq.options.radius.small" },
+        { "value": "medium", "label": "t:sections.faq.options.radius.medium" },
+        { "value": "large", "label": "t:sections.faq.options.radius.large" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.faq.headers.form_fields"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_name_field",
+      "label": "t:sections.faq.labels.show_name_field",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "name_label",
+      "label": "t:sections.faq.labels.name_label",
+      "default": "Name"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_topic_dropdown",
+      "label": "t:sections.faq.labels.show_topic_dropdown",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "topic_label",
+      "label": "t:sections.faq.labels.topic_label",
+      "default": "How can we help you?"
+    },
+    {
+      "type": "textarea",
+      "id": "topic_options",
+      "label": "t:sections.faq.labels.topic_options",
+      "default": "Exchanges & Returns,Order Status,Product Questions,Other",
+      "info": "t:sections.faq.info.topic_options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_message_field",
+      "label": "t:sections.faq.labels.show_message_field",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "message_label",
+      "label": "t:sections.faq.labels.message_label",
+      "default": "Message"
+    },
+    {
+      "type": "text",
+      "id": "message_placeholder",
+      "label": "t:sections.faq.labels.message_placeholder",
+      "default": "Your message..."
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "t:sections.faq.labels.submit_label",
+      "default": "Send Request"
+    },
+    {
+      "type": "select",
+      "id": "submit_button_style",
+      "label": "t:sections.faq.labels.submit_button_style",
+      "default": "filled",
+      "options": [
+        { "value": "filled", "label": "t:sections.faq.options.button_style.filled" },
+        { "value": "outlined", "label": "t:sections.faq.options.button_style.outlined" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "t:sections.faq.labels.success_message",
+      "default": "Thank you! We'll get back to you shortly."
+    },
+    {
+      "type": "header",
+      "content": "t:sections.faq.headers.faq_column"
+    },
+    {
+      "type": "select",
+      "id": "accordion_behavior",
+      "label": "t:sections.faq.labels.accordion_behavior",
+      "default": "single",
+      "options": [
+        { "value": "single", "label": "t:sections.faq.options.accordion_behavior.single" },
+        { "value": "multiple", "label": "t:sections.faq.options.accordion_behavior.multiple" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "first_item_open",
+      "label": "t:sections.faq.labels.first_item_open",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.faq.labels.show_divider",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "icon_style",
+      "label": "t:sections.faq.labels.icon_style",
+      "default": "chevron",
+      "options": [
+        { "value": "chevron", "label": "t:sections.faq.options.icon_style.chevron" },
+        { "value": "plus", "label": "t:sections.faq.options.icon_style.plus" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "question_size",
+      "label": "t:sections.faq.labels.question_size",
+      "default": "medium",
+      "options": [
+        { "value": "small", "label": "t:sections.faq.options.question_size.small" },
+        { "value": "medium", "label": "t:sections.faq.options.question_size.medium" },
+        { "value": "large", "label": "t:sections.faq.options.question_size.large" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "t:sections.faq.labels.answer_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.faq.info.answer_color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.faq.headers.colour"
+    },
+    {
+      "type": "select",
+      "id": "section_color_scheme_mode",
+      "label": "t:sections.faq.labels.section_color_scheme_mode",
+      "options": [
+        { "value": "default", "label": "t:sections.faq.options.color_scheme_mode.default" },
+        { "value": "custom", "label": "t:sections.faq.options.color_scheme_mode.custom" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.faq.labels.color_scheme",
+      "default": "scheme-6",
+      "visible_if": "{{ section.settings.section_color_scheme_mode == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.faq.headers.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.faq.labels.padding_top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.faq.labels.padding_right",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.faq.labels.padding_bottom",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.faq.labels.padding_left",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.faq.headers.margin"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.faq.labels.margin_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.faq.labels.margin_bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.faq.headers.background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.faq.labels.background_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.faq.info.background_color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.faq.headers.border"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.faq.labels.border_width",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "t:sections.faq.labels.border_style",
+      "options": [
+        { "value": "none", "label": "t:sections.faq.options.border_style.none" },
+        { "value": "solid", "label": "t:sections.faq.options.border_style.solid" },
+        { "value": "dashed", "label": "t:sections.faq.options.border_style.dashed" },
+        { "value": "dotted", "label": "t:sections.faq.options.border_style.dotted" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "t:sections.faq.labels.border_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.faq.info.border_color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.faq.headers.radius"
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.faq.labels.radius_tl",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.faq.labels.radius_tr",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.faq.labels.radius_br",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.faq.labels.radius_bl",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_group",
+      "name": "t:sections.faq.blocks.faq_group.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "group_heading",
+          "label": "t:sections.faq.blocks.faq_group.labels.group_heading",
+          "info": "t:sections.faq.blocks.faq_group.info.group_heading"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.faq.blocks.faq_group.headers.item_1"
+        },
+        {
+          "type": "text",
+          "id": "q1",
+          "label": "t:sections.faq.blocks.faq_group.labels.question"
+        },
+        {
+          "type": "richtext",
+          "id": "a1",
+          "label": "t:sections.faq.blocks.faq_group.labels.answer"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.faq.blocks.faq_group.headers.item_2"
+        },
+        {
+          "type": "text",
+          "id": "q2",
+          "label": "t:sections.faq.blocks.faq_group.labels.question"
+        },
+        {
+          "type": "richtext",
+          "id": "a2",
+          "label": "t:sections.faq.blocks.faq_group.labels.answer"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.faq.blocks.faq_group.headers.item_3"
+        },
+        {
+          "type": "text",
+          "id": "q3",
+          "label": "t:sections.faq.blocks.faq_group.labels.question"
+        },
+        {
+          "type": "richtext",
+          "id": "a3",
+          "label": "t:sections.faq.blocks.faq_group.labels.answer"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.faq.blocks.faq_group.headers.item_4"
+        },
+        {
+          "type": "text",
+          "id": "q4",
+          "label": "t:sections.faq.blocks.faq_group.labels.question"
+        },
+        {
+          "type": "richtext",
+          "id": "a4",
+          "label": "t:sections.faq.blocks.faq_group.labels.answer"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.faq.blocks.faq_group.headers.item_5"
+        },
+        {
+          "type": "text",
+          "id": "q5",
+          "label": "t:sections.faq.blocks.faq_group.labels.question"
+        },
+        {
+          "type": "richtext",
+          "id": "a5",
+          "label": "t:sections.faq.blocks.faq_group.labels.answer"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.faq.blocks.faq_group.headers.item_6"
+        },
+        {
+          "type": "text",
+          "id": "q6",
+          "label": "t:sections.faq.blocks.faq_group.labels.question"
+        },
+        {
+          "type": "richtext",
+          "id": "a6",
+          "label": "t:sections.faq.blocks.faq_group.labels.answer"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.faq.blocks.faq_group.headers.item_7"
+        },
+        {
+          "type": "text",
+          "id": "q7",
+          "label": "t:sections.faq.blocks.faq_group.labels.question"
+        },
+        {
+          "type": "richtext",
+          "id": "a7",
+          "label": "t:sections.faq.blocks.faq_group.labels.answer"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.faq.blocks.faq_group.headers.item_8"
+        },
+        {
+          "type": "text",
+          "id": "q8",
+          "label": "t:sections.faq.blocks.faq_group.labels.question"
+        },
+        {
+          "type": "richtext",
+          "id": "a8",
+          "label": "t:sections.faq.blocks.faq_group.labels.answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.faq.presets.name",
+      "blocks": [
+        {
+          "type": "faq_group",
+          "settings": {
+            "group_heading": "Skincare & Orders",
+            "q1": "How do I find my shade?",
+            "a1": "<p>Use our Shade Finder tool on any product page. Answer a few quick questions and we'll recommend your perfect match based on your skin tone, undertone, and coverage preferences.</p>",
+            "q2": "What is your return policy?",
+            "a2": "<p>We accept returns within 30 days of purchase. Items must be unused and in original packaging. Contact our support team to initiate a return and receive a prepaid shipping label.</p>",
+            "q3": "How long does shipping take?",
+            "a3": "<p>Standard shipping takes 5-7 business days within the continental US. Express shipping (2-3 business days) is available at checkout. International orders typically arrive within 10-14 business days.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -487,6 +487,13 @@
       "region_label": "Trust highlights",
       "empty_state": "Add trust item blocks to show this section."
     },
+    "columns": {
+      "empty_state": "Add column blocks to show this section."
+    },
+    "faq": {
+      "empty_state": "Add FAQ group blocks to show this section.",
+      "form_select_topic": "Select a topic"
+    },
     "instagram_feed": {
       "carousel": "Carousel",
       "region_label": "Instagram feed",
