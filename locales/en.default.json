@@ -528,6 +528,45 @@
       "slide_n_of_m": "Slide {{ n }} of {{ m }}",
       "slide_fraction_aria": "Slide __CURRENT__ of __TOTAL__",
       "lightbox_dialog": "Story images"
+    },
+    "our_team_2": {
+      "carousel": "Carousel",
+      "region_label": "Team members",
+      "slide_number": "Slide {{ index }}",
+      "previous": "Previous members",
+      "next": "Next members",
+      "empty_state": "Add team member blocks to show this section.",
+      "facebook": "{{ name }} on Facebook",
+      "instagram": "{{ name }} on Instagram",
+      "x": "{{ name }} on X",
+      "pinterest": "{{ name }} on Pinterest",
+      "linkedin": "{{ name }} on LinkedIn",
+      "social_links_for": "Social links for {{ name }}"
+    },
+    "our_team": {
+      "carousel": "Carousel",
+      "region_label": "Team members",
+      "slide_number": "Slide {{ index }}",
+      "previous": "Previous members",
+      "next": "Next members",
+      "pagination": "Carousel pagination",
+      "empty_state": "Add team member blocks to show this section.",
+      "email": "Email",
+      "facebook": "{{ name }} on Facebook",
+      "instagram": "{{ name }} on Instagram",
+      "x": "{{ name }} on X",
+      "linkedin": "{{ name }} on LinkedIn",
+      "tiktok": "{{ name }} on TikTok",
+      "social_links_for": "Social links for {{ name }}"
+    },
+    "testimonials": {
+      "carousel": "Carousel",
+      "region_label": "Customer testimonials",
+      "slide_number": "Slide {{ index }}",
+      "previous": "Previous testimonial",
+      "next": "Next testimonial",
+      "pagination": "Testimonial pagination",
+      "empty_state": "Add testimonial blocks to show this section."
     }
   }
 }
