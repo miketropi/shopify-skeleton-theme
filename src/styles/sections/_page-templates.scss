@@ -23,8 +23,18 @@
   }
 }
 
-.section-main-page {
+.section-main-page--narrow {
   max-width: min(40rem, 100%);
+  margin-inline: auto;
+}
+
+.section-main-page--medium {
+  max-width: min(55rem, 100%);
+  margin-inline: auto;
+}
+
+.section-main-page--wide {
+  max-width: 100%;
   margin-inline: auto;
 }
 

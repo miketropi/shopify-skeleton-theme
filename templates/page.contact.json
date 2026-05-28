@@ -1,42 +1,220 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "page_header": {
       "type": "section-page-header",
       "settings": {
         "show_breadcrumb": true,
+        "breadcrumb_separator": "/",
         "heading_source": "page",
-        "heading_size": "large",
-        "description_source": "page",
+        "custom_heading": "",
+        "heading_size": "xlarge",
+        "description_source": "custom",
+        "custom_description": "Get in touch with our team for support, questions.",
+        "description_max_width": 480,
+        "content_position": "bottom-left",
         "background_type": "color",
-        "section_height": "medium",
+        "background_color_override": "#f4f4f5",
+        "image_position": "center center",
+        "enable_parallax": false,
+        "parallax_intensity": 30,
+        "show_overlay": false,
+        "overlay_color": "#000000",
+        "overlay_opacity": 20,
+        "section_height": "small",
         "full_width": true,
         "entrance_animate_on_scroll": true,
         "section_color_scheme_mode": "default",
-        "padding_bottom": 0
-      }
-    },
-    "main": {
-      "type": "main-page",
-      "settings": {
-        "show_title": false
+        "color_scheme": "",
+        "heading_color": "rgba(0,0,0,0)",
+        "breadcrumb_color": "rgba(0,0,0,0)",
+        "padding_top": 0,
+        "padding_right": 0,
+        "padding_bottom": 40,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 52,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
       }
     },
     "form": {
       "type": "section-contact-form",
       "settings": {
-        "heading": "",
+        "eyebrow_text": "CONTACT US",
+        "heading": "Get In Touch",
+        "description": "Use the form below to get in touch with the sales team",
+        "text_alignment": "center",
         "heading_size": "large",
-        "content_width": "narrow",
+        "content_width": "medium",
         "show_phone": true,
+        "button_label": "",
+        "section_color_scheme_mode": "default",
         "color_scheme": "scheme-1",
         "padding_top": 0,
-        "padding_bottom": 40
+        "padding_right": 0,
+        "padding_bottom": 0,
+        "padding_left": 0,
+        "margin_top": 52,
+        "margin_bottom": 52,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
+    },
+    "section_map_location_LWidJm": {
+      "type": "section-map-location",
+      "name": "t:sections.map_location.presets.name",
+      "settings": {
+        "map_api_key": "",
+        "map_address": "101 E 129th St, East Chicago, IN 46312, USA",
+        "map_zoom": 14,
+        "map_style": "default",
+        "section_height": "medium",
+        "card_position": "right",
+        "card_heading": "Information",
+        "card_border_radius": "medium",
+        "card_shadow": true,
+        "show_phone": true,
+        "phone_label": "Phone:",
+        "phone_number": "(+01) 1234 8888",
+        "show_email": true,
+        "email_label": "Email:",
+        "email_address": "support.beplus@gmail.com",
+        "show_address": true,
+        "address_label": "Address:",
+        "address": "101 E 129th St, East Chicago, IN 46312, USA",
+        "show_hours": true,
+        "hours_label": "Open Time:",
+        "hours_row_1_days": "Mon - Sat:",
+        "hours_row_1_time": "7:30am - 8:00pm PST",
+        "hours_row_2_days": "Sunday:",
+        "hours_row_2_time": "9:00am - 5:00pm PST",
+        "hours_row_3_days": "",
+        "hours_row_3_time": "",
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_right": 0,
+        "padding_bottom": 40,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
+    },
+    "section_trust_bar_iqK7he": {
+      "type": "section-trust-bar",
+      "blocks": {
+        "trust_item_PRLwMd": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "return",
+            "heading": "14-Day Returns",
+            "description": "Shop with confidence and enjoy easy 14-day returns.",
+            "link": "#",
+            "open_in_new_tab": false
+          }
+        },
+        "trust_item_qF338M": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shipping",
+            "heading": "Free Shipping",
+            "description": "Enjoy free delivery on all qualifying orders every time.",
+            "link": "#",
+            "open_in_new_tab": false
+          }
+        },
+        "trust_item_rcWkXG": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "support",
+            "heading": "Expert Support",
+            "description": "Get personalized help to choose your perfect skincare routine.",
+            "link": "#",
+            "open_in_new_tab": false
+          }
+        },
+        "trust_item_n87R4L": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shield",
+            "heading": "Secure Checkout",
+            "description": "Shop securely with encrypted, protected payment information.",
+            "link": "#",
+            "open_in_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "trust_item_PRLwMd",
+        "trust_item_qF338M",
+        "trust_item_rcWkXG",
+        "trust_item_n87R4L"
+      ],
+      "name": "t:sections.trust_bar.presets.name",
+      "settings": {
+        "layout": "grid",
+        "show_dividers": true,
+        "text_alignment": "center",
+        "item_heading_size": "large",
+        "item_description_size": "medium",
+        "icon_size": "theme",
+        "heading_color": "rgba(0,0,0,0)",
+        "description_color": "rgba(0,0,0,0)",
+        "icon_color": "rgba(0,0,0,0)",
+        "full_width": false,
+        "entrance_animate_on_scroll": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "padding_top": 32,
+        "padding_right": 24,
+        "padding_bottom": 32,
+        "padding_left": 24,
+        "margin_top": 0,
+        "margin_bottom": 44,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
       }
     }
   },
   "order": [
     "page_header",
-    "main",
-    "form"
+    "form",
+    "section_map_location_LWidJm",
+    "section_trust_bar_iqK7he"
   ]
 }

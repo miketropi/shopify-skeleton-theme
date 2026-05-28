@@ -1,0 +1,21 @@
+import { registerSection } from '../section-registry'
+
+const pending = new WeakMap<HTMLElement, Promise<void>>()
+
+export function registerSectionOurTeam2(): void {
+  registerSection(
+    'section-our-team-2',
+    (container) => {
+      const p = import('./section-our-team-2.runtime.js').then((m) => {
+        m.init(container)
+      })
+      pending.set(container, p)
+    },
+    async (container) => {
+      await pending.get(container)
+      const m = await import('./section-our-team-2.runtime.js')
+      m.destroy(container)
+      pending.delete(container)
+    },
+  )
+}

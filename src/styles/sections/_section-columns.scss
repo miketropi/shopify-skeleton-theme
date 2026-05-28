@@ -1,0 +1,320 @@
+@use '../base/breakpoints' as *;
+
+// ────────────────────────────────────────────────────────────
+// Columns section — CSS-only multi-column grid
+// ────────────────────────────────────────────────────────────
+
+.columns {
+  box-sizing: border-box;
+  color: var(--cs-text, inherit);
+
+  // ── CSS vars (merchant overrides set on root) ──
+  --columns-cols: 3;
+  --columns-cols-tablet: 2;
+  --columns-gap: 2rem;
+  --columns-row-gap: 2rem;
+  --columns-sticky-offset: 80px;
+  --columns-divider-color: #e5e5e5;
+  --columns-heading-color: var(--cs-heading, inherit);
+  --columns-desc-color: var(--cs-text, inherit);
+}
+
+.columns__inner {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.columns__empty {
+  margin: 0;
+  padding: 2rem 1.25rem;
+  border: 1px dashed color-mix(in srgb, var(--cs-border, #e0ddd8) 55%, transparent);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--cs-background, #fff) 97%, var(--cs-border, #e8e6e1) 3%);
+  font-family: var(--cs-font-body, inherit);
+  font-size: var(--font-size-sm, 0.875rem);
+  line-height: var(--line-height-normal, 1.55);
+  text-align: center;
+  color: var(--cs-text-secondary, var(--cs-text));
+}
+
+// ── Grid ──────────────────────────────────────────────────
+
+.columns__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--columns-row-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include mq-up('md') {
+    grid-template-columns: repeat(var(--columns-cols-tablet, 2), minmax(0, 1fr));
+    gap: var(--columns-row-gap) var(--columns-gap);
+  }
+
+  @include mq-up('lg') {
+    grid-template-columns: repeat(var(--columns-cols, 3), minmax(0, 1fr));
+    gap: var(--columns-row-gap) var(--columns-gap);
+  }
+}
+
+// ── Column item ───────────────────────────────────────────
+
+.columns__item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: var(--columns-item-padding, 0);
+  border-radius: var(--columns-item-radius, 0);
+  background: var(--columns-item-bg, transparent);
+}
+
+// ── Vertical alignment (flex-start / center / end) ───────
+
+.columns--valign-top .columns__item {
+  justify-content: flex-start;
+}
+
+.columns--valign-middle .columns__item {
+  justify-content: center;
+}
+
+.columns--valign-bottom .columns__item {
+  justify-content: flex-end;
+}
+
+// ── Content alignment ─────────────────────────────────────
+
+.columns__item--align-left {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.columns__item--align-center {
+  text-align: center;
+  align-items: center;
+}
+
+.columns__item--align-right {
+  text-align: right;
+  align-items: flex-end;
+}
+
+// ── Sticky scroll ─────────────────────────────────────────
+// Shorter columns stick to top while tallest scrolls.
+// Disabled on mobile (below md) and when prefers-reduced-motion.
+
+.columns--sticky .columns__item {
+  @include mq-up('md') {
+    position: sticky;
+    top: var(--columns-sticky-offset, 80px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .columns--sticky .columns__item {
+    position: static;
+  }
+}
+
+// ── Dividers ──────────────────────────────────────────────
+
+.columns--dividers {
+  @include mq-up('md') {
+    .columns__item:not(:last-child) {
+      border-inline-end: 1px solid var(--columns-divider-color, #e5e5e5);
+      padding-inline-end: var(--columns-gap);
+    }
+
+    .columns__item:not(:first-child) {
+      padding-inline-start: var(--columns-gap);
+    }
+  }
+}
+
+// Mobile-first: dividers only appear at md+ (see .columns--dividers above).
+// No border-inline-end on mobile because the grid is single-column.
+
+// ── Image ─────────────────────────────────────────────────
+
+.columns__image-wrap {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--columns-img-radius, 0);
+  margin-block-end: 1rem;
+}
+
+.columns__image-wrap--ratio-auto {
+  // no forced ratio
+}
+
+.columns__image-wrap--ratio-square {
+  aspect-ratio: 1 / 1;
+}
+
+.columns__image-wrap--ratio-portrait {
+  aspect-ratio: 3 / 4;
+}
+
+.columns__image-wrap--ratio-landscape {
+  aspect-ratio: 4 / 3;
+}
+
+.columns__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.columns__image-wrap--ratio-auto .columns__image {
+  height: auto;
+  object-fit: contain;
+}
+
+// ── Eyebrow ───────────────────────────────────────────────
+
+.columns__eyebrow {
+  margin: 0 0 0.375rem 0;
+  font-family: var(--cs-font-body, inherit);
+  font-size: var(--font-size-xs, 0.8125rem);
+  font-weight: 600;
+  line-height: var(--line-height-normal, 1.55);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cs-accent, var(--cs-text-secondary));
+}
+
+.columns__item--align-center .columns__eyebrow {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.columns__item--align-right .columns__eyebrow {
+  margin-left: auto;
+}
+
+// ── Heading ───────────────────────────────────────────────
+
+.columns__heading {
+  margin: 0 0 0.625rem 0;
+  font-family: var(--cs-font-heading, inherit);
+  font-weight: 600;
+  line-height: var(--line-height-tight, 1.2);
+  color: var(--columns-heading-color, var(--cs-heading, inherit));
+}
+
+// Heading size modifiers
+.columns__item--heading-small .columns__heading {
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+.columns__item--heading-medium .columns__heading {
+  font-size: var(--font-size-base, 1rem);
+}
+
+.columns__item--heading-large .columns__heading {
+  font-size: var(--font-size-lg, 1.25rem);
+}
+
+.columns__item--heading-xlarge .columns__heading {
+  font-size: var(--font-size-xl, 1.5rem);
+}
+
+// ── Description ───────────────────────────────────────────
+
+.columns__description {
+  font-family: var(--cs-font-body, inherit);
+  font-size: var(--font-size-base, 1rem);
+  line-height: var(--line-height-normal, 1.55);
+  color: var(--columns-desc-color, var(--cs-text, inherit));
+
+  > *:first-child {
+    margin-top: 0;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  a {
+    color: var(--cs-accent, currentColor);
+    text-decoration: underline;
+  }
+
+  ul,
+  ol {
+    padding-inline-start: 1.25rem;
+    margin: 0.5rem 0;
+  }
+}
+
+// ── Button / CTA ──────────────────────────────────────────
+
+.columns__action {
+  margin-block-start: 1.25rem;
+}
+
+.columns__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 7.5rem;
+  padding: 0.625rem 1.5rem;
+  font-family: var(--cs-font-body, inherit);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 600;
+  line-height: 1.4286;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.88;
+  }
+}
+
+.columns__btn--filled {
+  background-color: var(--cs-btn-primary-bg);
+  color: var(--cs-btn-primary-text);
+  border: 1px solid var(--cs-btn-primary-border);
+}
+
+.columns__btn--outlined {
+  background-color: var(--cs-btn-secondary-bg);
+  color: var(--cs-btn-secondary-text);
+  border: 1px solid var(--cs-btn-secondary-border);
+}
+
+.columns__btn--text {
+  background: none;
+  border: none;
+  padding: 0.375rem 0;
+  min-width: auto;
+  color: var(--cs-accent, var(--cs-btn-secondary-text));
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+
+  &:hover {
+    opacity: 0.75;
+  }
+}
+
+.columns__item--align-center .columns__action {
+  display: flex;
+  justify-content: center;
+}
+
+.columns__item--align-right .columns__action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+// ── Full width override ───────────────────────────────────
+
+.columns--full-width {
+  // section-content-width on inner constrains content;
+  // background (via section-styles) spans edge to edge
+}

@@ -33,6 +33,11 @@ declare global {
         id: number
       }
     }
+    /**
+     * Google Maps API — loaded dynamically by section-map-location.runtime.ts.
+     * Declared loosely to avoid heavy @types/googlemaps dependency.
+     */
+    google?: any
   }
 }
 

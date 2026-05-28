@@ -1,0 +1,222 @@
+@use '../base/variables' as *;
+@use '../base/breakpoints' as *;
+
+$_card-r: 0.75rem;
+$_card-r-sm: 0.45rem;
+$_card-r-lg: 1.25rem;
+$_ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+/* ── Container ── */
+
+.maploc {
+  position: relative;
+  overflow: hidden;
+
+  &.shopify-section-wrapper {
+    background: var(--cs-background, #fff);
+  }
+}
+
+/* ── Map area ── */
+
+.maploc__map-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+
+  .maploc--height-small & {
+    height: 280px;
+  }
+  .maploc--height-medium & {
+    height: 320px;
+  }
+  .maploc--height-large & {
+    height: 400px;
+  }
+
+  @include mq-up('md') {
+    height: var(--maploc-height-desktop, 480px) !important;
+  }
+}
+
+.maploc__map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.maploc__static {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cs-background-secondary, #f4f4f5);
+  color: var(--cs-text-secondary, #71717a);
+  font-size: var(--font-size-sm, 0.875rem);
+
+  &--placeholder {
+    background: var(--cs-background-secondary, #f4f4f5);
+    // border: 1px dashed var(--cs-border, #e4e4e7);
+    border-radius: $_card-r;
+
+    @include mq-up('md') {
+      margin: 1rem;
+    }
+  }
+}
+
+.maploc__static-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Info card ── */
+
+.maploc__card {
+  position: relative;
+  width: 100%;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  background: var(--maploc-card-bg, var(--cs-background, #fff));
+  color: var(--cs-text, #1a1a1a);
+  font-size: var(--font-size-base, 1rem);
+  line-height: var(--line-height-relaxed, 1.6);
+
+  @include mq-up('md') {
+    position: absolute;
+    top: 50%;
+    width: clamp(18rem, 30vw, 22rem);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    transform: translateY(-50%);
+    border-radius: var(--maploc-card-radius, $_card-r);
+    z-index: 2;
+  }
+
+  .maploc--card-left & {
+    @include mq-up('md') {
+      left: clamp(1rem, 3vw, 2rem);
+    }
+  }
+
+  .maploc--card-right & {
+    @include mq-up('md') {
+      right: clamp(1rem, 3vw, 2rem);
+    }
+  }
+
+  .maploc--card-shadow & {
+    @include mq-up('md') {
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+    }
+  }
+}
+
+/* ── Card border radius ── */
+
+.maploc--card-radius-none .maploc__card {
+  @include mq-up('md') {
+    border-radius: 0;
+  }
+}
+
+.maploc--card-radius-small .maploc__card {
+  --maploc-card-radius: #{$_card-r-sm};
+}
+
+.maploc--card-radius-medium .maploc__card {
+  --maploc-card-radius: #{$_card-r};
+}
+
+.maploc--card-radius-large .maploc__card {
+  --maploc-card-radius: #{$_card-r-lg};
+}
+
+/* ── Card heading ── */
+
+.maploc__card-heading {
+  margin: 0 0 clamp(0.65rem, 1.5vw, 0.85rem);
+  font-size: var(--font-size-lg, 1.125rem);
+  font-weight: 700;
+  line-height: var(--line-height-snug, 1.3);
+  color: var(--cs-heading, var(--cs-text));
+}
+
+/* ── Detail rows ── */
+
+.maploc__detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em;
+  padding: 0.45rem 0;
+
+  & + & {
+    border-top: 1px solid color-mix(in srgb, var(--cs-border, #e4e4e7) 60%, transparent);
+  }
+}
+
+.maploc__detail-label {
+  font-weight: 600;
+  color: var(--cs-text, #1a1a1a);
+  flex-shrink: 0;
+}
+
+.maploc__detail-value {
+  color: var(--cs-text-secondary, #71717a);
+  word-break: break-word;
+}
+
+.maploc__link {
+  color: var(--cs-accent, #007aff);
+  text-decoration: none;
+  transition: opacity 0.15s $_ease;
+
+  &:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+}
+
+/* ── Opening hours ── */
+
+.maploc__hours {
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid color-mix(in srgb, var(--cs-border, #e4e4e7) 60%, transparent);
+}
+
+.maploc__hours-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--cs-text, #1a1a1a);
+}
+
+.maploc__hours-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  // font-size: var(--font-size-xs, 0.8125rem);
+}
+
+.maploc__hours-days {
+  color: var(--cs-text-secondary, #71717a);
+}
+
+.maploc__hours-time {
+  color: var(--cs-text, #1a1a1a);
+  font-weight: 500;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .maploc__card,
+  .maploc__link {
+    transition: none;
+  }
+}

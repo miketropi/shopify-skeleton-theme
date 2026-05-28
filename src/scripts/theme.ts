@@ -25,8 +25,14 @@ import { registerSectionProductImagesStory } from './sections/section-product-im
 import { registerCollectionGridSection } from './collection-grid'
 import './size-guide'
 import { initSearchModal } from './search-modal'
-import { registerHeaderTopBarSection } from './header-top-bar' 
+import { registerHeaderTopBarSection } from './header-top-bar'
+import { registerFooterSection } from './footer'
 import { registerSectionPageHeader } from './sections/section-page-header'
+import { registerSectionMapLocation } from './sections/section-map-location'
+import { registerSectionFaq } from './sections/section-faq'
+import { registerSectionTestimonials } from './sections/section-testimonials'
+import { registerSectionOurTeam } from './sections/section-our-team'
+import { registerSectionOurTeam2 } from './sections/section-our-team-2'
 import { registerMainBlogSection } from './main-blog'
 import { registerMainArticleSection } from './main-article'
 import { bindTcardHoverVideos } from './tcard-hover-video'
@@ -67,6 +73,11 @@ registerSectionBeforeAfter()
 registerSectionRoutineGuide()
 registerSectionTrustBar()
 registerSectionPageHeader()
+registerSectionMapLocation()
+registerSectionFaq()
+registerSectionTestimonials()
+registerSectionOurTeam()
+registerSectionOurTeam2()
 registerSectionInstagramFeed()
 registerSectionProductImagesStory()
 registerCollectionGridSection()

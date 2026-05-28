@@ -1,0 +1,5 @@
+{
+  "plugin": [
+    "github:naeem76/opencode-qdrant-plugin"
+  ]
+}

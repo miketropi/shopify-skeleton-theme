@@ -2113,10 +2113,169 @@
         "radius": "Corner radius"
       },
       "labels": {
+        "eyebrow_text": "Eyebrow text",
         "heading": "Form heading",
         "heading_size": "Heading size",
+        "description": "Description",
+        "text_alignment": "Text alignment",
         "content_width": "Form width",
         "show_phone": "Show phone field",
+        "button_label": "Button label",
+        "section_color_scheme_mode": "Colour scheme",
+        "color_scheme": "Colour scheme",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "background_color_info": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "border_color_info": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "placeholders": {
+        "eyebrow_text": "e.g. Get in touch",
+        "button_label": "e.g. Send Message"
+      },
+      "info": {
+        "heading": "Leave blank to use the default “Contact form” title."
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "text_alignment": {
+          "left": "Left",
+          "center": "Center",
+          "right": "Right"
+        },
+        "section_color_scheme_mode": {
+          "default": "Default (global theme)",
+          "custom": "Custom"
+        },
+        "content_width": {
+          "narrow": "Narrow",
+          "medium": "Medium"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "presets": {
+        "name": "Contact form"
+      }
+    },
+    "main_page": {
+      "name": "Page",
+      "headers": {
+        "content": "Content",
+        "colour": "Colour",
+        "section": "Section",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "show_title": "Show page title",
+        "content_width": "Content width",
+        "section_color_scheme_mode": "Colour scheme",
+        "color_scheme": "Colour scheme",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "background_color_info": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "border_color_info": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "content_width": {
+          "narrow": "Narrow",
+          "medium": "Medium",
+          "wide": "Wide"
+        },
+        "section_color_scheme_mode": {
+          "default": "Default (global theme)",
+          "custom": "Custom"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      }
+    },
+    "map_location": {
+      "name": "Map Location",
+      "map_label": "Store location map",
+      "no_map": "Enter a Google Maps API key and address to display the map.",
+      "headers": {
+        "map": "Map",
+        "info_card": "Info Card",
+        "contact_details": "Contact Details",
+        "opening_hours": "Opening Hours",
+        "colour": "Colour",
+        "section": "Section",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "map_api_key": "Google Maps API key",
+        "map_address": "Map address",
+        "map_zoom": "Zoom level",
+        "map_style": "Map style",
+        "section_height": "Section height",
+        "static_map_image": "Static map fallback image",
+        "card_position": "Card position",
+        "card_heading": "Card heading",
+        "card_border_radius": "Card border radius",
+        "card_shadow": "Show card shadow",
+        "show_phone": "Show phone",
+        "phone_label": "Phone label",
+        "phone_number": "Phone number",
+        "show_email": "Show email",
+        "email_label": "Email label",
+        "email_address": "Email address",
+        "show_address": "Show address",
+        "address_label": "Address label",
+        "address": "Address",
+        "show_hours": "Show opening hours",
+        "hours_label": "Hours label",
+        "hours_row_1_days": "Row 1 — Days",
+        "hours_row_1_time": "Row 1 — Hours",
+        "hours_row_2_days": "Row 2 — Days",
+        "hours_row_2_time": "Row 2 — Hours",
+        "hours_row_3_days": "Row 3 — Days (optional)",
+        "hours_row_3_time": "Row 3 — Hours (optional)",
+        "section_color_scheme_mode": "Colour scheme",
         "color_scheme": "Colour scheme",
         "padding_top": "Top",
         "padding_right": "Right",
@@ -2136,18 +2295,34 @@
         "radius_bl": "Bottom left"
       },
       "info": {
-        "heading": "Leave blank to use the default “Contact form” title."
+        "map_api_key": "Required for interactive map. Leave empty to use a static fallback image.",
+        "map_address": "Used to place the map pin and center the map.",
+        "static_map_image": "Fallback image when no API key is provided. Recommended size: 1440×600px."
       },
       "options": {
-        "heading_size": {
-          "small": "Small",
-          "medium": "Medium",
-          "large": "Large",
-          "xlarge": "Extra large"
+        "map_style": {
+          "default": "Default",
+          "light": "Light (greyscale)",
+          "dark": "Dark"
         },
-        "content_width": {
-          "narrow": "Narrow",
-          "medium": "Medium"
+        "section_height": {
+          "small": "Small (320px)",
+          "medium": "Medium (480px)",
+          "large": "Large (600px)"
+        },
+        "card_position": {
+          "left": "Left",
+          "right": "Right"
+        },
+        "card_border_radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (12px)",
+          "large": "Large (20px)"
+        },
+        "section_color_scheme_mode": {
+          "default": "Default (global theme)",
+          "custom": "Custom"
         },
         "border_style": {
           "none": "None",
@@ -2157,7 +2332,7 @@
         }
       },
       "presets": {
-        "name": "Contact form"
+        "name": "Map Location"
       }
     },
     "footer": {
@@ -2209,6 +2384,712 @@
           "name": "Link column",
           "column_heading_override": "Column heading override",
           "column_heading_override_info": "Falls back to the menu title when empty."
+        }
+      }
+    },
+    "columns": {
+      "name": "Columns",
+      "presets": {
+        "name": "Columns"
+      },
+      "headers": {
+        "layout": "Layout",
+        "style": "Style",
+        "colour": "Colour",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "columns": "Columns",
+        "column_gap": "Column gap",
+        "row_gap": "Row gap",
+        "enable_sticky_scroll": "Enable sticky scroll",
+        "sticky_offset_top": "Sticky offset top (px)",
+        "vertical_alignment": "Vertical alignment",
+        "full_width": "Full width (edge-to-edge background)",
+        "show_dividers": "Show column dividers",
+        "divider_color": "Divider colour",
+        "section_color_scheme_mode": "Colour scheme",
+        "color_scheme": "Scheme",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "gap": {
+          "none": "None",
+          "small": "Small (16px)",
+          "medium": "Medium (32px)",
+          "large": "Large (48px)"
+        },
+        "vertical_alignment": {
+          "top": "Top",
+          "middle": "Middle",
+          "bottom": "Bottom"
+        },
+        "color_scheme_mode": {
+          "default": "Default (global theme)",
+          "custom": "Custom"
+        },
+        "padding": {
+          "none": "None",
+          "small": "Small (16px)",
+          "medium": "Medium (24px)",
+          "large": "Large (40px)"
+        },
+        "radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "image_ratio": {
+          "auto": "Auto (original)",
+          "square": "Square (1:1)",
+          "portrait": "Portrait (3:4)",
+          "landscape": "Landscape (4:3)"
+        },
+        "button_style": {
+          "filled": "Filled",
+          "outlined": "Outlined",
+          "text": "Text link"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "info": {
+        "enable_sticky_scroll": "Shorter columns stick to the top while the tallest column scrolls. Disabled automatically on mobile.",
+        "sticky_offset_top": "Accounts for fixed header height. Only applies when sticky scroll is enabled.",
+        "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "blocks": {
+        "column": {
+          "name": "Column",
+          "headers": {
+            "layout": "Layout",
+            "image": "Image",
+            "text": "Text content",
+            "button": "Button"
+          },
+          "labels": {
+            "column_width": "Column width override",
+            "content_alignment": "Content alignment",
+            "column_background_color": "Column background colour",
+            "column_padding": "Column padding",
+            "column_border_radius": "Column border radius",
+            "show_image": "Show image",
+            "image": "Image",
+            "image_ratio": "Image ratio",
+            "image_border_radius": "Image border radius",
+            "eyebrow_text": "Eyebrow text",
+            "heading": "Heading",
+            "heading_size": "Heading size",
+            "heading_color": "Heading colour",
+            "description": "Description",
+            "description_color": "Description colour",
+            "show_button": "Show button",
+            "button_label": "Button label",
+            "button_link": "Button link",
+            "button_style": "Button style",
+            "open_new_tab": "Open in new tab"
+          },
+          "options": {
+            "column_width": {
+              "auto": "Auto",
+              "narrow": "Narrow (25%)",
+              "default": "Default (33%)",
+              "wide": "Wide (50%)",
+              "full": "Full (100%)"
+            },
+            "content_alignment": {
+              "left": "Left",
+              "center": "Center",
+              "right": "Right"
+            }
+          }
+        }
+      }
+    },
+    "our_team_2": {
+      "name": "Our Team 2",
+      "presets": {
+        "name": "Our Team 2"
+      },
+      "headers": {
+        "intro_column": "Intro column",
+        "carousel": "Carousel",
+        "card_style": "Card style",
+        "layout": "Layout",
+        "colour": "Colour",
+        "animation": "Animation",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "description": "Description",
+        "description_color": "Description colour",
+        "show_button": "Show button",
+        "button_label": "Button label",
+        "button_link": "Button link",
+        "button_style": "Button style",
+        "column_ratio": "Column ratio",
+        "cards_visible": "Cards visible",
+        "card_gap": "Card spacing",
+        "show_navigation_arrows": "Show navigation arrows",
+        "autoplay": "Autoplay",
+        "autoplay_speed": "Autoplay speed (seconds)",
+        "image_ratio": "Photo shape",
+        "card_border_radius": "Card corner radius",
+        "show_social_on_hover": "Show social icons on hover",
+        "name_color": "Name colour",
+        "role_color": "Role colour",
+        "full_width": "Full width (edge-to-edge background)",
+        "section_color_scheme_mode": "Colour scheme",
+        "color_scheme": "Scheme",
+        "animate_on_scroll": "Animate when scrolling into view",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "button_style": {
+          "filled": "Filled",
+          "outlined": "Outlined"
+        },
+        "column_ratio": {
+          "narrow_intro": "30% intro / 70% carousel",
+          "third": "33% / 67%",
+          "wide_intro": "40% intro / 60% carousel"
+        },
+        "cards_visible": {
+          "two": "2",
+          "two_half": "2.5 (peek)",
+          "three": "3",
+          "three_two": "3.2 (peek)"
+        },
+        "card_gap": {
+          "small": "Small (12px)",
+          "medium": "Medium (20px)",
+          "large": "Large (32px)"
+        },
+        "image_ratio": {
+          "square": "Square (1:1)",
+          "portrait": "Portrait (3:4)"
+        },
+        "card_radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "color_scheme_mode": {
+          "default": "Default (global theme)",
+          "custom": "Custom"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "info": {
+        "description_color": "Clear uses the colour scheme secondary text colour.",
+        "name_color": "Clear uses the colour scheme heading colour.",
+        "role_color": "Clear uses the colour scheme secondary text colour.",
+        "animate_on_scroll": "When off, the entrance animation runs after load without waiting for scroll (still respects reduced motion).",
+        "full_width": "Background spans the browser width; content stays in the page column.",
+        "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "blocks": {
+        "member": {
+          "name": "Team member",
+          "headers": {
+            "social": "Social links"
+          },
+          "labels": {
+            "photo": "Photo",
+            "image_position": "Photo focal point",
+            "name": "Name",
+            "role": "Role / Title",
+            "member_url": "Profile URL",
+            "social_facebook": "Facebook URL",
+            "social_x": "X (Twitter) URL",
+            "social_instagram": "Instagram URL",
+            "social_pinterest": "Pinterest URL",
+            "social_linkedin": "LinkedIn URL"
+          },
+          "options": {
+            "image_position": {
+              "center": "Center center",
+              "top": "Center top",
+              "bottom": "Center bottom"
+            }
+          },
+          "info": {
+            "photo": "Recommended 600×800px for portrait orientation.",
+            "member_url": "When set, the member name becomes a clickable link."
+          }
+        }
+      }
+    },
+    "our_team": {
+      "name": "Our Team",
+      "presets": {
+        "name": "Our Team"
+      },
+      "headers": {
+        "header_intro": "Header",
+        "carousel": "Carousel",
+        "layout": "Layout",
+        "card_style": "Card style",
+        "animation": "Animation",
+        "colour": "Colour",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "heading_alignment": "Heading alignment",
+        "slides_per_view": "Slides per view",
+        "autoplay": "Autoplay",
+        "autoplay_speed": "Autoplay speed (seconds)",
+        "show_dots": "Show pagination dots",
+        "show_arrows": "Show navigation arrows",
+        "transition_effect": "Transition effect",
+        "card_gap": "Card spacing",
+        "card_border_radius": "Card corner radius",
+        "full_width": "Full width (edge-to-edge background)",
+        "image_ratio": "Photo shape",
+        "image_border_radius": "Photo corner radius",
+        "show_social_links": "Show social links",
+        "card_text_align": "Card text alignment",
+        "animate_on_scroll": "Animate when scrolling into view",
+        "section_color_scheme_mode": "Colour scheme",
+        "color_scheme": "Scheme",
+        "name_color": "Name colour",
+        "role_color": "Role colour",
+        "bio_color": "Bio colour",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "heading_alignment": {
+          "left": "Left",
+          "center": "Center"
+        },
+        "slides_per_view": {
+          "one": "1",
+          "two": "2",
+          "three": "3",
+          "four": "4"
+        },
+        "transition_effect": {
+          "slide": "Slide",
+          "fade": "Fade"
+        },
+        "card_gap": {
+          "small": "Small (16px)",
+          "medium": "Medium (32px)",
+          "large": "Large (48px)"
+        },
+        "radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "image_ratio": {
+          "square": "Square (1:1)",
+          "portrait": "Portrait (3:4)",
+          "circle": "Circle"
+        },
+        "image_radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (12px)",
+          "large": "Large (20px)"
+        },
+        "card_text_align": {
+          "left": "Left",
+          "center": "Center"
+        },
+        "color_scheme_mode": {
+          "default": "Default (global theme)",
+          "custom": "Custom"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "info": {
+        "image_border_radius": "Ignored when photo shape is Circle.",
+        "name_color": "Clear uses the colour scheme heading colour.",
+        "role_color": "Clear uses the colour scheme secondary text colour.",
+        "bio_color": "Clear uses the colour scheme body text colour.",
+        "animate_on_scroll": "When off, the entrance animation runs after load without waiting for scroll (still respects reduced motion).",
+        "full_width": "Background spans the browser width; content stays in the page column.",
+        "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "blocks": {
+        "team_member": {
+          "name": "Team member",
+          "headers": {
+            "link": "Link",
+            "social": "Social"
+          },
+          "labels": {
+            "photo": "Photo",
+            "name": "Name",
+            "role": "Role",
+            "bio": "Bio",
+            "link": "Link",
+            "open_in_new_tab": "Open in new tab",
+            "email": "Email",
+            "social_facebook": "Facebook URL",
+            "social_instagram": "Instagram URL",
+            "social_x": "X (Twitter) URL",
+            "social_linkedin": "LinkedIn URL",
+            "social_tiktok": "TikTok URL"
+          },
+          "info": {
+            "photo": "Recommended 600×800px for portrait. Displayed at the top of the card."
+          }
+        }
+      }
+    },
+    "testimonials": {
+      "name": "Testimonials",
+      "presets": {
+        "name": "Testimonials"
+      },
+      "headers": {
+        "header_intro": "Header",
+        "carousel": "Carousel",
+        "style": "Style",
+        "layout": "Layout",
+        "colour": "Colour",
+        "animation": "Animation",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "show_quote_icon": "Show quote icon",
+        "quote_icon_color": "Quote icon colour",
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "autoplay": "Autoplay",
+        "autoplay_speed": "Autoplay speed (seconds)",
+        "show_dots": "Show pagination dots",
+        "show_arrows": "Show navigation arrows",
+        "transition_effect": "Transition effect",
+        "quote_text_size": "Quote text size",
+        "quote_text_color": "Quote text colour",
+        "quote_max_width": "Quote max width (px)",
+        "author_name_color": "Author name colour",
+        "author_label_color": "Author label colour",
+        "avatar_size": "Avatar size",
+        "full_width": "Full width (edge-to-edge background)",
+        "section_color_scheme_mode": "Colour scheme",
+        "color_scheme": "Scheme",
+        "animate_on_scroll": "Animate when scrolling into view",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "transition_effect": {
+          "fade": "Fade",
+          "slide": "Slide"
+        },
+        "quote_text_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "avatar_size": {
+          "small": "Small (32px)",
+          "medium": "Medium (40px)",
+          "large": "Large (52px)"
+        },
+        "color_scheme_mode": {
+          "default": "Default (global theme)",
+          "custom": "Custom"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "info": {
+        "quote_icon_color": "Clear uses the colour scheme text colour.",
+        "quote_text_color": "Clear uses the colour scheme text colour.",
+        "author_name_color": "Clear uses the colour scheme text colour.",
+        "author_label_color": "Clear uses the colour scheme secondary text colour.",
+        "animate_on_scroll": "When off, the entrance animation runs after load without waiting for scroll (still respects reduced motion).",
+        "full_width": "Background spans the browser width; content stays in the page column.",
+        "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "blocks": {
+        "testimonial": {
+          "name": "Testimonial",
+          "labels": {
+            "quote": "Quote",
+            "author_name": "Author name",
+            "author_label": "Author label",
+            "avatar": "Avatar image"
+          },
+          "info": {
+            "avatar": "Displayed as a circle. 80×80px recommended."
+          }
+        }
+      }
+    },
+    "faq": {
+      "name": "FAQ",
+      "presets": {
+        "name": "FAQ"
+      },
+      "headers": {
+        "layout": "Layout",
+        "form_column": "Form column",
+        "form_fields": "Form fields",
+        "faq_column": "FAQ column",
+        "colour": "Colour",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "column_layout": "Column layout",
+        "full_width": "Full width (edge-to-edge background)",
+        "show_form": "Show contact form",
+        "form_sticky": "Sticky form column",
+        "form_sticky_offset": "Sticky offset",
+        "form_heading": "Form heading",
+        "form_subtext": "Form subtext",
+        "form_background_color": "Form card background colour",
+        "form_card_radius": "Form card corner radius",
+        "show_name_field": "Show name field",
+        "name_label": "Name label",
+        "show_topic_dropdown": "Show topic dropdown",
+        "topic_label": "Topic label",
+        "topic_options": "Topic options",
+        "show_message_field": "Show message field",
+        "message_label": "Message label",
+        "message_placeholder": "Message placeholder",
+        "submit_label": "Submit button label",
+        "submit_button_style": "Submit button style",
+        "success_message": "Success message",
+        "accordion_behavior": "Accordion behavior",
+        "first_item_open": "First item open by default",
+        "show_divider": "Show dividers between items",
+        "icon_style": "Toggle icon style",
+        "question_size": "Question text size",
+        "answer_color": "Answer text colour",
+        "section_color_scheme_mode": "Colour scheme",
+        "color_scheme": "Scheme",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "column_layout": {
+          "narrow_form": "Form narrow · FAQ wide (30/70)",
+          "wide_form": "Form wide · FAQ narrow (40/60)"
+        },
+        "radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "button_style": {
+          "filled": "Filled",
+          "outlined": "Outlined"
+        },
+        "accordion_behavior": {
+          "single": "Single open (one at a time)",
+          "multiple": "Multiple open"
+        },
+        "icon_style": {
+          "chevron": "Chevron",
+          "plus": "Plus / minus"
+        },
+        "question_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large"
+        },
+        "color_scheme_mode": {
+          "default": "Default (global theme)",
+          "custom": "Custom"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "info": {
+        "form_sticky": "On desktop the form sticks to the viewport while the FAQ scrolls. Respects reduced-motion preferences.",
+        "form_background_color": "Clear uses the colour scheme. Otherwise fills the form card area.",
+        "topic_options": "One topic per line or comma-separated. Shows a dropdown above the message field.",
+        "answer_color": "Clear uses the text colour from the scheme. Otherwise overrides answer text colour.",
+        "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "blocks": {
+        "faq_group": {
+          "name": "FAQ Group",
+          "headers": {
+            "item_1": "Item 1",
+            "item_2": "Item 2",
+            "item_3": "Item 3",
+            "item_4": "Item 4",
+            "item_5": "Item 5",
+            "item_6": "Item 6",
+            "item_7": "Item 7",
+            "item_8": "Item 8"
+          },
+          "labels": {
+            "group_heading": "Group heading",
+            "question": "Question",
+            "answer": "Answer"
+          },
+          "info": {
+            "group_heading": "Optional heading to categorize this group of FAQs."
+          }
         }
       }
     }

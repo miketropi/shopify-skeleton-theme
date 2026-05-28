@@ -809,7 +809,8 @@ $_r-pill: 999px;
 
 // ─── Article body / RTE (CommonMark-style defaults) ─────
 
-.marticle__body {
+.marticle__body,
+.shopify-policy__container .shopify-policy__body {
   max-width: $_prose-max;
   margin-inline: 0;
   font-size: var(--font-size-lg, 1.0625rem);
@@ -1207,6 +1208,7 @@ $_r-pill: 999px;
     line-height: 1.45;
     margin: 0;
     border-spacing: 0;
+    margin-bottom: 1.35em;
 
     caption {
       padding: 0.5rem 0.65rem;

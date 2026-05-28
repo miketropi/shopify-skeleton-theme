@@ -150,7 +150,7 @@
       "email": "Email",
       "phone": "Phone number",
       "message": "Message",
-      "send": "Send",
+      "send": "Send Message",
       "post_success": "Thanks for contacting us. We'll get back to you as soon as possible.",
       "error_heading": "Please adjust the following:"
     }
@@ -487,6 +487,13 @@
       "region_label": "Trust highlights",
       "empty_state": "Add trust item blocks to show this section."
     },
+    "columns": {
+      "empty_state": "Add column blocks to show this section."
+    },
+    "faq": {
+      "empty_state": "Add FAQ group blocks to show this section.",
+      "form_select_topic": "Select a topic"
+    },
     "instagram_feed": {
       "carousel": "Carousel",
       "region_label": "Instagram feed",
@@ -509,6 +516,10 @@
       "next": "Next collections",
       "empty": "Add collection card blocks (pick a collection or a custom link) to show this section."
     },
+    "map_location": {
+      "map_label": "Store location map",
+      "no_map": "Enter a Google Maps API key and address to display the map."
+    },
     "product_images_story": {
       "select_product": "Pick a product in the section settings to show the card here.",
       "carousel": "Image carousel",
@@ -517,6 +528,45 @@
       "slide_n_of_m": "Slide {{ n }} of {{ m }}",
       "slide_fraction_aria": "Slide __CURRENT__ of __TOTAL__",
       "lightbox_dialog": "Story images"
+    },
+    "our_team_2": {
+      "carousel": "Carousel",
+      "region_label": "Team members",
+      "slide_number": "Slide {{ index }}",
+      "previous": "Previous members",
+      "next": "Next members",
+      "empty_state": "Add team member blocks to show this section.",
+      "facebook": "{{ name }} on Facebook",
+      "instagram": "{{ name }} on Instagram",
+      "x": "{{ name }} on X",
+      "pinterest": "{{ name }} on Pinterest",
+      "linkedin": "{{ name }} on LinkedIn",
+      "social_links_for": "Social links for {{ name }}"
+    },
+    "our_team": {
+      "carousel": "Carousel",
+      "region_label": "Team members",
+      "slide_number": "Slide {{ index }}",
+      "previous": "Previous members",
+      "next": "Next members",
+      "pagination": "Carousel pagination",
+      "empty_state": "Add team member blocks to show this section.",
+      "email": "Email",
+      "facebook": "{{ name }} on Facebook",
+      "instagram": "{{ name }} on Instagram",
+      "x": "{{ name }} on X",
+      "linkedin": "{{ name }} on LinkedIn",
+      "tiktok": "{{ name }} on TikTok",
+      "social_links_for": "Social links for {{ name }}"
+    },
+    "testimonials": {
+      "carousel": "Carousel",
+      "region_label": "Customer testimonials",
+      "slide_number": "Slide {{ index }}",
+      "previous": "Previous testimonial",
+      "next": "Next testimonial",
+      "pagination": "Testimonial pagination",
+      "empty_state": "Add testimonial blocks to show this section."
     }
   }
 }

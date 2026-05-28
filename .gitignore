@@ -15,3 +15,6 @@ node_modules/
 ## Release files
 release
 *.zip
+.roo
+.opencode/qdrant-status.json
+.opencode/qdrant-reindex-trigger.json
