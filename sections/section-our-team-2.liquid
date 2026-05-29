@@ -131,10 +131,10 @@
               {%- if button_link != blank -%}
                 <a
                   href="{{ button_link }}"
-                  class="btn btn--{{ button_style }} team-two__button"
+                  class="team-two__btn team-two__btn--{{ button_style }}"
                 >{{ button_label }}</a>
               {%- else -%}
-                <span class="btn btn--{{ button_style }} team-two__button">{{ button_label }}</span>
+                <span class="team-two__btn team-two__btn--{{ button_style }}">{{ button_label }}</span>
               {%- endif -%}
             </div>
           {%- endif -%}
@@ -296,7 +296,7 @@
       </div>
     {%- endif -%}
   </div>
-</div>
+</div> 
 
 {% schema %}
 {
