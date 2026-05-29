@@ -85,8 +85,10 @@
       "type": "section-map-location",
       "name": "t:sections.map_location.presets.name",
       "settings": {
+        "embed_method": "iframe_embed",
         "map_api_key": "",
         "map_address": "101 E 129th St, East Chicago, IN 46312, USA",
+        "iframe_embed_url": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3885.2893442513805!2d-87.47478552329348!3d41.657442479199794!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8811d94dda258cd5%3A0xa4c72b9eb15dd773!2s101%20E%20129th%20St%2C%20East%20Chicago%2C%20IN%2046312%2C%20USA!5e1!3m2!1sen!2s!4v1780040671019!5m2!1sen!2s",
         "map_zoom": 14,
         "map_style": "default",
         "section_height": "medium",

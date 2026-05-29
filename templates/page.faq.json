@@ -7,7 +7,7 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
- {
+{
   "sections": {
     "page_header": {
       "type": "section-page-header",
@@ -51,9 +51,131 @@
         "border_radius_bottom_right": 0,
         "border_radius_bottom_left": 0
       }
+    },
+    "section_faq_9ctWUz": {
+      "type": "section-faq",
+      "blocks": {
+        "faq_group_hGpDdb": {
+          "type": "faq_group",
+          "settings": {
+            "group_heading": "— Skincare & Orders",
+            "q1": "🌿 I have sensitive skin — will your products work for me?",
+            "a1": "<p>Absolutely — sensitive skin is at the heart of how we formulate. Every product in our range is <strong>dermatologist-tested, hypoallergenic, and free from known irritants</strong>, so your skin barrier stays protected, not provoked.</p><p>💡 New to the brand? We always recommend a quick <strong>patch test </strong>(inner elbow or behind the ear) for 24 hours before your first full application — just to be sure.</p>",
+            "q2": "🧪 Are your products free from parabens and synthetic fragrances?",
+            "a2": "<p>Yes — and we mean it. Our entire lineup is <strong>100% free from parabens, sulfates, phthalates, and synthetic fragrances</strong>. Every ingredient is naturally derived, third-party clinically tested, and chosen with intention. No fillers, no shortcuts.</p><p>📋 Want to geek out on the details? The <strong>full ingredient list </strong>is listed transparently on every product page — no fine print.</p>",
+            "q3": "🚚 How long does delivery actually take?",
+            "a3": "<p>We move fast. Orders are <strong>processed within 1–2 business days </strong>of payment confirmation — then handed off to our shipping partners for delivery. Expect your order in <strong>2–4 days </strong>if you're in a major city, or <strong>4–7 days </strong>for other regions.</p><p>📦 You'll get an <strong>email + SMS tracking link </strong>the moment your order ships — so you'll always know exactly where it is.</p>",
+            "q4": "🔄 What's your exchange and return policy?",
+            "a4": "<p>We stand behind every product we sell. Returns and exchanges are accepted within <strong>7 days of delivery </strong>— just keep the item unopened with the seal intact and hold onto your proof of purchase.</p><p>⚡ Received something damaged or not what you ordered? Snap a photo and reach out to our support team — we'll make it right, <strong>free of charge, within 24 hours</strong>. No hoops, no hassle.</p>",
+            "q5": "",
+            "a5": "",
+            "q6": "",
+            "a6": "",
+            "q7": "",
+            "a7": "",
+            "q8": "",
+            "a8": ""
+          }
+        },
+        "faq_group_tNg6jJ": {
+          "type": "faq_group",
+          "settings": {
+            "group_heading": "— Orders & Delivery",
+            "q1": "📍 Where is my order?",
+            "a1": "<p>Once your order ships, you'll receive an <strong>email and SMS with a real-time tracking link </strong>— so you can follow every step from our warehouse to your door. You can also check your order status anytime by logging into your account under <strong>My Orders</strong>.</p><p>⏱️Haven't received a tracking update after <strong>3 business days</strong>? Drop us a message and our team will investigate right away.</p>",
+            "q2": "✏️ Can I change or cancel my order?",
+            "a2": "<p>We totally get it — sometimes you change your mind. Changes and cancellations are possible as long as your order <strong>hasn't been dispatched yet</strong>. Our fulfilment team works fast, so the sooner you reach out, the better.</p><p>⚡Contact our support team <strong>within 1 hour of placing your order </strong>for the best chance of making changes. Once it's with the courier, we're unable to intercept it — but our returns process has you covered.</p>",
+            "q3": "🚚 What delivery options are available?",
+            "a3": "<p>We offer flexible shipping options to fit your timeline and budget:</p><ul><li>⚡ ExpressSame-day or next-day delivery for major cities. Order before 12pm to qualify.</li><li>📦 Standard2–4 business days. Free on orders over $50.</li><li>🌍 International7–14 business days. Available to 30+ countries.</li></ul><p></p><p>🏪 Click & CollectPick up in-store at any of our locations. Ready in 2 hours.</p>",
+            "q4": "💳 How can I pay for my order?",
+            "a4": "<p>We support a wide range of payment methods — because checkout should be the easiest part of your day:</p><ul><li>Visa / Mastercard</li><li>Apple Pay</li><li>Google Pay</li><li>Bank Transfer</li><li>Cash on Delivery</li><li>Buy Now, Pay Later</li></ul><p>🔒 All transactions are <strong>encrypted and secured </strong>via SSL. We never store your full card details.</p>",
+            "q5": "",
+            "a5": "",
+            "q6": "",
+            "a6": "",
+            "q7": "",
+            "a7": "",
+            "q8": "",
+            "a8": ""
+          }
+        },
+        "faq_group_3MGCbH": {
+          "type": "faq_group",
+          "settings": {
+            "group_heading": "— Returns & Support",
+            "q1": "🧴 Can I return a skincare product if it doesn't suit my skin?",
+            "a1": "<p>We know skincare is personal — what works for one person may not work for another, and that's completely okay. If a product doesn't agree with your skin, you can return it within <strong>14 days of delivery</strong>, even if it's been opened and tried, as long as it hasn't been significantly used.</p><p>💬 Not sure if your reaction is normal purging or a genuine skin response?<strong>Chat with our in-house skin specialists </strong>first — they may be able to help you adjust your routine before going straight to a return.</p><p>⚠️ Please note: returns on opened products are reviewed case by case and may require a brief description of your experience.</p>",
+            "q2": "📦 What should I do if my order arrives damaged or incorrect?",
+            "a2": "<p>That's on us — and we'll fix it fast. If anything arrives broken, leaking, or just plain wrong, here's what to do:</p><ol><li><strong>Snap a photo </strong>of the damaged or incorrect item, including the packaging if possible.</li><li><strong>Contact our support team </strong>via live chat, email, or the Help Center within<strong>48 hours</strong>of delivery.</li><li>We'll review your case and send a <strong>replacement or full refund</strong>— your choice — within 24 hours.</li></ol><p>⚡ No need to return the damaged item. We'll <strong>sort it completely free of charge</strong>, no back-and-forth required.</p>",
+            "q3": "🔔 Do you restock products that are sold out?",
+            "a3": "<p>Most of our bestsellers do come back — we restock regularly based on demand. That said, some limited-edition drops are exactly that :<strong>limited</strong>. Once they're gone, they're gone.</p><ul><li>Hit <strong>\"Notify Me\" </strong>on any sold-out product page and we'll email you the moment it's back in stock — so you're first in line.</li><li>Follow us on Instagram and TikTok for <strong>restock announcements </strong>and early access drops before they go live on site.</li><li><strong>Loyalty members </strong>get priority access to restocked items — join the program for free and never miss out again.</li></ul>",
+            "q4": "",
+            "a4": "",
+            "q5": "",
+            "a5": "",
+            "q6": "",
+            "a6": "",
+            "q7": "",
+            "a7": "",
+            "q8": "",
+            "a8": ""
+          }
+        }
+      },
+      "block_order": [
+        "faq_group_hGpDdb",
+        "faq_group_tNg6jJ",
+        "faq_group_3MGCbH"
+      ],
+      "name": "t:sections.faq.presets.name",
+      "settings": {
+        "column_layout": "30-70",
+        "full_width": false,
+        "show_form": true,
+        "form_sticky": true,
+        "form_sticky_offset": 80,
+        "form_heading": "Ask Your Question",
+        "form_subtext": "Ask Anything. We're Here to Help",
+        "form_background_color": "rgba(0,0,0,0)",
+        "form_card_radius": "medium",
+        "show_name_field": true,
+        "name_label": "Name",
+        "show_topic_dropdown": true,
+        "topic_label": "How can we help you?",
+        "topic_options": "Exchanges & Returns,Order Status,Product Questions,Other",
+        "show_message_field": true,
+        "message_label": "Message",
+        "message_placeholder": "Your message...",
+        "submit_label": "Send Request",
+        "submit_button_style": "filled",
+        "success_message": "Thank you! We'll get back to you shortly.",
+        "accordion_behavior": "single",
+        "first_item_open": true,
+        "show_divider": true,
+        "icon_style": "chevron",
+        "question_size": "large",
+        "answer_color": "rgba(0,0,0,0)",
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "padding_top": 80,
+        "padding_right": 0,
+        "padding_bottom": 80,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
     }
   },
   "order": [
     "page_header",
+    "section_faq_9ctWUz"
   ]
 }
