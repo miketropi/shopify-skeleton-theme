@@ -11,6 +11,12 @@
     endif
   endif
 
+  assign embed_method = section.settings.embed_method | default: 'javascript_api'
+  assign iframe_embed_url = section.settings.iframe_embed_url
+  assign has_iframe = false
+  if embed_method == 'iframe_embed' and iframe_embed_url != blank
+    assign has_iframe = true
+  endif
   assign map_zoom = section.settings.map_zoom | default: 14
   assign map_style = section.settings.map_style | default: 'default'
   assign section_height = section.settings.section_height | default: 'medium'
@@ -47,6 +53,7 @@
   class="section-{{ section.id }} maploc shopify-section-wrapper maploc--height-{{ section_height }} maploc--card-{{ card_position }} maploc--card-radius-{{ card_radius }}{% if show_card_shadow %} maploc--card-shadow{% endif %}"
   data-section-type="section-map-location"
   data-section-id="{{ section.id }}"
+  data-embed-method="{{ embed_method }}"
   data-map-api-key="{{ section.settings.map_api_key | escape }}"
   data-map-address="{{ section.settings.map_address | escape }}"
   data-map-zoom="{{ map_zoom }}"
@@ -58,25 +65,20 @@
   "
   {{ section.shopify_attributes }}
 >
-  {%- if has_api_key and has_address -%}
+  {%- if has_iframe -%}
+    <div class="maploc__map-container">
+      <iframe
+        class="maploc__iframe"
+        src="{{ iframe_embed_url }}"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="{{ 'sections.map_location.map_label' | t }}"
+      ></iframe>
+    </div>
+  {%- elsif has_api_key and has_address -%}
     <div class="maploc__map-container">
       <div class="maploc__map" data-maploc-map aria-label="{{ 'sections.map_location.map_label' | t }}"></div>
-      {%- unless has_api_key -%}
-        {%- if section.settings.static_map_image != blank -%}
-          <div class="maploc__static">
-            {{
-              section.settings.static_map_image
-              | image_url: width: 1440
-              | image_tag:
-                loading: 'lazy',
-                alt: section.settings.map_address,
-                class: 'maploc__static-img',
-                widths: '400,800,1200,1440',
-                sizes: '100vw'
-            }}
-          </div>
-        {%- endif -%}
-      {%- endunless -%}
     </div>
   {%- else -%}
     <div class="maploc__map-container">
@@ -173,16 +175,35 @@
       "content": "t:sections.map_location.headers.map"
     },
     {
+      "type": "select",
+      "id": "embed_method",
+      "label": "t:sections.map_location.labels.embed_method",
+      "default": "javascript_api",
+      "options": [
+        { "value": "javascript_api", "label": "t:sections.map_location.options.embed_method.javascript_api" },
+        { "value": "iframe_embed", "label": "t:sections.map_location.options.embed_method.iframe_embed" }
+      ]
+    },
+    {
       "type": "text",
       "id": "map_api_key",
       "label": "t:sections.map_location.labels.map_api_key",
-      "info": "t:sections.map_location.info.map_api_key"
+      "info": "t:sections.map_location.info.map_api_key",
+      "visible_if": "{{ section.settings.embed_method == 'javascript_api' }}"
     },
     {
       "type": "text",
       "id": "map_address",
       "label": "t:sections.map_location.labels.map_address",
-      "info": "t:sections.map_location.info.map_address"
+      "info": "t:sections.map_location.info.map_address",
+      "visible_if": "{{ section.settings.embed_method == 'javascript_api' }}"
+    },
+    {
+      "type": "text",
+      "id": "iframe_embed_url",
+      "label": "t:sections.map_location.labels.iframe_embed_url",
+      "info": "t:sections.map_location.info.iframe_embed_url",
+      "visible_if": "{{ section.settings.embed_method == 'iframe_embed' }}"
     },
     {
       "type": "range",
@@ -191,13 +212,15 @@
       "min": 8,
       "max": 18,
       "step": 1,
-      "default": 14
+      "default": 14,
+      "visible_if": "{{ section.settings.embed_method == 'javascript_api' }}"
     },
     {
       "type": "select",
       "id": "map_style",
       "label": "t:sections.map_location.labels.map_style",
       "default": "default",
+      "visible_if": "{{ section.settings.embed_method == 'javascript_api' }}",
       "options": [
         { "value": "default", "label": "t:sections.map_location.options.map_style.default" },
         { "value": "light", "label": "t:sections.map_location.options.map_style.light" },

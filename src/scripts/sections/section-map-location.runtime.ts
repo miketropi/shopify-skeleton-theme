@@ -7,6 +7,7 @@ interface MapInitData {
   address: string
   zoom: number
   mapStyle: string
+  embedMethod: string
 }
 
 function getData(container: HTMLElement): MapInitData {
@@ -15,6 +16,7 @@ function getData(container: HTMLElement): MapInitData {
     address: container.dataset.mapAddress || '',
     zoom: Number(container.dataset.mapZoom) || 14,
     mapStyle: container.dataset.mapStyle || 'default',
+    embedMethod: container.dataset.embedMethod || 'javascript_api',
   }
 }
 
@@ -28,6 +30,7 @@ export function init(container: HTMLElement): void {
   const abort = new AbortController()
   const { signal } = abort
 
+  if (data.embedMethod !== 'javascript_api') return
   if (!data.apiKey || !data.address) return
 
   const mapEl = container.querySelector<HTMLElement>('[data-maploc-map]')

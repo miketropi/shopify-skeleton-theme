@@ -2248,8 +2248,10 @@
         "radius": "Corner radius"
       },
       "labels": {
+        "embed_method": "Embed method",
         "map_api_key": "Google Maps API key",
         "map_address": "Map address",
+        "iframe_embed_url": "Google Maps embed URL",
         "map_zoom": "Zoom level",
         "map_style": "Map style",
         "section_height": "Section height",
@@ -2295,11 +2297,16 @@
         "radius_bl": "Bottom left"
       },
       "info": {
-        "map_api_key": "Required for interactive map. Leave empty to use a static fallback image.",
+        "map_api_key": "Required for interactive map via JavaScript API. Leave empty to use a static fallback image.",
         "map_address": "Used to place the map pin and center the map.",
+        "iframe_embed_url": "Open Google Maps, click Share → Embed a map → Copy HTML, then paste only the URL from the src attribute.",
         "static_map_image": "Fallback image when no API key is provided. Recommended size: 1440×600px."
       },
       "options": {
+        "embed_method": {
+          "javascript_api": "JavaScript API (requires API key)",
+          "iframe_embed": "iframe embed (no API key)"
+        },
         "map_style": {
           "default": "Default",
           "light": "Light (greyscale)",
