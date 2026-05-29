@@ -515,6 +515,23 @@ $_ease: cubic-bezier(0.22, 1, 0.36, 1);
   // background (via section-styles) spans edge to edge
 }
 
+// ── Entrance animation ──────────────────────────────────────
+
+.faq:not(.faq--revealed) .faq__item {
+  opacity: 0;
+  transform: translate3d(0, 0.75rem, 0);
+}
+
+.faq--revealed .faq__item {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+html.no-js .faq .faq__item {
+  opacity: 1;
+  transform: none;
+}
+
 // ── Reduced motion ─────────────────────────────────────────
 
 @media (prefers-reduced-motion: reduce) {

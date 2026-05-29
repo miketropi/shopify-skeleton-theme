@@ -76,6 +76,8 @@
   data-section-type="section-faq"
   data-section-id="{{ section.id }}"
   data-faq-accordion="{{ accordion_behavior }}"
+  data-faq-entrance-scroll="{% if section.settings.enable_entrance_animation %}true{% else %}false{% endif %}"
+  data-faq-scroll-to-answer="{% if section.settings.scroll_to_answer %}true{% else %}false{% endif %}"
   style="
     {{ cs_scheme_vars }}
     --faq-sticky-offset: {{ sticky_offset }}px;
@@ -476,6 +478,19 @@
       "id": "show_divider",
       "label": "t:sections.faq.labels.show_divider",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_entrance_animation",
+      "label": "t:sections.faq.labels.enable_entrance_animation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "scroll_to_answer",
+      "label": "t:sections.faq.labels.scroll_to_answer",
+      "default": true,
+      "info": "t:sections.faq.info.scroll_to_answer"
     },
     {
       "type": "select",

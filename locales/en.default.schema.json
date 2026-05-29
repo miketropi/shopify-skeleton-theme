@@ -3006,6 +3006,8 @@
         "accordion_behavior": "Accordion behavior",
         "first_item_open": "First item open by default",
         "show_divider": "Show dividers between items",
+        "enable_entrance_animation": "Animate items on scroll",
+        "scroll_to_answer": "Scroll to opened answer",
         "icon_style": "Toggle icon style",
         "question_size": "Question text size",
         "answer_color": "Answer text colour",
@@ -3071,7 +3073,8 @@
         "topic_options": "One topic per line or comma-separated. Shows a dropdown above the message field.",
         "answer_color": "Clear uses the text colour from the scheme. Otherwise overrides answer text colour.",
         "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
-        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0."
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "scroll_to_answer": "When a question is opened the page scrolls to bring the answer into view."
       },
       "section_color_scheme_mode": "Colour scheme",
       "section_color_scheme_mode_default": "Default (global theme)",
