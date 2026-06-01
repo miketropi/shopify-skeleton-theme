@@ -3216,6 +3216,131 @@
       "presets": {
         "name": "Our Story"
       }
+    },
+    "image_with_text": {
+      "name": "Image With Text",
+      "headers": {
+        "layout": "Layout",
+        "image": "Image",
+        "content": "Content",
+        "colour": "Colour",
+        "layout_width": "Layout",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "content_position": "Content position",
+        "column_ratio": "Column ratio",
+        "image_border_radius": "Image border radius",
+        "section_height": "Section height",
+        "content_padding": "Content padding",
+        "image": "Image",
+        "image_position": "Image position",
+        "mobile_image": "Mobile image (optional)",
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "description": "Description",
+        "show_button": "Show button",
+        "button_label": "Button label",
+        "button_link": "Button link",
+        "button_style": "Button style",
+        "open_new_tab": "Open in new tab",
+        "content_background_color": "Content background colour",
+        "heading_color": "Heading colour",
+        "description_color": "Description colour",
+        "eyebrow_color": "Eyebrow colour",
+        "content_vertical_alignment": "Content vertical alignment",
+        "full_width": "Full width (edge-to-edge background)",
+        "full_width_info": "Section background fills the browser width. Content stays in the page column.",
+        "entrance_animation": "Scroll-in animation",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "background_color_info": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "border_color_info": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "position": {
+          "left": "Left",
+          "right": "Right"
+        },
+        "ratio": {
+          "40": "40 / 60",
+          "50": "50 / 50",
+          "60": "60 / 40"
+        },
+        "radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "height": {
+          "auto": "Auto",
+          "small": "Small (400px)",
+          "medium": "Medium (560px)",
+          "large": "Large (720px)"
+        },
+        "padding": {
+          "small": "Small (24px)",
+          "medium": "Medium (40px)",
+          "large": "Large (60px)"
+        },
+        "image_position": {
+          "center_center": "Centre centre",
+          "top_center": "Top centre",
+          "bottom_center": "Bottom centre",
+          "left_center": "Left centre",
+          "right_center": "Right centre"
+        },
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "button": {
+          "filled": "Filled",
+          "outlined": "Outlined"
+        },
+        "valign": {
+          "top": "Top",
+          "middle": "Middle",
+          "bottom": "Bottom"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "info": {
+        "mobile_image": "Separate image for mobile. Falls back to the main image if empty."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "color_scheme": "Scheme",
+      "color_scheme_info": "Used when Colour scheme is set to Custom. Otherwise the section uses the theme's global colour scheme.",
+      "presets": {
+        "name": "Image With Text"
+      }
     }
   }
 }
