@@ -33,6 +33,7 @@ import { registerSectionFaq } from './sections/section-faq'
 import { registerSectionTestimonials } from './sections/section-testimonials'
 import { registerSectionOurTeam } from './sections/section-our-team'
 import { registerSectionOurTeam2 } from './sections/section-our-team-2'
+import { registerSectionOurStory } from './sections/section-our-story'
 import { registerMainBlogSection } from './main-blog'
 import { registerMainArticleSection } from './main-article'
 import { bindTcardHoverVideos } from './tcard-hover-video'
@@ -78,6 +79,7 @@ registerSectionFaq()
 registerSectionTestimonials()
 registerSectionOurTeam()
 registerSectionOurTeam2()
+registerSectionOurStory()
 registerSectionInstagramFeed()
 registerSectionProductImagesStory()
 registerCollectionGridSection()

@@ -3102,6 +3102,120 @@
           }
         }
       }
+    },
+    "our_story": {
+      "name": "Our Story",
+      "headers": {
+        "header": "Header",
+        "grid": "Image Grid",
+        "colour": "Colour",
+        "layout": "Layout",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "description": "Description",
+        "description_max_width": "Description max width",
+        "text_alignment": "Text alignment",
+        "columns": "Columns",
+        "column_gap": "Column gap",
+        "image_ratio": "Image ratio",
+        "image_border_radius": "Image border radius",
+        "full_width": "Full width (edge-to-edge background)",
+        "full_width_info": "Section background fills the browser width. Content stays in the page column.",
+        "entrance_animation": "Scroll-in animation",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "background_color_info": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "border_color_info": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "text_align": {
+          "left": "Left",
+          "center": "Centre",
+          "right": "Right"
+        },
+        "columns": {
+          "2": "2 columns",
+          "3": "3 columns",
+          "4": "4 columns"
+        },
+        "gap": {
+          "small": "Small (12px)",
+          "medium": "Medium (24px)",
+          "large": "Large (40px)"
+        },
+        "ratio": {
+          "square": "Square (1:1)",
+          "portrait": "Portrait (4:5)",
+          "landscape": "Landscape (4:3)"
+        },
+        "radius": {
+          "none": "None",
+          "small": "Small (8px)",
+          "medium": "Medium (16px)",
+          "large": "Large (24px)"
+        },
+        "image_position": {
+          "center_center": "Centre centre",
+          "top_center": "Top centre",
+          "bottom_center": "Bottom centre",
+          "left_center": "Left centre",
+          "right_center": "Right centre"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "color_scheme": "Scheme",
+      "color_scheme_info": "Used when Colour scheme is set to Custom. Otherwise the section uses the theme's global colour scheme.",
+      "blocks": {
+        "story_card": {
+          "name": "Story Card",
+          "labels": {
+            "image": "Image",
+            "image_position": "Image position",
+            "heading": "Heading",
+            "description": "Description",
+            "heading_color": "Heading colour",
+            "description_color": "Description colour",
+            "text_alignment": "Text alignment"
+          }
+        }
+      },
+      "presets": {
+        "name": "Our Story"
+      }
     }
   }
 }
