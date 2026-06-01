@@ -125,10 +125,55 @@
         "border_radius_bottom_right": 0,
         "border_radius_bottom_left": 0
       }
+    },
+    "section_image_with_text_BXbQbb": {
+      "type": "section-image-with-text",
+      "name": "t:sections.image_with_text.presets.name",
+      "settings": {
+        "content_position": "left",
+        "column_ratio": "50",
+        "image_border_radius": "none",
+        "section_height": "auto",
+        "content_padding": "large",
+        "image": "shopify://shop_images/22f0bac6288916bf6e87decd85ca6574.jpg",
+        "image_position": "center center",
+        "eyebrow_text": "OUR PHILOSOPHY",
+        "heading": "Simple Beauty, Honest Ingredients",
+        "heading_size": "xlarge",
+        "description": "Our products are created with carefully selected ingredients that support healthy skin while remaining gentle for daily use.",
+        "show_button": true,
+        "button_label": "Explore Our Products",
+        "button_link": "shopify://collections/all",
+        "button_style": "filled",
+        "open_new_tab": false,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "content_background_color": "rgba(0,0,0,0)",
+        "heading_color": "#1a1a1a",
+        "description_color": "#666666",
+        "eyebrow_color": "#999999",
+        "content_vertical_alignment": "middle",
+        "full_width": true,
+        "padding_top": 0,
+        "padding_right": 0,
+        "padding_bottom": 0,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
     }
   },
   "order": [
     "page_header",
-    "section_our_story_XQezQ4"
+    "section_our_story_XQezQ4",
+    "section_image_with_text_BXbQbb"
   ]
 }
