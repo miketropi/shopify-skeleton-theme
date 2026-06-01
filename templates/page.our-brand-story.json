@@ -7,7 +7,7 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
- {
+{
   "sections": {
     "page_header": {
       "type": "section-page-header",
@@ -52,9 +52,83 @@
         "border_radius_bottom_left": 0
       }
     },
-    
+    "section_our_story_XQezQ4": {
+      "type": "section-our-story",
+      "blocks": {
+        "story_card_WqwJVw": {
+          "type": "story_card",
+          "settings": {
+            "image_position": "center center",
+            "heading": "Quality & Craftsmanship",
+            "description": "We carefully select high-quality ingredients to create products that are gentle, effective, and safe for everyday skincare.",
+            "text_alignment": "center",
+            "heading_color": "#1a1a1a",
+            "description_color": "#666666"
+          }
+        },
+        "story_card_77m9ce": {
+          "type": "story_card",
+          "settings": {
+            "image_position": "center center",
+            "heading": "Sustainable Values",
+            "description": "We prioritize responsibly sourced ingredients and eco-friendly packaging to reduce environmental impact.",
+            "text_alignment": "center",
+            "heading_color": "#1a1a1a",
+            "description_color": "#666666"
+          }
+        },
+        "story_card_b74yWg": {
+          "type": "story_card",
+          "settings": {
+            "image_position": "center center",
+            "heading": "Community Inspired",
+            "description": "We believe beauty should empower people and support communities through creativity, confidence, and self-expression.",
+            "text_alignment": "center",
+            "heading_color": "#1a1a1a",
+            "description_color": "#666666"
+          }
+        }
+      },
+      "block_order": [
+        "story_card_WqwJVw",
+        "story_card_77m9ce",
+        "story_card_b74yWg"
+      ],
+      "name": "t:sections.our_story.presets.name",
+      "settings": {
+        "eyebrow_text": "OUR STORY",
+        "heading": "Beauty That Truly Cares for Your Skin Every Day",
+        "heading_size": "xlarge",
+        "description": "We believe skincare should be simple, effective, and accessible for everyone. Our mission is to create beauty products that combine thoughtful ingredients, and everyday self-care.",
+        "description_max_width": 560,
+        "text_alignment": "center",
+        "columns": "3",
+        "column_gap": "large",
+        "image_ratio": "square",
+        "image_border_radius": "medium",
+        "entrance_animation": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "full_width": false,
+        "padding_top": 80,
+        "padding_right": 0,
+        "padding_bottom": 80,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
+    }
   },
   "order": [
-    "page_header"
+    "page_header",
+    "section_our_story_XQezQ4"
   ]
 }
