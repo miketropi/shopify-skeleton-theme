@@ -223,6 +223,10 @@
   width: 100%;
   border-radius: var(--team-two-card-radius, 16px);
 
+  &--placeholder {
+    background: linear-gradient(to right, var(--cs-border, #e0e0e0), var(--cs-border, #e0e0e0));
+  }
+
   img {
     display: block;
     width: 100%;
@@ -252,6 +256,17 @@
 
 .team-two--image-portrait .team-two__member-photo {
   aspect-ratio: 3 / 4;
+}
+
+.team-two__member-photo--placeholder {
+  background-color: var(--cs-background-secondary, #f4f4f4);
+}
+
+.team-two__placeholder-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .team-two__member-social {

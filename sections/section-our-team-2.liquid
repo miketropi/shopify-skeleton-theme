@@ -269,6 +269,11 @@
                             </div>
                           {%- endif -%}
                         </div>
+                      {%- else -%}
+                        <div class="team-two__member-photo team-two__member-photo--placeholder" aria-hidden="true">
+                          {%- assign ph_idx = forloop.index0 | modulo: 6 | plus: 1 -%}
+                          {{ 'collection-' | append: ph_idx | placeholder_svg_tag: 'team-two__placeholder-svg' }}
+                        </div>
                       {%- endif -%}
 
                       <div class="team-two__member-info">
