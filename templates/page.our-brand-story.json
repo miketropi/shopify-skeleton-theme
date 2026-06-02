@@ -135,12 +135,12 @@
         "image_border_radius": "none",
         "section_height": "auto",
         "content_padding": "large",
-        "image": "shopify://shop_images/22f0bac6288916bf6e87decd85ca6574.jpg",
+        "entrance_animation": true,
         "image_position": "center center",
         "eyebrow_text": "OUR PHILOSOPHY",
         "heading": "Simple Beauty, Honest Ingredients",
         "heading_size": "xlarge",
-        "description": "Our products are created with carefully selected ingredients that support healthy skin while remaining gentle for daily use.",
+        "description": "We blend high-quality, dermatologist-respected ingredients to support balanced, healthy skin—formulas that are effective, non-irritating, and soft enough to use in your routine every single day.",
         "show_button": true,
         "button_label": "Explore Our Products",
         "button_link": "shopify://collections/all",
@@ -148,7 +148,7 @@
         "open_new_tab": false,
         "section_color_scheme_mode": "default",
         "color_scheme": "",
-        "content_background_color": "rgba(0,0,0,0)",
+        "content_background_color": "#f4f4f5",
         "heading_color": "#1a1a1a",
         "description_color": "#666666",
         "eyebrow_color": "#999999",
@@ -169,11 +169,274 @@
         "border_radius_bottom_right": 0,
         "border_radius_bottom_left": 0
       }
+    },
+    "section_testimonials_EUHHCk": {
+      "type": "section-testimonials",
+      "blocks": {
+        "testimonial_bWtfEK": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I love how gentle and effective these products are, my skin feels healthier every day with consistent use.",
+            "author_name": "Sophia Bennett",
+            "author_label": "Verified Customer"
+          }
+        },
+        "testimonial_7a6NkP": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "The best skincare line I have ever used. My complexion has never looked this radiant and clear.",
+            "author_name": "Megan Atkinson",
+            "author_label": "Skincare Enthusiast"
+          }
+        },
+        "testimonial_G8EiUN": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Finally found products that actually deliver on their promises. Highly recommend to everyone.",
+            "author_name": "James Wu",
+            "author_label": "Verified Customer"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_bWtfEK",
+        "testimonial_7a6NkP",
+        "testimonial_G8EiUN"
+      ],
+      "name": "t:sections.testimonials.presets.name",
+      "settings": {
+        "show_quote_icon": true,
+        "quote_icon_color": "rgba(0,0,0,0)",
+        "eyebrow_text": "Customer Reviews",
+        "heading": "",
+        "heading_size": "large",
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "show_dots": true,
+        "show_arrows": false,
+        "transition_effect": "fade",
+        "quote_text_size": "large",
+        "quote_text_color": "rgba(0,0,0,0)",
+        "quote_max_width": 800,
+        "author_name_color": "rgba(0,0,0,0)",
+        "author_label_color": "rgba(0,0,0,0)",
+        "avatar_size": "medium",
+        "full_width": false,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "animate_on_scroll": true,
+        "padding_top": 80,
+        "padding_right": 0,
+        "padding_bottom": 80,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
+    },
+    "section_our_team_2_dQYLmc": {
+      "type": "section-our-team-2",
+      "blocks": {
+        "member_xERdUL": {
+          "type": "member",
+          "settings": {
+            "image_position": "center top",
+            "name": "Sophia Bennett",
+            "role": "Founder & Creative Director",
+            "member_url": "",
+            "social_facebook": "",
+            "social_x": "",
+            "social_instagram": "",
+            "social_pinterest": "",
+            "social_linkedin": ""
+          }
+        },
+        "member_6CYaAy": {
+          "type": "member",
+          "settings": {
+            "image_position": "center top",
+            "name": "Marcus Rivera",
+            "role": "Head of Product",
+            "member_url": "",
+            "social_facebook": "",
+            "social_x": "",
+            "social_instagram": "",
+            "social_pinterest": "",
+            "social_linkedin": ""
+          }
+        },
+        "member_nFcmai": {
+          "type": "member",
+          "settings": {
+            "image_position": "center top",
+            "name": "Aiko Tanaka",
+            "role": "Lead Designer",
+            "member_url": "",
+            "social_facebook": "",
+            "social_x": "",
+            "social_instagram": "",
+            "social_pinterest": "",
+            "social_linkedin": ""
+          }
+        },
+        "member_TdBgxa": {
+          "type": "member",
+          "settings": {
+            "image_position": "center top",
+            "name": "David Okafor",
+            "role": "Community Manager",
+            "member_url": "",
+            "social_facebook": "",
+            "social_x": "",
+            "social_instagram": "",
+            "social_pinterest": "",
+            "social_linkedin": ""
+          }
+        }
+      },
+      "block_order": [
+        "member_xERdUL",
+        "member_6CYaAy",
+        "member_nFcmai",
+        "member_TdBgxa"
+      ],
+      "name": "t:sections.our_team_2.presets.name",
+      "settings": {
+        "eyebrow_text": "Created With Heart",
+        "heading": "Meet Our Beauty Team",
+        "heading_size": "large",
+        "description": "A passionate group dedicated to creating thoughtful skincare and delivering quality beauty experiences.",
+        "description_color": "rgba(0,0,0,0)",
+        "show_button": true,
+        "button_label": "View All",
+        "button_link": "#",
+        "button_style": "filled",
+        "column_ratio": "30-70",
+        "cards_visible": "3.2",
+        "card_gap": "medium",
+        "show_navigation_arrows": true,
+        "autoplay": false,
+        "autoplay_speed": 4,
+        "image_ratio": "square",
+        "card_border_radius": "medium",
+        "show_social_on_hover": true,
+        "name_color": "rgba(0,0,0,0)",
+        "role_color": "rgba(0,0,0,0)",
+        "full_width": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "animate_on_scroll": true,
+        "padding_top": 60,
+        "padding_right": 0,
+        "padding_bottom": 60,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "#f4f4f5",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
+    },
+    "section_trust_bar_akxzYx": {
+      "type": "section-trust-bar",
+      "blocks": {
+        "trust_item_bDjyPp": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "return",
+            "heading": "14-Day Returns",
+            "description": "Shop with confidence and enjoy easy 14-day returns.",
+            "link": "#",
+            "open_in_new_tab": false
+          }
+        },
+        "trust_item_kajGid": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shipping",
+            "heading": "Free Shipping",
+            "description": "Enjoy free delivery on all qualifying orders every time.",
+            "link": "#",
+            "open_in_new_tab": false
+          }
+        },
+        "trust_item_yKqmKG": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "support",
+            "heading": "Expert Support",
+            "description": "Get personalized help to choose your perfect skincare routine.",
+            "link": "#",
+            "open_in_new_tab": false
+          }
+        },
+        "trust_item_dyYcCq": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shield",
+            "heading": "Secure Checkout",
+            "description": "Shop securely with encrypted, protected payment information.",
+            "link": "#",
+            "open_in_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "trust_item_bDjyPp",
+        "trust_item_kajGid",
+        "trust_item_yKqmKG",
+        "trust_item_dyYcCq"
+      ],
+      "name": "t:sections.trust_bar.presets.name",
+      "settings": {
+        "layout": "grid",
+        "show_dividers": true,
+        "text_alignment": "center",
+        "item_heading_size": "large",
+        "item_description_size": "medium",
+        "icon_size": "theme",
+        "heading_color": "rgba(0,0,0,0)",
+        "description_color": "rgba(0,0,0,0)",
+        "icon_color": "rgba(0,0,0,0)",
+        "full_width": false,
+        "entrance_animate_on_scroll": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "padding_top": 32,
+        "padding_right": 24,
+        "padding_bottom": 32,
+        "padding_left": 24,
+        "margin_top": 32,
+        "margin_bottom": 32,
+        "background_color": "rgba(0,0,0,0)",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
     }
   },
   "order": [
     "page_header",
     "section_our_story_XQezQ4",
-    "section_image_with_text_BXbQbb"
+    "section_image_with_text_BXbQbb",
+    "section_testimonials_EUHHCk",
+    "section_our_team_2_dQYLmc",
+    "section_trust_bar_akxzYx"
   ]
 }
