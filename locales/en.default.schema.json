@@ -2501,7 +2501,8 @@
         "column": {
           "name": "Column",
           "headers": {
-            "layout": "Layout",
+        "layout": "Layout",
+        "animation": "Animation",
             "image": "Image",
             "text": "Text content",
             "button": "Button"
@@ -3340,6 +3341,133 @@
       "color_scheme_info": "Used when Colour scheme is set to Custom. Otherwise the section uses the theme's global colour scheme.",
       "presets": {
         "name": "Image With Text"
+      }
+    },
+    "benefits": {
+      "name": "Benefits",
+      "headers": {
+        "header": "Header",
+        "benefits_row": "Benefits Row",
+        "colour": "Colour",
+        "layout": "Layout",
+        "animation": "Animation",
+        "padding": "Padding",
+        "margin": "Margin",
+        "background": "Background",
+        "border": "Border",
+        "radius": "Corner radius"
+      },
+      "labels": {
+        "eyebrow_text": "Eyebrow text",
+        "heading": "Heading",
+        "heading_size": "Heading size",
+        "description": "Description",
+        "text_alignment": "Header alignment",
+        "columns": "Columns",
+        "column_gap": "Column gap",
+        "icon_size": "Icon size",
+        "icon_color": "Icon colour",
+        "full_width": "Full width (edge-to-edge background)",
+        "entrance_animate_on_scroll": "Animate when scrolling into view",
+        "section_color_scheme_mode": "Colour scheme",
+        "color_scheme": "Scheme",
+        "padding_top": "Top",
+        "padding_right": "Right",
+        "padding_bottom": "Bottom",
+        "padding_left": "Left",
+        "margin_top": "Margin top",
+        "margin_bottom": "Margin bottom",
+        "background_color": "Background colour",
+        "border_width": "Width",
+        "border_style": "Style",
+        "border_color": "Border colour",
+        "radius_tl": "Top left",
+        "radius_tr": "Top right",
+        "radius_br": "Bottom right",
+        "radius_bl": "Bottom left"
+      },
+      "options": {
+        "heading_size": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large",
+          "xlarge": "Extra large"
+        },
+        "text_align": {
+          "left": "Left",
+          "center": "Centre"
+        },
+        "columns": {
+          "2": "2 columns",
+          "3": "3 columns",
+          "4": "4 columns"
+        },
+        "gap": {
+          "small": "Small (24px)",
+          "medium": "Medium (40px)",
+          "large": "Large (64px)"
+        },
+        "icon_size": {
+          "small": "Small (32px)",
+          "medium": "Medium (40px)",
+          "large": "Large (48px)"
+        },
+        "icon": {
+          "none": "None",
+          "leaf": "Leaf",
+          "heart": "Heart",
+          "shield": "Shield",
+          "lock": "Lock",
+          "star": "Star",
+          "sparkle": "Sparkle",
+          "drop": "Drop",
+          "sun": "Sun",
+          "moon": "Moon",
+          "flower": "Flower",
+          "recycle": "Recycle",
+          "award": "Award",
+          "no_symbol": "No symbol (Ø)",
+          "check": "Check"
+        },
+        "color_scheme_mode": {
+          "default": "Default (global theme)",
+          "custom": "Custom"
+        },
+        "border_style": {
+          "none": "None",
+          "solid": "Solid",
+          "dashed": "Dashed",
+          "dotted": "Dotted"
+        }
+      },
+      "info": {
+        "icon_color": "Clear uses the text colour from the scheme. Otherwise overrides all icon colours.",
+        "full_width": "Section background fills the browser width. Content stays in the page column.",
+        "background_color": "Clear uses the colour scheme. Otherwise fills the full section area.",
+        "border_color": "Clear uses the colour scheme border. Used when width is greater than 0.",
+        "entrance_animate_on_scroll": "Benefit items fade and slide up when the section scrolls into view. When off, items appear immediately once the page loads."
+      },
+      "section_color_scheme_mode": "Colour scheme",
+      "section_color_scheme_mode_default": "Default (global theme)",
+      "section_color_scheme_mode_custom": "Custom",
+      "color_scheme": "Scheme",
+      "color_scheme_info": "Used when Colour scheme is set to Custom. Otherwise the section uses the theme's global colour scheme.",
+      "blocks": {
+        "benefit": {
+          "name": "Benefit",
+          "labels": {
+            "icon": "Icon",
+            "custom_icon": "Custom icon",
+            "heading": "Heading",
+            "description": "Description"
+          },
+          "info": {
+            "custom_icon": "Overrides the predefined icon if set."
+          }
+        }
+      },
+      "presets": {
+        "name": "Benefits"
       }
     }
   }

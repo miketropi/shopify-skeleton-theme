@@ -1,0 +1,541 @@
+{%- liquid
+  assign ben_scheme = settings.global_color_scheme
+  if ben_scheme == blank or ben_scheme.settings == blank
+    assign ben_scheme = settings.color_schemes['scheme-6']
+  endif
+
+  assign ben_sm = section.settings.section_color_scheme_mode
+  if ben_sm == 'custom'
+    assign picked_ben = section.settings.color_scheme
+    if picked_ben != blank and picked_ben.settings != blank
+      assign ben_scheme = picked_ben
+    endif
+  elsif ben_sm == 'default'
+  else
+    assign picked_ben = section.settings.color_scheme
+    if picked_ben != blank and picked_ben.settings != blank
+      assign ben_scheme = picked_ben
+    endif
+  endif
+
+  assign heading_size = section.settings.heading_size | default: 'large'
+  assign text_alignment = section.settings.text_alignment | default: 'left'
+  assign columns = section.settings.columns | default: '3'
+  assign column_gap_key = section.settings.column_gap | default: 'medium'
+  assign icon_size_key = section.settings.icon_size | default: 'medium'
+  assign icon_color = section.settings.icon_color
+
+  case column_gap_key
+    when 'small'
+      assign gap_px = 24
+    when 'medium'
+      assign gap_px = 40
+    when 'large'
+      assign gap_px = 64
+  endcase
+
+  case icon_size_key
+    when 'small'
+      assign icon_px = 32
+    when 'medium'
+      assign icon_px = 40
+    when 'large'
+      assign icon_px = 48
+  endcase
+
+  assign has_intro = false
+  if section.settings.eyebrow_text != blank or section.settings.heading != blank or section.settings.description != blank
+    assign has_intro = true
+  endif
+
+  assign block_count = 0
+  for block in section.blocks
+    if block.type == 'benefit'
+      assign block_count = block_count | plus: 1
+    endif
+  endfor
+
+  assign icon_sizes_str = icon_px | append: 'px'
+-%}
+{%- capture ben_scheme_vars -%}
+  {%- render 'color-scheme-vars', scheme: ben_scheme, inline_only: true -%}
+{%- endcapture -%}
+
+{%- render 'section-styles', section: section -%}
+
+{%- if block_count > 0 -%}
+{% style %}
+  html.js #shopify-section-{{ section.id }} .ben:not(.ben--revealed) .ben__item {
+    opacity: 0;
+  }
+{% endstyle %}
+{%- endif -%}
+
+<div
+  class="section-{{ section.id }} ben shopify-section-wrapper section-intro--heading-{{ heading_size }} ben--cols-{{ columns }} ben--align-{{ text_alignment }}{% if section.settings.full_width %} full-width ben--full-width{% endif %}"
+  data-section-type="section-benefits"
+  data-section-id="{{ section.id }}"
+  data-benefits-entrance-scroll="{% if section.settings.entrance_animate_on_scroll == false %}false{% else %}true{% endif %}"
+  style="
+    {{ ben_scheme_vars }}
+    --ben-columns: {{ columns }};
+    --ben-column-gap: {{ gap_px }}px;
+    --ben-icon-size: {{ icon_px }}px;
+    {%- if icon_color != blank and icon_color != 'rgba(0,0,0,0)' -%}
+      --ben-icon-color: {{ icon_color }};
+    {%- endif -%}
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="ben__shell{% if section.settings.full_width %} section-content-width{% endif %}">
+    {%- if has_intro -%}
+      <header class="ben__intro section-intro__copy{% if text_alignment == 'center' %} ben__intro--center{% endif %}">
+        {%- if section.settings.eyebrow_text != blank -%}
+          <p class="section-intro__eyebrow">{{ section.settings.eyebrow_text | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="section-intro__heading ben__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <div class="ben__description rte">{{ section.settings.description }}</div>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- if block_count > 0 -%}
+      <div class="ben__loading" data-benefits-loading aria-hidden="true">
+        <span class="ben__loading-inner">
+          <span class="ben__loading-dot"></span>
+          <span class="ben__loading-dot"></span>
+          <span class="ben__loading-dot"></span>
+        </span>
+      </div>
+
+      <ul class="ben__grid" role="list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'benefit' -%}
+            {%- assign has_icon = false -%}
+            {%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
+              {%- assign has_icon = true -%}
+            {%- endif -%}
+
+            {%- assign block_is_empty = false -%}
+            {%- if block.settings.heading == blank and block.settings.description == blank and has_icon == false -%}
+              {%- assign block_is_empty = true -%}
+            {%- endif -%}
+
+            {%- unless block_is_empty -%}
+              <li class="ben__item" {{ block.shopify_attributes }}>
+                {%- if has_icon -%}
+                  <div class="ben__icon">
+                    {%- if block.settings.custom_icon != blank -%}
+                      {{
+                        block.settings.custom_icon
+                        | image_url: width: 160
+                        | image_tag:
+                          class: 'ben__icon-img',
+                          widths: '32,40,48,80',
+                          sizes: icon_sizes_str,
+                          width: icon_px,
+                          height: icon_px,
+                          loading: 'lazy',
+                          alt: ''
+                      }}
+                    {%- else -%}
+                      {%- render 'benefit-icon', icon: block.settings.icon -%}
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+
+                <div class="ben__content">
+                  {%- if block.settings.heading != blank -%}
+                    <h3 class="ben__item-heading">{{ block.settings.heading | escape }}</h3>
+                  {%- endif -%}
+                  {%- if block.settings.description != blank -%}
+                    <p class="ben__item-text">{{ block.settings.description | escape }}</p>
+                  {%- endif -%}
+                </div>
+              </li>
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.benefits.name",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.benefits.headers.header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "t:sections.benefits.labels.eyebrow_text"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.benefits.labels.heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.benefits.labels.heading_size",
+      "default": "large",
+      "options": [
+        { "value": "small", "label": "t:sections.benefits.options.heading_size.small" },
+        { "value": "medium", "label": "t:sections.benefits.options.heading_size.medium" },
+        { "value": "large", "label": "t:sections.benefits.options.heading_size.large" },
+        { "value": "xlarge", "label": "t:sections.benefits.options.heading_size.xlarge" }
+      ]
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:sections.benefits.labels.description"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:sections.benefits.labels.text_alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "t:sections.benefits.options.text_align.left" },
+        { "value": "center", "label": "t:sections.benefits.options.text_align.center" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.benefits.headers.benefits_row"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "t:sections.benefits.labels.columns",
+      "default": "3",
+      "options": [
+        { "value": "2", "label": "t:sections.benefits.options.columns.2" },
+        { "value": "3", "label": "t:sections.benefits.options.columns.3" },
+        { "value": "4", "label": "t:sections.benefits.options.columns.4" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "column_gap",
+      "label": "t:sections.benefits.labels.column_gap",
+      "default": "medium",
+      "options": [
+        { "value": "small", "label": "t:sections.benefits.options.gap.small" },
+        { "value": "medium", "label": "t:sections.benefits.options.gap.medium" },
+        { "value": "large", "label": "t:sections.benefits.options.gap.large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "icon_size",
+      "label": "t:sections.benefits.labels.icon_size",
+      "default": "medium",
+      "options": [
+        { "value": "small", "label": "t:sections.benefits.options.icon_size.small" },
+        { "value": "medium", "label": "t:sections.benefits.options.icon_size.medium" },
+        { "value": "large", "label": "t:sections.benefits.options.icon_size.large" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "t:sections.benefits.labels.icon_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.benefits.info.icon_color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.benefits.headers.layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.benefits.labels.full_width",
+      "info": "t:sections.benefits.info.full_width",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.benefits.headers.animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "entrance_animate_on_scroll",
+      "label": "t:sections.benefits.labels.entrance_animate_on_scroll",
+      "info": "t:sections.benefits.info.entrance_animate_on_scroll",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.benefits.headers.colour"
+    },
+    {
+      "type": "select",
+      "id": "section_color_scheme_mode",
+      "label": "t:sections.benefits.labels.section_color_scheme_mode",
+      "options": [
+        { "value": "default", "label": "t:sections.benefits.options.color_scheme_mode.default" },
+        { "value": "custom", "label": "t:sections.benefits.options.color_scheme_mode.custom" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.benefits.labels.color_scheme",
+      "default": "scheme-6",
+      "visible_if": "{{ section.settings.section_color_scheme_mode == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.benefits.headers.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.benefits.labels.padding_top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.benefits.labels.padding_right",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.benefits.labels.padding_bottom",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.benefits.labels.padding_left",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.benefits.headers.margin"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.benefits.labels.margin_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.benefits.labels.margin_bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.benefits.headers.background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.benefits.labels.background_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.benefits.info.background_color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.benefits.headers.border"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.benefits.labels.border_width",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "t:sections.benefits.labels.border_style",
+      "options": [
+        { "value": "none", "label": "t:sections.benefits.options.border_style.none" },
+        { "value": "solid", "label": "t:sections.benefits.options.border_style.solid" },
+        { "value": "dashed", "label": "t:sections.benefits.options.border_style.dashed" },
+        { "value": "dotted", "label": "t:sections.benefits.options.border_style.dotted" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "t:sections.benefits.labels.border_color",
+      "default": "rgba(0,0,0,0)",
+      "info": "t:sections.benefits.info.border_color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.benefits.headers.radius"
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.benefits.labels.radius_tl",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.benefits.labels.radius_tr",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.benefits.labels.radius_br",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom_left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.benefits.labels.radius_bl",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "t:sections.benefits.blocks.benefit.name",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "t:sections.benefits.blocks.benefit.labels.icon",
+          "default": "none",
+          "options": [
+            { "value": "none", "label": "t:sections.benefits.options.icon.none" },
+            { "value": "leaf", "label": "t:sections.benefits.options.icon.leaf" },
+            { "value": "heart", "label": "t:sections.benefits.options.icon.heart" },
+            { "value": "shield", "label": "t:sections.benefits.options.icon.shield" },
+            { "value": "lock", "label": "t:sections.benefits.options.icon.lock" },
+            { "value": "star", "label": "t:sections.benefits.options.icon.star" },
+            { "value": "sparkle", "label": "t:sections.benefits.options.icon.sparkle" },
+            { "value": "drop", "label": "t:sections.benefits.options.icon.drop" },
+            { "value": "sun", "label": "t:sections.benefits.options.icon.sun" },
+            { "value": "moon", "label": "t:sections.benefits.options.icon.moon" },
+            { "value": "flower", "label": "t:sections.benefits.options.icon.flower" },
+            { "value": "recycle", "label": "t:sections.benefits.options.icon.recycle" },
+            { "value": "award", "label": "t:sections.benefits.options.icon.award" },
+            { "value": "no-symbol", "label": "t:sections.benefits.options.icon.no_symbol" },
+            { "value": "check", "label": "t:sections.benefits.options.icon.check" }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "t:sections.benefits.blocks.benefit.labels.custom_icon",
+          "info": "t:sections.benefits.blocks.benefit.info.custom_icon"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.benefits.blocks.benefit.labels.heading"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "t:sections.benefits.blocks.benefit.labels.description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.benefits.presets.name",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "leaf",
+            "heading": "100% Vegan Formula",
+            "description": "Made with plant-based ingredients and free from animal-derived components, supporting a cleaner."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "heart",
+            "heading": "Dermatologist Tested",
+            "description": "Clinically reviewed to ensure safety, efficacy, and gentleness for all skin types."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "drop",
+            "heading": "Deep Hydration",
+            "description": "Locked-in moisture with hyaluronic acid and natural botanicals for a healthy dewy finish."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

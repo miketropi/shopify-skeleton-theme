@@ -35,6 +35,7 @@ import { registerSectionOurTeam } from './sections/section-our-team'
 import { registerSectionOurTeam2 } from './sections/section-our-team-2'
 import { registerSectionOurStory } from './sections/section-our-story'
 import { registerSectionImageWithText } from './sections/section-image-with-text'
+import { registerSectionBenefits } from './sections/section-benefits'
 import { registerMainBlogSection } from './main-blog'
 import { registerMainArticleSection } from './main-article'
 import { bindTcardHoverVideos } from './tcard-hover-video'
@@ -87,6 +88,7 @@ registerSectionProductImagesStory()
 registerCollectionGridSection()
 registerHeaderTopBarSection()
 registerFooterSection()
+registerSectionBenefits()
 registerMainBlogSection()
 registerMainArticleSection()
 
