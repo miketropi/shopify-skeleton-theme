@@ -135,10 +135,80 @@
         "tabs_layout": "top",
         "content_max_width": "760"
       }
+    },
+    "section_benefits_TzL6b9": {
+      "type": "section-benefits",
+      "blocks": {
+        "benefit_wnhEqF": {
+          "type": "benefit",
+          "settings": {
+            "icon": "leaf",
+            "heading": "100% Vegan Formula",
+            "description": "Made with plant-based ingredients and free from animal-derived components, supporting a cleaner.",
+            "mark_as_featured": false
+          }
+        },
+        "benefit_NcLNpN": {
+          "type": "benefit",
+          "settings": {
+            "icon": "heart",
+            "heading": "Dermatologist Tested",
+            "description": "Clinically reviewed to ensure safety, efficacy, and gentleness for all skin types.",
+            "mark_as_featured": false
+          }
+        },
+        "benefit_FF9ynq": {
+          "type": "benefit",
+          "settings": {
+            "icon": "drop",
+            "heading": "Deep Hydration",
+            "description": "Locked-in moisture with hyaluronic acid and natural botanicals for a healthy dewy finish.",
+            "mark_as_featured": false
+          }
+        }
+      },
+      "block_order": [
+        "benefit_wnhEqF",
+        "benefit_NcLNpN",
+        "benefit_FF9ynq"
+      ],
+      "name": "t:sections.benefits.presets.name",
+      "settings": {
+        "eyebrow_text": "EXPLORE OUR BENEFITS",
+        "heading": "Pure Skincare Essentials",
+        "heading_size": "xlarge",
+        "description": "Discover the clean beauty benefits designed to nourish your skin with safe, effective ingredients.",
+        "text_alignment": "left",
+        "columns": "3",
+        "column_gap": "medium",
+        "icon_size": "medium",
+        "icon_color": "rgba(0,0,0,0)",
+        "show_top_divider": true,
+        "divider_color": "rgba(0,0,0,0)",
+        "accent_color": "rgba(0,0,0,0)",
+        "full_width": true,
+        "section_color_scheme_mode": "default",
+        "color_scheme": "",
+        "padding_top": 80,
+        "padding_right": 0,
+        "padding_bottom": 80,
+        "padding_left": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "#f4f4f5",
+        "border_width": 0,
+        "border_style": "solid",
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius_top_left": 0,
+        "border_radius_top_right": 0,
+        "border_radius_bottom_right": 0,
+        "border_radius_bottom_left": 0
+      }
     }
   },
   "order": [
     "main",
-    "product_tabs"
+    "product_tabs",
+    "section_benefits_TzL6b9"
   ]
 }
